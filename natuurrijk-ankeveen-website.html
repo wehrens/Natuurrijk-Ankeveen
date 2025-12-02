@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natuurrijk Ankeveen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-dark: #2d4a3e;
+            --green-medium: #4a7c59;
+            --green-light: #7fb069;
+            --green-pale: #d4e6c3;
+            --cream: #f8f6f0;
+            --cream-dark: #e8e4d9;
+            --brown: #8b6914;
+            --brown-light: #c4a35a;
+            --text-dark: #1a2e22;
+            --text-medium: #3d5a4a;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background-color: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(248, 246, 240, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--green-dark);
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--green-medium) 0%, var(--green-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-family: 'Fraunces', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-medium);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--green-medium);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--green-light);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: var(--green-medium);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            transition: background 0.3s ease, transform 0.3s ease !important;
+        }
+
+        .nav-cta:hover {
+            background: var(--green-dark);
+            transform: translateY(-2px);
+        }
+
+        .nav-cta::after {
+            display: none !important;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--green-pale) 0%, transparent 70%);
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            color: var(--green-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-content h1 span {
+            color: var(--green-medium);
+            position: relative;
+        }
+
+        .hero-content h1 span::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: var(--brown-light);
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--text-medium);
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--green-medium);
+            color: white;
+            box-shadow: 0 4px 15px rgba(74, 124, 89, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--green-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 124, 89, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--green-dark);
+            border: 2px solid var(--green-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--green-dark);
+            color: white;
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .hero-image-main {
+            width: 100%;
+            height: 450px;
+            background: linear-gradient(145deg, var(--green-medium), var(--green-dark));
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(45, 74, 62, 0.3);
+        }
+
+        .hero-image-main::before {
+            content: '🌿 Foto: Zeisbrigade in actie';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .hero-badge {
+            position: absolute;
+            bottom: -20px;
+            left: -20px;
+            background: var(--brown);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3);
+        }
+
+        .hero-badge span {
+            display: block;
+            font-size: 1.8rem;
+            font-family: 'Fraunces', serif;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--green-dark);
+            padding: 3rem 2rem;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            color: white;
+        }
+
+        .stat-number {
+            font-family: 'Fraunces', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--green-light);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        /* Activities Section */
+        .activities {
+            padding: 6rem 2rem;
+            background: var(--white);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--green-dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-medium);
+            font-size: 1.1rem;
+        }
+
+        .activities-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .activity-card {
+            background: var(--cream);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(45, 74, 62, 0.15);
+        }
+
+        .activity-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--green-light), var(--green-medium));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .activity-content {
+            padding: 1.5rem;
+        }
+
+        .activity-content h3 {
+            font-size: 1.4rem;
+            color: var(--green-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .activity-content p {
+            color: var(--text-medium);
+            font-size: 0.95rem;
+        }
+
+        .activity-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--green-medium);
+            font-weight: 600;
+            margin-top: 1rem;
+            text-decoration: none;
+            transition: gap 0.3s ease;
+        }
+
+        .activity-link:hover {
+            gap: 0.75rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, var(--green-pale) 0%, var(--cream) 100%);
+            position: relative;
+        }
+
+        .cta-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .cta-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(45, 74, 62, 0.1);
+            text-align: center;
+        }
+
+        .cta-card h3 {
+            font-size: 1.8rem;
+            color: var(--green-dark);
+            margin-bottom: 1rem;
+        }
+
+        .cta-card p {
+            color: var(--text-medium);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--green-pale);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* News Section */
+        .news {
+            padding: 6rem 2rem;
+            background: var(--white);
+        }
+
+        .news-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .news-featured {
+            background: var(--green-dark);
+            border-radius: 25px;
+            padding: 2.5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .news-featured::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, var(--green-medium) 0%, transparent 70%);
+            opacity: 0.3;
+        }
+
+        .news-featured-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .news-tag {
+            background: var(--brown);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .news-featured h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .news-featured p {
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .news-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .news-small {
+            background: var(--cream);
+            padding: 1.5rem;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .news-small:hover {
+            transform: translateX(5px);
+        }
+
+        .news-small h4 {
+            font-size: 1.1rem;
+            color: var(--green-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .news-small p {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+
+        .news-date {
+            font-size: 0.85rem;
+            color: var(--brown);
+            font-weight: 600;
+        }
+
+        /* Team Section */
+        .team {
+            padding: 6rem 2rem;
+            background: var(--cream);
+        }
+
+        .team-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .team-member {
+            text-align: center;
+        }
+
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--green-light), var(--green-medium));
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 10px 30px rgba(74, 124, 89, 0.2);
+        }
+
+        .team-member h4 {
+            font-size: 1.1rem;
+            color: var(--green-dark);
+        }
+
+        .team-member p {
+            font-size: 0.85rem;
+            color: var(--text-medium);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--green-dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .footer-brand p {
+            opacity: 0.8;
+            margin: 1rem 0;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--green-light);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            opacity: 1;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .partner-logos {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .partner-logo {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content, .hero-visual {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .hero-visual {
+            animation-delay: 0.2s;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-content p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .activities-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .team-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .footer-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .activities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-container {
+                grid-template-columns: 1fr;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">🌱</div>
+                <span class="logo-text">Natuurrijk Ankeveen</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#over-ons">Over ons</a></li>
+                <li><a href="#activiteiten">Wat we doen</a></li>
+                <li><a href="#nieuws">Nieuws</a></li>
+                <li><a href="#agenda">Agenda</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#meedoen" class="nav-cta">Doe mee!</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Samen bouwen aan een <span>natuurrijker</span> Ankeveen</h1>
+                <p>Wij zijn een enthousiaste werkgroep van vrijwilligers die zich inzet voor meer biodiversiteit in en om Ankeveen. Van zeismaaien tot zwaluwbescherming – elke actie telt!</p>
+                <div class="hero-buttons">
+                    <a href="#meedoen" class="btn btn-primary">
+                        Word vrijwilliger →
+                    </a>
+                    <a href="#activiteiten" class="btn btn-secondary">
+                        Ontdek ons werk
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-image-main"></div>
+                <div class="hero-badge">
+                    <span>5</span>
+                    jaar actief!
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="stats-bar">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number">35+</div>
+                <div class="stat-label">Vrijwilligers</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">70</div>
+                <div class="stat-label">Zwaluwnesten in 2025</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Natuurvriendelijke oevers</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Jaar ervaring</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Activities Section -->
+    <section class="activities" id="activiteiten">
+        <div class="section-header">
+            <h2>Wat we doen</h2>
+            <p>Met praktische, kleinschalige projecten maken we samen een groot verschil voor de natuur in Ankeveen</p>
+        </div>
+        <div class="activities-grid">
+            <div class="activity-card">
+                <div class="activity-image">🌾</div>
+                <div class="activity-content">
+                    <h3>Zeisbrigade</h3>
+                    <p>Met 35 vrijwilligers maaien we op de traditionele manier. Goed voor de biodiversiteit én een heerlijke bezigheid!</p>
+                    <a href="#" class="activity-link">Meer info →</a>
+                </div>
+            </div>
+            <div class="activity-card">
+                <div class="activity-image">🌊</div>
+                <div class="activity-content">
+                    <h3>Natuurvriendelijke oevers</h3>
+                    <p>Van IJsclub tot Buhrmanlaan: we leggen oevers aan met inheemse planten en struiken.</p>
+                    <a href="#" class="activity-link">Bekijk projecten →</a>
+                </div>
+            </div>
+            <div class="activity-card">
+                <div class="activity-image">🐦</div>
+                <div class="activity-content">
+                    <h3>Huiszwaluw­bescherming</h3>
+                    <p>Van 6 naar 25 succesvolle nesten in één jaar! We helpen deze prachtige trekvogels.</p>
+                    <a href="#" class="activity-link">Lees het verhaal →</a>
+                </div>
+            </div>
+            <div class="activity-card">
+                <div class="activity-image">🌳</div>
+                <div class="activity-content">
+                    <h3>De Ruige Hoek</h3>
+                    <p>Verwildering met beleid: we laten de natuur haar gang gaan en planten vlindervriendelijke struiken.</p>
+                    <a href="#" class="activity-link">Ontdek meer →</a>
+                </div>
+            </div>
+            <div class="activity-card">
+                <div class="activity-image">🪓</div>
+                <div class="activity-content">
+                    <h3>Wilgen knotten</h3>
+                    <p>Traditioneel onderhoud van knotwilgen, belangrijk voor het typische Hollandse landschap.</p>
+                    <a href="#" class="activity-link">Bekijk foto's →</a>
+                </div>
+            </div>
+            <div class="activity-card">
+                <div class="activity-image">👧</div>
+                <div class="activity-content">
+                    <h3>Educatie</h3>
+                    <p>Op de Joseph Lokin school maken kinderen vogelhuisjes en insectenhotels met onze hulp.</p>
+                    <a href="#" class="activity-link">Meer over educatie →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="meedoen">
+        <div class="cta-container">
+            <div class="cta-card">
+                <div class="cta-icon">🙋</div>
+                <h3>Doe mee als vrijwilliger</h3>
+                <p>Geen ervaring nodig! Of je nu wilt zeisen, planten of gewoon gezellig meehelpen – iedereen is welkom.</p>
+                <a href="#contact" class="btn btn-primary">Aanmelden</a>
+            </div>
+            <div class="cta-card">
+                <div class="cta-icon">💚</div>
+                <h3>Steun ons werk</h3>
+                <p>Met een donatie maken we nog meer mogelijk: meer planten, meer nestkasten, meer biodiversiteit.</p>
+                <a href="#" class="btn btn-secondary">Doneren</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section class="news" id="nieuws">
+        <div class="news-container">
+            <div class="section-header">
+                <h2>Nieuws & Resultaten</h2>
+                <p>De laatste updates over onze projecten en successen</p>
+            </div>
+            <div class="news-grid">
+                <div class="news-featured">
+                    <div class="news-featured-content">
+                        <span class="news-tag">🏆 Uitgelicht</span>
+                        <h3>Huiszwaluw-seizoen 2025: een groot succes!</h3>
+                        <p>Van 6 naar 25 succesvolle broedsels in de Ooievaarsbuurt. De 54 kunstnestkasten en zwaluwtil hebben de kolonie een enorme boost gegeven.</p>
+                        <a href="#" class="btn btn-primary">Lees meer →</a>
+                    </div>
+                </div>
+                <div class="news-sidebar">
+                    <div class="news-small">
+                        <span class="news-date">November 2024</span>
+                        <h4>Natuurwerkdag groot succes</h4>
+                        <p>Samen plantten we de oever bij de Buhrmanlaan aan.</p>
+                    </div>
+                    <div class="news-small">
+                        <span class="news-date">2024</span>
+                        <h4>Prijs Toekomstversnellers!</h4>
+                        <p>We wonnen de provinciale prijs voor ons oeverproject.</p>
+                    </div>
+                    <div class="news-small">
+                        <span class="news-date">Juli 2024</span>
+                        <h4>Zeiscursus weer een hit</h4>
+                        <p>Nieuwe enthousiastelingen leerden de kunst van het zeisen.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team" id="over-ons">
+        <div class="section-header">
+            <h2>Het team</h2>
+            <p>Vijf gedreven Ankeveners vormen het hart van de werkgroep</p>
+        </div>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="team-avatar">👩‍🔬</div>
+                <h4>Arda van der Lee</h4>
+                <p>Biologe</p>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">🌲</div>
+                <h4>Martin Ockhuijsen</h4>
+                <p>Vrijwillig boswachter</p>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">🌿</div>
+                <h4>Wijnand Smit</h4>
+                <p>Ecologisch hovenier</p>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">💊</div>
+                <h4>Ron Wehrens</h4>
+                <p>Apotheker</p>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">🎨</div>
+                <h4>Hans Hazes</h4>
+                <p>Ondernemer</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="#" class="logo" style="color: white;">
+                    <div class="logo-icon">🌱</div>
+                    <span class="logo-text">Natuurrijk Ankeveen</span>
+                </a>
+                <p>Samen bouwen aan biodiversiteit in Ankeveen. Al 5 jaar actief met praktische projecten die een verschil maken.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Navigatie</h4>
+                <ul>
+                    <li><a href="#over-ons">Over ons</a></li>
+                    <li><a href="#activiteiten">Wat we doen</a></li>
+                    <li><a href="#nieuws">Nieuws</a></li>
+                    <li><a href="#agenda">Agenda</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Meedoen</h4>
+                <ul>
+                    <li><a href="#">Word vrijwilliger</a></li>
+                    <li><a href="#">Doneren</a></li>
+                    <li><a href="#">Zeiscursus</a></li>
+                    <li><a href="#">Natuurwerkdag</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Contact</h4>
+                <ul>
+                    <li>Ron Wehrens</li>
+                    <li><a href="tel:0646293590">06-46293590</a></li>
+                    <li><a href="mailto:natuurrijkankeveen@protonmail.com">natuurrijkankeveen@protonmail.com</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2025 Werkgroep Natuurrijk Ankeveen</span>
+            <div class="partner-logos">
+                <span class="partner-logo">Groenfonds NH</span>
+                <span class="partner-logo">Vogelwerkgroep G&O</span>
+                <span class="partner-logo">Gemeente Wijdemeren</span>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
