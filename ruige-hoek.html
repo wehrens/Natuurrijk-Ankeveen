@@ -3,261 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>De Ruige Hoek - Natuurrijk Ankeveen</title>
+    <title>De Ruige Hoek & Bermen - Natuurrijk Ankeveen</title>
+    <meta name="description" content="Natuurrijk Ankeveen beheert De Ruige Hoek en diverse bermen in Ankeveen voor meer biodiversiteit.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <meta name="description" content="De Ruige Hoek is een stukje natuur in Ankeveen dat we ecologisch beheren met zeismaaien en inheemse beplanting.">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --green-dark: #2d4a3e;
-            --green-medium: #4a7c59;
-            --green-light: #7fb069;
-            --green-pale: #d4e6c3;
-            --cream: #f8f6f0;
-            --cream-dark: #e8e4d9;
-            --brown: #8b6914;
-            --brown-light: #c4a35a;
-            --text-dark: #1a2e22;
-            --text-medium: #3d5a4a;
-            --white: #ffffff;
-        }
-
+        :root { --green-dark: #2d4a3e; --green-medium: #4a7c59; --green-light: #7fb069; --green-pale: #d4e6c3; --cream: #f8f6f0; --cream-dark: #e8e4d9; --brown: #8b6914; --text-dark: #1a2e22; --text-medium: #3d5a4a; --white: #ffffff; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Source Sans 3', sans-serif;
-            background-color: var(--cream);
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
-
-        h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
-
-        nav {
-            background: var(--green-dark);
-            padding: 1rem 2rem;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-            color: white;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-        }
-
-        .logo-text {
-            font-family: 'Fraunces', serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-
-        .back-link {
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            opacity: 0.9;
-            transition: opacity 0.3s;
-        }
-
-        .back-link:hover { opacity: 1; }
-
-        .page-hero {
-            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-medium) 100%);
-            color: white;
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .page-hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .page-hero p {
-            font-size: 1.25rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .content {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-
-        .content h2 {
-            font-size: 2rem;
-            color: var(--green-dark);
-            margin: 2.5rem 0 1rem;
-        }
-
-        .content h2:first-of-type { margin-top: 0; }
-
-        .content p {
-            color: var(--text-medium);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .content ul {
-            color: var(--text-medium);
-            margin: 1rem 0 1.5rem 1.5rem;
-            font-size: 1.1rem;
-        }
-
-        .content li {
-            margin-bottom: 0.5rem;
-        }
-
-        .highlight-box {
-            background: var(--green-pale);
-            border-left: 4px solid var(--green-medium);
-            padding: 1.5rem 2rem;
-            margin: 2rem 0;
-            border-radius: 0 15px 15px 0;
-        }
-
-        .highlight-box h3 {
-            color: var(--green-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .highlight-box p { margin-bottom: 0; }
-
-        .image-single {
-            margin: 2rem 0;
-        }
-
-        .image-single img {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 15px;
-        }
-
-        .cta-section {
-            background: var(--white);
-            padding: 3rem;
-            border-radius: 20px;
-            text-align: center;
-            margin-top: 3rem;
-            box-shadow: 0 10px 40px rgba(45, 74, 62, 0.1);
-        }
-
-        .cta-section h2 { margin-top: 0; }
-
-        .btn {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: var(--green-medium);
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: 600;
-            margin-top: 1rem;
-            transition: all 0.3s;
-        }
-
-        .btn:hover {
-            background: var(--green-dark);
-            transform: translateY(-2px);
-        }
-
-        footer {
-            background: var(--green-dark);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
-        footer a {
-            color: var(--green-light);
-            text-decoration: none;
-        }
-
-        @media (max-width: 768px) {
-            .page-hero h1 { font-size: 2rem; }
-            .image-single img { height: 250px; }
-        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Source Sans 3', sans-serif; background-color: var(--cream); color: var(--text-dark); line-height: 1.6; }
+        h1, h2, h3, h4 { font-family: 'Fraunces', serif; font-weight: 600; }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(248, 246, 240, 0.95); backdrop-filter: blur(10px); z-index: 1000; padding: 1rem 2rem; border-bottom: 1px solid var(--cream-dark); }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--green-dark); }
+        .logo-icon { width: 45px; height: 45px; background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+        .logo-text { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-medium); font-weight: 500; }
+        .nav-links a:hover { color: var(--green-medium); }
+        .nav-cta { background: var(--green-medium); color: white !important; padding: 0.6rem 1.2rem; border-radius: 25px; }
+        .nav-cta:hover { background: var(--green-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--green-dark); }
+        .page-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--green-pale) 0%, var(--cream) 100%); text-align: center; }
+        .page-header h1 { font-size: 3rem; color: var(--green-dark); margin-bottom: 1rem; }
+        .page-header p { font-size: 1.25rem; color: var(--text-medium); max-width: 600px; margin: 0 auto; }
+        .content-section { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
+        .content-section h2 { font-size: 2rem; color: var(--green-dark); margin-bottom: 1.5rem; }
+        .content-section p { color: var(--text-medium); margin-bottom: 1.5rem; font-size: 1.1rem; }
+        .content-section ul { margin: 1.5rem 0 1.5rem 1.5rem; color: var(--text-medium); }
+        .content-section li { margin-bottom: 0.75rem; font-size: 1.1rem; }
+        .image-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0; }
+        .image-grid img { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15); }
+        .image-grid.single { grid-template-columns: 1fr; }
+        .image-grid.single img { height: 400px; }
+        .cta-section { padding: 4rem 2rem; background: var(--green-dark); text-align: center; }
+        .cta-section h2 { font-size: 2rem; color: white; margin-bottom: 1rem; }
+        .cta-section p { color: rgba(255,255,255,0.9); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .btn { padding: 1rem 2rem; border-radius: 30px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-primary { background: var(--green-light); color: var(--green-dark); }
+        .btn-primary:hover { background: white; transform: translateY(-3px); }
+        .btn-secondary { background: transparent; color: white; border: 2px solid white; margin-left: 1rem; }
+        .btn-secondary:hover { background: white; color: var(--green-dark); }
+        footer { background: var(--green-dark); color: white; padding: 3rem 2rem 1.5rem; text-align: center; }
+        footer p { opacity: 0.8; margin-bottom: 1rem; }
+        footer a { color: var(--green-light); text-decoration: none; }
+        .contact-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 2000; justify-content: center; align-items: center; padding: 1rem; }
+        .contact-modal.active { display: flex; }
+        .contact-modal-content { background: white; border-radius: 25px; padding: 2.5rem; max-width: 450px; width: 100%; position: relative; animation: modalSlideIn 0.3s ease; }
+        @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .contact-modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; color: var(--text-medium); cursor: pointer; }
+        .contact-modal h3 { font-size: 1.8rem; color: var(--green-dark); margin-bottom: 0.5rem; text-align: center; }
+        .contact-modal-subtitle { text-align: center; color: var(--text-medium); margin-bottom: 2rem; }
+        .contact-options { display: flex; flex-direction: column; gap: 1rem; }
+        .contact-option { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; background: var(--cream); border-radius: 15px; text-decoration: none; color: var(--text-dark); transition: all 0.3s ease; border: 2px solid transparent; }
+        .contact-option:hover { border-color: var(--green-medium); transform: translateX(5px); background: var(--green-pale); }
+        .contact-option-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .contact-option-icon.email { background: #EA4335; }
+        .contact-option-icon.whatsapp { background: #25D366; }
+        .contact-option-icon.signal { background: #3A76F0; }
+        .contact-option-icon.phone { background: var(--green-medium); }
+        .contact-option-text strong { display: block; font-size: 1.1rem; color: var(--green-dark); }
+        .contact-option-text span { font-size: 0.9rem; color: var(--text-medium); }
+        .contact-modal-footer { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--cream-dark); text-align: center; color: var(--text-medium); font-size: 0.9rem; }
+        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .image-grid img { height: 200px; } .btn-secondary { margin-left: 0; margin-top: 1rem; } }
     </style>
 </head>
 <body>
     <nav>
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <div class="logo-icon">🌱</div>
+                <div class="logo-icon">🐸</div>
                 <span class="logo-text">Natuurrijk Ankeveen</span>
             </a>
-            <a href="index.html" class="back-link">← Terug naar home</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#activiteiten">Wat we doen</a></li>
+                <li><a href="index.html#resultaten">Resultaten</a></li>
+                <li><a href="javascript:void(0)" onclick="openContactModal()" class="nav-cta">Doe mee!</a></li>
+            </ul>
+            <button class="mobile-menu-btn">☰</button>
         </div>
     </nav>
 
-    <section class="page-hero">
-        <h1>🌳 De Ruige Hoek</h1>
-        <p>Ons eigen stukje natuur in Ankeveen</p>
+    <section class="page-header">
+        <h1>🌳 De Ruige Hoek & Bermen</h1>
+        <p>Natuurbeheer in het hart van Ankeveen</p>
     </section>
 
-    <div class="content">
-        <h2>Een plek voor natuur én mensen</h2>
-        <p>De Ruige Hoek is een klein natuurgebiedje in Ankeveen met een picknickbank waar je heerlijk kunt genieten van de natuur. We hebben het beheer van deze plek overgenomen van de gemeente Wijdemeren.</p>
-
-        <div class="highlight-box">
-            <h3>Ecologisch beheer sinds 2023</h3>
-            <p>In plaats van machinaal maaien, beheren we de Ruige Hoek met de zeis. We voeren het maaisel af, waardoor de bodem langzaam verschraalt en bijzondere planten terugkomen.</p>
+    <section class="content-section">
+        <div class="image-grid single">
+            <img src="RuigeHoek.jpg" alt="De Ruige Hoek in Ankeveen">
         </div>
 
-        <h2>Resultaten zichtbaar</h2>
-        <p>Sinds we in 2023 zijn begonnen met ecologisch beheer, zien we de natuur al herstellen. Steeds meer bijzondere inheemse planten verschijnen op het veldje – planten die eerder werden verdrongen door snelgroeiers zoals gras en brandnetel.</p>
+        <h2>De Ruige Hoek</h2>
+        <p>De Ruige Hoek is een klein maar waardevol stukje natuur midden in Ankeveen. Met een gezellige picknickbank is het een fijne plek om even tot rust te komen. Het beheer van dit gebied hebben we overgenomen van de gemeente Wijdemeren.</p>
+        
+        <p>We hebben er bloeiende en besdragende vogelvriendelijke struiken aangeplant, zoals meidoorn, sleedoorn en wilde liguster. Deze struiken bieden voedsel voor vogels in de herfst en winter, en nectar voor insecten in het voorjaar.</p>
 
-        <p>Dit is precies wat we willen bereiken: door de bodem te verschralen krijgen zeldzamere soorten de kans. Het is een langzaam proces, maar de resultaten zijn nu al zichtbaar!</p>
+        <h2>Bermenbeheer</h2>
+        <p>Naast De Ruige Hoek beheren we ook diverse bermen verspreid over Ankeveen. Door deze bermen ecologisch te maaien – met de zeis, en het maaisel af te voeren – creëren we ruimte voor wilde bloemen en kruiden.</p>
 
-        <h2>Wat we doen</h2>
         <ul>
-            <li><strong>Zeismaaien</strong> – meerdere keren per jaar maaien we het veldje met de zeis</li>
-            <li><strong>Maaisel afvoeren</strong> – we laten het maaisel niet liggen maar voeren het af</li>
-            <li><strong>Inheemse beplanting</strong> – we planten alleen soorten die hier van nature thuishoren</li>
-            <li><strong>Monitoring</strong> – we houden bij welke soorten terugkomen</li>
+            <li><strong>Verschraling</strong> – Door maaisel af te voeren worden voedingsstoffen afgevoerd</li>
+            <li><strong>Bloemenrijk</strong> – Wilde bloemen krijgen de kans om te groeien</li>
+            <li><strong>Insectvriendelijk</strong> – Bloemen trekken bijen, vlinders en andere bestuivers</li>
+            <li><strong>Vogelvoedsel</strong> – Insecten zijn voedsel voor veel vogelsoorten</li>
         </ul>
 
-        <div class="highlight-box">
-            <h3>Even uitrusten?</h3>
-            <p>De picknickbank op de Ruige Hoek is vrij toegankelijk. Kom gerust even zitten en geniet van de bloemen, vlinders en vogels!</p>
+        <div class="image-grid">
+            <img src="hooiopper.jpg" alt="Hooiopper na het zeisen">
+            <img src="Zeismaai.jpg" alt="Zeisen van de bermen">
         </div>
 
-        <div class="cta-section">
-            <h2>Meehelpen op de Ruige Hoek?</h2>
-            <p>We organiseren regelmatig werkdagen op de Ruige Hoek. Kom zeisen, harken of gewoon gezellig meehelpen!</p>
-            <a href="index.html#contact" class="btn">Neem contact op →</a>
+        <h2>Vogelvriendelijke beplanting</h2>
+        <p>Bij al onze aanplant kiezen we bewust voor inheemse soorten die waarde hebben voor de lokale fauna. Bloeiende struiken voor nectar in het voorjaar, besdragende struiken voor voedsel in de herfst en winter.</p>
+    </section>
+
+    <section class="cta-section">
+        <h2>Help mee in De Ruige Hoek!</h2>
+        <p>We organiseren regelmatig werkdagen in De Ruige Hoek en op de bermen. Gezellig buiten bezig zijn en direct resultaat zien – dat is waar we het voor doen.</p>
+        <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Neem contact op →</a>
+        <a href="index.html" class="btn btn-secondary">← Terug naar home</a>
+    </section>
+
+    <footer>
+        <p>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van <a href="https://bruisendankeveen.nl" target="_blank">Stichting Bruisend Ankeveen</a></p>
+        <p><a href="index.html">Terug naar hoofdpagina</a></p>
+    </footer>
+
+    <div class="contact-modal" id="contactModal" onclick="closeContactModal(event)">
+        <div class="contact-modal-content" onclick="event.stopPropagation()">
+            <span class="contact-modal-close" onclick="closeContactModal()">&times;</span>
+            <h3>📬 Neem contact op</h3>
+            <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
+            <div class="contact-options">
+                <a href="mailto:natuurrijkankeveen@protonmail.com" class="contact-option">
+                    <div class="contact-option-icon email"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+                    <div class="contact-option-text"><strong>E-mail</strong><span>natuurrijkankeveen@protonmail.com</span></div>
+                </a>
+                <a href="https://wa.me/31646293590" target="_blank" class="contact-option">
+                    <div class="contact-option-icon whatsapp"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+                    <div class="contact-option-text"><strong>WhatsApp</strong><span>Stuur ons een berichtje</span></div>
+                </a>
+                <a href="https://signal.me/#p/+31646293590" target="_blank" class="contact-option">
+                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.4c5.302 0 9.6 4.298 9.6 9.6s-4.298 9.6-9.6 9.6S2.4 17.302 2.4 12 6.698 2.4 12 2.4z"/></svg></div>
+                    <div class="contact-option-text"><strong>Signal</strong><span>Veilig en privé chatten</span></div>
+                </a>
+                <a href="tel:+31646293590" class="contact-option">
+                    <div class="contact-option-icon phone"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
+                    <div class="contact-option-text"><strong>Bellen</strong><span>06-46293590</span></div>
+                </a>
+            </div>
+            <div class="contact-modal-footer">Contactpersoon: <strong>Ron Wehrens</strong></div>
         </div>
     </div>
 
-    <footer>
-        <p><a href="index.html#activiteiten">← Zie alle projecten</a> | <a href="index.html">Terug naar home</a></p>
-        <p style="margin-top: 0.5rem; opacity: 0.7;">© 2025 Werkgroep Natuurrijk Ankeveen</p>
-    </footer>
+    <script>
+        function openContactModal() { document.getElementById('contactModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeContactModal(event) { if (event && event.target.closest('.contact-modal-content')) return; document.getElementById('contactModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeContactModal(); });
+    </script>
 </body>
 </html>
