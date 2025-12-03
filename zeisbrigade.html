@@ -3,244 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zeisbrigade - Natuurrijk Ankeveen</title>
-    <meta name="description" content="De Zeisbrigade van Natuurrijk Ankeveen maait op traditionele wijze bermen en veldjes om biodiversiteit te bevorderen.">
+    <title>De Zeisbrigade - Natuurrijk Ankeveen</title>
+    <meta name="description" content="De Zeisbrigade van Natuurrijk Ankeveen onderhoudt bloemrijke bermen en weilanden met de zeis. Traditioneel maaibeheer voor biodiversiteit.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --green-dark: #2d4a3e;
-            --green-medium: #4a7c59;
-            --green-light: #7fb069;
-            --green-pale: #d4e6c3;
-            --cream: #f8f6f0;
-            --cream-dark: #e8e4d9;
-            --brown: #8b6914;
-            --brown-light: #c4a35a;
-            --text-dark: #1a2e22;
-            --text-medium: #3d5a4a;
-            --white: #ffffff;
-        }
-
+        :root { --green-dark: #2d4a3e; --green-medium: #4a7c59; --green-light: #7fb069; --green-pale: #d4e6c3; --cream: #f8f6f0; --cream-dark: #e8e4d9; --brown: #8b6914; --text-dark: #1a2e22; --text-medium: #3d5a4a; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Source Sans 3', sans-serif;
-            background-color: var(--cream);
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
+        body { font-family: 'Source Sans 3', sans-serif; background-color: var(--cream); color: var(--text-dark); line-height: 1.6; }
         h1, h2, h3, h4 { font-family: 'Fraunces', serif; font-weight: 600; }
-
-        /* Navigation */
-        nav {
-            position: fixed; top: 0; left: 0; right: 0;
-            background: rgba(248, 246, 240, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 1rem 2rem;
-            border-bottom: 1px solid var(--cream-dark);
-        }
-        .nav-container {
-            max-width: 1200px; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .logo {
-            display: flex; align-items: center; gap: 0.75rem;
-            text-decoration: none; color: var(--green-dark);
-        }
-        .logo-icon {
-            width: 45px; height: 45px;
-            background: transparent; border-radius: 0;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--green-dark); font-size: 2rem;
-        }
+        nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(248, 246, 240, 0.95); backdrop-filter: blur(10px); z-index: 1000; padding: 1rem 2rem; border-bottom: 1px solid var(--cream-dark); }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--green-dark); }
+        .logo-icon { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; }
         .logo-icon img { width: 100%; height: 100%; object-fit: contain; }
         .logo-egel { margin-left: 0.5rem; animation: egelWalk 3s ease-in-out infinite; }
         @keyframes egelWalk { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
         .logo-text { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; }
         .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a {
-            text-decoration: none; color: var(--text-medium); font-weight: 500;
-            transition: color 0.3s ease; position: relative;
-        }
-        .nav-links a:hover { color: var(--green-medium); }
-        .nav-cta {
-            background: var(--green-medium); color: white !important;
-            padding: 0.6rem 1.2rem; border-radius: 25px;
-            transition: background 0.3s ease, transform 0.3s ease !important;
-        }
-        .nav-cta:hover { background: var(--green-dark); transform: translateY(-2px); }
-        .mobile-menu-btn {
-            display: none; background: none; border: none;
-            font-size: 1.5rem; cursor: pointer; color: var(--green-dark);
-        }
-
-        /* Page Header */
-        .page-header {
-            padding: 8rem 2rem 4rem;
-            background: linear-gradient(135deg, var(--green-pale) 0%, var(--cream) 100%);
-            text-align: center;
-        }
-        .page-header h1 {
-            font-size: 3rem; color: var(--green-dark); margin-bottom: 1rem;
-        }
-        .page-header p {
-            font-size: 1.25rem; color: var(--text-medium); max-width: 600px; margin: 0 auto;
-        }
-
-        /* Content Section */
-        .content-section {
-            padding: 4rem 2rem;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .content-section h2 {
-            font-size: 2rem; color: var(--green-dark); margin-bottom: 1.5rem;
-        }
-        .content-section p {
-            color: var(--text-medium); margin-bottom: 1.5rem; font-size: 1.1rem;
-        }
-        .content-section ul {
-            margin: 1.5rem 0 1.5rem 1.5rem;
-            color: var(--text-medium);
-        }
-        .content-section li {
-            margin-bottom: 0.75rem; font-size: 1.1rem;
-        }
-
-        /* Image Grid */
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        .image-grid img {
-            width: 100%;
-            height: 250px;
-            object-fit: contain;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15);
-        }
+        .nav-links a { text-decoration: none; color: var(--text-medium); font-weight: 500; }
+        .nav-cta { background: var(--green-medium); color: white !important; padding: 0.6rem 1.2rem; border-radius: 25px; }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+        .page-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--green-pale) 0%, var(--cream) 100%); text-align: center; }
+        .page-header h1 { font-size: 3rem; color: var(--green-dark); margin-bottom: 1rem; }
+        .page-header p { font-size: 1.25rem; color: var(--text-medium); max-width: 600px; margin: 0 auto; }
+        .content-section { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
+        .content-section h2 { font-size: 2rem; color: var(--green-dark); margin-bottom: 1.5rem; }
+        .content-section p { color: var(--text-medium); margin-bottom: 1.5rem; font-size: 1.1rem; }
+        .content-section ul { margin: 1.5rem 0 1.5rem 1.5rem; color: var(--text-medium); }
+        .content-section li { margin-bottom: 0.75rem; font-size: 1.1rem; }
+        .image-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0; }
+        .image-grid img { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15); cursor: pointer; transition: transform 0.3s; }
+        .image-grid img:hover { transform: scale(1.02); }
         .image-grid.single { grid-template-columns: 1fr; }
         .image-grid.single img { height: 400px; }
-
-        /* CTA Section */
-        .cta-section {
-            padding: 4rem 2rem;
-            background: var(--green-dark);
-            text-align: center;
-        }
-        .cta-section h2 {
-            font-size: 2rem; color: white; margin-bottom: 1rem;
-        }
-        .cta-section p {
-            color: rgba(255,255,255,0.9); margin-bottom: 2rem;
-            max-width: 600px; margin-left: auto; margin-right: auto;
-        }
-        .btn {
-            padding: 1rem 2rem; border-radius: 30px; font-weight: 600;
-            text-decoration: none; transition: all 0.3s ease;
-            display: inline-flex; align-items: center; gap: 0.5rem;
-        }
-        .btn-primary {
-            background: var(--green-light); color: var(--green-dark);
-            box-shadow: 0 4px 15px rgba(127, 176, 105, 0.3);
-        }
-        .btn-primary:hover {
-            background: white; transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(127, 176, 105, 0.4);
-        }
-        .btn-secondary {
-            background: transparent; color: white;
-            border: 2px solid white; margin-left: 1rem;
-        }
-        .btn-secondary:hover { background: white; color: var(--green-dark); }
-
-        /* Footer */
-        footer {
-            background: var(--green-dark); color: white;
-            padding: 3rem 2rem 1.5rem; text-align: center;
-        }
+        .highlight-box { background: var(--green-pale); padding: 2rem; border-radius: 15px; margin: 2rem 0; border-left: 4px solid var(--green-medium); }
+        .highlight-box p { margin-bottom: 0; font-size: 1.2rem; color: var(--green-dark); font-weight: 500; }
+        .cta-section { padding: 4rem 2rem; background: var(--green-dark); text-align: center; }
+        .cta-section h2 { font-size: 2rem; color: white; margin-bottom: 1rem; }
+        .cta-section p { color: rgba(255,255,255,0.9); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .btn { padding: 1rem 2rem; border-radius: 30px; font-weight: 600; text-decoration: none; cursor: pointer; border: none; }
+        .btn-primary { background: var(--green-light); color: var(--green-dark); }
+        .btn-secondary { background: transparent; color: white; border: 2px solid white; margin-left: 1rem; }
+        footer { background: var(--green-dark); color: white; padding: 3rem 2rem 1.5rem; text-align: center; }
         footer p { opacity: 0.8; margin-bottom: 1rem; }
         footer a { color: var(--green-light); text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
-
-        /* Contact Modal */
-        .contact-modal {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7); z-index: 2000;
-            justify-content: center; align-items: center; padding: 1rem;
-        }
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center; padding: 2rem; }
+        .lightbox.active { display: flex; }
+        .lightbox img { max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 10px; }
+        .lightbox-close { position: absolute; top: 20px; right: 30px; font-size: 2.5rem; color: white; cursor: pointer; }
+        .contact-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 2000; justify-content: center; align-items: center; padding: 1rem; }
         .contact-modal.active { display: flex; }
-        .contact-modal-content {
-            background: white; border-radius: 25px; padding: 2.5rem;
-            max-width: 450px; width: 100%; position: relative;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
-            animation: modalSlideIn 0.3s ease;
-        }
-        @keyframes modalSlideIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .contact-modal-close {
-            position: absolute; top: 15px; right: 20px;
-            font-size: 1.8rem; color: var(--text-medium);
-            cursor: pointer; transition: color 0.3s; line-height: 1;
-        }
-        .contact-modal-close:hover { color: var(--green-dark); }
-        .contact-modal h3 {
-            font-size: 1.8rem; color: var(--green-dark);
-            margin-bottom: 0.5rem; text-align: center;
-        }
-        .contact-modal-subtitle {
-            text-align: center; color: var(--text-medium); margin-bottom: 2rem;
-        }
+        .contact-modal-content { background: white; border-radius: 25px; padding: 2.5rem; max-width: 450px; width: 100%; position: relative; }
+        .contact-modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; color: var(--text-medium); cursor: pointer; }
+        .contact-modal h3 { font-size: 1.8rem; color: var(--green-dark); margin-bottom: 0.5rem; text-align: center; }
+        .contact-modal-subtitle { text-align: center; color: var(--text-medium); margin-bottom: 2rem; }
         .contact-options { display: flex; flex-direction: column; gap: 1rem; }
-        .contact-option {
-            display: flex; align-items: center; gap: 1rem;
-            padding: 1rem 1.25rem; background: var(--cream);
-            border-radius: 15px; text-decoration: none; color: var(--text-dark);
-            transition: all 0.3s ease; border: 2px solid transparent;
-        }
-        .contact-option:hover {
-            border-color: var(--green-medium);
-            transform: translateX(5px); background: var(--green-pale);
-        }
-        .contact-option-icon {
-            width: 50px; height: 50px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; flex-shrink: 0;
-        }
-        .contact-option-icon.email { background: #EA4335; color: white; }
-        .contact-option-icon.whatsapp { background: #25D366; color: white; }
-        .contact-option-icon.signal { background: #3A76F0; color: white; }
-        .contact-option-icon.phone { background: var(--green-medium); color: white; }
-        .contact-option-text { flex: 1; }
+        .contact-option { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; background: var(--cream); border-radius: 15px; text-decoration: none; color: var(--text-dark); transition: all 0.3s ease; border: 2px solid transparent; }
+        .contact-option:hover { border-color: var(--green-medium); transform: translateX(5px); background: var(--green-pale); }
+        .contact-option-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .contact-option-icon.email { background: #EA4335; }
+        .contact-option-icon.whatsapp { background: #25D366; }
+        .contact-option-icon.signal { background: #3A76F0; }
+        .contact-option-icon.phone { background: var(--green-medium); }
         .contact-option-text strong { display: block; font-size: 1.1rem; color: var(--green-dark); }
         .contact-option-text span { font-size: 0.9rem; color: var(--text-medium); }
-        .contact-modal-footer {
-            margin-top: 1.5rem; padding-top: 1.5rem;
-            border-top: 1px solid var(--cream-dark);
-            text-align: center; color: var(--text-medium); font-size: 0.9rem;
-        }
-        .contact-modal-footer strong { color: var(--green-dark); }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .mobile-menu-btn { display: block; }
-            .page-header h1 { font-size: 2.2rem; }
-            .image-grid { grid-template-columns: 1fr; }
-            .image-grid img { height: 200px; }
-            .btn-secondary { margin-left: 0; margin-top: 1rem; }
-        }
+        .contact-modal-footer { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--cream-dark); text-align: center; color: var(--text-medium); }
+        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .btn-secondary { margin-left: 0; margin-top: 1rem; } }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav>
         <div class="nav-container">
             <a href="index.html" class="logo">
@@ -253,136 +85,110 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="index.html#activiteiten">Wat we doen</a></li>
                 <li><a href="index.html#resultaten">Resultaten</a></li>
-                <li><a href="index.html#nieuws">Nieuws</a></li>
                 <li><a href="javascript:void(0)" onclick="openContactModal()" class="nav-cta">Doe mee!</a></li>
             </ul>
             <button class="mobile-menu-btn">☰</button>
         </div>
     </nav>
 
-    <!-- Page Header -->
     <section class="page-header">
         <h1>🌾 De Zeisbrigade</h1>
-        <p>Traditioneel maaien voor meer biodiversiteit</p>
+        <p>Traditioneel maaibeheer voor bloemrijke bermen</p>
     </section>
 
-    <!-- Content -->
     <section class="content-section">
         <div class="image-grid single">
-            <img src="groepsfoto-zeisbrigade.jpg" alt="De Zeisbrigade van Natuurrijk Ankeveen">
+            <img src="Zeismaai.jpg" alt="De Zeisbrigade in actie" onclick="openLightbox(this.src)">
         </div>
 
-        <h2>Maaien zoals vroeger</h2>
-        <p>In samenwerking met de gemeente Wijdemeren maaien we op de traditionele manier met de zeis. Dit is niet alleen een ambachtelijke techniek, maar ook veel beter voor de biodiversiteit dan machinaal maaien.</p>
-        
-        <p>We onderhouden diverse bermen, veldjes en oevers in en rondom Ankeveen. Na het maaien voeren we het maaisel af. Zo verschraalt de bodem langzaam en krijgen wilde bloemen de kans om te groeien. Deze bloemen trekken weer insecten aan, die op hun beurt voedsel zijn voor vogels.</p>
+        <h2>Waarom zeisen?</h2>
+        <p>De zeis is een oud gereedschap dat perfect is voor natuurbeheer. Anders dan een bosmaaier of tractor, maait de zeis het gras laag bij de grond zonder de bodem te verstoren. Het maaisel valt zacht neer, waardoor insecten kunnen ontsnappen en zaden kunnen rijpen.</p>
 
-        <div class="image-grid">
-            <img src="Zeismaai.jpg" alt="Vrijwilligers maaien met de zeis">
-            <img src="hooiopper.jpg" alt="Traditionele hooiopper na het zeisen">
+        <p>Bovendien maakt zeisen geen lawaai en stoot het geen uitlaatgassen uit. Het is puur ambacht, in harmonie met de natuur.</p>
+
+        <div class="highlight-box">
+            <p>🌿 Door te zeisen en het maaisel af te voeren, verschraalt de bodem langzaam. Dit is precies wat bloemrijke vegetatie nodig heeft – minder voedingsstoffen betekent meer bloemen en minder grassen!</p>
         </div>
 
-        <h2>Waar we maaien</h2>
+        <h2>Wat wij doen</h2>
         <ul>
-            <li><strong>Bermen langs wegen</strong> – diverse locaties in Ankeveen</li>
-            <li><strong>Veldjes en graslanden</strong> – kleine stukjes natuur die we beheren</li>
-            <li><strong>Oevers</strong> – langs sloten en waterkanten</li>
-            <li><strong>Zorgkwekerij Kostelijk</strong> – hier helpen we bij de aanleg van een voedselbos</li>
+            <li><strong>Bermen maaien</strong> – Langs wegen en paden in Ankeveen</li>
+            <li><strong>Weilanden onderhouden</strong> – Voor bloemrijke hooilanden</li>
+            <li><strong>Maaisel afvoeren</strong> – Naar composthopen of als veevoer</li>
+            <li><strong>Hooioppers maken</strong> – Op de traditionele manier</li>
         </ul>
 
-        <h2>Zeiscursus</h2>
-        <p>Wil je leren zeisen? Dat kan! We organiseren regelmatig zeiscursussen waar je de techniek kunt leren. De eerstvolgende cursus staat gepland voor <strong>september 2026</strong> – de exacte datum wordt nog bekendgemaakt.</p>
-        
-        <p>Je hoeft geen eigen zeis te hebben: we hebben leenzeisen beschikbaar. En als zeisen (nog) niet je ding is, kun je ook helpen met harken – het maaisel bij elkaar harken en op de kar werpen is minstens zo belangrijk!</p>
+        <div class="image-grid">
+            <img src="hooiopper.jpg" alt="Traditionele hooiopper" onclick="openLightbox(this.src)">
+            <img src="groepsfoto-zeisbrigade.jpg" alt="De zeisbrigade groepsfoto" onclick="openLightbox(this.src)">
+        </div>
+
+        <h2>De zeiscursus</h2>
+        <p>Elk jaar organiseren we een zeiscursus waarbij deelnemers leren zeisen van een ervaren smid. Je leert niet alleen de techniek, maar ook hoe je de zeis scherp houdt met de haarblok en strijker.</p>
+
+        <p>De cursus vindt plaats in september – houd onze website en sociale media in de gaten voor de exacte datum!</p>
 
         <div class="image-grid">
-            <img src="zeiscursus-smid.jpg" alt="De smid leert zeisen slijpen">
-            <img src="tractor-zeisdag.jpg" alt="Zeisdag met tractor voor maaisel afvoer">
+            <img src="zeiscursus-smid.jpg" alt="Zeiscursus met smid" onclick="openLightbox(this.src)">
+            <img src="tractor-zeisdag.jpg" alt="Tractor helpt met afvoer maaisel" onclick="openLightbox(this.src)">
         </div>
+
+        <h2>Meedoen?</h2>
+        <p>Je hoeft geen ervaring te hebben om mee te doen. We hebben zeisen beschikbaar en ervaren zeisers helpen je graag op weg. Na afloop is er altijd koffie, thee en wat lekkers!</p>
+
+        <p>De zeisdagen worden aangekondigd via onze nieuwsbrief en WhatsApp-groep. Meestal werken we op zaterdagochtenden in het voorjaar en de nazomer.</p>
     </section>
 
-    <!-- CTA -->
     <section class="cta-section">
-        <h2>Doe mee met de Zeisbrigade!</h2>
-        <p>Of je nu wilt zeisen, harken of gewoon gezellig meehelpen – iedereen is welkom. Neem contact met ons op voor meer informatie of om je aan te melden.</p>
+        <h2>Doe mee met zeisen!</h2>
+        <p>Wil je een keer meehelpen of meer weten over onze zeisdagen? Neem contact met ons op!</p>
         <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Neem contact op →</a>
         <a href="index.html" class="btn btn-secondary">← Terug naar home</a>
     </section>
 
-    <!-- Footer -->
     <footer>
         <p>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van <a href="https://bruisendankeveen.nl" target="_blank">Stichting Bruisend Ankeveen</a></p>
         <p><a href="index.html">Terug naar hoofdpagina</a></p>
     </footer>
 
-    <!-- Contact Modal -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="Vergrote afbeelding">
+    </div>
+
     <div class="contact-modal" id="contactModal" onclick="closeContactModal(event)">
         <div class="contact-modal-content" onclick="event.stopPropagation()">
             <span class="contact-modal-close" onclick="closeContactModal()">&times;</span>
             <h3>📬 Neem contact op</h3>
             <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
-            
             <div class="contact-options">
-                <a href="/cdn-cgi/l/email-protection#4d232c3938383f3f2427262c2326283b2828230d3d3f22392223202c2421632e2220" class="contact-option">
-                    <div class="contact-option-icon email">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                    </div>
-                    <div class="contact-option-text">
-                        <strong>E-mail</strong>
-                        <span><span class="__cf_email__" data-cfemail="137d7267666661617a7978727d78766576767d5363617c677c7d7e727a7f3d707c7e">[email&#160;protected]</span></span>
-                    </div>
+                <a href="mailto:natuurrijkankeveen@protonmail.com" class="contact-option">
+                    <div class="contact-option-icon email"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+                    <div class="contact-option-text"><strong>E-mail</strong><span>natuurrijkankeveen@protonmail.com</span></div>
                 </a>
-                
                 <a href="https://wa.me/31646293590" target="_blank" class="contact-option">
-                    <div class="contact-option-icon whatsapp">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    </div>
-                    <div class="contact-option-text">
-                        <strong>WhatsApp</strong>
-                        <span>Stuur ons een berichtje</span>
-                    </div>
+                    <div class="contact-option-icon whatsapp"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></div>
+                    <div class="contact-option-text"><strong>WhatsApp</strong><span>Stuur ons een berichtje</span></div>
                 </a>
-                
                 <a href="https://signal.me/#p/+31646293590" target="_blank" class="contact-option">
-                    <div class="contact-option-icon signal">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.4c5.302 0 9.6 4.298 9.6 9.6s-4.298 9.6-9.6 9.6S2.4 17.302 2.4 12 6.698 2.4 12 2.4zm4.8 4.8c-.636 0-1.2.564-1.2 1.2s.564 1.2 1.2 1.2 1.2-.564 1.2-1.2-.564-1.2-1.2-1.2zm-9.6 0c-.636 0-1.2.564-1.2 1.2s.564 1.2 1.2 1.2S8.4 9.036 8.4 8.4s-.564-1.2-1.2-1.2zM12 15.6c-2.206 0-4.14-1.19-5.19-2.963a.6.6 0 111.032-.612C8.68 13.428 10.252 14.4 12 14.4s3.32-.972 4.158-2.375a.6.6 0 111.032.612C16.14 14.41 14.206 15.6 12 15.6z"/></svg>
-                    </div>
-                    <div class="contact-option-text">
-                        <strong>Signal</strong>
-                        <span>Veilig en privé chatten</span>
-                    </div>
+                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.4c5.302 0 9.6 4.298 9.6 9.6s-4.298 9.6-9.6 9.6S2.4 17.302 2.4 12 6.698 2.4 12 2.4z"/></svg></div>
+                    <div class="contact-option-text"><strong>Signal</strong><span>Veilig en privé chatten</span></div>
                 </a>
-                
                 <a href="tel:+31646293590" class="contact-option">
-                    <div class="contact-option-icon phone">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                    </div>
-                    <div class="contact-option-text">
-                        <strong>Bellen</strong>
-                        <span>06-46293590</span>
-                    </div>
+                    <div class="contact-option-icon phone"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
+                    <div class="contact-option-text"><strong>Bellen</strong><span>06-46293590</span></div>
                 </a>
             </div>
-            
-            <div class="contact-modal-footer">
-                Contactpersoon: <strong>Ron Wehrens</strong>
-            </div>
+            <div class="contact-modal-footer">Contactpersoon: <strong>Ron Wehrens</strong></div>
         </div>
     </div>
 
     <script>
-        function openContactModal() {
-            document.getElementById('contactModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeContactModal(event) {
-            if (event && event.target.closest('.contact-modal-content')) return;
-            document.getElementById('contactModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeContactModal();
-        });
+        function openContactModal() { document.getElementById('contactModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeContactModal(event) { if (event && event.target.closest('.contact-modal-content')) return; document.getElementById('contactModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
+        function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); document.body.style.overflow = 'auto'; }
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeContactModal(); closeLightbox(); } });
     </script>
 </body>
 </html>

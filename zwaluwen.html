@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Huiszwaluwbescherming - Natuurrijk Ankeveen</title>
+    <meta name="description" content="Natuurrijk Ankeveen beschermt huiszwaluwen met kunstnesten en een zwaluwtil. Van 6 naar 70 nesten!">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -32,7 +33,8 @@
         .content-section ul { margin: 1.5rem 0 1.5rem 1.5rem; color: var(--text-medium); }
         .content-section li { margin-bottom: 0.75rem; font-size: 1.1rem; }
         .image-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0; }
-        .image-grid img { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15); }
+        .image-grid img { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15); cursor: pointer; transition: transform 0.3s; }
+        .image-grid img:hover { transform: scale(1.02); }
         .image-grid.single { grid-template-columns: 1fr; }
         .image-grid.single img { height: 400px; }
         .highlight-box { background: var(--green-pale); padding: 2rem; border-radius: 15px; margin: 2rem 0; border-left: 4px solid var(--green-medium); }
@@ -40,13 +42,20 @@
         .cta-section { padding: 4rem 2rem; background: var(--green-dark); text-align: center; }
         .cta-section h2 { font-size: 2rem; color: white; margin-bottom: 1rem; }
         .cta-section p { color: rgba(255,255,255,0.9); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .btn { padding: 1rem 2rem; border-radius: 30px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; cursor: pointer; border: none; }
+        .btn { padding: 1rem 2rem; border-radius: 30px; font-weight: 600; text-decoration: none; cursor: pointer; border: none; }
         .btn-primary { background: var(--green-light); color: var(--green-dark); }
-        .btn-primary:hover { background: white; }
         .btn-secondary { background: transparent; color: white; border: 2px solid white; margin-left: 1rem; }
         footer { background: var(--green-dark); color: white; padding: 3rem 2rem 1.5rem; text-align: center; }
         footer p { opacity: 0.8; margin-bottom: 1rem; }
         footer a { color: var(--green-light); text-decoration: none; }
+        
+        /* Lightbox */
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center; padding: 2rem; }
+        .lightbox.active { display: flex; }
+        .lightbox img { max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 10px; }
+        .lightbox-close { position: absolute; top: 20px; right: 30px; font-size: 2.5rem; color: white; cursor: pointer; }
+        
+        /* Contact Modal */
         .contact-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 2000; justify-content: center; align-items: center; padding: 1rem; }
         .contact-modal.active { display: flex; }
         .contact-modal-content { background: white; border-radius: 25px; padding: 2.5rem; max-width: 450px; width: 100%; position: relative; }
@@ -64,6 +73,7 @@
         .contact-option-text strong { display: block; font-size: 1.1rem; color: var(--green-dark); }
         .contact-option-text span { font-size: 0.9rem; color: var(--text-medium); }
         .contact-modal-footer { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--cream-dark); text-align: center; color: var(--text-medium); }
+        
         @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .btn-secondary { margin-left: 0; margin-top: 1rem; } }
     </style>
 </head>
@@ -93,44 +103,68 @@
 
     <section class="content-section">
         <div class="image-grid single">
-            <img src="Huiszwaluwteam.jpg" alt="Het huiszwaluwteam met kunstnesten">
+            <img src="Huiszwaluwteam.jpg" alt="Het huiszwaluwteam met kunstnesten" onclick="openLightbox(this.src)">
         </div>
 
         <h2>De huiszwaluw in de knel</h2>
-        <p>De huiszwaluw is een sympathieke trekvogel die van nature onder dakgoten nestelt. Maar door gladde gevels, minder modder en renovaties zijn er steeds minder geschikte nestplaatsen.</p>
+        <p>De huiszwaluw is een sympathieke trekvogel die van nature onder dakgoten nestelt. Maar door gladde gevels, minder modder en renovaties zijn er steeds minder geschikte nestplaatsen. In Ankeveen zagen we het aantal nesten jaar na jaar dalen.</p>
 
         <div class="highlight-box">
             <p>🎉 In 2024 waren er nog maar 6 succesvolle nesten in de Ooievaarsbuurt. In 2025 waren dat er al 25 – en in heel Ankeveen telden we zo'n 70 broedgevallen!</p>
+        </div>
+
+        <h2>Onze resultaten in beeld</h2>
+        <p>Klik op de grafiek om te vergroten en de spectaculaire groei van het aantal nesten te zien:</p>
+        
+        <div class="image-grid">
+            <img src="Huiszwaluwen_grafiek_2022_-_2025.jpg" alt="Grafiek aantal bewoonde nesten huiszwaluw 2022-2025" onclick="openLightbox(this.src)" style="cursor: pointer;">
+            <img src="Huiszwaluwnestkastje.png" alt="Huiszwaluwkunstnest onder de dakgoot" onclick="openLightbox(this.src)">
         </div>
 
         <h2>Wat wij doen</h2>
         <ul>
             <li><strong>54 kunstnesten geplaatst</strong> – Onder dakgoten bij bewoners die meedoen</li>
             <li><strong>Zwaluwtil bij de speeltuin</strong> – Een toren met meerdere nestplaatsen</li>
-            <li><strong>Poepplankjes aangeboden</strong> – Voor bewoners bezorgd over overlast</li>
-            <li><strong>Monitoring</strong> – Elk jaar tellen we de nesten</li>
+            <li><strong>Poepplankjes aangeboden</strong> – Voor bewoners die bezorgd waren over overlast</li>
+            <li><strong>Gesprekken met bewoners</strong> – Voorlichting en enthousiasmeren</li>
+            <li><strong>Monitoring</strong> – Elk jaar tellen we de nesten en volgen we het succes</li>
         </ul>
 
         <div class="image-grid">
-            <img src="Huiszwaluwnestkastje.png" alt="Huiszwaluwkunstnest">
-            <img src="zwaluwtil-speeltuin.jpg" alt="De huiszwaluwtil">
+            <img src="zwaluwtil-speeltuin.jpg" alt="De huiszwaluwtil bij de speeltuin" onclick="openLightbox(this.src)">
+            <img src="zwaluwtil-plaatsen.jpg" alt="Plaatsen van de zwaluwtil" onclick="openLightbox(this.src)">
         </div>
 
+        <h2>Waarom kunstnesten werken</h2>
+        <p>Interessant genoeg bouwen de zwaluwen vaak hun eigen nestjes – vaak vlak naast onze kunstnesten! De kunstnesten geven hen het signaal dat dit een veilige, populaire broedplek is. Het werkt als een soort "hier is het goed" bord.</p>
+
         <h2>Trotse bewoners</h2>
-        <p>Het mooiste resultaat? Bewoners die eerst bezorgd waren over poepoverlast, sturen ons nu trots foto's van hun zwaluwen!</p>
+        <p>Het mooiste resultaat? Bewoners die eerst bezorgd waren over poepoverlast, sturen ons nu trots foto's van hun zwaluwen. Ze hebben de vogels in hun hart gesloten en zijn blij dat ze kunnen bijdragen aan natuurbehoud.</p>
+
+        <div class="image-grid single">
+            <img src="IMG_5525.jpg" alt="Vrijwilligers bij de zwaluwtil" onclick="openLightbox(this.src)">
+        </div>
     </section>
 
     <section class="cta-section">
         <h2>Wil je ook huiszwaluwen helpen?</h2>
-        <p>We kunnen altijd hulp gebruiken bij het monitoren van nesten of plaatsen van kunstnesten. Interesse in een kunstnest onder je dakgoot? Neem contact op!</p>
+        <p>We kunnen altijd hulp gebruiken bij het monitoren van nesten, plaatsen van kunstnesten, of voorlichting aan bewoners. Heb je zelf interesse in een kunstnest onder je dakgoot? Neem contact op!</p>
         <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Neem contact op →</a>
         <a href="index.html" class="btn btn-secondary">← Terug naar home</a>
     </section>
 
     <footer>
         <p>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van <a href="https://bruisendankeveen.nl" target="_blank">Stichting Bruisend Ankeveen</a></p>
+        <p><a href="index.html">Terug naar hoofdpagina</a></p>
     </footer>
 
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="Vergrote afbeelding">
+    </div>
+
+    <!-- Contact Modal -->
     <div class="contact-modal" id="contactModal" onclick="closeContactModal(event)">
         <div class="contact-modal-content" onclick="event.stopPropagation()">
             <span class="contact-modal-close" onclick="closeContactModal()">&times;</span>
@@ -146,7 +180,7 @@
                     <div class="contact-option-text"><strong>WhatsApp</strong><span>Stuur ons een berichtje</span></div>
                 </a>
                 <a href="https://signal.me/#p/+31646293590" target="_blank" class="contact-option">
-                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div>
+                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.4c5.302 0 9.6 4.298 9.6 9.6s-4.298 9.6-9.6 9.6S2.4 17.302 2.4 12 6.698 2.4 12 2.4z"/></svg></div>
                     <div class="contact-option-text"><strong>Signal</strong><span>Veilig en privé chatten</span></div>
                 </a>
                 <a href="tel:+31646293590" class="contact-option">
@@ -168,8 +202,20 @@
             document.getElementById('contactModal').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeContactModal();
+            if (e.key === 'Escape') {
+                closeContactModal();
+                closeLightbox();
+            }
         });
     </script>
 </body>

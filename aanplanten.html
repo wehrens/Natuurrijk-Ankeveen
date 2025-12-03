@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aanplanten - Natuurrijk Ankeveen</title>
+    <title>Inheems Aanplanten - Natuurrijk Ankeveen</title>
+    <meta name="description" content="Natuurrijk Ankeveen plant inheemse bomen, struiken en bloemen voor meer biodiversiteit in het dorp.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -32,11 +33,17 @@
         .content-section ul { margin: 1.5rem 0 1.5rem 1.5rem; color: var(--text-medium); }
         .content-section li { margin-bottom: 0.75rem; font-size: 1.1rem; }
         .image-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0; }
-        .image-grid img { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15); }
+        .image-grid img { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15); cursor: pointer; transition: transform 0.3s; }
+        .image-grid img:hover { transform: scale(1.02); }
         .image-grid.single { grid-template-columns: 1fr; }
         .image-grid.single img { height: 400px; }
         .highlight-box { background: var(--green-pale); padding: 2rem; border-radius: 15px; margin: 2rem 0; border-left: 4px solid var(--green-medium); }
-        .highlight-box p { margin-bottom: 0; font-size: 1.1rem; color: var(--green-dark); }
+        .highlight-box p { margin-bottom: 0; font-size: 1.2rem; color: var(--green-dark); font-weight: 500; }
+        .plant-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .plant-card { background: white; border-radius: 15px; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border: 1px solid var(--cream-dark); }
+        .plant-card h4 { color: var(--green-dark); margin-bottom: 0.5rem; }
+        .plant-card p { color: var(--text-medium); font-size: 0.95rem; margin: 0; }
+        .plant-card .plant-emoji { font-size: 2rem; margin-bottom: 0.5rem; }
         .cta-section { padding: 4rem 2rem; background: var(--green-dark); text-align: center; }
         .cta-section h2 { font-size: 2rem; color: white; margin-bottom: 1rem; }
         .cta-section p { color: rgba(255,255,255,0.9); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
@@ -46,6 +53,10 @@
         footer { background: var(--green-dark); color: white; padding: 3rem 2rem 1.5rem; text-align: center; }
         footer p { opacity: 0.8; margin-bottom: 1rem; }
         footer a { color: var(--green-light); text-decoration: none; }
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center; padding: 2rem; }
+        .lightbox.active { display: flex; }
+        .lightbox img { max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 10px; }
+        .lightbox-close { position: absolute; top: 20px; right: 30px; font-size: 2.5rem; color: white; cursor: pointer; }
         .contact-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 2000; justify-content: center; align-items: center; padding: 1rem; }
         .contact-modal.active { display: flex; }
         .contact-modal-content { background: white; border-radius: 25px; padding: 2.5rem; max-width: 450px; width: 100%; position: relative; }
@@ -86,48 +97,87 @@
     </nav>
 
     <section class="page-header">
-        <h1>🌱 Aanplanten</h1>
-        <p>Inheems, biologisch en pesticidevrij</p>
+        <h1>🌱 Inheems Aanplanten</h1>
+        <p>Planten die hier thuishoren, voor dieren die hier leven</p>
     </section>
 
     <section class="content-section">
-        <div class="image-grid single">
-            <img src="oever-planten.jpg" alt="Vrijwilligers planten oeverplanten">
-        </div>
+        <h2>Waarom inheemse planten?</h2>
+        <p>Inheemse planten zijn soorten die van nature in Nederland voorkomen. Ze zijn door duizenden jaren evolutie perfect aangepast aan ons klimaat én aan de dieren die hier leven.</p>
 
-        <h2>Alleen inheemse planten</h2>
-        <p>Bij Natuurrijk Ankeveen werken we uitsluitend met inheemse planten, struiken en bomen. Onze lokale insecten en vogels zijn al duizenden jaren samen geëvolueerd met deze planten.</p>
+        <p>Een inheemse eik kan wel 500 soorten insecten herbergen. Een Amerikaanse eik? Slechts een handvol. Inheemse planten zijn daarom essentieel voor vlinders, bijen, vogels en andere dieren.</p>
 
         <div class="highlight-box">
-            <p>🐝 <strong>Wist je dat...</strong> een exotische plant vaak geen enkele waarde heeft voor onze inheemse insecten? Een vlinderstruik trekt wel vlinders aan met nectar, maar de rupsen kunnen er niet op leven. Inheemse planten bieden het complete plaatje!</p>
-        </div>
-
-        <h2>Biologisch gekweekt</h2>
-        <p>Al onze planten komen van gerenommeerde kwekers die biologisch kweken: <strong>zonder pesticiden</strong>. Dit is essentieel, want pesticiden blijven in de plant aanwezig en kunnen insecten doden.</p>
-
-        <div class="image-grid single">
-            <img src="IjsbaanJul2024.jpg" alt="Resultaat: bloeiende oever">
+            <p>🌿 Wist je dat... een inheemse meidoorn voedsel biedt aan meer dan 150 insectensoorten, terwijl exotische struiken vaak maar een paar soorten aantrekken?</p>
         </div>
 
         <h2>Wat we planten</h2>
+        <p>Bij al onze projecten gebruiken we uitsluitend inheemse soorten van Nederlandse herkomst. Hier zijn enkele van onze favorieten:</p>
+
+        <div class="plant-grid">
+            <div class="plant-card">
+                <div class="plant-emoji">🌸</div>
+                <h4>Meidoorn</h4>
+                <p>Prachtige witte bloesem in mei, rode bessen in de herfst. Geliefd bij vogels en insecten.</p>
+            </div>
+            <div class="plant-card">
+                <div class="plant-emoji">🌼</div>
+                <h4>Gele lis</h4>
+                <p>Opvallende gele bloemen aan de waterkant. Trekt libellen en andere waterinsecten aan.</p>
+            </div>
+            <div class="plant-card">
+                <div class="plant-emoji">💜</div>
+                <h4>Grote kattenstaart</h4>
+                <p>Paarse bloemaren die bijen en vlinders aantrekken. Bloeit van juni tot september.</p>
+            </div>
+            <div class="plant-card">
+                <div class="plant-emoji">🌿</div>
+                <h4>Watermunt</h4>
+                <p>Aromatische plant met lila bloemen. Belangrijk voor bijen en vlinders.</p>
+            </div>
+            <div class="plant-card">
+                <div class="plant-emoji">🍃</div>
+                <h4>Vuilboom</h4>
+                <p>De waardplant van de citroenvlinder! Rupsen eten alleen van deze struik.</p>
+            </div>
+            <div class="plant-card">
+                <div class="plant-emoji">🌺</div>
+                <h4>Dotterbloem</h4>
+                <p>Vroege voorjaarsbloem met glanzend gele bloemen. Een van de eerste voedselbronnen voor bijen.</p>
+            </div>
+        </div>
+
+        <h2>Onze plantprojecten</h2>
+        <p>We planten op verschillende locaties in en rond Ankeveen:</p>
         <ul>
-            <li><strong>Oeverplanten</strong> – Gele lis, dotterbloem, watermunt</li>
-            <li><strong>Bloeiende struiken</strong> – Meidoorn, sleedoorn, wilde liguster</li>
-            <li><strong>Besdragende struiken</strong> – Voedsel voor vogels</li>
-            <li><strong>Inheemse bomen</strong> – Knotwilgen, zwarte els, zomereik</li>
+            <li><strong>Natuurvriendelijke oevers</strong> – Honderden water- en oeverplanten langs de IJsclub en andere locaties</li>
+            <li><strong>De Ruige Hoek</strong> – Inheemse struiken voor vogels en kleine zoogdieren</li>
+            <li><strong>Bermen en weilanden</strong> – Wilde bloemen voor bijen en vlinders</li>
+            <li><strong>Joseph Lokin school</strong> – Bloemen en struiken op het schoolplein samen met de kinderen</li>
         </ul>
+
+        <h2>Zelf aan de slag?</h2>
+        <p>Ook in je eigen tuin kun je veel doen! Vervang exotische planten door inheemse soorten en je zult zien dat er veel meer vlinders, bijen en vogels op af komen.</p>
+
+        <p>Tip: Koop planten bij een gespecialiseerde kwekerij die werkt met inheems materiaal van Nederlandse herkomst. Zo weet je zeker dat de planten zijn aangepast aan ons klimaat.</p>
     </section>
 
     <section class="cta-section">
         <h2>Help mee met planten!</h2>
-        <p>We organiseren regelmatig plantdagen. Lekker buiten bezig zijn, met je handen in de aarde!</p>
+        <p>We organiseren regelmatig plantdagen. Neem contact op als je wilt helpen of advies wilt over inheems tuinieren.</p>
         <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Neem contact op →</a>
         <a href="index.html" class="btn btn-secondary">← Terug naar home</a>
     </section>
 
     <footer>
         <p>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van <a href="https://bruisendankeveen.nl" target="_blank">Stichting Bruisend Ankeveen</a></p>
+        <p><a href="index.html">Terug naar hoofdpagina</a></p>
     </footer>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="Vergrote afbeelding">
+    </div>
 
     <div class="contact-modal" id="contactModal" onclick="closeContactModal(event)">
         <div class="contact-modal-content" onclick="event.stopPropagation()">
@@ -144,7 +194,7 @@
                     <div class="contact-option-text"><strong>WhatsApp</strong><span>Stuur ons een berichtje</span></div>
                 </a>
                 <a href="https://signal.me/#p/+31646293590" target="_blank" class="contact-option">
-                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div>
+                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.4c5.302 0 9.6 4.298 9.6 9.6s-4.298 9.6-9.6 9.6S2.4 17.302 2.4 12 6.698 2.4 12 2.4z"/></svg></div>
                     <div class="contact-option-text"><strong>Signal</strong><span>Veilig en privé chatten</span></div>
                 </a>
                 <a href="tel:+31646293590" class="contact-option">
@@ -157,18 +207,11 @@
     </div>
 
     <script>
-        function openContactModal() {
-            document.getElementById('contactModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeContactModal(event) {
-            if (event && event.target.closest('.contact-modal-content')) return;
-            document.getElementById('contactModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeContactModal();
-        });
+        function openContactModal() { document.getElementById('contactModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeContactModal(event) { if (event && event.target.closest('.contact-modal-content')) return; document.getElementById('contactModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
+        function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); document.body.style.overflow = 'auto'; }
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeContactModal(); closeLightbox(); } });
     </script>
 </body>
 </html>

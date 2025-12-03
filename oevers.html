@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Natuurvriendelijke Oevers - Natuurrijk Ankeveen</title>
+    <meta name="description" content="Natuurrijk Ankeveen legt natuurvriendelijke oevers aan. Winnaar Toekomstversnellers 2024!">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root { --green-dark: #2d4a3e; --green-medium: #4a7c59; --green-light: #7fb069; --green-pale: #d4e6c3; --cream: #f8f6f0; --cream-dark: #e8e4d9; --brown: #8b6914; --brown-light: #c4a35a; --text-dark: #1a2e22; --text-medium: #3d5a4a; }
+        :root { --green-dark: #2d4a3e; --green-medium: #4a7c59; --green-light: #7fb069; --green-pale: #d4e6c3; --cream: #f8f6f0; --cream-dark: #e8e4d9; --brown: #8b6914; --brown-light: #d4a84b; --text-dark: #1a2e22; --text-medium: #3d5a4a; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Source Sans 3', sans-serif; background-color: var(--cream); color: var(--text-dark); line-height: 1.6; }
         h1, h2, h3, h4 { font-family: 'Fraunces', serif; font-weight: 600; }
@@ -21,10 +22,8 @@
         .logo-text { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; }
         .nav-links { display: flex; gap: 2rem; list-style: none; }
         .nav-links a { text-decoration: none; color: var(--text-medium); font-weight: 500; }
-        .nav-links a:hover { color: var(--green-medium); }
         .nav-cta { background: var(--green-medium); color: white !important; padding: 0.6rem 1.2rem; border-radius: 25px; }
-        .nav-cta:hover { background: var(--green-dark); }
-        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--green-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
         .page-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--green-pale) 0%, var(--cream) 100%); text-align: center; }
         .page-header h1 { font-size: 3rem; color: var(--green-dark); margin-bottom: 1rem; }
         .page-header p { font-size: 1.25rem; color: var(--text-medium); max-width: 600px; margin: 0 auto; }
@@ -34,32 +33,40 @@
         .content-section ul { margin: 1.5rem 0 1.5rem 1.5rem; color: var(--text-medium); }
         .content-section li { margin-bottom: 0.75rem; font-size: 1.1rem; }
         .image-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0; }
-        .image-grid img { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15); }
+        .image-grid img { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15); cursor: pointer; transition: transform 0.3s; }
+        .image-grid img:hover { transform: scale(1.02); }
         .image-grid.single { grid-template-columns: 1fr; }
         .image-grid.single img { height: 400px; }
+        
+        /* Timeline styles */
         .timeline { position: relative; padding-left: 2rem; border-left: 3px solid var(--green-light); margin: 2rem 0; }
         .timeline-item { margin-bottom: 2.5rem; position: relative; }
-        .timeline-item::before { content: ''; position: absolute; left: -2.45rem; top: 0.25rem; width: 14px; height: 14px; background: var(--green-medium); border-radius: 50%; border: 3px solid var(--cream); }
-        .timeline-date { color: var(--brown); font-weight: 600; font-size: 0.9rem; }
-        .timeline-item h3 { color: var(--green-dark); font-size: 1.2rem; margin: 0.25rem 0 0.5rem 0; }
-        .timeline-item p { margin: 0 0 1rem 0; font-size: 1rem; color: var(--text-medium); }
-        .timeline-image { width: 100%; max-width: 400px; height: auto; border-radius: 10px; box-shadow: 0 5px 20px rgba(45, 74, 62, 0.15); margin-top: 0.5rem; }
-        .timeline-highlight { background: linear-gradient(135deg, var(--green-pale) 0%, #fff9e6 100%); padding: 1.5rem; border-radius: 15px; border: 2px solid var(--brown-light); margin-left: -1rem; }
+        .timeline-item::before { content: ''; position: absolute; left: -2.45rem; top: 0.3rem; width: 14px; height: 14px; background: var(--green-medium); border: 3px solid var(--cream); border-radius: 50%; }
+        .timeline-date { font-weight: 600; color: var(--brown); margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .timeline-content h3 { font-size: 1.3rem; color: var(--green-dark); margin-bottom: 0.5rem; }
+        .timeline-content p { color: var(--text-medium); margin-bottom: 1rem; }
+        .timeline-image { max-width: 400px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; }
+        .timeline-highlight { background: linear-gradient(135deg, var(--green-pale) 0%, #fff9e6 100%); padding: 1.5rem; border-radius: 15px; border: 2px solid var(--brown-light); }
+        .timeline-highlight::before { background: var(--brown); }
+        
+        .highlight-box { background: var(--green-pale); padding: 2rem; border-radius: 15px; margin: 2rem 0; border-left: 4px solid var(--green-medium); }
+        .highlight-box p { margin-bottom: 0; font-size: 1.2rem; color: var(--green-dark); font-weight: 500; }
         .cta-section { padding: 4rem 2rem; background: var(--green-dark); text-align: center; }
         .cta-section h2 { font-size: 2rem; color: white; margin-bottom: 1rem; }
         .cta-section p { color: rgba(255,255,255,0.9); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .btn { padding: 1rem 2rem; border-radius: 30px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; border: none; }
+        .btn { padding: 1rem 2rem; border-radius: 30px; font-weight: 600; text-decoration: none; cursor: pointer; border: none; }
         .btn-primary { background: var(--green-light); color: var(--green-dark); }
-        .btn-primary:hover { background: white; transform: translateY(-3px); }
         .btn-secondary { background: transparent; color: white; border: 2px solid white; margin-left: 1rem; }
-        .btn-secondary:hover { background: white; color: var(--green-dark); }
         footer { background: var(--green-dark); color: white; padding: 3rem 2rem 1.5rem; text-align: center; }
         footer p { opacity: 0.8; margin-bottom: 1rem; }
         footer a { color: var(--green-light); text-decoration: none; }
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center; padding: 2rem; }
+        .lightbox.active { display: flex; }
+        .lightbox img { max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 10px; }
+        .lightbox-close { position: absolute; top: 20px; right: 30px; font-size: 2.5rem; color: white; cursor: pointer; }
         .contact-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 2000; justify-content: center; align-items: center; padding: 1rem; }
         .contact-modal.active { display: flex; }
-        .contact-modal-content { background: white; border-radius: 25px; padding: 2.5rem; max-width: 450px; width: 100%; position: relative; animation: modalSlideIn 0.3s ease; }
-        @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .contact-modal-content { background: white; border-radius: 25px; padding: 2.5rem; max-width: 450px; width: 100%; position: relative; }
         .contact-modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; color: var(--text-medium); cursor: pointer; }
         .contact-modal h3 { font-size: 1.8rem; color: var(--green-dark); margin-bottom: 0.5rem; text-align: center; }
         .contact-modal-subtitle { text-align: center; color: var(--text-medium); margin-bottom: 2rem; }
@@ -74,7 +81,7 @@
         .contact-option-text strong { display: block; font-size: 1.1rem; color: var(--green-dark); }
         .contact-option-text span { font-size: 0.9rem; color: var(--text-medium); }
         .contact-modal-footer { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--cream-dark); text-align: center; color: var(--text-medium); }
-        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .btn-secondary { margin-left: 0; margin-top: 1rem; } }
+        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .btn-secondary { margin-left: 0; margin-top: 1rem; } .timeline-image { max-width: 100%; } }
     </style>
 </head>
 <body>
@@ -97,73 +104,93 @@
     </nav>
 
     <section class="page-header">
-        <h1>🌿 Natuurvriendelijke Oevers</h1>
-        <p>Bloeiende oevers vol leven langs de Ankeveense wateren</p>
+        <h1>🌊 Natuurvriendelijke Oevers</h1>
+        <p>Van steile kades naar bloemrijke waterranden</p>
     </section>
 
     <section class="content-section">
-        <div class="image-grid single">
-            <img src="IjsbaanJul2024.jpg" alt="Bloeiende natuurvriendelijke oever bij de ijsbaan">
-        </div>
+        <h2>Waarom natuurvriendelijke oevers?</h2>
+        <p>Steile, beschoeide oevers zijn een ecologische woestijn. Vissen kunnen er niet paaien, vogels vinden er geen voedsel, en planten krijgen geen kans. Door oevers flauw af te graven en in te planten met inheemse soorten, creëren we een rijke overgangszone tussen water en land.</p>
 
-        <h2>Van kale kant naar bloeiende biotoop</h2>
-        <p>Langs veel Ankeveense sloten en vaarten lagen kale, steile oevers. Saai voor het oog én arm aan leven. Wij veranderen dat door natuurvriendelijke oevers aan te leggen met inheemse waterplanten.</p>
-        
-        <p>Een natuurvriendelijke oever heeft een flauw aflopend talud en is beplant met inheemse soorten zoals gele lis, dotterbloem, watermunt en moerasvergeet-mij-nietje.</p>
+        <p>Het resultaat? Een explosie van biodiversiteit: libellen, kikkers, watervogels, vissen en tientallen plantensoorten vinden hier een thuis.</p>
 
-        <h2>Project IJsbaan: een succesverhaal</h2>
-        <p>Ons grootste oeverproject is bij de IJsclub in Ankeveen. Hier hebben we de oever volledig getransformeerd.</p>
+        <h2>Het proces</h2>
+        <p>Klik op de foto's om ze te vergroten:</p>
 
         <div class="timeline">
             <div class="timeline-item">
-                <span class="timeline-date">Stap 1</span>
-                <h3>Afschrapen</h3>
-                <p>Met een graafmachine wordt de steile oever afgegraven tot een flauw talud.</p>
-                <img src="Oeveraanleg.jpg" alt="Graafmachine" class="timeline-image">
+                <div class="timeline-date">Stap 1 – Afschrapen</div>
+                <div class="timeline-content">
+                    <h3>Graafmachine aan het werk</h3>
+                    <p>Een graafmachine schraapt de steile oever af tot een flauw talud. Dit creëert een geleidelijke overgang van water naar land, ideaal voor planten en dieren.</p>
+                    <img src="Oeveraanleg.jpg" alt="Graafmachine schraapt oever af" class="timeline-image" onclick="openLightbox(this.src)">
+                </div>
             </div>
+
             <div class="timeline-item">
-                <span class="timeline-date">Stap 2</span>
-                <h3>Aanplanten</h3>
-                <p>Honderden inheemse water- en oeverplanten worden met de hand aangeplant.</p>
-                <img src="oever-planten.jpg" alt="Vrijwilligers planten" class="timeline-image">
+                <div class="timeline-date">Stap 2 – Aanplanten</div>
+                <div class="timeline-content">
+                    <h3>Honderden planten met de hand</h3>
+                    <p>Vrijwilligers planten honderden inheemse water- en oeverplanten: gele lis, dotterbloem, watermunt, moerasvergeet-mij-nietje, en nog veel meer.</p>
+                    <img src="oever-planten.jpg" alt="Vrijwilligers planten oeverplanten" class="timeline-image" onclick="openLightbox(this.src)">
+                </div>
             </div>
+
             <div class="timeline-item">
-                <span class="timeline-date">Stap 3</span>
-                <h3>In bloei!</h3>
-                <p>Na een jaar staat de oever prachtig in bloei met gele lis, dotterbloem en watermunt.</p>
-                <img src="IjsbaanJul2024.jpg" alt="Bloeiende oever" class="timeline-image">
+                <div class="timeline-date">Stap 3 – In bloei</div>
+                <div class="timeline-content">
+                    <h3>Een jaar later: prachtig in bloei</h3>
+                    <p>Na een jaar staan de oevers prachtig in bloei. Gele lis, dotterbloemen en watermunt trekken bijen, vlinders en libellen aan.</p>
+                    <img src="IjsbaanJul2024.jpg" alt="Bloeiende oever bij de IJsclub" class="timeline-image" onclick="openLightbox(this.src)">
+                </div>
             </div>
+
             <div class="timeline-item">
-                <span class="timeline-date">Stap 4</span>
-                <h3>Onderhoud</h3>
-                <p>Elk jaar moet de oever onderhouden worden. Met waadpakken aan staan we in het water om woekerende planten uit te dunnen.</p>
-                <img src="oever-onderhoud.jpg" alt="Onderhoud met waadpakken" class="timeline-image">
+                <div class="timeline-date">Stap 4 – Onderhoud</div>
+                <div class="timeline-content">
+                    <h3>Jaarlijks onderhoud</h3>
+                    <p>Elk jaar trekken vrijwilligers hun waadpakken aan om woekerende planten uit te dunnen en de oever in balans te houden. Zwaar werk, maar heel bevredigend!</p>
+                    <img src="oever-onderhoud.jpg" alt="Vrijwilligers in waadpakken" class="timeline-image" onclick="openLightbox(this.src)">
+                </div>
             </div>
+
             <div class="timeline-item timeline-highlight">
-                <span class="timeline-date">2024</span>
-                <h3>🏆 Winnaar Toekomstversnellers!</h3>
-                <p>Ons project won de provinciale prijs van Noord-Holland: €5.000 voor nog meer biodiversiteit!</p>
+                <div class="timeline-date">🏆 2024 – Toekomstversnellers</div>
+                <div class="timeline-content">
+                    <h3>Winnaar provinciale prijs Noord-Holland!</h3>
+                    <p>Ons project 'Bloemrijke en natuurrijke oevers in Ankeveen' won de Toekomstversnellers prijs van de provincie Noord-Holland. Een erkenning voor jaren hard werken én €5.000 om nog meer oevers aan te leggen!</p>
+                </div>
             </div>
         </div>
 
         <h2>Onze oeverlocaties</h2>
         <ul>
-            <li><strong>IJsclub Ankeveen</strong> – Onze eerste en grootste oever</li>
-            <li><strong>Bergse Pad</strong> – Langs het fietspad richting 's-Graveland</li>
-            <li><strong>Buhrmanlaan</strong> – In de woonwijk</li>
+            <li><strong>IJsclub Ankeveen (2021)</strong> – Onze eerste en grootste oever, langs de ijsbaan</li>
+            <li><strong>Bergse Pad (2022)</strong> – Langs het fietspad richting 's-Graveland</li>
+            <li><strong>Buhrmanlaan (2023)</strong> – In de woonwijk, met hulp van buurtbewoners</li>
         </ul>
+
+        <div class="highlight-box">
+            <p>💡 Wist je dat... een natuurvriendelijke oever tot wel 10x meer soorten herbergt dan een beschoeide oever?</p>
+        </div>
     </section>
 
     <section class="cta-section">
         <h2>Help mee met oeveronderhoud!</h2>
-        <p>We zoeken vrijwilligers die willen helpen bij het onderhouden van onze oevers. Geen ervaring nodig – wel groene vingers en zin om buiten bezig te zijn.</p>
+        <p>Elk jaar in het najaar onderhouden we de oevers. Trek je waadpak aan en doe mee!</p>
         <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Neem contact op →</a>
         <a href="index.html" class="btn btn-secondary">← Terug naar home</a>
     </section>
 
     <footer>
         <p>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van <a href="https://bruisendankeveen.nl" target="_blank">Stichting Bruisend Ankeveen</a></p>
+        <p><a href="index.html">Terug naar hoofdpagina</a></p>
     </footer>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="Vergrote afbeelding">
+    </div>
 
     <div class="contact-modal" id="contactModal" onclick="closeContactModal(event)">
         <div class="contact-modal-content" onclick="event.stopPropagation()">
@@ -180,7 +207,7 @@
                     <div class="contact-option-text"><strong>WhatsApp</strong><span>Stuur ons een berichtje</span></div>
                 </a>
                 <a href="https://signal.me/#p/+31646293590" target="_blank" class="contact-option">
-                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93s3.06-7.44 7-7.93v15.86zm2 0V4.07c3.94.49 7 3.85 7 7.93s-3.06 7.44-7 7.93z"/></svg></div>
+                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.4c5.302 0 9.6 4.298 9.6 9.6s-4.298 9.6-9.6 9.6S2.4 17.302 2.4 12 6.698 2.4 12 2.4z"/></svg></div>
                     <div class="contact-option-text"><strong>Signal</strong><span>Veilig en privé chatten</span></div>
                 </a>
                 <a href="tel:+31646293590" class="contact-option">
@@ -193,18 +220,11 @@
     </div>
 
     <script>
-        function openContactModal() {
-            document.getElementById('contactModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeContactModal(event) {
-            if (event && event.target.closest('.contact-modal-content')) return;
-            document.getElementById('contactModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeContactModal();
-        });
+        function openContactModal() { document.getElementById('contactModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeContactModal(event) { if (event && event.target.closest('.contact-modal-content')) return; document.getElementById('contactModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
+        function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); document.body.style.overflow = 'auto'; }
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeContactModal(); closeLightbox(); } });
     </script>
 </body>
 </html>
