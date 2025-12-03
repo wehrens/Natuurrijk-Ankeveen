@@ -471,7 +471,7 @@
 
         .results-images {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
         }
 
@@ -1423,7 +1423,7 @@
                 </div>
                 <div class="activity-content">
                     <h3>Zeisbrigade</h3>
-                    <p>In samenwerking met de gemeente Wijdemeren maaien we op de traditionele manier. We onderhouden diverse bermen, veldjes en oevers met de zeis en voeren het maaisel af. Zo verschraalt de bodem en krijgen wilde bloemen de kans. Ook helpen we zorgkwekerij Kostelijk bij de aanleg van een voedselbos.</p>
+                    <p>In goed overleg met de gemeente Wijdemeren maaien we op de traditionele manier. We onderhouden diverse bermen, veldjes en oevers met de zeis en voeren het maaisel af. Zo verschraalt de bodem en krijgen wilde bloemen de kans. Ook helpen we zorgkwekerij Kostelijk bij de aanleg van een voedselbos.</p>
                     <span class="activity-link">Meer info →</span>
                 </div>
             </div>
@@ -1473,7 +1473,7 @@
                 </div>
                 <div class="activity-content">
                     <h3>Educatie</h3>
-                    <p>Op de Joseph Lokin school maken kinderen vogelhuisjes en insectenhotels. We hebben er ook kunstnesten voor huiszwaluwen en nestkastjes voor huismussen opgehangen. Zo leren kinderen spelenderwijs over natuur.</p>
+                    <p>We organiseren regelmatig activiteiten met de Joseph Lokin school: vogelhuisjes en insectenhotels maken, helpen met planten, en uitleg over biodiversiteit. Ook hebben we er kunstnesten voor huiszwaluwen en nestkastjes voor huismussen opgehangen.</p>
                     <span class="activity-link">Meer info →</span>
                 </div>
             </div>
@@ -1489,13 +1489,13 @@
             </div>
             <div class="results-content">
                 <div class="results-text">
-                    <p>In 2024 waren er nog maar <strong>6 succesvolle nesten</strong> in de Ooievaarsbuurt. Na het plaatsen van 54 kunstnesten en een zwaluwtil steeg dit in 2025 naar <strong>25 nesten</strong>!</p>
+                    <p>In 2024 waren er nog maar <strong>6 huiszwaluwnesten</strong> in de Ooievaarsbuurt. Na het plaatsen van 54 kunstnesten en een zwaluwtil steeg dit in 2025 naar <strong>25 nesten</strong>!</p>
                     <p>Hoewel de zwaluwen hun eigen nestjes bouwden (vaak vlak naast onze kunstnesten), gaven de kunstnesten hen het gevoel dat dit een veilige en populaire plek is om te broeden.</p>
                     <p class="highlight">In heel Ankeveen telden we in 2025 zo'n 70 succesvolle broedgevallen!</p>
                 </div>
                 <div class="results-images">
-                    <div class="results-image large">
-                        <img src="Huiszwaluwen_grafiek_2022_-_2025.jpg" alt="Grafiek aantal bewoonde nesten huiszwaluw 2022-2025" onclick="openLightbox('Huiszwaluwen_grafiek_2022_-_2025.jpg')" style="cursor: pointer;">
+                    <div class="results-image">
+                        <img src="Huiszwaluwen_grafiek_2022_-_2025.jpg" alt="Grafiek aantal bewoonde nesten huiszwaluw 2022-2025" onclick="openLightbox('Huiszwaluwen_grafiek_2022_-_2025.jpg')" style="cursor: pointer; object-fit: contain; background: white;">
                     </div>
                     <div class="results-image">
                         <img src="Huiszwaluwnestkastje.png" alt="Huiszwaluwkunstnest onder de dakgoot">
@@ -1534,7 +1534,7 @@
                 <div class="news-featured">
                     <img src="toekomstversnellers.jpg" alt="Winnaar Toekomstversnellers 2024">
                     <div class="news-featured-overlay">
-                        <span class="news-tag">🏆 Uitgelicht</span>
+                        <span class="news-tag">🏆 Jippie!</span>
                         <h3>Winnaar Toekomstversnellers 2024!</h3>
                         <p>Ons project 'Bloemrijke en natuurrijke oevers in Ankeveen' won de provinciale prijs van Noord-Holland: €5.000 voor nog meer biodiversiteit!</p>
                     </div>
@@ -1553,7 +1553,7 @@
                     <div class="news-small">
                         <span class="news-date">April 2025</span>
                         <h4>Zwaluwtil geplaatst</h4>
-                        <p>Met hulp van de gemeente staat er nu een til bij de speeltuin.</p>
+                        <p>Gefinancierd door de Vogelwerkgroep 't Gooi. De gemeente hielp om het 6 meter hoge gevaarte met een kraantje geplaatst te krijgen.</p>
                     </div>
                 </div>
             </div>
@@ -1904,6 +1904,20 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeContactModal();
         });
+
+        // Hero slideshow - 4 seconden per foto
+        const heroImages = document.querySelectorAll('.hero-image-main img');
+        let currentImage = 0;
+        
+        function nextHeroImage() {
+            heroImages[currentImage].classList.remove('active');
+            currentImage = (currentImage + 1) % heroImages.length;
+            heroImages[currentImage].classList.add('active');
+        }
+        
+        if (heroImages.length > 1) {
+            setInterval(nextHeroImage, 4000);
+        }
     </script>
 </body>
 </html>
