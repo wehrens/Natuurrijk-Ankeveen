@@ -370,6 +370,7 @@
             border-radius: 20px;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
 
         .activity-card:hover {
@@ -1214,7 +1215,7 @@
                 <li><a href="#activiteiten">Wat we doen</a></li>
                 <li><a href="#resultaten">Resultaten</a></li>
                 <li><a href="#nieuws">Nieuws</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="javascript:void(0)" onclick="openContactModal()">Contact</a></li>
                 <li><a href="javascript:void(0)" onclick="openContactModal()" class="nav-cta">Doe mee!</a></li>
             </ul>
             <button class="mobile-menu-btn">☰</button>
@@ -1282,64 +1283,64 @@
             <p>Met praktische, kleinschalige projecten maken we samen een groot verschil voor de natuur in Ankeveen</p>
         </div>
         <div class="activities-grid">
-            <div class="activity-card">
+            <div class="activity-card" onclick="window.location='zeisbrigade.html'">
                 <div class="activity-image">
                     <img src="zeisen-actie.jpg" alt="Vrijwilligers maaien met de zeis">
                 </div>
                 <div class="activity-content">
                     <h3>Zeisbrigade</h3>
                     <p>In samenwerking met de gemeente maaien we op de traditionele manier. Door te zeisen kunnen we selectief en in sinuspatronen maaien, en voeren we het maaisel af. Zo verschraalt de bodem en krijgen zeldzame planten de kans.</p>
-                    <a href="zeisbrigade.html" class="activity-link">Meer info →</a>
+                    <span class="activity-link">Meer info →</span>
                 </div>
             </div>
-            <div class="activity-card">
+            <div class="activity-card" onclick="window.location='oevers.html'">
                 <div class="activity-image">
                     <img src="Oeveraanleg.jpg" alt="Graafmachine legt natuurvriendelijke oever aan">
                 </div>
                 <div class="activity-content">
                     <h3>Natuurvriendelijke oevers</h3>
                     <p>Van IJsclub tot Buhrmanlaan: we leggen oevers aan met inheemse planten voor insecten, vogels en amfibieën.</p>
-                    <a href="oevers.html" class="activity-link">Bekijk projecten →</a>
+                    <span class="activity-link">Bekijk projecten →</span>
                 </div>
             </div>
-            <div class="activity-card">
+            <div class="activity-card" onclick="window.location='zwaluwen.html'">
                 <div class="activity-image">
                     <img src="Huiszwaluwnestkastje.jpg" alt="Huiszwaluwnest onder de dakgoot">
                 </div>
                 <div class="activity-content">
                     <h3>Huiszwaluw­bescherming</h3>
                     <p>Van 6 naar 25 succesvolle nesten in één jaar! Met kunstnestjes en een zwaluwtil helpen we deze trekvogels.</p>
-                    <a href="zwaluwen.html" class="activity-link">Lees het verhaal →</a>
+                    <span class="activity-link">Lees het verhaal →</span>
                 </div>
             </div>
-            <div class="activity-card">
+            <div class="activity-card" onclick="window.location='ruige-hoek.html'">
                 <div class="activity-image">
                     <img src="Sloot.jpg" alt="De Ruige Hoek natuurgebied">
                 </div>
                 <div class="activity-content">
                     <h3>De Ruige Hoek</h3>
                     <p>Het beheer van dit stukje natuur met picknickbank hebben we van de gemeente overgenomen. We beheren het ecologisch met inheemse beplanting.</p>
-                    <a href="ruige-hoek.html" class="activity-link">Ontdek meer →</a>
+                    <span class="activity-link">Ontdek meer →</span>
                 </div>
             </div>
-            <div class="activity-card">
+            <div class="activity-card" onclick="window.location='aanplanten.html'">
                 <div class="activity-image">
                     <img src="oever-planten.jpg" alt="Vrijwilligers planten oeverplanten">
                 </div>
                 <div class="activity-content">
                     <h3>Aanplanten</h3>
                     <p>We werken uitsluitend met inheemse planten, struiken en bomen. Samen met bewoners planten we soorten die vlinders, vogels en insecten ondersteunen.</p>
-                    <a href="aanplanten.html" class="activity-link">Bekijk foto's →</a>
+                    <span class="activity-link">Bekijk foto's →</span>
                 </div>
             </div>
-            <div class="activity-card">
+            <div class="activity-card" onclick="window.location='educatie.html'">
                 <div class="activity-image">
                     <img src="Lokin2025.jpg" alt="Kinderen bouwen vogelhuisjes op de Joseph Lokin school">
                 </div>
                 <div class="activity-content">
                     <h3>Educatie</h3>
                     <p>Op de Joseph Lokin school maken kinderen vogelhuisjes en insectenhotels. Zo leren ze spelenderwijs over natuur.</p>
-                    <a href="educatie.html" class="activity-link">Meer over educatie →</a>
+                    <span class="activity-link">Meer over educatie →</span>
                 </div>
             </div>
         </div>
@@ -1375,18 +1376,12 @@
 
     <!-- CTA Section -->
     <section class="cta-section" id="meedoen">
-        <div class="cta-container">
-            <div class="cta-card">
+        <div class="cta-container" style="max-width: 700px;">
+            <div class="cta-card" style="text-align: left;">
                 <div class="cta-icon">🙋</div>
                 <h3>Doe mee als vrijwilliger</h3>
-                <p>Of je nu wilt zeisen, planten of gewoon gezellig meehelpen – iedereen is welkom.</p>
+                <p>Sluit je aan bij de zeisbrigade! Je kunt bij ons het zeisen leren, we hebben leenzeisen beschikbaar en er is altijd behoefte aan mensen die helpen het maaisel bij elkaar te harken en op de kar te werpen. Of je nu wilt zeisen, planten of gewoon gezellig meehelpen – iedereen is welkom!</p>
                 <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Aanmelden</a>
-            </div>
-            <div class="cta-card">
-                <div class="cta-icon">💚</div>
-                <h3>Steun ons werk</h3>
-                <p>Met een donatie maken we nog meer mogelijk: meer planten, meer nestkasten, meer biodiversiteit.</p>
-                <a href="#" class="btn btn-secondary">Doneren</a>
             </div>
         </div>
     </section>
@@ -1558,7 +1553,6 @@
                 <h4>Meedoen</h4>
                 <ul>
                     <li><a href="javascript:void(0)" onclick="openContactModal()">Word vrijwilliger</a></li>
-                    <li><a href="#doneren">Doneren</a></li>
                     <li><a href="zeisbrigade.html">Zeiscursus</a></li>
                     <li><a href="ruige-hoek.html">Natuurwerkdag</a></li>
                 </ul>
@@ -1685,7 +1679,7 @@
                 
                 <a href="https://signal.me/#p/+31646293590" target="_blank" class="contact-option">
                     <div class="contact-option-icon signal">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12c0 2.917 1.043 5.59 2.775 7.67l-.822 3.08a.6.6 0 00.756.738l3.168-.878A11.947 11.947 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm5.657 16.243a1.5 1.5 0 01-2.121 0l-1.415-1.414a.5.5 0 00-.707 0l-1.414 1.414a1.5 1.5 0 01-2.121-2.122l1.414-1.414a.5.5 0 000-.707L9.879 10.586a1.5 1.5 0 012.121-2.122l1.414 1.415a.5.5 0 00.707 0l1.415-1.415a1.5 1.5 0 012.12 2.122L16.243 12a.5.5 0 000 .707l1.414 1.415a1.5 1.5 0 010 2.12z"/></svg>
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.4c5.302 0 9.6 4.298 9.6 9.6s-4.298 9.6-9.6 9.6S2.4 17.302 2.4 12 6.698 2.4 12 2.4zm4.8 4.8c-.636 0-1.2.564-1.2 1.2s.564 1.2 1.2 1.2 1.2-.564 1.2-1.2-.564-1.2-1.2-1.2zm-9.6 0c-.636 0-1.2.564-1.2 1.2s.564 1.2 1.2 1.2S8.4 9.036 8.4 8.4s-.564-1.2-1.2-1.2zM12 15.6c-2.206 0-4.14-1.19-5.19-2.963a.6.6 0 111.032-.612C8.68 13.428 10.252 14.4 12 14.4s3.32-.972 4.158-2.375a.6.6 0 111.032.612C16.14 14.41 14.206 15.6 12 15.6z"/></svg>
                     </div>
                     <div class="contact-option-text">
                         <strong>Signal</strong>
