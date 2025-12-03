@@ -22,6 +22,7 @@
         .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--green-dark); }
         .logo-icon { width: 45px; height: 45px; background: transparent; border-radius: 0; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-size: 2rem; }
+        .logo-icon img { width: 100%; height: 100%; object-fit: contain; }
         .logo-text { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; }
         .nav-links { display: flex; gap: 2rem; list-style: none; }
         .nav-links a { text-decoration: none; color: var(--text-medium); font-weight: 500; transition: color 0.3s ease; }
@@ -74,7 +75,20 @@
         .contact-option-text span { font-size: 0.9rem; color: var(--text-medium); }
         .contact-modal-footer { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--cream-dark); text-align: center; color: var(--text-medium); font-size: 0.9rem; }
         .contact-modal-footer strong { color: var(--green-dark); }
-        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .image-grid img { height: 200px; } .btn-secondary { margin-left: 0; margin-top: 1rem; } }
+        
+        /* Timeline styles */
+        .timeline { position: relative; padding-left: 2rem; border-left: 3px solid var(--green-light); margin: 2rem 0; }
+        .timeline-item { margin-bottom: 2.5rem; position: relative; }
+        .timeline-item::before { content: ''; position: absolute; left: -2.45rem; top: 0.25rem; width: 14px; height: 14px; background: var(--green-medium); border-radius: 50%; border: 3px solid var(--cream); }
+        .timeline-date { color: var(--brown); font-weight: 600; font-size: 0.9rem; }
+        .timeline-item h3 { color: var(--green-dark); font-size: 1.2rem; margin: 0.25rem 0 0.5rem 0; }
+        .timeline-item p { margin: 0 0 1rem 0; font-size: 1rem; color: var(--text-medium); }
+        .timeline-image { width: 100%; max-width: 400px; height: auto; border-radius: 10px; box-shadow: 0 5px 20px rgba(45, 74, 62, 0.15); margin-top: 0.5rem; }
+        .timeline-highlight { background: linear-gradient(135deg, var(--green-pale) 0%, #fff9e6 100%); padding: 1.5rem; border-radius: 15px; border: 2px solid var(--brown-light); margin-left: -1rem; }
+        .timeline-highlight::before { background: var(--brown); }
+        .timeline-highlight .timeline-date { color: var(--brown); }
+        
+        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .image-grid img { height: 200px; } .btn-secondary { margin-left: 0; margin-top: 1rem; } .timeline-image { max-width: 100%; } }
     </style>
 </head>
 <body>
@@ -83,6 +97,7 @@
             <a href="index.html" class="logo">
                 <div class="logo-icon"><img src="libelle.png" alt="Libelle"></div>
                 <span class="logo-text">Natuurrijk Ankeveen</span>
+                <div class="logo-icon"><img src="huiszwaluw.png" alt="Huiszwaluw"></div>
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
@@ -109,59 +124,47 @@
         
         <p>Een natuurvriendelijke oever heeft een flauw aflopend talud en is beplant met inheemse soorten zoals gele lis, dotterbloem, watermunt en moerasvergeet-mij-nietje. Deze planten bieden voedsel en schuilplaatsen voor insecten, amfibieën en vogels.</p>
 
-        <div class="image-grid">
-            <img src="Oeveraanleg.jpg" alt="Aanleg natuurvriendelijke oever">
-            <img src="oever-planten.jpg" alt="Vrijwilligers planten oeverplanten">
+        <h2>Project IJsbaan: een succesverhaal</h2>
+        <p>Ons grootste oeverproject is bij de IJsclub in Ankeveen. Hier hebben we de oever volledig getransformeerd – van kale kant naar bloeiende biotoop.</p>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <span class="timeline-date">Stap 1</span>
+                <h3>Afschrapen</h3>
+                <p>Met een graafmachine wordt de steile oever afgegraven tot een flauw talud. Dit creëert de basis voor een natuurvriendelijke oever.</p>
+                <img src="Oeveraanleg.jpg" alt="Graafmachine schraapt de oever af" class="timeline-image">
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-date">Stap 2</span>
+                <h3>Aanplanten</h3>
+                <p>Honderden inheemse water- en oeverplanten worden met de hand aangeplant door onze vrijwilligers.</p>
+                <img src="oever-planten.jpg" alt="Vrijwilligers planten oeverplanten" class="timeline-image">
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-date">Stap 3</span>
+                <h3>In bloei!</h3>
+                <p>Na een jaar staat de oever prachtig in bloei met gele lis, dotterbloem, watermunt en moerasvergeet-mij-nietje.</p>
+                <img src="IjsbaanJul2024.jpg" alt="Bloeiende oever bij de IJsclub" class="timeline-image">
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-date">Stap 4</span>
+                <h3>Onderhoud</h3>
+                <p>Elk jaar moet de oever onderhouden worden. Met waadpakken aan staan we in het water om woekerende planten uit te dunnen.</p>
+                <img src="oever-onderhoud.jpg" alt="Vrijwilligers in waadpakken onderhouden de oever" class="timeline-image">
+            </div>
+            <div class="timeline-item timeline-highlight">
+                <span class="timeline-date">2024</span>
+                <h3>🏆 Winnaar Toekomstversnellers!</h3>
+                <p>Ons project won de provinciale prijs van Noord-Holland: €5.000 voor nog meer biodiversiteit!</p>
+            </div>
         </div>
 
-        <h2>Onze oeverprojecten</h2>
+        <h2>Onze oeverlocaties</h2>
         <ul>
             <li><strong>IJsclub Ankeveen</strong> – Onze eerste en grootste oever, nu prachtig in bloei</li>
             <li><strong>Bergse Pad</strong> – Langs het fietspad richting 's-Graveland</li>
             <li><strong>Buhrmanlaan</strong> – In de woonwijk, zichtbaar voor veel bewoners</li>
         </ul>
-
-        <h2>Onderhoud is essentieel</h2>
-        <p>Na de aanleg is het werk niet klaar. Woekerende soorten zoals egelskop kunnen andere planten verdringen. Daarom onderhouden we de oevers door uit te dunnen, bij te planten waar nodig, en regelmatig kort te maaien.</p>
-
-        <!-- Tijdslijn -->
-        <div class="timeline" style="margin: 3rem 0; position: relative; padding-left: 2rem; border-left: 3px solid var(--green-medium);">
-            <div class="timeline-item" style="margin-bottom: 2rem; position: relative;">
-                <div style="position: absolute; left: -2.6rem; width: 1.2rem; height: 1.2rem; background: var(--green-medium); border-radius: 50%; border: 3px solid var(--cream);"></div>
-                <div style="background: var(--green-pale); padding: 1.5rem; border-radius: 15px;">
-                    <span style="font-weight: 600; color: var(--green-medium);">2021</span>
-                    <h4 style="margin: 0.5rem 0; color: var(--green-dark);">IJsclub Ankeveen</h4>
-                    <p style="margin: 0; color: var(--text-medium);">Onze eerste natuurvriendelijke oever – nu prachtig in bloei met gele lis, dotterbloem en watermunt.</p>
-                </div>
-            </div>
-            <div class="timeline-item" style="margin-bottom: 2rem; position: relative;">
-                <div style="position: absolute; left: -2.6rem; width: 1.2rem; height: 1.2rem; background: var(--green-medium); border-radius: 50%; border: 3px solid var(--cream);"></div>
-                <div style="background: var(--green-pale); padding: 1.5rem; border-radius: 15px;">
-                    <span style="font-weight: 600; color: var(--green-medium);">2022</span>
-                    <h4 style="margin: 0.5rem 0; color: var(--green-dark);">Bergse Pad</h4>
-                    <p style="margin: 0; color: var(--text-medium);">Langs het fietspad richting 's-Graveland – zichtbaar voor fietsers en wandelaars.</p>
-                </div>
-            </div>
-            <div class="timeline-item" style="margin-bottom: 2rem; position: relative;">
-                <div style="position: absolute; left: -2.6rem; width: 1.2rem; height: 1.2rem; background: var(--green-medium); border-radius: 50%; border: 3px solid var(--cream);"></div>
-                <div style="background: var(--green-pale); padding: 1.5rem; border-radius: 15px;">
-                    <span style="font-weight: 600; color: var(--green-medium);">2023</span>
-                    <h4 style="margin: 0.5rem 0; color: var(--green-dark);">Buhrmanlaan</h4>
-                    <p style="margin: 0; color: var(--text-medium);">In de woonwijk, zichtbaar voor veel bewoners die nu genieten van de bloeiende oever.</p>
-                </div>
-            </div>
-            <div class="timeline-item" style="position: relative;">
-                <div style="position: absolute; left: -2.6rem; width: 1.2rem; height: 1.2rem; background: var(--brown); border-radius: 50%; border: 3px solid var(--cream);"></div>
-                <div style="background: linear-gradient(135deg, var(--green-pale) 0%, #fff9e6 100%); padding: 1.5rem; border-radius: 15px; border: 2px solid var(--brown-light);">
-                    <span style="font-weight: 600; color: var(--brown);">2024</span>
-                    <h4 style="margin: 0.5rem 0; color: var(--green-dark);">🏆 Winnaar Toekomstversnellers!</h4>
-                    <p style="margin: 0; color: var(--text-medium);">Ons project won de provinciale prijs van Noord-Holland.</p>
-                </div>
-            </div>
-        </div>
-
-        <h2>Winnaar Toekomstversnellers 2024</h2>
-        <p>Ons project 'Bloemrijke en natuurrijke oevers in Ankeveen' won de provinciale prijs van Noord-Holland! Deze erkenning bevestigt dat onze aanpak werkt en navolging verdient.</p>
     </section>
 
     <section class="cta-section">
