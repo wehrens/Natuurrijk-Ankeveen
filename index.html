@@ -952,6 +952,55 @@
                 grid-column: span 1;
             }
         }
+        /* Lightbox */
+        .team-avatar img {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .team-avatar img:hover {
+            transform: scale(1.05);
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .lightbox-close:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -1052,7 +1101,7 @@
             </div>
             <div class="activity-card">
                 <div class="activity-image">
-                    <img src="nestkastjes-ophangen.jpg" alt="Vrijwilliger hangt zwaluwnestkasten op">
+                    <img src="Huiszwaluwnestkastje.jpg" alt="Huiszwaluwnest onder de dakgoot">
                 </div>
                 <div class="activity-content">
                     <h3>Huiszwaluw­bescherming</h3>
@@ -1169,8 +1218,8 @@
                     </div>
                     <div class="news-small">
                         <span class="news-date">April 2025</span>
-                        <h4>Tweede zwaluwtil geplaatst</h4>
-                        <p>Met hulp van de gemeente staat er nu ook een til bij de speeltuin.</p>
+                        <h4>Zwaluwtil geplaatst</h4>
+                        <p>Met hulp van de gemeente staat er nu een til bij de speeltuin.</p>
                     </div>
                 </div>
             </div>
@@ -1211,13 +1260,13 @@
             <h2>Het kernteam</h2>
             <p>Vijf gedreven Ankeveners vormen het hart van de werkgroep</p>
         </div>
-        <div style="max-width: 600px; margin: 0 auto 3rem; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(45, 74, 62, 0.15);">
-            <img src="NatuurwerkgroepAnkeveen.png" alt="Het kernteam van Natuurrijk Ankeveen" style="width: 100%; display: block;">
+        <div style="max-width: 600px; margin: 0 auto 3rem; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(45, 74, 62, 0.15); cursor: pointer;">
+            <img src="NatuurwerkgroepAnkeveen.png" alt="Het kernteam van Natuurrijk Ankeveen" style="width: 100%; display: block;" onclick="openLightbox('NatuurwerkgroepAnkeveen.png')">
         </div>
         <div class="team-grid">
             <div class="team-member">
                 <div class="team-avatar">
-                    <img src="Arda.jpg" alt="Arda van der Lee">
+                    <img src="Arda.jpg" alt="Arda van der Lee" onclick="openLightbox('Arda.jpg')">
                 </div>
                 <h4>Arda van der Lee</h4>
                 <p>Biologe</p>
@@ -1229,19 +1278,21 @@
             </div>
             <div class="team-member">
                 <div class="team-avatar">
-                    <img src="Wijnand.jpg" alt="Wijnand Smit">
+                    <img src="Wijnand.jpg" alt="Wijnand Smit" onclick="openLightbox('Wijnand.jpg')">
                 </div>
                 <h4>Wijnand Smit</h4>
                 <p>Ecologisch hovenier</p>
             </div>
             <div class="team-member">
-                <div class="team-avatar">💊</div>
+                <div class="team-avatar">
+                    <img src="Ron.jpg" alt="Ron Wehrens" onclick="openLightbox('Ron.jpg')">
+                </div>
                 <h4>Ron Wehrens</h4>
                 <p>Apotheker</p>
             </div>
             <div class="team-member">
                 <div class="team-avatar">
-                    <img src="Hans.jpg" alt="Hans Hazes">
+                    <img src="Hans.jpg" alt="Hans Hazes" onclick="openLightbox('Hans.jpg')">
                 </div>
                 <h4>Hans Hazes</h4>
                 <p>Ondernemer</p>
@@ -1284,7 +1335,7 @@
                     <div class="logo-icon">🌱</div>
                     <span class="logo-text">Natuurrijk Ankeveen</span>
                 </a>
-                <p>Samen bouwen aan biodiversiteit in Ankeveen. Al 5 jaar actief met praktische projecten die een verschil maken voor mens en natuur.</p>
+                <p>Samen bouwen aan biodiversiteit in Ankeveen. Onze werkgroep opereert onder Stichting Bruisend Ankeveen.</p>
             </div>
             <div class="footer-column">
                 <h4>Navigatie</h4>
@@ -1299,9 +1350,9 @@
                 <h4>Meedoen</h4>
                 <ul>
                     <li><a href="#meedoen">Word vrijwilliger</a></li>
-                    <li><a href="#">Doneren</a></li>
-                    <li><a href="#">Zeiscursus</a></li>
-                    <li><a href="#">Natuurwerkdag</a></li>
+                    <li><a href="#doneren">Doneren</a></li>
+                    <li><a href="zeisbrigade.html">Zeiscursus</a></li>
+                    <li><a href="ruige-hoek.html">Natuurwerkdag</a></li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -1309,9 +1360,36 @@
                 <ul>
                     <li>Ron Wehrens</li>
                     <li><a href="tel:0646293590">06-46293590</a></li>
-                    <li><a href="/cdn-cgi/l/email-protection#6c020d1819191e1e0506070d0207091a0909022c1c1e03180302010d0500420f0301">natuurrijkankeveen<br>@protonmail.com</a></li>
+                    <li><a href="mailto:natuurrijkankeveen@protonmail.com">natuurrijkankeveen<br>@protonmail.com</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <span>© 2025 Werkgroep Natuurrijk Ankev
+            <span>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van Stichting Bruisend Ankeveen · IBAN: NL97 INGB 0006 3150 11</span>
+        </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="">
+    </div>
+
+    <script>
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>
