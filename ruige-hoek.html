@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Ruige Hoek - Natuurrijk Ankeveen</title>
+    <meta name="description" content="De Ruige Hoek is een stukje natuur in Ankeveen dat we ecologisch beheren met zeismaaien en inheemse beplanting.">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-dark: #2d4a3e;
+            --green-medium: #4a7c59;
+            --green-light: #7fb069;
+            --green-pale: #d4e6c3;
+            --cream: #f8f6f0;
+            --cream-dark: #e8e4d9;
+            --brown: #8b6914;
+            --brown-light: #c4a35a;
+            --text-dark: #1a2e22;
+            --text-medium: #3d5a4a;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background-color: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
+
+        nav {
+            background: var(--green-dark);
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .logo-text {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .back-link:hover { opacity: 1; }
+
+        .page-hero {
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-medium) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .page-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .page-hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .content h2 {
+            font-size: 2rem;
+            color: var(--green-dark);
+            margin: 2.5rem 0 1rem;
+        }
+
+        .content h2:first-of-type { margin-top: 0; }
+
+        .content p {
+            color: var(--text-medium);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .content ul {
+            color: var(--text-medium);
+            margin: 1rem 0 1.5rem 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-box {
+            background: var(--green-pale);
+            border-left: 4px solid var(--green-medium);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 15px 15px 0;
+        }
+
+        .highlight-box h3 {
+            color: var(--green-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-box p { margin-bottom: 0; }
+
+        .image-single {
+            margin: 2rem 0;
+        }
+
+        .image-single img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .cta-section {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 10px 40px rgba(45, 74, 62, 0.1);
+        }
+
+        .cta-section h2 { margin-top: 0; }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--green-medium);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--green-dark);
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background: var(--green-dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--green-light);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 2rem; }
+            .image-single img { height: 250px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🌱</div>
+                <span class="logo-text">Natuurrijk Ankeveen</span>
+            </a>
+            <a href="index.html" class="back-link">← Terug naar home</a>
+        </div>
+    </nav>
+
+    <section class="page-hero">
+        <h1>🌳 De Ruige Hoek</h1>
+        <p>Ons eigen stukje natuur in Ankeveen</p>
+    </section>
+
+    <div class="content">
+        <h2>Een plek voor natuur én mensen</h2>
+        <p>De Ruige Hoek is een klein natuurgebiedje in Ankeveen met een picknickbank waar je heerlijk kunt genieten van de natuur. We hebben het beheer van deze plek overgenomen van de gemeente Wijdemeren.</p>
+
+        <div class="highlight-box">
+            <h3>Ecologisch beheer sinds 2023</h3>
+            <p>In plaats van machinaal maaien, beheren we de Ruige Hoek met de zeis. We voeren het maaisel af, waardoor de bodem langzaam verschraalt en bijzondere planten terugkomen.</p>
+        </div>
+
+        <h2>Resultaten zichtbaar</h2>
+        <p>Sinds we in 2023 zijn begonnen met ecologisch beheer, zien we de natuur al herstellen. Steeds meer bijzondere inheemse planten verschijnen op het veldje – planten die eerder werden verdrongen door snelgroeiers zoals gras en brandnetel.</p>
+
+        <p>Dit is precies wat we willen bereiken: door de bodem te verschralen krijgen zeldzamere soorten de kans. Het is een langzaam proces, maar de resultaten zijn nu al zichtbaar!</p>
+
+        <h2>Wat we doen</h2>
+        <ul>
+            <li><strong>Zeismaaien</strong> – meerdere keren per jaar maaien we het veldje met de zeis</li>
+            <li><strong>Maaisel afvoeren</strong> – we laten het maaisel niet liggen maar voeren het af</li>
+            <li><strong>Inheemse beplanting</strong> – we planten alleen soorten die hier van nature thuishoren</li>
+            <li><strong>Monitoring</strong> – we houden bij welke soorten terugkomen</li>
+        </ul>
+
+        <div class="highlight-box">
+            <h3>Even uitrusten?</h3>
+            <p>De picknickbank op de Ruige Hoek is vrij toegankelijk. Kom gerust even zitten en geniet van de bloemen, vlinders en vogels!</p>
+        </div>
+
+        <div class="cta-section">
+            <h2>Meehelpen op de Ruige Hoek?</h2>
+            <p>We organiseren regelmatig werkdagen op de Ruige Hoek. Kom zeisen, harken of gewoon gezellig meehelpen!</p>
+            <a href="index.html#contact" class="btn">Neem contact op →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Werkgroep Natuurrijk Ankeveen | <a href="index.html">Terug naar home</a></p>
+    </footer>
+</body>
+</html>

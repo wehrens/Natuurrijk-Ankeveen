@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huiszwaluwbescherming - Natuurrijk Ankeveen</title>
+    <meta name="description" content="Van 6 naar 70 nesten! Ontdek hoe we de huiszwaluw in Ankeveen helpen met nestkasten en een zwaluwtil.">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-dark: #2d4a3e;
+            --green-medium: #4a7c59;
+            --green-light: #7fb069;
+            --green-pale: #d4e6c3;
+            --cream: #f8f6f0;
+            --cream-dark: #e8e4d9;
+            --brown: #8b6914;
+            --brown-light: #c4a35a;
+            --text-dark: #1a2e22;
+            --text-medium: #3d5a4a;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background-color: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
+
+        nav {
+            background: var(--green-dark);
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .logo-text {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .back-link:hover { opacity: 1; }
+
+        .page-hero {
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-medium) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .page-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .page-hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .content h2 {
+            font-size: 2rem;
+            color: var(--green-dark);
+            margin: 2.5rem 0 1rem;
+        }
+
+        .content h2:first-of-type { margin-top: 0; }
+
+        .content p {
+            color: var(--text-medium);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(45, 74, 62, 0.1);
+        }
+
+        .stat-card .number {
+            font-family: 'Fraunces', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--green-medium);
+        }
+
+        .stat-card .label {
+            color: var(--text-medium);
+            font-size: 0.95rem;
+        }
+
+        .highlight-box {
+            background: var(--green-pale);
+            border-left: 4px solid var(--green-medium);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 15px 15px 0;
+        }
+
+        .highlight-box h3 {
+            color: var(--green-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-box p { margin-bottom: 0; }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .image-grid img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: 0 5px 20px rgba(45, 74, 62, 0.1);
+        }
+
+        .chart-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .cta-section {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 10px 40px rgba(45, 74, 62, 0.1);
+        }
+
+        .cta-section h2 { margin-top: 0; }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--green-medium);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--green-dark);
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background: var(--green-dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--green-light);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 2rem; }
+            .stats-row { grid-template-columns: 1fr; }
+            .image-grid { grid-template-columns: 1fr; }
+            .image-grid img { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🌱</div>
+                <span class="logo-text">Natuurrijk Ankeveen</span>
+            </a>
+            <a href="index.html" class="back-link">← Terug naar home</a>
+        </div>
+    </nav>
+
+    <section class="page-hero">
+        <h1>🐦 Huiszwaluwbescherming</h1>
+        <p>Een spectaculaire comeback van de huiszwaluw in Ankeveen</p>
+    </section>
+
+    <div class="content">
+        <h2>Het probleem</h2>
+        <p>De huiszwaluw heeft het moeilijk in Nederland. Door renovaties van huizen verdwijnen geschikte nestplekken onder dakgoten. Bovendien is er door verharding steeds minder modder te vinden waarmee ze hun nesten bouwen.</p>
+        <p>In de Ooievaarsbuurt in Ankeveen zagen we het aantal succesvolle nesten dramatisch dalen. In 2024 waren er nog maar 6 nesten over.</p>
+
+        <h2>Onze aanpak</h2>
+        <p>We zijn aan de slag gegaan met twee oplossingen:</p>
+
+        <div class="highlight-box">
+            <h3>54 kunstnestkasten</h3>
+            <p>Aan woningen in de Ooievaarsbuurt hebben vrijwilligers 54 kunstnestkasten opgehangen. Deze bieden directe nestgelegenheid én geven zwaluwen het signaal dat dit een goede plek is om te broeden.</p>
+        </div>
+
+        <div class="image-grid">
+            <img src="nestkastjes-ophangen.jpg" alt="Vrijwilliger hangt nestkasten op">
+            <img src="zwaluwtil-plaatsen.jpg" alt="Plaatsen van de zwaluwtil met kraanwagen">
+        </div>
+
+        <div class="highlight-box">
+            <h3>Huiszwaluwtil</h3>
+            <p>In samenwerking met de gemeente Wijdemeren hebben we een 6 meter hoge zwaluwtil geplaatst bij de speeltuin. Deze til biedt plaats aan 12 nestkasten en is een baken voor de zwaluwen.</p>
+        </div>
+
+        <div class="image-grid">
+            <img src="IMG_5525.jpg" alt="Het team bij de geplaatste zwaluwtil">
+            <img src="zwaluwtil-speeltuin.jpg" alt="De zwaluwtil bij de speeltuin">
+        </div>
+
+        <h2>Spectaculaire resultaten</h2>
+        <p>Het effect was verbluffend! Hoewel de zwaluwen vaak hun eigen nestjes bouwden (soms vlak naast onze kunstnestjes), gaven de nestkasten hen het gevoel dat dit een veilige en populaire plek is.</p>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="number">6</div>
+                <div class="label">nesten in 2024<br>(Ooievaarsbuurt)</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">25</div>
+                <div class="label">nesten in 2025<br>(Ooievaarsbuurt)</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">70</div>
+                <div class="label">nesten in 2025<br>(heel Ankeveen)</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <img src="Huiszwaluwen_grafiek_2022_-_2025.jpg" alt="Grafiek met groei van het aantal zwaluwnesten 2022-2025">
+        </div>
+
+        <div class="cta-section">
+            <h2>Wil je ook nestkasten ophangen?</h2>
+            <p>Heb je huiszwaluwen bij jou in de buurt en wil je ze helpen? Wij adviseren je graag over de beste plek en het juiste type nestkast.</p>
+            <a href="index.html#contact" class="btn">Neem contact op →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Werkgroep Natuurrijk Ankeveen | <a href="index.html">Terug naar home</a></p>
+    </footer>
+</body>
+</html>

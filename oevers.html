@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natuurvriendelijke Oevers - Natuurrijk Ankeveen</title>
+    <meta name="description" content="We leggen natuurvriendelijke oevers aan met inheemse waterplanten. Winnaar Toekomstversnellers 2024!">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-dark: #2d4a3e;
+            --green-medium: #4a7c59;
+            --green-light: #7fb069;
+            --green-pale: #d4e6c3;
+            --cream: #f8f6f0;
+            --cream-dark: #e8e4d9;
+            --brown: #8b6914;
+            --brown-light: #c4a35a;
+            --text-dark: #1a2e22;
+            --text-medium: #3d5a4a;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background-color: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
+
+        nav {
+            background: var(--green-dark);
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .logo-text {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .back-link:hover { opacity: 1; }
+
+        .page-hero {
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-medium) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .page-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .page-hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .award-badge {
+            display: inline-block;
+            background: var(--brown);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            margin-top: 1.5rem;
+            font-weight: 600;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .content h2 {
+            font-size: 2rem;
+            color: var(--green-dark);
+            margin: 2.5rem 0 1rem;
+        }
+
+        .content h2:first-of-type { margin-top: 0; }
+
+        .content p {
+            color: var(--text-medium);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .highlight-box {
+            background: var(--green-pale);
+            border-left: 4px solid var(--green-medium);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 15px 15px 0;
+        }
+
+        .highlight-box h3 {
+            color: var(--green-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-box p { margin-bottom: 0; }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .image-grid img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 3px solid var(--green-light);
+            margin: 2rem 0;
+        }
+
+        .timeline-item {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.45rem;
+            top: 0.25rem;
+            width: 14px;
+            height: 14px;
+            background: var(--green-medium);
+            border-radius: 50%;
+            border: 3px solid var(--cream);
+        }
+
+        .timeline-date {
+            color: var(--brown);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .timeline-item h3 {
+            color: var(--green-dark);
+            font-size: 1.2rem;
+            margin: 0.25rem 0;
+        }
+
+        .timeline-item p {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .plant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .plant-item {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            border-left: 3px solid var(--green-light);
+        }
+
+        .plant-item strong {
+            color: var(--green-dark);
+            display: block;
+        }
+
+        .plant-item span {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .cta-section {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 10px 40px rgba(45, 74, 62, 0.1);
+        }
+
+        .cta-section h2 { margin-top: 0; }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--green-medium);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--green-dark);
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background: var(--green-dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--green-light);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 2rem; }
+            .image-grid { grid-template-columns: 1fr; }
+            .image-grid img { height: 200px; }
+            .plant-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🌱</div>
+                <span class="logo-text">Natuurrijk Ankeveen</span>
+            </a>
+            <a href="index.html" class="back-link">← Terug naar home</a>
+        </div>
+    </nav>
+
+    <section class="page-hero">
+        <h1>🌿 Natuurvriendelijke Oevers</h1>
+        <p>Bloemrijke oevers voor insecten, vogels en amfibieën</p>
+        <div class="award-badge">🏆 Winnaar Toekomstversnellers 2024</div>
+    </section>
+
+    <div class="content">
+        <h2>Het probleem met harde oevers</h2>
+        <p>Veel sloten in Nederland hebben steile, harde oevers waar weinig kan groeien. Dit is slecht voor de biodiversiteit: insecten vinden geen voedsel, vogels geen nestgelegenheid, en amfibieën kunnen niet uit het water klimmen.</p>
+        <p>Wij leggen natuurvriendelijke oevers aan met een flauw talud en inheemse water- en oeverplanten. Dit creëert een overgangszone tussen water en land waar het leven floreert.</p>
+
+        <h2>Project IJsbaan: een succesverhaal</h2>
+        <p>Ons grootste oeverproject is bij de IJsclub in Ankeveen. Hier hebben we in 2023 de oever volledig getransformeerd.</p>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <span class="timeline-date">Februari 2023</span>
+                <h3>Situatie vóór aanleg</h3>
+                <p>Steile, kale oever met weinig begroeiing.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-date">Juni 2023</span>
+                <h3>Grondwerk</h3>
+                <p>Met een graafmachine werd de oever uitgegraven tot een flauw talud.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-date">Juni 2023</span>
+                <h3>Beplanting</h3>
+                <p>Honderden inheemse water- en oeverplanten werden aangeplant.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-date">2024</span>
+                <h3>Toekomstversnellers prijs</h3>
+                <p>Het project won de provinciale prijs van Noord-Holland!</p>
+            </div>
+        </div>
+
+        <div class="image-grid">
+            <img src="oever-graven.jpg" alt="Graafmachine graaft de oever uit">
+            <img src="oever-planten.jpg" alt="Vrijwilligers planten oeverplanten">
+        </div>
+
+        <h2>Onze inheemse oeverplanten</h2>
+        <p>We werken uitsluitend met inheemse planten die van nature in deze regio thuishoren. Deze planten zijn perfect aangepast aan ons klimaat en bieden voedsel en schuilplaatsen voor lokale diersoorten.</p>
+
+        <div class="plant-grid">
+            <div class="plant-item">
+                <strong>Dotterbloem</strong>
+                <span>Caltha palustris</span>
+            </div>
+            <div class="plant-item">
+                <strong>Zwanebloem</strong>
+                <span>Butomus umbellatus</span>
+            </div>
+            <div class="plant-item">
+                <strong>Gele lis</strong>
+                <span>Iris pseudacorus</span>
+            </div>
+            <div class="plant-item">
+                <strong>Kattestaart</strong>
+                <span>Lythrum salicaria</span>
+            </div>
+            <div class="plant-item">
+                <strong>Watermunt</strong>
+                <span>Mentha aquatica</span>
+            </div>
+            <div class="plant-item">
+                <strong>Koninginnekruid</strong>
+                <span>Eupatorium cannabinum</span>
+            </div>
+            <div class="plant-item">
+                <strong>Moerasspiraea</strong>
+                <span>Filipendula ulmaria</span>
+            </div>
+            <div class="plant-item">
+                <strong>Pinksterbloem</strong>
+                <span>Cardamine pratensis</span>
+            </div>
+            <div class="plant-item">
+                <strong>Waterweegbree</strong>
+                <span>Alisma plantago-aquatica</span>
+            </div>
+            <div class="plant-item">
+                <strong>Pijlkruid</strong>
+                <span>Sagittaria sagittifolia</span>
+            </div>
+            <div class="plant-item">
+                <strong>Echte valeriaan</strong>
+                <span>Valeriana officinalis</span>
+            </div>
+            <div class="plant-item">
+                <strong>Gewone smeerwortel</strong>
+                <span>Symphytum officinale</span>
+            </div>
+            <div class="plant-item">
+                <strong>Moerasvergeet-mij-niet</strong>
+                <span>Myosotis palustris</span>
+            </div>
+            <div class="plant-item">
+                <strong>Grote engelwortel</strong>
+                <span>Angelica archangelica</span>
+            </div>
+            <div class="plant-item">
+                <strong>Heemst</strong>
+                <span>Althea officinalis</span>
+            </div>
+            <div class="plant-item">
+                <strong>Gewone brunel</strong>
+                <span>Prunella vulgaris</span>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <h3>Locaties</h3>
+            <p>We hebben inmiddels natuurvriendelijke oevers aangelegd bij de IJsclub, de Buhrmanlaan en diverse andere plekken in Ankeveen. Samen werken we aan een groener en natuurrijker dorp!</p>
+        </div>
+
+        <div class="cta-section">
+            <h2>Interesse in een natuurvriendelijke oever?</h2>
+            <p>Heb je een sloot langs je tuin en wil je bijdragen aan de biodiversiteit? Neem contact met ons op voor advies!</p>
+            <a href="index.html#contact" class="btn">Neem contact op →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Werkgroep Natuurrijk Ankeveen | <a href="index.html">Terug naar home</a></p>
+    </footer>
+</body>
+</html>
