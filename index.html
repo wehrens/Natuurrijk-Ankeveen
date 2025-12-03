@@ -735,7 +735,7 @@
 
         .sponsors-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 1.5rem;
             align-items: center;
             justify-items: center;
@@ -760,7 +760,7 @@
 
         .sponsor-item img {
             max-width: 100%;
-            max-height: 90px;
+            max-height: 100px;
             object-fit: contain;
         }
 
@@ -1279,7 +1279,7 @@
             </div>
             <div class="activity-card">
                 <div class="activity-image">
-                    <img src="oever-planten.jpg" alt="Vrijwilligers planten oeverplanten">
+                    <img src="Oeveraanleg.jpg" alt="Graafmachine legt natuurvriendelijke oever aan">
                 </div>
                 <div class="activity-content">
                     <h3>Natuurvriendelijke oevers</h3>
@@ -1309,7 +1309,7 @@
             </div>
             <div class="activity-card">
                 <div class="activity-image">
-                    <img src="oever-beplanten.jpg" alt="Oeverplanten worden gezet">
+                    <img src="oever-planten.jpg" alt="Vrijwilligers planten oeverplanten">
                 </div>
                 <div class="activity-content">
                     <h3>Aanplanten</h3>
@@ -1508,6 +1508,9 @@
                     <img src="wijdemeren.png" alt="Gemeente Wijdemeren">
                 </div>
                 <div class="sponsor-item">
+                    <img src="Ankeveenseijsclub.png" alt="Ankeveense IJsclub">
+                </div>
+                <div class="sponsor-item">
                     <img src="Appelboom.png" alt="De Appelboom">
                 </div>
                 <div class="sponsor-item">
@@ -1645,13 +1648,13 @@
             <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
             
             <div class="contact-options">
-                <a href="mailto:natuurrijkankeveen@protonmail.com" class="contact-option">
+                <a href="/cdn-cgi/l/email-protection#3957584d4c4c4b4b5053525857525c4f5c5c5779494b564d565754585055175a5654" class="contact-option">
                     <div class="contact-option-icon email">
                         <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                     </div>
                     <div class="contact-option-text">
                         <strong>E-mail</strong>
-                        <span>natuurrijkankeveen@protonmail.com</span>
+                        <span><span class="__cf_email__" data-cfemail="d6b8b7a2a3a3a4a4bfbcbdb7b8bdb3a0b3b3b896a6a4b9a2b9b8bbb7bfbaf8b5b9bb">[email&#160;protected]</span></span>
                     </div>
                 </a>
                 
@@ -1692,7 +1695,7 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         function openContactModal() {
             document.getElementById('contactModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1700,13 +1703,4 @@
 
         function closeContactModal(event) {
             if (event && event.target.closest('.contact-modal-content')) return;
-            document.getElementById('contactModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeContactModal();
-        });
-    </script>
-</body>
-</html>
+            document.getEleme
