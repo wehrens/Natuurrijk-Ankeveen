@@ -969,22 +969,56 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             z-index: 2000;
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            padding: 2rem;
         }
 
         .lightbox.active {
             display: flex;
         }
 
-        .lightbox img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 10px;
+        .lightbox-content {
+            display: flex;
+            gap: 2rem;
+            max-width: 1000px;
+            align-items: center;
+            cursor: default;
+        }
+
+        .lightbox-content img {
+            max-width: 400px;
+            max-height: 80vh;
+            border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-text {
+            color: white;
+            max-width: 400px;
+        }
+
+        .lightbox-text h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--green-light);
+        }
+
+        .lightbox-text .role {
+            font-size: 1rem;
+            opacity: 0.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .lightbox-text .quote {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            font-style: italic;
+            opacity: 0.9;
         }
 
         .lightbox-close {
@@ -1000,6 +1034,22 @@
 
         .lightbox-close:hover {
             opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .lightbox-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .lightbox-content img {
+                max-width: 80vw;
+                max-height: 40vh;
+            }
+
+            .lightbox-text {
+                max-width: 90vw;
+            }
         }
     </style>
 </head>
@@ -1362,7 +1412,7 @@
                 <ul>
                     <li>Ron Wehrens</li>
                     <li><a href="tel:0646293590">06-46293590</a></li>
-                    <li><a href="/cdn-cgi/l/email-protection#c4aaa5b0b1b1b6b6adaeafa5aaafa1b2a1a1aa84b4b6abb0abaaa9a5ada8eaa7aba9">natuurrijkankeveen<br>@protonmail.com</a></li>
+                    <li><a href="mailto:natuurrijkankeveen@protonmail.com">natuurrijkankeveen<br>@protonmail.com</a></li>
                 </ul>
             </div>
         </div>
@@ -1371,20 +1421,82 @@
         </div>
     </footer>
 
+
     <!-- Lightbox -->
-    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
         <span class="lightbox-close">&times;</span>
-        <img id="lightbox-img" src="" alt="">
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <img id="lightbox-img" src="" alt="">
+            <div class="lightbox-text" id="lightbox-text">
+                <h3 id="lightbox-name"></h3>
+                <div class="role" id="lightbox-role"></div>
+                <div class="quote" id="lightbox-quote"></div>
+            </div>
+        </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
+        const teamData = {
+            'Arda.jpg': {
+                name: 'Arda van der Lee',
+                role: 'Biologe',
+                quote: 'Als biologe zie ik dagelijks hoe waardevol biodiversiteit is. Het is prachtig om te zien hoe snel de natuur zich herstelt als je haar de ruimte geeft. Samen met de werkgroep kunnen we echt het verschil maken voor de planten en dieren in Ankeveen.'
+            },
+            'Martin.jpg': {
+                name: 'Martin Ockhuijsen',
+                role: 'Vrijwillig boswachter',
+                quote: 'Als vrijwillig boswachter ken ik elk hoekje van de Ankeveense natuur. Het geeft enorme voldoening om te zien hoe onze projecten de biodiversiteit versterken. Van elke nieuwe plantensoort die terugkomt word ik blij!'
+            },
+            'Wijnand.jpg': {
+                name: 'Wijnand Smit',
+                role: 'Ecologisch hovenier',
+                quote: 'Als ecologisch hovenier weet ik welke inheemse planten hier thuishoren en hoe je ze het beste kunt laten gedijen. Het mooiste is om te zien hoe een kale oever verandert in een bloeiende biotoop vol leven.'
+            },
+            'Ron.jpg': {
+                name: 'Ron Wehrens',
+                role: 'Apotheker',
+                quote: 'Ik ben erg bezorgd over de opwarming van de aarde en het verlies van biodiversiteit. Maar in plaats van bij de pakken neer te zitten zet ik me in voor de natuur in m\'n directe omgeving. Dat voelt goed, je ziet resultaat en het is heerlijk met meer mensen te zijn die er net zo over denken en de handen uit de mouwen willen steken!'
+            },
+            'Hans.jpg': {
+                name: 'Hans Hazes',
+                role: 'Ondernemer',
+                quote: 'Als ondernemer weet ik hoe belangrijk het is om te investeren in de toekomst. En wat is er belangrijker dan investeren in onze natuur? De energie en het enthousiasme van onze vrijwilligers zijn aanstekelijk!'
+            },
+            'NatuurwerkgroepAnkeveen.png': {
+                name: 'Het kernteam',
+                role: 'v.l.n.r.: Wijnand, Arda, Hans, Ron, Martin',
+                quote: 'Samen zetten we ons in voor een natuurrijker Ankeveen. Met verschillende achtergronden en expertises vullen we elkaar perfect aan. Van zeisen tot zwaluwen, van oevers tot educatie – we pakken het samen aan!'
+            }
+        };
+
         function openLightbox(src) {
             document.getElementById('lightbox-img').src = src;
+            
+            const data = teamData[src];
+            const textDiv = document.getElementById('lightbox-text');
+            
+            if (data) {
+                document.getElementById('lightbox-name').textContent = data.name;
+                document.getElementById('lightbox-role').textContent = data.role;
+                document.getElementById('lightbox-quote').textContent = data.quote;
+                textDiv.style.display = 'block';
+            } else {
+                textDiv.style.display = 'none';
+            }
+            
             document.getElementById('lightbox').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeLightbox() {
+        function closeLightbox(event) {
+            if (event && event.target.closest('.lightbox-content')) return;
             document.getElementById('lightbox').classList.remove('active');
             document.body.style.overflow = 'auto';
- 
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>
