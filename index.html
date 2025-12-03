@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Natuurrijk Ankeveen - Samen bouwen aan biodiversiteit</title>
     <meta name="description" content="Werkgroep Natuurrijk Ankeveen zet zich in voor meer biodiversiteit in Ankeveen. Van zeismaaien tot zwaluwbescherming – doe mee!">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -270,6 +271,15 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .hero-image-main img.active {
+            opacity: 1;
         }
 
         .hero-badge {
@@ -1227,8 +1237,13 @@
                 </div>
             </div>
             <div class="hero-visual">
-                <div class="hero-image-main">
-                    <img src="groepsfoto-zeisbrigade.jpg" alt="De Zeisbrigade van Natuurrijk Ankeveen">
+                <div class="hero-image-main" id="heroSlideshow">
+                    <img src="groepsfoto-zeisbrigade.jpg" alt="De Zeisbrigade van Natuurrijk Ankeveen" class="active">
+                    <img src="Oeveraanleg.jpg" alt="Aanleg natuurvriendelijke oever">
+                    <img src="zwaluwtil-speeltuin.jpg" alt="De huiszwaluwtil bij de speeltuin">
+                    <img src="hooiopper.jpg" alt="Hooiopper na het zeisen">
+                    <img src="oever-planten.jpg" alt="Vrijwilligers planten oeverplanten">
+                    <img src="Lokin2025.jpg" alt="Educatie op de Joseph Lokinschool">
                 </div>
                 <div class="hero-badge">
                     <span>35+</span>
@@ -1703,4 +1718,25 @@
 
         function closeContactModal(event) {
             if (event && event.target.closest('.contact-modal-content')) return;
-            document.getEleme
+            document.getElementById('contactModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeContactModal();
+        });
+
+        // Hero slideshow
+        const slides = document.querySelectorAll('#heroSlideshow img');
+        let currentSlide = 0;
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        setInterval(nextSlide, 8000);
+    </script>
+</body>
+</html>
