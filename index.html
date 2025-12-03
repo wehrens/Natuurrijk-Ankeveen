@@ -91,6 +91,16 @@
             object-fit: contain;
         }
 
+        .logo-egel {
+            margin-left: 0.5rem;
+            animation: egelWalk 3s ease-in-out infinite;
+        }
+
+        @keyframes egelWalk {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+
         .logo-text {
             font-family: 'Fraunces', serif;
             font-size: 1.4rem;
@@ -898,6 +908,30 @@
             text-align: center;
             font-size: 0.9rem;
             opacity: 0.7;
+            position: relative;
+        }
+
+        .footer-egel {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            animation: egelFooterWalk 20s linear infinite;
+        }
+
+        .footer-egel img {
+            width: 50px;
+            height: auto;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .footer-egel:hover img {
+            opacity: 1;
+        }
+
+        @keyframes egelFooterWalk {
+            0% { left: -60px; }
+            100% { left: calc(100% + 60px); }
         }
 
         /* Animations */
@@ -1302,6 +1336,7 @@
                 <div class="logo-icon"><img src="libelle.png" alt="Libelle"></div>
                 <span class="logo-text">Natuurrijk Ankeveen</span>
                 <div class="logo-icon"><img src="huiszwaluw.png" alt="Huiszwaluw"></div>
+                <div class="logo-icon logo-egel"><img src="egel.png" alt="Egel"></div>
             </a>
             <ul class="nav-links">
                 <li><a href="#over-ons">Over ons</a></li>
@@ -1681,6 +1716,7 @@
                     <div class="logo-icon"><img src="libelle.png" alt="Libelle"></div>
                     <span class="logo-text">Natuurrijk Ankeveen</span>
                     <div class="logo-icon"><img src="huiszwaluw.png" alt="Huiszwaluw"></div>
+                    <div class="logo-icon logo-egel"><img src="egel.png" alt="Egel"></div>
                 </a>
                 <p>Samen bouwen aan biodiversiteit in Ankeveen. Onze werkgroep opereert onder Stichting Bruisend Ankeveen.</p>
                 <div class="footer-logo">
@@ -1714,6 +1750,9 @@
         </div>
         <div class="footer-bottom">
             <span>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van Stichting Bruisend Ankeveen · IBAN: NL97 INGB 0006 3150 11</span>
+            <div class="footer-egel">
+                <img src="egel.png" alt="Egel">
+            </div>
         </div>
     </footer>
 
@@ -1863,3 +1902,7 @@
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeContactModal();
+        });
+    </script>
+</body>
+</html>

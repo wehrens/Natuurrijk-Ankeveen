@@ -56,6 +56,8 @@
             color: var(--green-dark); font-size: 2rem;
         }
         .logo-icon img { width: 100%; height: 100%; object-fit: contain; }
+        .logo-egel { margin-left: 0.5rem; animation: egelWalk 3s ease-in-out infinite; }
+        @keyframes egelWalk { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
         .logo-text { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; }
         .nav-links { display: flex; gap: 2rem; list-style: none; }
         .nav-links a {
@@ -245,6 +247,7 @@
                 <div class="logo-icon"><img src="libelle.png" alt="Libelle"></div>
                 <span class="logo-text">Natuurrijk Ankeveen</span>
                 <div class="logo-icon"><img src="huiszwaluw.png" alt="Huiszwaluw"></div>
+                <div class="logo-icon logo-egel"><img src="egel.png" alt="Egel"></div>
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
@@ -367,11 +370,19 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         function openContactModal() {
             document.getElementById('contactModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
         function closeContactModal(event) {
             if (event && event.target.closest('.contact-modal-content')) return;
-            document.getElem
+            document.getElementById('contactModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeContactModal();
+        });
+    </script>
+</body>
+</html>

@@ -4,27 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aanplanten - Natuurrijk Ankeveen</title>
-    <meta name="description" content="Natuurrijk Ankeveen plant uitsluitend inheemse, biologisch gekweekte planten voor meer biodiversiteit.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root { --green-dark: #2d4a3e; --green-medium: #4a7c59; --green-light: #7fb069; --green-pale: #d4e6c3; --cream: #f8f6f0; --cream-dark: #e8e4d9; --brown: #8b6914; --text-dark: #1a2e22; --text-medium: #3d5a4a; --white: #ffffff; }
+        :root { --green-dark: #2d4a3e; --green-medium: #4a7c59; --green-light: #7fb069; --green-pale: #d4e6c3; --cream: #f8f6f0; --cream-dark: #e8e4d9; --brown: #8b6914; --text-dark: #1a2e22; --text-medium: #3d5a4a; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
         body { font-family: 'Source Sans 3', sans-serif; background-color: var(--cream); color: var(--text-dark); line-height: 1.6; }
         h1, h2, h3, h4 { font-family: 'Fraunces', serif; font-weight: 600; }
         nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(248, 246, 240, 0.95); backdrop-filter: blur(10px); z-index: 1000; padding: 1rem 2rem; border-bottom: 1px solid var(--cream-dark); }
         .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--green-dark); }
-        .logo-icon { width: 45px; height: 45px; background: transparent; border-radius: 0; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+        .logo-icon { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; }
         .logo-icon img { width: 100%; height: 100%; object-fit: contain; }
+        .logo-egel { margin-left: 0.5rem; animation: egelWalk 3s ease-in-out infinite; }
+        @keyframes egelWalk { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
         .logo-text { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; }
         .nav-links { display: flex; gap: 2rem; list-style: none; }
         .nav-links a { text-decoration: none; color: var(--text-medium); font-weight: 500; }
-        .nav-links a:hover { color: var(--green-medium); }
         .nav-cta { background: var(--green-medium); color: white !important; padding: 0.6rem 1.2rem; border-radius: 25px; }
-        .nav-cta:hover { background: var(--green-dark); }
-        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--green-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
         .page-header { padding: 8rem 2rem 4rem; background: linear-gradient(135deg, var(--green-pale) 0%, var(--cream) 100%); text-align: center; }
         .page-header h1 { font-size: 3rem; color: var(--green-dark); margin-bottom: 1rem; }
         .page-header p { font-size: 1.25rem; color: var(--text-medium); max-width: 600px; margin: 0 auto; }
@@ -33,42 +31,39 @@
         .content-section p { color: var(--text-medium); margin-bottom: 1.5rem; font-size: 1.1rem; }
         .content-section ul { margin: 1.5rem 0 1.5rem 1.5rem; color: var(--text-medium); }
         .content-section li { margin-bottom: 0.75rem; font-size: 1.1rem; }
-        .highlight-box { background: var(--green-pale); padding: 2rem; border-radius: 15px; margin: 2rem 0; border-left: 4px solid var(--green-medium); }
-        .highlight-box p { margin-bottom: 0; font-size: 1.1rem; color: var(--green-dark); }
         .image-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0; }
-        .image-grid img { width: 100%; height: 250px; object-fit: contain; border-radius: 15px; box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15); }
+        .image-grid img { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15); }
         .image-grid.single { grid-template-columns: 1fr; }
         .image-grid.single img { height: 400px; }
+        .highlight-box { background: var(--green-pale); padding: 2rem; border-radius: 15px; margin: 2rem 0; border-left: 4px solid var(--green-medium); }
+        .highlight-box p { margin-bottom: 0; font-size: 1.1rem; color: var(--green-dark); }
         .cta-section { padding: 4rem 2rem; background: var(--green-dark); text-align: center; }
         .cta-section h2 { font-size: 2rem; color: white; margin-bottom: 1rem; }
         .cta-section p { color: rgba(255,255,255,0.9); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .btn { padding: 1rem 2rem; border-radius: 30px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn { padding: 1rem 2rem; border-radius: 30px; font-weight: 600; text-decoration: none; cursor: pointer; border: none; }
         .btn-primary { background: var(--green-light); color: var(--green-dark); }
-        .btn-primary:hover { background: white; transform: translateY(-3px); }
         .btn-secondary { background: transparent; color: white; border: 2px solid white; margin-left: 1rem; }
-        .btn-secondary:hover { background: white; color: var(--green-dark); }
         footer { background: var(--green-dark); color: white; padding: 3rem 2rem 1.5rem; text-align: center; }
         footer p { opacity: 0.8; margin-bottom: 1rem; }
         footer a { color: var(--green-light); text-decoration: none; }
         .contact-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 2000; justify-content: center; align-items: center; padding: 1rem; }
         .contact-modal.active { display: flex; }
-        .contact-modal-content { background: white; border-radius: 25px; padding: 2.5rem; max-width: 450px; width: 100%; position: relative; animation: modalSlideIn 0.3s ease; }
-        @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .contact-modal-content { background: white; border-radius: 25px; padding: 2.5rem; max-width: 450px; width: 100%; position: relative; }
         .contact-modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; color: var(--text-medium); cursor: pointer; }
         .contact-modal h3 { font-size: 1.8rem; color: var(--green-dark); margin-bottom: 0.5rem; text-align: center; }
         .contact-modal-subtitle { text-align: center; color: var(--text-medium); margin-bottom: 2rem; }
         .contact-options { display: flex; flex-direction: column; gap: 1rem; }
         .contact-option { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; background: var(--cream); border-radius: 15px; text-decoration: none; color: var(--text-dark); transition: all 0.3s ease; border: 2px solid transparent; }
         .contact-option:hover { border-color: var(--green-medium); transform: translateX(5px); background: var(--green-pale); }
-        .contact-option-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .contact-option-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
         .contact-option-icon.email { background: #EA4335; }
         .contact-option-icon.whatsapp { background: #25D366; }
         .contact-option-icon.signal { background: #3A76F0; }
         .contact-option-icon.phone { background: var(--green-medium); }
         .contact-option-text strong { display: block; font-size: 1.1rem; color: var(--green-dark); }
         .contact-option-text span { font-size: 0.9rem; color: var(--text-medium); }
-        .contact-modal-footer { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--cream-dark); text-align: center; color: var(--text-medium); font-size: 0.9rem; }
-        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .image-grid img { height: 200px; } .btn-secondary { margin-left: 0; margin-top: 1rem; } }
+        .contact-modal-footer { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--cream-dark); text-align: center; color: var(--text-medium); }
+        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .btn-secondary { margin-left: 0; margin-top: 1rem; } }
     </style>
 </head>
 <body>
@@ -78,6 +73,7 @@
                 <div class="logo-icon"><img src="libelle.png" alt="Libelle"></div>
                 <span class="logo-text">Natuurrijk Ankeveen</span>
                 <div class="logo-icon"><img src="huiszwaluw.png" alt="Huiszwaluw"></div>
+                <div class="logo-icon logo-egel"><img src="egel.png" alt="Egel"></div>
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
@@ -100,16 +96,14 @@
         </div>
 
         <h2>Alleen inheemse planten</h2>
-        <p>Bij Natuurrijk Ankeveen werken we uitsluitend met inheemse planten, struiken en bomen. Waarom? Omdat onze lokale insecten, vogels en andere dieren al duizenden jaren samen zijn geëvolueerd met deze planten. Ze bieden precies het juiste voedsel en de juiste schuilplaatsen.</p>
+        <p>Bij Natuurrijk Ankeveen werken we uitsluitend met inheemse planten, struiken en bomen. Onze lokale insecten en vogels zijn al duizenden jaren samen geëvolueerd met deze planten.</p>
 
         <div class="highlight-box">
-            <p>🐝 <strong>Wist je dat...</strong> een exotische plant vaak geen enkele waarde heeft voor onze inheemse insecten? Een vlinderstruik (Buddleja) trekt wel vlinders aan met zijn nectar, maar de rupsen kunnen er niet op leven. Inheemse planten bieden het complete plaatje!</p>
+            <p>🐝 <strong>Wist je dat...</strong> een exotische plant vaak geen enkele waarde heeft voor onze inheemse insecten? Een vlinderstruik trekt wel vlinders aan met nectar, maar de rupsen kunnen er niet op leven. Inheemse planten bieden het complete plaatje!</p>
         </div>
 
         <h2>Biologisch gekweekt</h2>
-        <p>Al onze planten komen van gerenommeerde kwekers die biologisch kweken. Dat betekent: <strong>zonder pesticiden</strong>. Dit is essentieel, want pesticiden blijven in de plant aanwezig en kunnen insecten doden die nectar of stuifmeel verzamelen.</p>
-
-        <p>Veel reguliere tuincentrumplanten zijn behandeld met neonicotinoïden – gif dat bijen en andere bestuivers ernstig schaadt. Bij ons kun je erop vertrouwen dat elke plant veilig is voor het hele ecosysteem.</p>
+        <p>Al onze planten komen van gerenommeerde kwekers die biologisch kweken: <strong>zonder pesticiden</strong>. Dit is essentieel, want pesticiden blijven in de plant aanwezig en kunnen insecten doden.</p>
 
         <div class="image-grid single">
             <img src="IjsbaanJul2024.jpg" alt="Resultaat: bloeiende oever">
@@ -117,26 +111,22 @@
 
         <h2>Wat we planten</h2>
         <ul>
-            <li><strong>Oeverplanten</strong> – Gele lis, dotterbloem, watermunt, moerasvergeet-mij-nietje</li>
-            <li><strong>Bloeiende struiken</strong> – Meidoorn, sleedoorn, wilde liguster, gelderse roos</li>
-            <li><strong>Besdragende struiken</strong> – Voedsel voor vogels in herfst en winter</li>
+            <li><strong>Oeverplanten</strong> – Gele lis, dotterbloem, watermunt</li>
+            <li><strong>Bloeiende struiken</strong> – Meidoorn, sleedoorn, wilde liguster</li>
+            <li><strong>Besdragende struiken</strong> – Voedsel voor vogels</li>
             <li><strong>Inheemse bomen</strong> – Knotwilgen, zwarte els, zomereik</li>
         </ul>
-
-        <h2>Onze kwekers</h2>
-        <p>We werken samen met ecologische kwekerijen die dezelfde waarden delen. Zij kweken met respect voor de natuur, zonder chemische bestrijdingsmiddelen, en met aandacht voor biodiversiteit.</p>
     </section>
 
     <section class="cta-section">
         <h2>Help mee met planten!</h2>
-        <p>We organiseren regelmatig plantdagen. Lekker buiten bezig zijn, met je handen in de aarde, en direct zien dat je iets goeds doet voor de natuur.</p>
+        <p>We organiseren regelmatig plantdagen. Lekker buiten bezig zijn, met je handen in de aarde!</p>
         <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Neem contact op →</a>
         <a href="index.html" class="btn btn-secondary">← Terug naar home</a>
     </section>
 
     <footer>
         <p>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van <a href="https://bruisendankeveen.nl" target="_blank">Stichting Bruisend Ankeveen</a></p>
-        <p><a href="index.html">Terug naar hoofdpagina</a></p>
     </footer>
 
     <div class="contact-modal" id="contactModal" onclick="closeContactModal(event)">
@@ -145,16 +135,16 @@
             <h3>📬 Neem contact op</h3>
             <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
             <div class="contact-options">
-                <a href="/cdn-cgi/l/email-protection#caa4abbebfbfb8b8a3a0a1aba4a1afbcafafa48abab8a5bea5a4a7aba3a6e4a9a5a7" class="contact-option">
+                <a href="mailto:natuurrijkankeveen@protonmail.com" class="contact-option">
                     <div class="contact-option-icon email"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
-                    <div class="contact-option-text"><strong>E-mail</strong><span><span class="__cf_email__" data-cfemail="06686772737374746f6c6d67686d6370636368467674697269686b676f6a2865696b">[email&#160;protected]</span></span></div>
+                    <div class="contact-option-text"><strong>E-mail</strong><span>natuurrijkankeveen@protonmail.com</span></div>
                 </a>
                 <a href="https://wa.me/31646293590" target="_blank" class="contact-option">
-                    <div class="contact-option-icon whatsapp"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+                    <div class="contact-option-icon whatsapp"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></div>
                     <div class="contact-option-text"><strong>WhatsApp</strong><span>Stuur ons een berichtje</span></div>
                 </a>
                 <a href="https://signal.me/#p/+31646293590" target="_blank" class="contact-option">
-                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.4c5.302 0 9.6 4.298 9.6 9.6s-4.298 9.6-9.6 9.6S2.4 17.302 2.4 12 6.698 2.4 12 2.4z"/></svg></div>
+                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div>
                     <div class="contact-option-text"><strong>Signal</strong><span>Veilig en privé chatten</span></div>
                 </a>
                 <a href="tel:+31646293590" class="contact-option">
@@ -166,6 +156,19 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        function openContactModal() { document.getElementById('contactModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
-        function closeContactModal(event) { if (event && event.target.closest('.contact-m
+    <script>
+        function openContactModal() {
+            document.getElementById('contactModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeContactModal(event) {
+            if (event && event.target.closest('.contact-modal-content')) return;
+            document.getElementById('contactModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeContactModal();
+        });
+    </script>
+</body>
+</html>
