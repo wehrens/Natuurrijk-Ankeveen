@@ -51,7 +51,7 @@
         }
         .logo-icon {
             width: 45px; height: 45px;
-            background: transparent; border-radius: 50%;
+            background: transparent; border-radius: 0;
             display: flex; align-items: center; justify-content: center;
             color: var(--green-dark); font-size: 2rem;
         }
@@ -116,7 +116,7 @@
         .image-grid img {
             width: 100%;
             height: 250px;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15);
         }
@@ -241,7 +241,7 @@
     <nav>
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <div class="logo-icon">🐸</div>
+                <div class="logo-icon"><img src="libelle.png" alt="Libelle"></div>
                 <span class="logo-text">Natuurrijk Ankeveen</span>
             </a>
             <ul class="nav-links">
@@ -318,13 +318,13 @@
             <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
             
             <div class="contact-options">
-                <a href="mailto:natuurrijkankeveen@protonmail.com" class="contact-option">
+                <a href="/cdn-cgi/l/email-protection#4d232c3938383f3f2427262c2326283b2828230d3d3f22392223202c2421632e2220" class="contact-option">
                     <div class="contact-option-icon email">
                         <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                     </div>
                     <div class="contact-option-text">
                         <strong>E-mail</strong>
-                        <span>natuurrijkankeveen@protonmail.com</span>
+                        <span><span class="__cf_email__" data-cfemail="137d7267666661617a7978727d78766576767d5363617c677c7d7e727a7f3d707c7e">[email&#160;protected]</span></span>
                     </div>
                 </a>
                 
@@ -365,19 +365,11 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         function openContactModal() {
             document.getElementById('contactModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
         function closeContactModal(event) {
             if (event && event.target.closest('.contact-modal-content')) return;
-            document.getElementById('contactModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeContactModal();
-        });
-    </script>
-</body>
-</html>
+            document.getElem
