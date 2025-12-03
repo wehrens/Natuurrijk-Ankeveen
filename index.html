@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Natuurrijk Ankeveen</title>
+    <title>Natuurrijk Ankeveen - Samen bouwen aan biodiversiteit</title>
+    <meta name="description" content="Werkgroep Natuurrijk Ankeveen zet zich in voor meer biodiversiteit in Ankeveen. Van zeismaaien tot zwaluwbescherming – doe mee!">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -359,7 +360,6 @@
             border-radius: 20px;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
         }
 
         .activity-card:hover {
@@ -429,7 +429,7 @@
         }
 
         .results-container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
@@ -451,9 +451,15 @@
             color: var(--green-dark);
         }
 
+        .results-images {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
         .results-image {
             background: white;
-            padding: 1rem;
+            padding: 0.75rem;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(45, 74, 62, 0.1);
         }
@@ -462,6 +468,10 @@
             width: 100%;
             height: auto;
             border-radius: 10px;
+        }
+
+        .results-image.large {
+            grid-column: span 2;
         }
 
         /* CTA Section */
@@ -527,28 +537,29 @@
         }
 
         .news-featured {
-            background: var(--green-dark);
             border-radius: 25px;
-            padding: 2.5rem;
-            color: white;
-            position: relative;
             overflow: hidden;
+            position: relative;
+            min-height: 400px;
         }
 
-        .news-featured::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
+        .news-featured img {
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, var(--green-medium) 0%, transparent 70%);
-            opacity: 0.3;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
-        .news-featured-content {
-            position: relative;
-            z-index: 1;
+        .news-featured-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(45, 74, 62, 0.95));
+            padding: 3rem 2rem 2rem;
+            color: white;
         }
 
         .news-tag {
@@ -563,13 +574,13 @@
         }
 
         .news-featured h3 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            margin-bottom: 0.75rem;
         }
 
         .news-featured p {
             opacity: 0.9;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .news-sidebar {
@@ -616,14 +627,14 @@
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 250px);
+            gap: 1rem;
         }
 
         .gallery-item {
             border-radius: 15px;
             overflow: hidden;
-            aspect-ratio: 4/3;
             box-shadow: 0 5px 20px rgba(45, 74, 62, 0.1);
             transition: transform 0.3s ease;
         }
@@ -640,6 +651,10 @@
 
         .gallery-item.large {
             grid-column: span 2;
+        }
+
+        .gallery-item.tall {
+            grid-row: span 2;
         }
 
         /* Team Section */
@@ -868,10 +883,11 @@
 
             .gallery-grid {
                 grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: auto;
             }
 
-            .gallery-item.large {
-                grid-column: span 1;
+            .gallery-item.tall {
+                grid-row: span 1;
             }
 
             .sponsors-grid {
@@ -916,12 +932,24 @@
                 grid-template-columns: 1fr;
             }
 
+            .gallery-item.large {
+                grid-column: span 1;
+            }
+
             .hero-image-main {
                 height: 300px;
             }
 
             .sponsors-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .results-images {
+                grid-template-columns: 1fr;
+            }
+
+            .results-image.large {
+                grid-column: span 1;
             }
         }
     </style>
@@ -963,11 +991,11 @@
             </div>
             <div class="hero-visual">
                 <div class="hero-image-main">
-                    <img src="SlotenAnkeveen.jpg" alt="Vrijwilligers aan het werk bij de oever">
+                    <img src="images/groepsfoto-zeisbrigade.jpg" alt="De Zeisbrigade van Natuurrijk Ankeveen">
                 </div>
                 <div class="hero-badge">
-                    <span>5</span>
-                    jaar actief!
+                    <span>35+</span>
+                    vrijwilligers
                 </div>
             </div>
         </div>
@@ -1004,59 +1032,59 @@
         <div class="activities-grid">
             <div class="activity-card">
                 <div class="activity-image">
-                    <img src="Klus.jpg" alt="Vrijwilligers aan het werk">
+                    <img src="images/zeisen-actie.jpg" alt="Vrijwilligers maaien met de zeis">
                 </div>
                 <div class="activity-content">
                     <h3>Zeisbrigade</h3>
-                    <p>Met 35 vrijwilligers maaien we op de traditionele manier. Goed voor de biodiversiteit én een heerlijke bezigheid!</p>
+                    <p>Met 35 vrijwilligers maaien we op de traditionele manier. Goed voor de biodiversiteit én een heerlijke bezigheid in de buitenlucht!</p>
                     <a href="#" class="activity-link">Meer info →</a>
                 </div>
             </div>
             <div class="activity-card">
                 <div class="activity-image">
-                    <img src="SlotenAnkeveen.jpg" alt="Onderhoud natuurvriendelijke oever">
+                    <img src="images/oever-planten.jpg" alt="Vrijwilligers planten oeverplanten">
                 </div>
                 <div class="activity-content">
                     <h3>Natuurvriendelijke oevers</h3>
-                    <p>Van IJsclub tot Buhrmanlaan: we leggen oevers aan met inheemse planten en struiken.</p>
+                    <p>Van IJsclub tot Buhrmanlaan: we leggen oevers aan met inheemse planten voor insecten, vogels en amfibieën.</p>
                     <a href="#" class="activity-link">Bekijk projecten →</a>
                 </div>
             </div>
             <div class="activity-card">
                 <div class="activity-image">
-                    <img src="IMG_5525.jpg" alt="Zwaluwtil plaatsen">
+                    <img src="images/nestkastjes-ophangen.jpg" alt="Vrijwilliger hangt zwaluwnestkasten op">
                 </div>
                 <div class="activity-content">
                     <h3>Huiszwaluw­bescherming</h3>
-                    <p>Van 6 naar 25 succesvolle nesten in één jaar! We helpen deze prachtige trekvogels.</p>
+                    <p>Van 6 naar 25 succesvolle nesten in één jaar! Met kunstnestjes en een zwaluwtil helpen we deze trekvogels.</p>
                     <a href="#" class="activity-link">Lees het verhaal →</a>
                 </div>
             </div>
             <div class="activity-card">
                 <div class="activity-image">
-                    <img src="Sloot.jpg" alt="Biodiversiteit in de sloot">
+                    <img src="images/Sloot.jpg" alt="Biodiversiteit in de sloot">
                 </div>
                 <div class="activity-content">
                     <h3>Biodiversiteit bevorderen</h3>
-                    <p>Van kikkers tot salamanders: onze sloten en oevers bieden een thuis aan talloze soorten.</p>
+                    <p>Van kikkers tot salamanders: onze sloten en oevers bieden een thuis aan talloze soorten flora en fauna.</p>
                     <a href="#" class="activity-link">Ontdek meer →</a>
                 </div>
             </div>
             <div class="activity-card">
                 <div class="activity-image">
-                    <img src="uit%20NH%20Nieuws.jpg" alt="Aanplanten oever">
+                    <img src="images/oever-beplanten.jpg" alt="Oeverplanten worden gezet">
                 </div>
                 <div class="activity-content">
                     <h3>Aanplanten</h3>
-                    <p>Samen met bewoners planten we inheemse struiken en planten voor vlinders, vogels en insecten.</p>
+                    <p>Samen met bewoners planten we inheemse struiken en oeverplanten voor vlinders, vogels en insecten.</p>
                     <a href="#" class="activity-link">Bekijk foto's →</a>
                 </div>
             </div>
             <div class="activity-card">
-                <div class="activity-image-placeholder">👧</div>
+                <div class="activity-image-placeholder">🎓</div>
                 <div class="activity-content">
                     <h3>Educatie</h3>
-                    <p>Op de Joseph Lokin school maken kinderen vogelhuisjes en insectenhotels met onze hulp.</p>
+                    <p>Op basisscholen maken kinderen vogelhuisjes en insectenhotels. Zo leren ze spelenderwijs over natuur.</p>
                     <a href="#" class="activity-link">Meer over educatie →</a>
                 </div>
             </div>
@@ -1076,8 +1104,16 @@
                     <p>Hoewel de zwaluwen hun eigen nestjes bouwden (vaak vlak naast onze kunstnestjes), gaven de nestkasten hen het gevoel dat dit een veilige en populaire plek is om te broeden.</p>
                     <p class="highlight">In heel Ankeveen telden we in 2025 zo'n 70 succesvolle broedgevallen!</p>
                 </div>
-                <div class="results-image">
-                    <img src="images/Huiszwaluwen_grafiek_2022_-_2025.jpg" alt="Grafiek aantal bewoonde nesten huiszwaluw 2022-2025">
+                <div class="results-images">
+                    <div class="results-image large">
+                        <img src="images/Huiszwaluwen_grafiek_2022_-_2025.jpg" alt="Grafiek aantal bewoonde nesten huiszwaluw 2022-2025">
+                    </div>
+                    <div class="results-image">
+                        <img src="images/zwaluwtil-speeltuin.jpg" alt="De huiszwaluwtil bij de speeltuin">
+                    </div>
+                    <div class="results-image">
+                        <img src="images/IMG_5525.jpg" alt="Vrijwilligers bij de zwaluwtil">
+                    </div>
                 </div>
             </div>
         </div>
@@ -1110,28 +1146,29 @@
             </div>
             <div class="news-grid">
                 <div class="news-featured">
-                    <div class="news-featured-content">
+                    <img src="images/toekomstversnellers.jpg" alt="Winnaar Toekomstversnellers 2024">
+                    <div class="news-featured-overlay">
                         <span class="news-tag">🏆 Uitgelicht</span>
-                        <h3>Huiszwaluw-seizoen 2025: een groot succes!</h3>
-                        <p>Van 6 naar 25 succesvolle broedsels in de Ooievaarsbuurt. De 54 kunstnestkasten en zwaluwtil hebben de kolonie een enorme boost gegeven.</p>
+                        <h3>Winnaar Toekomstversnellers 2024!</h3>
+                        <p>Ons project 'Bloemrijke en natuurrijke oevers in Ankeveen' won de provinciale prijs van Noord-Holland.</p>
                         <a href="#" class="btn btn-primary">Lees meer →</a>
                     </div>
                 </div>
                 <div class="news-sidebar">
                     <div class="news-small">
-                        <span class="news-date">November 2024</span>
-                        <h4>Natuurwerkdag groot succes</h4>
-                        <p>Samen plantten we de oever bij de Buhrmanlaan aan.</p>
+                        <span class="news-date">Zomer 2025</span>
+                        <h4>70 zwaluwnesten geteld!</h4>
+                        <p>Recordaantal broedgevallen in Ankeveen dankzij nestkasten en zwaluwtil.</p>
                     </div>
                     <div class="news-small">
-                        <span class="news-date">2024</span>
-                        <h4>Prijs Toekomstversnellers!</h4>
-                        <p>We wonnen de provinciale prijs voor ons oeverproject.</p>
+                        <span class="news-date">Juni 2025</span>
+                        <h4>Zeiscursus groot succes</h4>
+                        <p>Tientallen nieuwe enthousiastelingen leerden de kunst van het zeisen.</p>
                     </div>
                     <div class="news-small">
-                        <span class="news-date">Juli 2024</span>
-                        <h4>Zeiscursus weer een hit</h4>
-                        <p>Nieuwe enthousiastelingen leerden de kunst van het zeisen.</p>
+                        <span class="news-date">April 2025</span>
+                        <h4>Tweede zwaluwtil geplaatst</h4>
+                        <p>Met hulp van de gemeente staat er nu ook een til bij de speeltuin.</p>
                     </div>
                 </div>
             </div>
@@ -1142,23 +1179,26 @@
     <section class="gallery">
         <div class="section-header">
             <h2>Beelden uit het veld</h2>
-            <p>Een impressie van onze activiteiten</p>
+            <p>Een impressie van onze activiteiten door de jaren heen</p>
         </div>
         <div class="gallery-grid">
             <div class="gallery-item large">
-                <img src="uit%20NH%20Nieuws.jpg" alt="Vrijwilligers aan het planten">
+                <img src="images/zeiscursus-smid.jpg" alt="De smid leert zeisen slijpen">
             </div>
             <div class="gallery-item">
-                <img src="IMG_5525.jpg" alt="Zwaluwtil">
+                <img src="images/hooiopper.jpg" alt="Traditionele hooiopper">
             </div>
             <div class="gallery-item">
-                <img src="Klus.jpg" alt="Werkzaamheden">
+                <img src="images/zwaluwtil-plaatsen.jpg" alt="Plaatsen van de zwaluwtil">
+            </div>
+            <div class="gallery-item tall">
+                <img src="images/oever-graven.jpg" alt="Graafwerk voor natuurlijke oever">
             </div>
             <div class="gallery-item">
-                <img src="SlotenAnkeveen.jpg" alt="Oeveronderhoud">
+                <img src="images/tractor-zeisdag.jpg" alt="Zeisdag met tractor">
             </div>
-            <div class="gallery-item large">
-                <img src="Sloot.jpg" alt="Biodiversiteit">
+            <div class="gallery-item">
+                <img src="images/buurtbijeenkomst.jpg" alt="Uitleg aan buurtbewoners">
             </div>
         </div>
     </section>
@@ -1166,7 +1206,7 @@
     <!-- Team Section -->
     <section class="team" id="over-ons">
         <div class="section-header">
-            <h2>Het team</h2>
+            <h2>Het kernteam</h2>
             <p>Vijf gedreven Ankeveners vormen het hart van de werkgroep</p>
         </div>
         <div class="team-grid">
@@ -1235,7 +1275,7 @@
                     <div class="logo-icon">🌱</div>
                     <span class="logo-text">Natuurrijk Ankeveen</span>
                 </a>
-                <p>Samen bouwen aan biodiversiteit in Ankeveen. Al 5 jaar actief met praktische projecten die een verschil maken.</p>
+                <p>Samen bouwen aan biodiversiteit in Ankeveen. Al 5 jaar actief met praktische projecten die een verschil maken voor mens en natuur.</p>
             </div>
             <div class="footer-column">
                 <h4>Navigatie</h4>
