@@ -400,15 +400,6 @@
             transform: scale(1.05);
         }
 
-        .activity-image-placeholder {
-            height: 200px;
-            background: linear-gradient(135deg, var(--green-light), var(--green-medium));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-        }
-
         .activity-content {
             padding: 1.5rem;
         }
@@ -470,7 +461,7 @@
 
         .results-images {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
         }
 
@@ -488,7 +479,7 @@
         }
 
         .results-image.large {
-            grid-column: span 2;
+            grid-column: span 3;
         }
 
         /* CTA Section */
@@ -497,20 +488,11 @@
             background: linear-gradient(135deg, var(--cream) 0%, var(--green-pale) 100%);
         }
 
-        .cta-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-        }
-
         .cta-card {
             background: white;
             padding: 3rem;
             border-radius: 25px;
             box-shadow: 0 10px 40px rgba(45, 74, 62, 0.1);
-            text-align: center;
         }
 
         .cta-card h3 {
@@ -711,6 +693,12 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .team-avatar img:hover {
+            transform: scale(1.05);
         }
 
         .team-member h4 {
@@ -769,6 +757,11 @@
             object-fit: cover;
         }
 
+        .volunteer-item h4 {
+            font-size: 1rem;
+            color: var(--green-dark);
+        }
+
         /* Large Logo */
         .large-logo {
             max-width: 200px;
@@ -791,16 +784,6 @@
             width: 100%;
             height: auto;
             border-radius: 10px;
-        }
-
-        .volunteer-item h4 {
-            font-size: 1rem;
-            color: var(--green-dark);
-        }
-
-        .volunteer-item p {
-            font-size: 0.8rem;
-            color: var(--text-medium);
         }
 
         /* Sponsors Section */
@@ -958,6 +941,11 @@
                 margin: 0 auto;
             }
 
+            .large-logo {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
             .activities-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -1009,10 +997,6 @@
                 grid-template-columns: 1fr;
             }
 
-            .cta-container {
-                grid-template-columns: 1fr;
-            }
-
             .news-grid {
                 grid-template-columns: 1fr;
             }
@@ -1035,6 +1019,16 @@
 
             .hero-image-main {
                 height: 300px;
+                min-height: 300px;
+            }
+
+            .hero-image-main img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                position: absolute;
+                top: 0;
+                left: 0;
             }
 
             .sponsors-grid {
@@ -1058,18 +1052,18 @@
                 height: 60px;
                 font-size: 1.2rem;
             }
+
+            .hero-visual {
+                width: 100%;
+            }
+
+            .hero-badge {
+                bottom: -10px;
+                left: 10px;
+            }
         }
 
         /* Lightbox */
-        .team-avatar img {
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .team-avatar img:hover {
-            transform: scale(1.05);
-        }
-
         .lightbox {
             display: none;
             position: fixed;
@@ -1092,14 +1086,15 @@
         .lightbox-content {
             display: flex;
             gap: 2rem;
-            max-width: 1000px;
+            max-width: 95vw;
             align-items: center;
+            justify-content: center;
             cursor: default;
         }
 
         .lightbox-content img {
-            max-width: 400px;
-            max-height: 80vh;
+            max-width: 90vw;
+            max-height: 85vh;
             border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
@@ -1304,7 +1299,7 @@
     <nav>
         <div class="nav-container">
             <a href="#" class="logo">
-                <div class="logo-icon">🌱</div>
+                <div class="logo-icon">🐸</div>
                 <span class="logo-text">Natuurrijk Ankeveen</span>
             </a>
             <ul class="nav-links">
@@ -1463,7 +1458,10 @@
                 </div>
                 <div class="results-images">
                     <div class="results-image large">
-                        <img src="Huiszwaluwen_grafiek_2022_-_2025.jpg" alt="Grafiek aantal bewoonde nesten huiszwaluw 2022-2025">
+                        <img src="Huiszwaluwen_grafiek_2022_-_2025.jpg" alt="Grafiek aantal bewoonde nesten huiszwaluw 2022-2025" onclick="openLightbox('Huiszwaluwen_grafiek_2022_-_2025.jpg')" style="cursor: pointer;">
+                    </div>
+                    <div class="results-image">
+                        <img src="Huiszwaluwnestkastje.png" alt="Huiszwaluwkunstnest onder de dakgoot">
                     </div>
                     <div class="results-image">
                         <img src="IMG_5525.jpg" alt="Vrijwilligers bij de zwaluwtil">
@@ -1478,7 +1476,7 @@
 
     <!-- CTA Section -->
     <section class="cta-section" id="meedoen">
-        <div class="cta-container" style="max-width: 700px;">
+        <div style="max-width: 700px; margin: 0 auto;">
             <div class="cta-card" style="text-align: left;">
                 <div class="cta-icon">🙋</div>
                 <h3>Doe mee als vrijwilliger</h3>
@@ -1512,9 +1510,9 @@
                         <p>Recordaantal broedgevallen in Ankeveen dankzij kunstnesten en zwaluwtil.</p>
                     </div>
                     <div class="news-small">
-                        <span class="news-date">Juni 2025</span>
-                        <h4>Zeiscursus groot succes</h4>
-                        <p>Tientallen nieuwe enthousiastelingen leerden de kunst van het zeisen.</p>
+                        <span class="news-date">September 2026</span>
+                        <h4>Zeiscursus – datum volgt!</h4>
+                        <p>Wil je leren zeisen? Houd deze plek in de gaten voor de exacte datum.</p>
                     </div>
                     <div class="news-small">
                         <span class="news-date">April 2025</span>
@@ -1674,7 +1672,7 @@
         <div class="footer-container">
             <div class="footer-brand">
                 <a href="#" class="logo" style="color: white;">
-                    <div class="logo-icon">🌱</div>
+                    <div class="logo-icon">🐸</div>
                     <span class="logo-text">Natuurrijk Ankeveen</span>
                 </a>
                 <p>Samen bouwen aan biodiversiteit in Ankeveen. Onze werkgroep opereert onder Stichting Bruisend Ankeveen.</p>
@@ -1695,8 +1693,7 @@
                 <h4>Meedoen</h4>
                 <ul>
                     <li><a href="javascript:void(0)" onclick="openContactModal()">Word vrijwilliger</a></li>
-                    <li><a href="zeisbrigade.html">Zeiscursus</a></li>
-                    <li><a href="ruige-hoek.html">Natuurwerkdag</a></li>
+                    <li><a href="zeisbrigade.html">Zeiscursus (sept. 2026)</a></li>
                 </ul>
             </div>
             <div class="footer-column">
