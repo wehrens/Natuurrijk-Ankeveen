@@ -76,13 +76,17 @@
         .logo-icon {
             width: 45px;
             height: 45px;
-            background: linear-gradient(135deg, var(--green-medium) 0%, var(--green-dark) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.5rem;
+            overflow: hidden;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .logo-text {
@@ -717,6 +721,55 @@
             color: var(--text-medium);
         }
 
+        /* Extra Volunteers Section */
+        .volunteers-extra {
+            max-width: 800px;
+            margin: 3rem auto 0;
+            text-align: center;
+        }
+
+        .volunteers-extra h3 {
+            font-size: 1.5rem;
+            color: var(--green-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .volunteers-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .volunteer-item {
+            text-align: center;
+        }
+
+        .volunteer-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--green-pale), var(--green-light));
+            border-radius: 50%;
+            margin: 0 auto 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--green-dark);
+            box-shadow: 0 5px 15px rgba(74, 124, 89, 0.15);
+        }
+
+        .volunteer-item h4 {
+            font-size: 1rem;
+            color: var(--green-dark);
+        }
+
+        .volunteer-item p {
+            font-size: 0.8rem;
+            color: var(--text-medium);
+        }
+
         /* Sponsors Section */
         .sponsors {
             padding: 5rem 2rem;
@@ -962,7 +1015,18 @@
             .results-image.large {
                 grid-column: span 1;
             }
+
+            .volunteers-grid {
+                gap: 1rem;
+            }
+
+            .volunteer-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.2rem;
+            }
         }
+
         /* Lightbox */
         .team-avatar img {
             cursor: pointer;
@@ -1207,7 +1271,9 @@
     <nav>
         <div class="nav-container">
             <a href="#" class="logo">
-                <div class="logo-icon">🌱</div>
+                <div class="logo-icon">
+                    <img src="logo.jpg" alt="Natuurrijk Ankeveen logo">
+                </div>
                 <span class="logo-text">Natuurrijk Ankeveen</span>
             </a>
             <ul class="nav-links">
@@ -1305,7 +1371,7 @@
             </div>
             <div class="activity-card" onclick="window.location='zwaluwen.html'">
                 <div class="activity-image">
-                    <img src="Huiszwaluwnestkastje.png" alt="Huiszwaluwnest onder de dakgoot">
+                    <img src="Huiszwaluwnestkastje.jpg" alt="Huiszwaluwnest onder de dakgoot">
                 </div>
                 <div class="activity-content">
                     <h3>Huiszwaluw­bescherming</h3>
@@ -1341,6 +1407,34 @@
                     <h3>Educatie</h3>
                     <p>Op de Joseph Lokin school maken kinderen vogelhuisjes en insectenhotels. Zo leren ze spelenderwijs over natuur.</p>
                     <span class="activity-link">Meer over educatie →</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Zeisbrigade Detail Section -->
+    <section class="results" id="zeisbrigade-detail">
+        <div class="results-container">
+            <div class="section-header">
+                <h2>Onze zeisbrigade</h2>
+                <p>Traditioneel maaien voor meer biodiversiteit</p>
+            </div>
+            <div class="results-content">
+                <div class="results-text">
+                    <p>We werken in hechte samenwerking met de onderhoudsdienst van de gemeente Wijdemeren. Steeds meer plekken in en rond Ankeveen worden niet meer machinaal gemaaid, maar door onze zeisbrigade onderhouden. <strong>Ook maaien we diverse bermen en voeren we het maaisel af</strong>, zodat de bodem kan verschralen en er meer ruimte komt voor wilde bloemen.</p>
+                    <p>Een van deze plekken is het picknickveldje bij de Ruige Hoek. Sinds we hier in 2023 zijn begonnen met zeisen, zien we al dat er steeds meer bijzondere inheemse planten terugkomen!</p>
+                    <p>Verder helpt onze zeisbrigade de sympathieke zorgkwekerij Kostelijk aan de Middenweg (Nederhorst den Berg). Daar wordt een stuk land omgevormd tot een voedselbos en wij helpen daar met de zeis dit op een natuurlijke manier tot stand te doen komen.</p>
+                </div>
+                <div class="results-images">
+                    <div class="results-image large">
+                        <img src="groepsfoto-zeisbrigade.jpg" alt="De Zeisbrigade van Natuurrijk Ankeveen">
+                    </div>
+                    <div class="results-image">
+                        <img src="zeisen-actie.jpg" alt="Vrijwilligers maaien met de zeis">
+                    </div>
+                    <div class="results-image">
+                        <img src="hooiopper.jpg" alt="Hooiopper na het zeisen">
+                    </div>
                 </div>
             </div>
         </div>
@@ -1498,6 +1592,33 @@
                 <p>Ondernemer</p>
             </div>
         </div>
+
+        <!-- Extra Vrijwilligers -->
+        <div class="volunteers-extra">
+            <h3>🌿 Trouwe vrijwilligers</h3>
+            <div class="volunteers-grid">
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar">C</div>
+                    <h4>Coos</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar">H</div>
+                    <h4>Harry</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar">E</div>
+                    <h4>Els</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar">P</div>
+                    <h4>Peter</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar">A</div>
+                    <h4>Aicha</h4>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Sponsors Section -->
@@ -1535,7 +1656,9 @@
         <div class="footer-container">
             <div class="footer-brand">
                 <a href="#" class="logo" style="color: white;">
-                    <div class="logo-icon">🌱</div>
+                    <div class="logo-icon">
+                        <img src="logo.jpg" alt="Natuurrijk Ankeveen logo">
+                    </div>
                     <span class="logo-text">Natuurrijk Ankeveen</span>
                 </a>
                 <p>Samen bouwen aan biodiversiteit in Ankeveen. Onze werkgroep opereert onder Stichting Bruisend Ankeveen.</p>
@@ -1562,7 +1685,7 @@
                 <ul>
                     <li>Ron Wehrens</li>
                     <li><a href="tel:0646293590">06-46293590</a></li>
-                    <li><a href="/cdn-cgi/l/email-protection#f19f908584848383989b9a909f9a948794949fb181839e859e9f9c90989ddf929e9c">natuurrijkankeveen<br>@protonmail.com</a></li>
+                    <li><a href="mailto:natuurrijkankeveen@protonmail.com">natuurrijkankeveen<br>@protonmail.com</a></li>
                 </ul>
             </div>
         </div>
@@ -1570,7 +1693,6 @@
             <span>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van Stichting Bruisend Ankeveen · IBAN: NL97 INGB 0006 3150 11</span>
         </div>
     </footer>
-
 
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
@@ -1585,7 +1707,7 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         const teamData = {
             'Arda.jpg': {
                 name: 'Arda van der Lee',
@@ -1642,7 +1764,7 @@
             if (event && event.target.closest('.lightbox-content')) return;
             document.getElementById('lightbox').classList.remove('active');
             document.body.style.overflow = 'auto';
-         }
+        }
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeLightbox();
@@ -1657,13 +1779,13 @@
             <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
             
             <div class="contact-options">
-                <a href="/cdn-cgi/l/email-protection#3957584d4c4c4b4b5053525857525c4f5c5c5779494b564d565754585055175a5654" class="contact-option">
+                <a href="mailto:natuurrijkankeveen@protonmail.com" class="contact-option">
                     <div class="contact-option-icon email">
                         <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                     </div>
                     <div class="contact-option-text">
                         <strong>E-mail</strong>
-                        <span><span class="__cf_email__" data-cfemail="d6b8b7a2a3a3a4a4bfbcbdb7b8bdb3a0b3b3b896a6a4b9a2b9b8bbb7bfbaf8b5b9bb">[email&#160;protected]</span></span>
+                        <span>natuurrijkankeveen@protonmail.com</span>
                     </div>
                 </a>
                 
@@ -1704,7 +1826,7 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         function openContactModal() {
             document.getElementById('contactModal').classList.add('active');
             document.body.style.overflow = 'hidden';
