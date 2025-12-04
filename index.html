@@ -169,6 +169,7 @@
         /* Hero Section */
         .hero {
             min-height: 100vh;
+            min-height: -webkit-fill-available;
             display: flex;
             align-items: center;
             padding: 8rem 2rem 4rem;
@@ -981,6 +982,14 @@
             .hero-visual {
                 max-width: 500px;
                 margin: 0 auto;
+                width: 100%;
+                display: block;
+            }
+
+            .hero-image-main {
+                height: 350px;
+                min-height: 350px;
+                display: block;
             }
 
             .large-logo {
@@ -1097,6 +1106,8 @@
 
             .hero-visual {
                 width: 100%;
+                max-width: 100%;
+                display: block;
             }
 
             .hero-badge {
@@ -1729,7 +1740,9 @@
                     <h4>Francette</h4>
                 </div>
                 <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Ge">🐞</div>
+                    <div class="volunteer-avatar">
+                        <img src="images/Ge.jpg" alt="Ge" onclick="openLightbox(this.src)">
+                    </div>
                     <h4>Ge</h4>
                 </div>
                 <div class="volunteer-item">
