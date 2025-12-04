@@ -723,7 +723,7 @@
 
         /* Extra Volunteers Section */
         .volunteers-extra {
-            max-width: 800px;
+            max-width: 1100px;
             margin: 3rem auto 0;
             text-align: center;
         }
@@ -738,23 +738,24 @@
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
         .volunteer-item {
             text-align: center;
+            width: 90px;
         }
 
         .volunteer-avatar {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             background: linear-gradient(135deg, var(--green-pale), var(--green-light));
             border-radius: 50%;
             margin: 0 auto 0.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: 600;
             color: var(--green-dark);
             box-shadow: 0 5px 15px rgba(74, 124, 89, 0.15);
@@ -765,10 +766,16 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .volunteer-avatar img:hover {
+            transform: scale(1.1);
         }
 
         .volunteer-item h4 {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: var(--green-dark);
         }
 
@@ -1639,35 +1646,167 @@
         <div class="volunteers-extra">
             <h3>🌿 Trouwe vrijwilligers</h3>
             <div class="volunteers-grid">
+                <!-- Vrijwilligers met foto -->
                 <div class="volunteer-item">
                     <div class="volunteer-avatar">
-                        <img src="images/Coos.jpg" alt="Coos">
+                        <img src="images/Alex.jpg" alt="Alex" onclick="openLightbox(this.src)">
+                    </div>
+                    <h4>Alex</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar">
+                        <img src="images/Coos.jpg" alt="Coos" onclick="openLightbox(this.src)">
                     </div>
                     <h4>Coos</h4>
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar">
-                        <img src="images/Harry.jpg" alt="Harry">
-                    </div>
-                    <h4>Harry</h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar">
-                        <img src="images/Els.jpg" alt="Els">
+                        <img src="images/Els.jpg" alt="Els" onclick="openLightbox(this.src)">
                     </div>
                     <h4>Els</h4>
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar">
-                        <img src="images/Peter.jpg" alt="Peter">
+                        <img src="images/Harry.jpg" alt="Harry" onclick="openLightbox(this.src)">
                     </div>
-                    <h4>Peter</h4>
+                    <h4>Harry</h4>
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar">
-                        <img src="images/Nynke.jpg" alt="Nynke">
+                        <img src="images/Nynke.jpg" alt="Nynke" onclick="openLightbox(this.src)">
                     </div>
                     <h4>Nynke</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar">
+                        <img src="images/Peter.jpg" alt="Peter" onclick="openLightbox(this.src)">
+                    </div>
+                    <h4>Peter</h4>
+                </div>
+                <!-- Vrijwilligers wachtend op foto (alfabetisch) -->
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Cor">🦋</div>
+                    <h4>Cor</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Daan">🐸</div>
+                    <h4>Daan</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Dagmar">🌸</div>
+                    <h4>Dagmar</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Desiree">🌻</div>
+                    <h4>Desiree</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Diana">🦆</div>
+                    <h4>Diana</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Ed">🍄</div>
+                    <h4>Ed</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Eric">🐝</div>
+                    <h4>Eric</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Erik">🦎</div>
+                    <h4>Erik</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Femke">🌺</div>
+                    <h4>Femke</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Fen">🦉</div>
+                    <h4>Fen</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Francette">🌼</div>
+                    <h4>Francette</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Ge">🐞</div>
+                    <h4>Ge</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Gerrit">🌳</div>
+                    <h4>Gerrit</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Henk">🦔</div>
+                    <h4>Henk</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Jaap">🐿️</div>
+                    <h4>Jaap</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Jan">🌾</div>
+                    <h4>Jan</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Jantien">🦢</div>
+                    <h4>Jantien</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Joop">🌷</div>
+                    <h4>Joop</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Karin">🦜</div>
+                    <h4>Karin</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Karin2">🍀</div>
+                    <h4>Karin</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Loes">🌿</div>
+                    <h4>Loes</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Marjolein">🌲</div>
+                    <h4>Marjolein</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Patrick">🐢</div>
+                    <h4>Patrick</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="PeterdG">🌱</div>
+                    <h4>Peter d G</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Rene">🦩</div>
+                    <h4>Rene</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Rob">🦇</div>
+                    <h4>Rob</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Stephan">🐟</div>
+                    <h4>Stephan</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Tatakh">🌴</div>
+                    <h4>Tatakh</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Tilly">🦗</div>
+                    <h4>Tilly</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Willem">🐦</div>
+                    <h4>Willem</h4>
+                </div>
+                <div class="volunteer-item">
+                    <div class="volunteer-avatar" data-name="Wilma">🌹</div>
+                    <h4>Wilma</h4>
                 </div>
             </div>
         </div>
