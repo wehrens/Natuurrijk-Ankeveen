@@ -166,6 +166,46 @@
             color: var(--green-dark);
         }
 
+        /* Flying Swallow Animation */
+        .flying-swallow {
+            position: fixed;
+            top: -50px;
+            left: -50px;
+            width: 40px;
+            height: auto;
+            z-index: 9999;
+            pointer-events: none;
+            animation: flySwallow 7s ease-in-out infinite;
+        }
+
+        @keyframes flySwallow {
+            0% {
+                top: -50px;
+                left: -50px;
+                transform: rotate(45deg) scaleX(-1);
+            }
+            15% {
+                top: 60px;
+                left: 15%;
+                transform: rotate(15deg) scaleX(-1);
+            }
+            50% {
+                top: 80px;
+                left: 50%;
+                transform: rotate(0deg) scaleX(-1);
+            }
+            85% {
+                top: 60px;
+                left: 85%;
+                transform: rotate(-15deg) scaleX(-1);
+            }
+            100% {
+                top: -50px;
+                left: calc(100% + 50px);
+                transform: rotate(-45deg) scaleX(-1);
+            }
+        }
+
         /* Hero Section */
         .hero {
             min-height: 100vh;
@@ -1409,6 +1449,9 @@
         </div>
     </nav>
 
+    <!-- Flying Swallow Animation -->
+    <img src="images/huiszwaluw.png" alt="" class="flying-swallow">
+
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-container">
@@ -1643,9 +1686,6 @@
             <div class="gallery-item">
                 <img src="images/buurtbijeenkomst.jpg" alt="Uitleg aan buurtbewoners">
             </div>
-            <div class="gallery-item">
-                <img src="images/Hans_en_Martin.jpg" alt="Hans en Martin proosten na het werk">
-            </div>
         </div>
     </section>
 
@@ -1768,7 +1808,9 @@
                     <h4>Femke <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
                 </div>
                 <div class="volunteer-item">
-                    <div class="volunteer-avatar gold" data-name="Fen">🦉</div>
+                    <div class="volunteer-avatar gold">
+                        <img src="images/Fen.jpg" alt="Fen" onclick="openLightbox(this.src, true)">
+                    </div>
                     <h4>Fen <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
                 </div>
                 <div class="volunteer-item">
@@ -1782,7 +1824,9 @@
                     <h4>Gé <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
                 </div>
                 <div class="volunteer-item">
-                    <div class="volunteer-avatar gold" data-name="Gerrit">🌳</div>
+                    <div class="volunteer-avatar gold">
+                        <img src="images/Gerrit.jpg" alt="Gerrit" onclick="openLightbox(this.src, true)">
+                    </div>
                     <h4>Gerrit <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
                 </div>
                 <div class="volunteer-item">
