@@ -764,8 +764,8 @@
         }
 
         .volunteer-avatar.gold {
-            border: 3px solid #d4af37;
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+            border: 6px ridge #d4af37;
+            box-shadow: 0 0 0 3px #b8960c, 0 5px 20px rgba(212, 175, 55, 0.6);
         }
 
         .volunteer-avatar img {
@@ -1155,6 +1155,11 @@
             max-height: 85vh;
             border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-content img.gold-border {
+            border: 10px ridge #d4af37;
+            box-shadow: 0 0 0 5px #b8960c, 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
         .lightbox-text {
@@ -1664,16 +1669,20 @@
         <!-- Extra Vrijwilligers -->
         <div class="volunteers-extra">
             <h3>🌿 Trouwe vrijwilligers</h3>
+            <p style="text-align: center; color: #666; margin-bottom: 1.5rem;">
+                <span style="display: inline-block; width: 16px; height: 16px; border: 3px ridge #d4af37; border-radius: 50%; vertical-align: middle; margin-right: 6px;"></span>
+                <em>Gouden rand = vrijwilligers die vrijwel altijd paraat staan!</em>
+            </p>
             <div class="volunteers-grid">
                 <div class="volunteer-item">
                     <div class="volunteer-avatar gold">
-                        <img src="images/Alex.jpg" alt="Alex" onclick="openLightbox(this.src)">
+                        <img src="images/Alex.jpg" alt="Alex" onclick="openLightbox(this.src, true)">
                     </div>
                     <h4>Alex</h4>
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar gold">
-                        <img src="images/Coos.jpg" alt="Coos" onclick="openLightbox(this.src)">
+                        <img src="images/Coos.jpg" alt="Coos" onclick="openLightbox(this.src, true)">
                     </div>
                     <h4>Coos</h4>
                 </div>
@@ -1699,19 +1708,19 @@
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar">
-                        <img src="images/Ed.jpg" alt="Ed" onclick="openLightbox(this.src)">
+                        <img src="images/Ed.jpg" alt="Ed" onclick="openLightbox(this.src, false)">
                     </div>
                     <h4>Ed</h4>
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar gold">
-                        <img src="images/Els.jpg" alt="Els" onclick="openLightbox(this.src)">
+                        <img src="images/Els.jpg" alt="Els" onclick="openLightbox(this.src, true)">
                     </div>
                     <h4>Els</h4>
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar">
-                        <img src="images/Eric.jpg" alt="Eric" onclick="openLightbox(this.src)">
+                        <img src="images/Eric.jpg" alt="Eric" onclick="openLightbox(this.src, false)">
                     </div>
                     <h4>Eric</h4>
                 </div>
@@ -1733,7 +1742,7 @@
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar">
-                        <img src="images/Ge.jpg" alt="Gé" onclick="openLightbox(this.src)">
+                        <img src="images/Ge.jpg" alt="Gé" onclick="openLightbox(this.src, false)">
                     </div>
                     <h4>Gé</h4>
                 </div>
@@ -1743,7 +1752,7 @@
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar gold">
-                        <img src="images/Harry.jpg" alt="Harry" onclick="openLightbox(this.src)">
+                        <img src="images/Harry.jpg" alt="Harry" onclick="openLightbox(this.src, true)">
                     </div>
                     <h4>Harry</h4>
                 </div>
@@ -1793,13 +1802,13 @@
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar">
-                        <img src="images/MartinZ.jpg" alt="Martin Z" onclick="openLightbox(this.src)">
+                        <img src="images/MartinZ.jpg" alt="Martin Z" onclick="openLightbox(this.src, false)">
                     </div>
                     <h4>Martin Z</h4>
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar gold">
-                        <img src="images/Nynke.jpg" alt="Nynke" onclick="openLightbox(this.src)">
+                        <img src="images/Nynke.jpg" alt="Nynke" onclick="openLightbox(this.src, true)">
                     </div>
                     <h4>Nynke</h4>
                 </div>
@@ -1809,7 +1818,7 @@
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar gold">
-                        <img src="images/Peter.jpg" alt="Peter" onclick="openLightbox(this.src)">
+                        <img src="images/Peter.jpg" alt="Peter" onclick="openLightbox(this.src, true)">
                     </div>
                     <h4>Peter</h4>
                 </div>
@@ -1843,7 +1852,7 @@
                 </div>
                 <div class="volunteer-item">
                     <div class="volunteer-avatar">
-                        <img src="images/Wilma.jpg" alt="Wilma" onclick="openLightbox(this.src)">
+                        <img src="images/Wilma.jpg" alt="Wilma" onclick="openLightbox(this.src, false)">
                     </div>
                     <h4>Wilma</h4>
                 </div>
@@ -1982,8 +1991,16 @@
             }
         };
 
-        function openLightbox(src) {
-            document.getElementById('lightbox-img').src = src;
+        function openLightbox(src, isGold = false) {
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = src;
+            
+            // Add or remove gold border class
+            if (isGold) {
+                lightboxImg.classList.add('gold-border');
+            } else {
+                lightboxImg.classList.remove('gold-border');
+            }
             
             const data = teamData[src];
             const textDiv = document.getElementById('lightbox-text');
