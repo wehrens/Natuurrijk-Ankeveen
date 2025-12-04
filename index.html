@@ -175,34 +175,39 @@
             height: auto;
             z-index: 9999;
             pointer-events: none;
-            animation: flySwallow 7s ease-in-out infinite;
+            animation: flySwallow 20s linear infinite;
         }
 
         @keyframes flySwallow {
             0% {
                 top: -50px;
                 left: -50px;
-                transform: rotate(45deg) scaleX(-1);
+                transform: rotate(45deg);
             }
-            15% {
+            3% {
                 top: 60px;
                 left: 15%;
-                transform: rotate(15deg) scaleX(-1);
+                transform: rotate(15deg);
             }
-            50% {
+            6.25% {
                 top: 80px;
                 left: 50%;
-                transform: rotate(0deg) scaleX(-1);
+                transform: rotate(0deg);
             }
-            85% {
+            9.5% {
                 top: 60px;
                 left: 85%;
-                transform: rotate(-15deg) scaleX(-1);
+                transform: rotate(-15deg);
             }
-            100% {
+            12.5% {
                 top: -50px;
                 left: calc(100% + 50px);
-                transform: rotate(-45deg) scaleX(-1);
+                transform: rotate(-45deg);
+            }
+            12.6%, 100% {
+                top: -50px;
+                left: -50px;
+                transform: rotate(45deg);
             }
         }
 
