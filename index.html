@@ -213,6 +213,56 @@
             }
         }
 
+        /* Walking Hedgehog Animation */
+        .walking-hedgehog {
+            position: fixed;
+            top: 75px;
+            right: -50px;
+            width: 35px;
+            height: auto;
+            z-index: 9998;
+            pointer-events: none;
+            animation: walkHedgehog 30s linear infinite;
+        }
+
+        @keyframes walkHedgehog {
+            0% {
+                right: -50px;
+            }
+            /* Walk */
+            12% {
+                right: 20%;
+            }
+            /* Stop and sniff - 2 sec */
+            12%, 19% {
+                right: 20%;
+            }
+            /* Walk more */
+            32% {
+                right: 50%;
+            }
+            /* Stop and sniff - 3 sec */
+            32%, 42% {
+                right: 50%;
+            }
+            /* Walk more */
+            55% {
+                right: 80%;
+            }
+            /* Stop and look - 3 sec */
+            55%, 65% {
+                right: 80%;
+            }
+            /* Final walk off screen */
+            73% {
+                right: calc(100% + 50px);
+            }
+            /* Stay hidden */
+            73%, 100% {
+                right: calc(100% + 50px);
+            }
+        }
+
         /* Hero Section */
         .hero {
             min-height: 100vh;
@@ -1471,6 +1521,9 @@
 
     <!-- Flying Swallow Animation -->
     <img src="images/huiszwaluw.png" alt="" class="flying-swallow">
+
+    <!-- Walking Hedgehog Animation -->
+    <img src="images/egel.png" alt="" class="walking-hedgehog">
 
     <!-- Hero Section -->
     <section class="hero">
