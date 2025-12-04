@@ -216,13 +216,19 @@
         /* Walking Hedgehog Animation */
         .walking-hedgehog {
             position: fixed;
-            top: 75px;
+            top: 55px;
             right: -50px;
             width: 35px;
             height: auto;
             z-index: 9998;
             pointer-events: none;
             animation: walkHedgehog 30s linear infinite;
+        }
+
+        @media (max-width: 768px) {
+            .walking-hedgehog {
+                top: 65px;
+            }
         }
 
         @keyframes walkHedgehog {
