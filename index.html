@@ -164,6 +164,8 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--green-dark);
+            z-index: 100;
+            position: relative;
         }
 
         /* Flying Swallow Animation */
@@ -770,11 +772,11 @@
         }
 
         .team-member h4 .zeis-icon {
-            height: 40px;
+            height: 55px;
             width: auto;
             position: absolute;
-            right: -10px;
-            top: -30px;
+            right: -15px;
+            top: -40px;
         }
 
         .team-member p {
@@ -1114,6 +1116,19 @@
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                gap: 0.5rem;
+            }
+
+            .nav-links.mobile-open {
+                display: flex;
             }
 
             .mobile-menu-btn {
@@ -1439,7 +1454,7 @@
             <a href="#" class="logo">
                 <div class="logo-icon"><img src="images/libelle.png" alt="Libelle"></div>
                 <span class="logo-text">Natuurrijk Ankeveen</span>
-                <div class="logo-icon"><img src="images/huiszwaluw.png" alt="Huiszwaluw"></div>
+                <div class="logo-icon"><img src="images/Huiszwaluwzittend.jpg" alt="Huiszwaluw"></div>
                 <div class="logo-icon logo-egel"><img src="images/egel.png" alt="Egel"></div>
             </a>
             <ul class="nav-links">
@@ -1989,7 +2004,7 @@
                 <a href="#" class="logo" style="color: white;">
                     <div class="logo-icon"><img src="images/libelle.png" alt="Libelle"></div>
                     <span class="logo-text">Natuurrijk Ankeveen</span>
-                    <div class="logo-icon"><img src="images/huiszwaluw.png" alt="Huiszwaluw"></div>
+                    <div class="logo-icon"><img src="images/Huiszwaluwzittend.jpg" alt="Huiszwaluw"></div>
                     <div class="logo-icon logo-egel"><img src="images/egel.png" alt="Egel"></div>
                 </a>
                 <p>Samen bouwen aan biodiversiteit in Ankeveen. Onze werkgroep opereert onder Stichting Bruisend Ankeveen.</p>
@@ -2018,7 +2033,7 @@
                 <ul>
                     <li>Ron Wehrens</li>
                     <li><a href="tel:0646293590">06-46293590</a></li>
-                    <li><a href="mailto:natuurrijkankeveen@protonmail.com">natuurrijkankeveen<br>@protonmail.com</a></li>
+                    <li><a href="/cdn-cgi/l/email-protection#7d131c0908080f0f1417161c1316180b1818133d0d0f12091213101c1411531e1210">natuurrijkankeveen<br>@protonmail.com</a></li>
                 </ul>
             </div>
         </div>
@@ -2043,7 +2058,7 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const teamData = {
             'images/Arda.jpg': {
                 name: 'Arda van der Lee',
@@ -2113,6 +2128,11 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeLightbox();
         });
+
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('mobile-open');
+        });
     </script>
 
     <!-- Contact Modal -->
@@ -2123,13 +2143,13 @@
             <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
             
             <div class="contact-options">
-                <a href="mailto:natuurrijkankeveen@protonmail.com" class="contact-option">
+                <a href="/cdn-cgi/l/email-protection#a5cbc4d1d0d0d7d7cccfcec4cbcec0d3c0c0cbe5d5d7cad1cacbc8c4ccc98bc6cac8" class="contact-option">
                     <div class="contact-option-icon email">
                         <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                     </div>
                     <div class="contact-option-text">
                         <strong>E-mail</strong>
-                        <span>natuurrijkankeveen@protonmail.com</span>
+                        <span><span class="__cf_email__" data-cfemail="741a1500010106061d1e1f151a1f110211111a3404061b001b1a19151d185a171b19">[email&#160;protected]</span></span>
                     </div>
                 </a>
                 
@@ -2170,7 +2190,7 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         function openContactModal() {
             document.getElementById('contactModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -2187,18 +2207,4 @@
         });
 
         // Hero slideshow - 4 seconden per foto
-        const heroImages = document.querySelectorAll('.hero-image-main img');
-        let currentImage = 0;
-        
-        function nextHeroImage() {
-            heroImages[currentImage].classList.remove('active');
-            currentImage = (currentImage + 1) % heroImages.length;
-            heroImages[currentImage].classList.add('active');
-        }
-        
-        if (heroImages.length > 1) {
-            setInterval(nextHeroImage, 4000);
-        }
-    </script>
-</body>
-</html>
+        const heroImages = document.querySelectorAll(
