@@ -3,6 +3,23 @@
    Alles gepositioneerd met TOP voor consistentie
    =========================================== */
 
+/* ===== HEADER ACHTERGROND ===== */
+/* Voorkomt dat content zichtbaar is bij scrollen */
+.header-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 115px;
+    background: linear-gradient(to bottom, 
+        rgba(248, 246, 240, 1) 0%,
+        rgba(248, 246, 240, 1) 85%,
+        rgba(248, 246, 240, 0) 100%
+    );
+    z-index: 1009;
+    pointer-events: none;
+}
+
 /* ===== CONTAINERS ===== */
 .header-grass,
 .header-garden,
@@ -23,10 +40,10 @@
 .header-animals-flying { z-index: 1013; }
 
 /* ===== GRAS ===== */
-/* Gras op 85px vanaf top = net onder de nav */
+/* Gras op 90px vanaf top = net onder de nav */
 .garden-grass {
     position: absolute;
-    top: 85px;
+    top: 90px;
     height: 60px;
     width: auto;
 }
@@ -35,7 +52,7 @@
 /* Bloemen groeien vanuit het gras omhoog */
 .garden-flower {
     position: absolute;
-    top: 55px;
+    top: 60px;
     height: 45px;
     width: auto;
     opacity: 0;
@@ -43,9 +60,9 @@
     animation: bloomFlower 1s ease-out forwards;
 }
 
-.garden-flower.small { height: 30px; top: 70px; }
-.garden-flower.medium { height: 40px; top: 60px; }
-.garden-flower.large { height: 52px; top: 48px; }
+.garden-flower.small { height: 30px; top: 75px; }
+.garden-flower.medium { height: 40px; top: 65px; }
+.garden-flower.large { height: 52px; top: 53px; }
 
 .garden-flower.mirrored {
     animation: bloomFlowerMirrored 1s ease-out forwards;
@@ -65,7 +82,7 @@
 /* Poel zit op grasniveau */
 .garden-pond {
     position: absolute;
-    top: 95px;
+    top: 100px;
     height: 24px;
     width: 120px;
     opacity: 0;
@@ -81,7 +98,7 @@
 /* Lisdodde groeit vanuit het gras bij de poel */
 .pond-lisdodde {
     position: absolute;
-    top: 55px;
+    top: 60px;
     height: 50px;
     width: auto;
     opacity: 0;
@@ -90,7 +107,7 @@
 
 .pond-lisdodde-right {
     position: absolute;
-    top: 55px;
+    top: 60px;
     height: 50px;
     width: auto;
     left: calc(78% + 100px);
@@ -102,7 +119,7 @@
 /* Roerdomp staat achter de poel */
 .pond-roerdomp {
     position: absolute;
-    top: 35px;
+    top: 40px;
     height: 75px;
     width: auto;
     opacity: 0;
@@ -118,7 +135,7 @@
 /* Egel en rups lopen over het gras */
 .walking-hedgehog {
     position: absolute;
-    top: 75px;
+    top: 80px;
     right: -50px;
     width: 35px;
     height: auto;
@@ -145,7 +162,7 @@
 
 .walking-hedgehog-reverse {
     position: absolute;
-    top: 75px;
+    top: 80px;
     left: -50px;
     width: 35px;
     height: auto;
@@ -173,7 +190,7 @@
 
 .crawling-caterpillar {
     position: absolute;
-    top: 75px;
+    top: 80px;
     left: calc(100% + 60px);
     width: 45px;
     height: auto;
@@ -256,7 +273,7 @@
 
 .flying-ladybug {
     position: absolute;
-    top: 80px;
+    top: 85px;
     left: 30%;
     width: 25px;
     height: auto;
@@ -265,18 +282,18 @@
 }
 
 @keyframes flyLadybug {
-    0%, 70% { top: 80px; left: 30%; opacity: 0; }
-    70.5% { top: 80px; left: 30%; opacity: 1; }
-    72% { top: 80px; left: 28%; opacity: 1; }
-    74% { top: 60px; left: 22%; transform: rotate(-25deg); opacity: 1; }
-    76% { top: 35px; left: 15%; transform: rotate(-35deg); opacity: 1; }
-    78% { top: -20px; left: 5%; transform: rotate(-45deg); opacity: 0; }
-    78.1%, 100% { top: 80px; left: 30%; opacity: 0; }
+    0%, 70% { top: 85px; left: 30%; opacity: 0; }
+    70.5% { top: 85px; left: 30%; opacity: 1; }
+    72% { top: 85px; left: 28%; opacity: 1; }
+    74% { top: 65px; left: 22%; transform: rotate(-25deg); opacity: 1; }
+    76% { top: 40px; left: 15%; transform: rotate(-35deg); opacity: 1; }
+    78% { top: -15px; left: 5%; transform: rotate(-45deg); opacity: 0; }
+    78.1%, 100% { top: 85px; left: 30%; opacity: 0; }
 }
 
 .flying-ladybug2 {
     position: absolute;
-    top: 80px;
+    top: 85px;
     left: 65%;
     width: 23px;
     height: auto;
@@ -285,17 +302,22 @@
 }
 
 @keyframes flyLadybug2 {
-    0%, 35% { top: 80px; left: 65%; transform: scaleX(-1); opacity: 0; }
-    35.5% { top: 80px; left: 65%; transform: scaleX(-1); opacity: 1; }
-    37% { top: 80px; left: 67%; transform: scaleX(-1); opacity: 1; }
-    39% { top: 60px; left: 72%; transform: scaleX(-1) rotate(25deg); opacity: 1; }
-    41% { top: 35px; left: 80%; transform: scaleX(-1) rotate(35deg); opacity: 1; }
-    43% { top: -20px; left: 90%; transform: scaleX(-1) rotate(45deg); opacity: 0; }
-    43.1%, 100% { top: 80px; left: 65%; transform: scaleX(-1); opacity: 0; }
+    0%, 35% { top: 85px; left: 65%; transform: scaleX(-1); opacity: 0; }
+    35.5% { top: 85px; left: 65%; transform: scaleX(-1); opacity: 1; }
+    37% { top: 85px; left: 67%; transform: scaleX(-1); opacity: 1; }
+    39% { top: 65px; left: 72%; transform: scaleX(-1) rotate(25deg); opacity: 1; }
+    41% { top: 40px; left: 80%; transform: scaleX(-1) rotate(35deg); opacity: 1; }
+    43% { top: -15px; left: 90%; transform: scaleX(-1) rotate(45deg); opacity: 0; }
+    43.1%, 100% { top: 85px; left: 65%; transform: scaleX(-1); opacity: 0; }
 }
 
 /* ===== MOBIEL ===== */
 @media (max-width: 768px) {
+    /* Achtergrond kleiner op mobiel */
+    .header-background {
+        height: 75px;
+    }
+    
     /* Op mobiel: kleinere header */
     .header-grass,
     .header-garden,
@@ -374,6 +396,10 @@
 
 /* ===== TABLET ===== */
 @media (min-width: 769px) and (max-width: 1024px) {
+    .header-background {
+        height: 95px;
+    }
+    
     .header-grass,
     .header-garden,
     .header-animals-ground,
