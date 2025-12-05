@@ -14,10 +14,10 @@
             totalFlowerTime: 120000,    // 2 min voor alle bloemen
             pondAppears: 50000,         // Vijver na 50s
             roerdompAppears: 100000,    // Roerdomp na 100s
-            animalStartDelay: 5000,     // Eerste dier al na 5s!
-            animalInterval: 10000,      // Check elke 10s voor nieuw dier
+            animalStartDelay: 4000,     // Eerste dier al na 4s!
+            animalInterval: 8000,       // Check elke 8s voor nieuw dier
         },
-        maxAnimalsVisible: 3,
+        maxAnimalsVisible: 5,           // Meer dieren tegelijk (voor groepjes zwaluwen)
         maxFlowers: 10,
         navKey: 'natuurrijk_navigating'
     };
@@ -221,19 +221,64 @@
         removeAnimal(img, 8000);
     }
 
-    // Zwaluw
-    function spawnSwallow() {
-        if (!canAddAnimal()) return;
+    // Zwaluw - met correcte spiegeling per afbeelding
+    // Swallowflight.png en Swallowflight2.png kijken naar LINKS
+    // Swallowflight3.png kijkt naar RECHTS
+    function spawnSwallow(forceDirection, delayMs) {
+        const spawn = () => {
+            // Zwaluwen zijn snel, tel ze niet mee voor limiet
+            const nonSwallowAnimals = state.activeAnimals.filter(a => a.type !== 'swallow').length;
+            if (nonSwallowAnimals >= 3) return false;
 
-        const img = document.createElement('img');
-        // Gebruik willekeurig een van de drie zwaluwen
-        const swallows = ['images/Swallowflight.png', 'images/Swallowflight2.png', 'images/Swallowflight3.png'];
-        img.src = swallows[Math.floor(Math.random() * swallows.length)];
-        img.className = 'flying-swallow ' + (Math.random() > 0.5 ? 'swoop-right' : 'swoop-left');
+            const img = document.createElement('img');
+            
+            // Kies afbeelding en bepaal of die gespiegeld moet worden
+            const swallowOptions = [
+                { src: 'images/Swallowflight.png', facesLeft: true },
+                { src: 'images/Swallowflight2.png', facesLeft: true },
+                { src: 'images/Swallowflight3.png', facesLeft: false }
+            ];
+            const chosen = swallowOptions[Math.floor(Math.random() * swallowOptions.length)];
+            img.src = chosen.src;
+            
+            // Bepaal vliegrichting
+            const goingRight = forceDirection !== undefined ? forceDirection : Math.random() > 0.5;
+            
+            // Kies een van de vluchtpaden
+            const pathVariant = Math.floor(Math.random() * 3); // 0, 1, of 2
+            
+            // Spiegeling logica
+            const needsMirror = (chosen.facesLeft && goingRight) || (!chosen.facesLeft && !goingRight);
+            
+            let className = 'flying-swallow ';
+            if (goingRight) {
+                className += needsMirror ? `swoop-right-${pathVariant}` : `swoop-right-nm-${pathVariant}`;
+            } else {
+                className += needsMirror ? `swoop-left-nm-${pathVariant}` : `swoop-left-${pathVariant}`;
+            }
+            img.className = className;
+            
+            flyingEl.appendChild(img);
+            state.activeAnimals.push({ type: 'swallow', el: img });
+            removeAnimal(img, 5500);
+            return true;
+        };
         
-        flyingEl.appendChild(img);
-        state.activeAnimals.push({ type: 'swallow', el: img });
-        removeAnimal(img, 5500); // 5s animatie + marge
+        if (delayMs) {
+            setTimeout(spawn, delayMs);
+        } else {
+            return spawn();
+        }
+    }
+
+    // Groep zwaluwen spawnen (2-3 achter elkaar)
+    function spawnSwallowGroup() {
+        const count = Math.random() > 0.4 ? 3 : 2; // Vaker 3 dan 2
+        const direction = Math.random() > 0.5; // Allemaal dezelfde kant op
+        
+        for (let i = 0; i < count; i++) {
+            spawnSwallow(direction, i * 600); // 0.6s tussen elke zwaluw
+        }
     }
 
     // Random dier spawnen
@@ -242,7 +287,8 @@
         { fn: spawnCaterpillar, weight: 1 },
         { fn: spawnButterfly, weight: 3 },
         { fn: spawnLadybug, weight: 2 },
-        { fn: spawnSwallow, weight: 3 },
+        { fn: () => spawnSwallow(), weight: 4 },      // Enkele zwaluw - vaker
+        { fn: spawnSwallowGroup, weight: 2 },          // Groep zwaluwen
     ];
 
     function spawnRandomAnimal() {
@@ -284,13 +330,18 @@
         // Fase 3: Roerdomp
         setTimeout(showRoerdomp, CONFIG.timing.roerdompAppears);
 
-        // Fase 4: Dieren beginnen - EERSTE IS EEN ZWALUW
+        // Fase 4: Dieren beginnen - START MET ZWALUW
         setTimeout(() => {
-            spawnSwallow(); // Eerste dier is altijd een zwaluw
+            spawnSwallow(true); // Eerste zwaluw naar rechts
+            
+            // Na 3s een groepje zwaluwen
+            setTimeout(() => {
+                spawnSwallowGroup();
+            }, 3000);
             
             // Regelmatig nieuwe dieren
             setInterval(() => {
-                if (Math.random() > 0.25) {
+                if (Math.random() > 0.2) {
                     spawnRandomAnimal();
                 }
             }, CONFIG.timing.animalInterval);
