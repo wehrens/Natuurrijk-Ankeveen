@@ -1,0 +1,377 @@
+/* ===========================================
+   NATUURRIJK ANKEVEEN - Header Garden Styles
+   Include this CSS in all pages
+   =========================================== */
+
+/* Layer Containers */
+.header-grass {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 77px;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 999;
+}
+
+.header-animals-ground {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 77px;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.header-garden {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 77px;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 1001;
+}
+
+.header-animals-flying {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 77px;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 1002;
+}
+
+/* Grass */
+.garden-grass {
+    position: absolute;
+    bottom: -25px;
+    height: 55px;
+    width: auto;
+    opacity: 1;
+}
+
+/* Pond */
+.garden-pond {
+    position: absolute;
+    bottom: -20px;
+    height: 22px;
+    width: 120px;
+    opacity: 0;
+    animation: fadeInPond 1.5s ease-out forwards;
+}
+
+@keyframes fadeInPond {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Lisdodde */
+.pond-lisdodde {
+    position: absolute;
+    bottom: -15px;
+    height: 50px;
+    width: auto;
+    opacity: 0;
+    animation: bloomFlower 1s ease-out forwards;
+}
+
+.pond-lisdodde-right {
+    position: absolute;
+    bottom: -15px;
+    height: 50px;
+    width: auto;
+    opacity: 0;
+    left: calc(78% + 95px);
+    animation: bloomFlowerMirrored 1s ease-out forwards;
+}
+
+/* Flowers */
+.garden-flower {
+    position: absolute;
+    bottom: -15px;
+    height: 45px;
+    width: auto;
+    opacity: 0;
+    transform-origin: bottom center;
+    animation: bloomFlower 1s ease-out forwards;
+}
+
+.garden-flower.small { height: 30px; }
+.garden-flower.medium { height: 40px; }
+.garden-flower.large { height: 52px; }
+.garden-flower.mirrored { animation: bloomFlowerMirrored 1s ease-out forwards; }
+
+@keyframes bloomFlower {
+    0% { opacity: 0; transform: scale(0.3) translateY(10px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes bloomFlowerMirrored {
+    0% { opacity: 0; transform: scaleX(-1) scale(0.3) translateY(10px); }
+    100% { opacity: 1; transform: scaleX(-1) scale(1) translateY(0); }
+}
+
+/* Flying Swallow */
+.flying-swallow {
+    position: absolute;
+    top: 0px;
+    left: -50px;
+    width: 40px;
+    height: auto;
+    pointer-events: none;
+    animation: flySwallowRoutes 60s linear infinite;
+}
+
+@keyframes flySwallowRoutes {
+    0%, 3% { top: -50px; left: -50px; transform: rotate(15deg); }
+    10% { top: 45px; left: 20%; transform: rotate(-5deg); }
+    17% { top: 35px; left: 50%; transform: rotate(10deg); }
+    24% { top: 50px; left: 80%; transform: rotate(-10deg); }
+    30% { top: -50px; left: calc(100% + 50px); transform: rotate(-20deg); }
+    30%, 36% { top: -50px; left: calc(100% + 50px); transform: scaleX(-1) rotate(15deg); }
+    43% { top: 30px; left: 75%; transform: scaleX(-1) rotate(-10deg); }
+    50% { top: 55px; left: 45%; transform: scaleX(-1) rotate(5deg); }
+    57% { top: 25px; left: 15%; transform: scaleX(-1) rotate(-5deg); }
+    63% { top: -50px; left: -50px; transform: scaleX(-1) rotate(-20deg); }
+    63%, 100% { top: -50px; left: -50px; transform: rotate(15deg); }
+}
+
+/* Walking Hedgehog - Right to Left */
+.walking-hedgehog {
+    position: absolute;
+    bottom: -15px;
+    right: -50px;
+    width: 35px;
+    height: auto;
+    pointer-events: none;
+    animation: walkHedgehogRTL 75s linear infinite;
+}
+
+@keyframes walkHedgehogRTL {
+    0% { right: -50px; transform: rotate(0deg); }
+    5% { right: 15%; transform: rotate(0deg); }
+    5.1% { right: 15%; transform: rotate(-8deg); }
+    6% { right: 15%; transform: rotate(5deg); }
+    6.5% { right: 15%; transform: rotate(-5deg); }
+    7% { right: 15%; transform: rotate(0deg); }
+    12% { right: 45%; transform: rotate(0deg); }
+    12.1% { right: 45%; transform: rotate(-8deg); }
+    13% { right: 45%; transform: rotate(5deg); }
+    13.5% { right: 45%; transform: rotate(-5deg); }
+    14.5% { right: 45%; transform: rotate(0deg); }
+    19% { right: 75%; transform: rotate(0deg); }
+    19.1% { right: 75%; transform: rotate(-8deg); }
+    20% { right: 75%; transform: rotate(5deg); }
+    20.5% { right: 75%; transform: rotate(-5deg); }
+    21% { right: 75%; transform: rotate(0deg); }
+    26% { right: calc(100% + 50px); transform: rotate(0deg); }
+    26%, 100% { right: calc(100% + 50px); transform: rotate(0deg); }
+}
+
+/* Walking Hedgehog Reverse - Left to Right */
+.walking-hedgehog-reverse {
+    position: absolute;
+    bottom: -15px;
+    left: -50px;
+    width: 35px;
+    height: auto;
+    pointer-events: none;
+    transform: scaleX(-1);
+    animation: walkHedgehogLTR 75s linear infinite;
+}
+
+@keyframes walkHedgehogLTR {
+    0%, 52% { left: -50px; transform: scaleX(-1) rotate(0deg); }
+    53% { left: -50px; transform: scaleX(-1) rotate(0deg); }
+    58% { left: 15%; transform: scaleX(-1) rotate(0deg); }
+    58.1% { left: 15%; transform: scaleX(-1) rotate(-8deg); }
+    59% { left: 15%; transform: scaleX(-1) rotate(5deg); }
+    59.5% { left: 15%; transform: scaleX(-1) rotate(-5deg); }
+    60% { left: 15%; transform: scaleX(-1) rotate(0deg); }
+    65% { left: 45%; transform: scaleX(-1) rotate(0deg); }
+    65.1% { left: 45%; transform: scaleX(-1) rotate(-8deg); }
+    66% { left: 45%; transform: scaleX(-1) rotate(5deg); }
+    66.5% { left: 45%; transform: scaleX(-1) rotate(-5deg); }
+    67.5% { left: 45%; transform: scaleX(-1) rotate(0deg); }
+    72% { left: 75%; transform: scaleX(-1) rotate(0deg); }
+    72.1% { left: 75%; transform: scaleX(-1) rotate(-8deg); }
+    73% { left: 75%; transform: scaleX(-1) rotate(5deg); }
+    73.5% { left: 75%; transform: scaleX(-1) rotate(-5deg); }
+    74% { left: 75%; transform: scaleX(-1) rotate(0deg); }
+    79% { left: calc(100% + 50px); transform: scaleX(-1) rotate(0deg); }
+    79%, 100% { left: calc(100% + 50px); transform: scaleX(-1) rotate(0deg); }
+}
+
+/* Crawling Caterpillar */
+.crawling-caterpillar {
+    position: absolute;
+    bottom: -15px;
+    left: calc(100% + 60px);
+    width: 45px;
+    height: auto;
+    pointer-events: none;
+    transform: scaleX(-1);
+    animation: crawlCaterpillar 120s ease-in-out infinite;
+}
+
+@keyframes crawlCaterpillar {
+    0%, 20% { left: calc(100% + 60px); }
+    21% { left: calc(100% + 60px); }
+    26% { left: 80%; }
+    27% { left: 78%; }
+    32% { left: 55%; }
+    35% { left: 50%; }
+    40% { left: 30%; }
+    42% { left: 28%; }
+    48% { left: 5%; }
+    50%, 100% { left: -60px; }
+}
+
+/* Flying Butterfly - Right to Left */
+.flying-butterfly2 {
+    position: absolute;
+    top: -40px;
+    left: calc(100% + 40px);
+    width: 35px;
+    height: auto;
+    pointer-events: none;
+    animation: flyButterfly2 90s ease-in-out infinite;
+}
+
+@keyframes flyButterfly2 {
+    0%, 55% { top: -40px; left: calc(100% + 40px); transform: rotate(-30deg) scaleX(-1); }
+    57% { top: 30px; left: 85%; transform: rotate(-15deg) scaleX(-1); }
+    59% { top: 20px; left: 70%; transform: rotate(10deg) scaleX(-1); }
+    61% { top: 40px; left: 55%; transform: rotate(-20deg) scaleX(-1); }
+    63% { top: 15px; left: 40%; transform: rotate(5deg) scaleX(-1); }
+    65% { top: 35px; left: 25%; transform: rotate(-15deg) scaleX(-1); }
+    67% { top: -40px; left: 10%; transform: rotate(30deg) scaleX(-1); }
+    67.1%, 100% { top: -40px; left: calc(100% + 40px); transform: rotate(-30deg) scaleX(-1); }
+}
+
+/* Flying Butterfly 3 - Left to Right (mirrored) */
+.flying-butterfly3 {
+    position: absolute;
+    top: -40px;
+    left: -40px;
+    width: 32px;
+    height: auto;
+    pointer-events: none;
+    animation: flyButterfly3 90s ease-in-out infinite;
+}
+
+@keyframes flyButterfly3 {
+    0%, 20% { top: -40px; left: -40px; transform: rotate(30deg); }
+    22% { top: 25px; left: 10%; transform: rotate(15deg); }
+    24% { top: 35px; left: 25%; transform: rotate(-10deg); }
+    26% { top: 20px; left: 40%; transform: rotate(20deg); }
+    28% { top: 40px; left: 55%; transform: rotate(-5deg); }
+    30% { top: 15px; left: 70%; transform: rotate(15deg); }
+    32% { top: -40px; left: 85%; transform: rotate(-30deg); }
+    32.1%, 100% { top: -40px; left: -40px; transform: rotate(30deg); }
+}
+
+/* Flying Ladybug - Left side */
+.flying-ladybug {
+    position: absolute;
+    bottom: -15px;
+    left: 30%;
+    width: 25px;
+    height: auto;
+    pointer-events: none;
+    animation: flyLadybug 120s ease-in-out infinite;
+}
+
+@keyframes flyLadybug {
+    0%, 70% { bottom: -15px; left: 30%; transform: rotate(0deg); opacity: 0; }
+    70.5% { bottom: -15px; left: 30%; transform: rotate(0deg); opacity: 1; }
+    72% { bottom: -15px; left: 28%; transform: rotate(0deg); opacity: 1; }
+    72.5% { bottom: -15px; left: 28%; transform: rotate(-10deg); opacity: 1; }
+    74% { bottom: 20px; left: 22%; transform: rotate(-25deg); opacity: 1; }
+    76% { bottom: 45px; left: 15%; transform: rotate(-35deg); opacity: 1; }
+    78% { bottom: 90px; left: 5%; transform: rotate(-45deg); opacity: 0; }
+    78.1%, 100% { bottom: -15px; left: 30%; transform: rotate(0deg); opacity: 0; }
+}
+
+/* Flying Ladybug 2 - Right side (mirrored) */
+.flying-ladybug2 {
+    position: absolute;
+    bottom: -15px;
+    left: 65%;
+    width: 23px;
+    height: auto;
+    pointer-events: none;
+    animation: flyLadybug2 120s ease-in-out infinite;
+}
+
+@keyframes flyLadybug2 {
+    0%, 35% { bottom: -15px; left: 65%; transform: rotate(0deg) scaleX(-1); opacity: 0; }
+    35.5% { bottom: -15px; left: 65%; transform: rotate(0deg) scaleX(-1); opacity: 1; }
+    37% { bottom: -15px; left: 67%; transform: rotate(0deg) scaleX(-1); opacity: 1; }
+    37.5% { bottom: -15px; left: 67%; transform: rotate(10deg) scaleX(-1); opacity: 1; }
+    39% { bottom: 20px; left: 72%; transform: rotate(25deg) scaleX(-1); opacity: 1; }
+    41% { bottom: 45px; left: 80%; transform: rotate(35deg) scaleX(-1); opacity: 1; }
+    43% { bottom: 90px; left: 90%; transform: rotate(45deg) scaleX(-1); opacity: 0; }
+    43.1%, 100% { bottom: -15px; left: 65%; transform: rotate(0deg) scaleX(-1); opacity: 0; }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .header-grass,
+    .header-animals-ground,
+    .header-animals-flying,
+    .header-garden {
+        height: 60px;
+    }
+    
+    .walking-hedgehog,
+    .walking-hedgehog-reverse,
+    .crawling-caterpillar {
+        width: 28px !important;
+        bottom: -12px !important;
+    }
+    
+    .flying-ladybug,
+    .flying-ladybug2 {
+        width: 20px !important;
+        bottom: -12px !important;
+    }
+    
+    .garden-grass {
+        height: 35px !important;
+        bottom: -18px !important;
+    }
+    
+    .garden-pond {
+        height: 14px !important;
+        width: 60px !important;
+        bottom: -15px !important;
+    }
+    
+    .pond-lisdodde {
+        height: 30px !important;
+        bottom: -12px !important;
+    }
+    
+    .pond-lisdodde-right {
+        left: calc(78% + 40px) !important;
+        height: 30px !important;
+        bottom: -12px !important;
+    }
+    
+    .garden-flower {
+        height: 30px;
+        bottom: -12px !important;
+    }
+    
+    .garden-flower.small { height: 22px; }
+    .garden-flower.medium { height: 28px; }
+    .garden-flower.large { height: 38px; }
+}
