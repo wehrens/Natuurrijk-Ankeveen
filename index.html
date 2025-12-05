@@ -186,7 +186,12 @@
 
         @media (max-width: 768px) {
             .header-animals {
-                height: 75px;
+                height: 90px;
+            }
+            .walking-hedgehog,
+            .walking-hedgehog-reverse,
+            .crawling-caterpillar {
+                bottom: 0px !important;
             }
         }
 
@@ -409,14 +414,32 @@
 
         @keyframes flyButterfly1 {
             0%, 5% { top: -40px; left: -40px; transform: rotate(30deg); }
-            10% { top: 25px; left: 10%; transform: rotate(15deg); }
-            15% { top: 35px; left: 20%; transform: rotate(-10deg); }
-            20% { top: 20px; left: 30%; transform: rotate(20deg); }
-            25% { top: 40px; left: 40%; transform: rotate(-5deg); }
-            30% { top: 15px; left: 50%; transform: rotate(15deg); }
-            35% { top: 30px; left: 60%; transform: rotate(-15deg); }
-            40% { top: -40px; left: 75%; transform: rotate(-30deg); }
-            40.1%, 100% { top: -40px; left: -40px; transform: rotate(30deg); }
+            /* Veel meer fladder-bewegingen */
+            7% { top: 20px; left: 5%; transform: rotate(20deg); }
+            8% { top: 30px; left: 8%; transform: rotate(-5deg); }
+            9% { top: 18px; left: 11%; transform: rotate(25deg); }
+            10% { top: 35px; left: 14%; transform: rotate(-10deg); }
+            11% { top: 22px; left: 17%; transform: rotate(15deg); }
+            12% { top: 38px; left: 20%; transform: rotate(-8deg); }
+            13% { top: 25px; left: 23%; transform: rotate(20deg); }
+            14% { top: 40px; left: 26%; transform: rotate(-12deg); }
+            15% { top: 28px; left: 29%; transform: rotate(18deg); }
+            16% { top: 42px; left: 32%; transform: rotate(-5deg); }
+            17% { top: 30px; left: 35%; transform: rotate(22deg); }
+            18% { top: 38px; left: 38%; transform: rotate(-10deg); }
+            19% { top: 25px; left: 41%; transform: rotate(15deg); }
+            20% { top: 40px; left: 44%; transform: rotate(-8deg); }
+            21% { top: 28px; left: 47%; transform: rotate(20deg); }
+            22% { top: 35px; left: 50%; transform: rotate(-5deg); }
+            23% { top: 22px; left: 53%; transform: rotate(18deg); }
+            24% { top: 38px; left: 56%; transform: rotate(-12deg); }
+            25% { top: 30px; left: 59%; transform: rotate(25deg); }
+            26% { top: 42px; left: 62%; transform: rotate(-8deg); }
+            27% { top: 28px; left: 65%; transform: rotate(15deg); }
+            28% { top: 35px; left: 68%; transform: rotate(-10deg); }
+            29% { top: 20px; left: 71%; transform: rotate(20deg); }
+            30% { top: -40px; left: 75%; transform: rotate(-30deg); }
+            30.1%, 100% { top: -40px; left: -40px; transform: rotate(30deg); }
         }
 
         /* Flying Butterfly 2 - Orange */
@@ -2201,7 +2224,9 @@
                     <h4>Tatakh <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
                 </div>
                 <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Tilly">🦗</div>
+                    <div class="volunteer-avatar">
+                        <img src="images/Tilly.jpg" alt="Tilly" onclick="openLightbox(this.src, false)">
+                    </div>
                     <h4>Tilly <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
                 </div>
                 <div class="volunteer-item">
@@ -2463,4 +2488,18 @@
         });
 
         // Hero slideshow - 4 seconden per foto
-        const heroImages = document.querySelectorAll(
+        const heroImages = document.querySelectorAll('.hero-image');
+        let currentHero = 0;
+        
+        function rotateHeroImages() {
+            heroImages[currentHero].classList.remove('active');
+            currentHero = (currentHero + 1) % heroImages.length;
+            heroImages[currentHero].classList.add('active');
+        }
+        
+        if (heroImages.length > 1) {
+            setInterval(rotateHeroImages, 4000);
+        }
+    </script>
+</body>
+</html>
