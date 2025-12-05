@@ -172,7 +172,19 @@
            HEADER ANIMATIONS - Swallow, Hedgehog, Caterpillar
            ============================================ */
         
-        /* Ground Animals - walk BEHIND flowers and pond */
+        /* Grass layer - BEHIND everything */
+        .header-grass {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 77px;
+            overflow: visible;
+            pointer-events: none;
+            z-index: 999; /* Lowest - grass is behind all animals */
+        }
+
+        /* Ground Animals - walk IN FRONT of grass, BEHIND flowers */
         .header-animals-ground {
             position: fixed;
             top: 0;
@@ -181,10 +193,10 @@
             height: 77px;
             overflow: visible;
             pointer-events: none;
-            z-index: 1000; /* BEHIND garden (1001) so behind flowers and pond */
+            z-index: 1000; /* Above grass, below flowers */
         }
 
-        /* Flying Animals - fly IN FRONT of flowers */
+        /* Flying Animals - fly IN FRONT of everything */
         .header-animals-flying {
             position: fixed;
             top: 0;
@@ -193,10 +205,11 @@
             height: 77px;
             overflow: visible;
             pointer-events: none;
-            z-index: 1002; /* ABOVE garden (1001) so in front of flowers */
+            z-index: 1002; /* Above flowers */
         }
 
         @media (max-width: 768px) {
+            .header-grass,
             .header-animals-ground,
             .header-animals-flying {
                 height: 60px;
@@ -1865,16 +1878,20 @@
     </nav>
 
     <!-- Growing Garden Container - flowers appear over time -->
+    <!-- Grass layer - BEHIND everything -->
+    <div class="header-grass" id="headerGrass"></div>
+
+    <!-- Garden flowers and pond - in front of grass and ground animals -->
     <div class="header-garden" id="headerGarden"></div>
 
-    <!-- Ground Animals - walk BEHIND flowers and pond -->
+    <!-- Ground Animals - walk BEHIND flowers but IN FRONT of grass -->
     <div class="header-animals-ground">
         <img src="images/egel.png" alt="" class="walking-hedgehog">
         <img src="images/egel.png" alt="" class="walking-hedgehog-reverse">
         <img src="images/Rups1.gif" alt="" class="crawling-caterpillar">
     </div>
 
-    <!-- Flying Animals - fly IN FRONT of flowers -->
+    <!-- Flying Animals - fly IN FRONT of everything -->
     <div class="header-animals-flying">
         <img src="images/huiszwaluw.png" alt="" class="flying-swallow">
         <img src="images/Vlinder.gif" alt="" class="flying-butterfly2">
@@ -2651,6 +2668,7 @@
         ];
 
         const garden = document.getElementById('headerGarden');
+        const grassContainer = document.getElementById('headerGrass');
         const usedPositions = [];
         let flowerIndex = 0;
         
@@ -2739,15 +2757,14 @@
         }
 
         function addAllGrass() {
-            // Add all grass patches immediately
+            // Add all grass patches immediately to the grass container (behind animals)
             grassPositions.forEach(pos => {
                 const img = document.createElement('img');
                 img.src = 'images/Gras.webp';
                 img.className = 'garden-grass';
                 img.style.left = pos.left + '%';
                 img.style.width = pos.width + '%';
-                img.style.zIndex = '1'; // Below everything
-                garden.appendChild(img);
+                grassContainer.appendChild(img);
             });
         }
 
