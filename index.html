@@ -178,24 +178,22 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 77px; /* Match nav height */
-            overflow: visible; /* Allow animals to be visible on the border */
+            height: 77px; /* Match nav height exactly */
+            overflow: visible; /* Allow elements to be visible below */
             pointer-events: none;
             z-index: 1002;
         }
 
         @media (max-width: 768px) {
             .header-animals {
-                height: 62px; /* Mobile nav height */
+                height: 60px; /* Mobile nav height */
             }
             .walking-hedgehog,
             .walking-hedgehog-reverse,
             .crawling-caterpillar {
-                bottom: -15px !important;
                 width: 28px !important;
             }
             .flying-ladybug {
-                bottom: -15px !important;
                 width: 20px !important;
             }
         }
@@ -293,7 +291,7 @@
         /* Walking Hedgehog - Right to Left (normal) */
         .walking-hedgehog {
             position: absolute;
-            bottom: -18px; /* On the ground line with grass */
+            bottom: 0; /* Feet on the ground line */
             right: -50px;
             width: 35px;
             height: auto;
@@ -330,7 +328,7 @@
         /* Walking Hedgehog Reverse - Left to Right (flipped) */
         .walking-hedgehog-reverse {
             position: absolute;
-            bottom: -18px; /* On the ground line with grass */
+            bottom: 0; /* Feet on the ground line */
             left: -50px;
             width: 35px;
             height: auto;
@@ -370,7 +368,7 @@
         /* Crawling Caterpillar - Right to Left (flipped to face left) */
         .crawling-caterpillar {
             position: absolute;
-            bottom: -18px; /* On the ground line with grass */
+            bottom: 0; /* Body on the ground line */
             left: calc(100% + 60px);
             width: 45px;
             height: auto;
@@ -431,7 +429,7 @@
         /* Flying Ladybug */
         .flying-ladybug {
             position: absolute;
-            bottom: -18px;
+            bottom: 0; /* Feet on the ground line */
             left: 30%;
             width: 25px;
             height: auto;
@@ -440,18 +438,18 @@
         }
 
         @keyframes flyLadybug {
-            0%, 70% { bottom: -18px; left: 30%; transform: rotate(0deg); opacity: 0; }
+            0%, 70% { bottom: 0; left: 30%; transform: rotate(0deg); opacity: 0; }
             /* Appear */
-            70.5% { bottom: -18px; left: 30%; transform: rotate(0deg); opacity: 1; }
+            70.5% { bottom: 0; left: 30%; transform: rotate(0deg); opacity: 1; }
             /* Walk a tiny bit */
-            72% { bottom: -18px; left: 28%; transform: rotate(0deg); opacity: 1; }
+            72% { bottom: 0; left: 28%; transform: rotate(0deg); opacity: 1; }
             /* Prepare to fly */
-            72.5% { bottom: -18px; left: 28%; transform: rotate(-10deg); opacity: 1; }
+            72.5% { bottom: 0; left: 28%; transform: rotate(-10deg); opacity: 1; }
             /* Fly up and away */
-            74% { bottom: 15px; left: 22%; transform: rotate(-25deg); opacity: 1; }
-            76% { bottom: 35px; left: 15%; transform: rotate(-35deg); opacity: 1; }
-            78% { bottom: 85px; left: 5%; transform: rotate(-45deg); opacity: 0; }
-            78.1%, 100% { bottom: -18px; left: 30%; transform: rotate(0deg); opacity: 0; }
+            74% { bottom: 30px; left: 22%; transform: rotate(-25deg); opacity: 1; }
+            76% { bottom: 50px; left: 15%; transform: rotate(-35deg); opacity: 1; }
+            78% { bottom: 100px; left: 5%; transform: rotate(-45deg); opacity: 0; }
+            78.1%, 100% { bottom: 0; left: 30%; transform: rotate(0deg); opacity: 0; }
         }
 
         /* Growing Garden - flowers that appear over time */
@@ -461,22 +459,14 @@
             left: 0;
             right: 0;
             height: 77px; /* Match nav height exactly */
+            overflow: visible; /* Allow elements to extend below */
             pointer-events: none;
             z-index: 1001;
         }
 
-        /* The ground level - this is where the header ends */
-        .garden-ground {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 0;
-        }
-
         .garden-flower {
             position: absolute;
-            bottom: -18px; /* Grow from ground level */
+            bottom: 0; /* Stem base on the ground line */
             height: 45px;
             width: auto;
             opacity: 0;
@@ -524,11 +514,10 @@
 
         @media (max-width: 768px) {
             .header-garden {
-                height: 62px; /* Mobile nav height */
+                height: 60px; /* Mobile nav height */
             }
             .garden-flower {
                 height: 30px;
-                bottom: -15px !important;
             }
             .garden-flower.small {
                 height: 22px;
@@ -541,32 +530,30 @@
             }
             .garden-grass {
                 height: 20px !important;
-                bottom: -12px !important;
             }
             .garden-pond {
                 height: 12px !important;
                 width: 60px !important;
-                bottom: -14px !important;
+                bottom: -5px !important;
             }
             .pond-lisdodde {
                 height: 30px !important;
-                bottom: -15px !important;
             }
         }
 
-        /* Grass base layer - sits exactly on header border */
+        /* Grass base layer - bottom of grass on the line */
         .garden-grass {
             position: absolute;
-            bottom: -20px; /* Centered on the header border line */
+            bottom: 0; /* Bottom of grass on the ground line */
             height: 38px;
             width: auto;
             opacity: 1;
         }
 
-        /* Pond - sits on the ground, slightly below */
+        /* Pond - extends slightly below the line */
         .garden-pond {
             position: absolute;
-            bottom: -22px; /* Slightly below the line */
+            bottom: -8px; /* Pond dips below the ground line */
             height: 22px;
             width: auto;
             opacity: 0;
@@ -581,7 +568,7 @@
         /* Lisdodde next to pond */
         .pond-lisdodde {
             position: absolute;
-            bottom: -18px;
+            bottom: 0; /* Stem base on the ground line */
             height: 50px;
             width: auto;
             opacity: 0;
