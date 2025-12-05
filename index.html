@@ -454,10 +454,32 @@
             67.1%, 100% { top: -40px; left: calc(100% + 40px); transform: rotate(-30deg) scaleX(-1); }
         }
 
+        /* Flying Butterfly 3 - Mirrored, different timing (left to right) */
+        .flying-butterfly3 {
+            position: absolute;
+            top: -40px;
+            left: -40px;
+            width: 32px;
+            height: auto;
+            pointer-events: none;
+            animation: flyButterfly3 90s ease-in-out infinite;
+        }
+
+        @keyframes flyButterfly3 {
+            0%, 20% { top: -40px; left: -40px; transform: rotate(30deg); }
+            22% { top: 25px; left: 10%; transform: rotate(15deg); }
+            24% { top: 35px; left: 25%; transform: rotate(-10deg); }
+            26% { top: 20px; left: 40%; transform: rotate(20deg); }
+            28% { top: 40px; left: 55%; transform: rotate(-5deg); }
+            30% { top: 15px; left: 70%; transform: rotate(15deg); }
+            32% { top: -40px; left: 85%; transform: rotate(-30deg); }
+            32.1%, 100% { top: -40px; left: -40px; transform: rotate(30deg); }
+        }
+
         /* Flying Ladybug */
         .flying-ladybug {
             position: absolute;
-            bottom: -15px; /* Feet on the ground with grass */
+            bottom: -15px;
             left: 30%;
             width: 25px;
             height: auto;
@@ -467,17 +489,35 @@
 
         @keyframes flyLadybug {
             0%, 70% { bottom: -15px; left: 30%; transform: rotate(0deg); opacity: 0; }
-            /* Appear */
             70.5% { bottom: -15px; left: 30%; transform: rotate(0deg); opacity: 1; }
-            /* Walk a tiny bit */
             72% { bottom: -15px; left: 28%; transform: rotate(0deg); opacity: 1; }
-            /* Prepare to fly */
             72.5% { bottom: -15px; left: 28%; transform: rotate(-10deg); opacity: 1; }
-            /* Fly up and away */
             74% { bottom: 20px; left: 22%; transform: rotate(-25deg); opacity: 1; }
             76% { bottom: 45px; left: 15%; transform: rotate(-35deg); opacity: 1; }
             78% { bottom: 90px; left: 5%; transform: rotate(-45deg); opacity: 0; }
             78.1%, 100% { bottom: -15px; left: 30%; transform: rotate(0deg); opacity: 0; }
+        }
+
+        /* Flying Ladybug 2 - Mirrored, different timing (from right side) */
+        .flying-ladybug2 {
+            position: absolute;
+            bottom: -15px;
+            left: 65%;
+            width: 23px;
+            height: auto;
+            pointer-events: none;
+            animation: flyLadybug2 120s ease-in-out infinite;
+        }
+
+        @keyframes flyLadybug2 {
+            0%, 35% { bottom: -15px; left: 65%; transform: rotate(0deg) scaleX(-1); opacity: 0; }
+            35.5% { bottom: -15px; left: 65%; transform: rotate(0deg) scaleX(-1); opacity: 1; }
+            37% { bottom: -15px; left: 67%; transform: rotate(0deg) scaleX(-1); opacity: 1; }
+            37.5% { bottom: -15px; left: 67%; transform: rotate(10deg) scaleX(-1); opacity: 1; }
+            39% { bottom: 20px; left: 72%; transform: rotate(25deg) scaleX(-1); opacity: 1; }
+            41% { bottom: 45px; left: 80%; transform: rotate(35deg) scaleX(-1); opacity: 1; }
+            43% { bottom: 90px; left: 90%; transform: rotate(45deg) scaleX(-1); opacity: 0; }
+            43.1%, 100% { bottom: -15px; left: 65%; transform: rotate(0deg) scaleX(-1); opacity: 0; }
         }
 
         /* Growing Garden - flowers that appear over time */
@@ -1895,7 +1935,9 @@
     <div class="header-animals-flying">
         <img src="images/huiszwaluw.png" alt="" class="flying-swallow">
         <img src="images/Vlinder.gif" alt="" class="flying-butterfly2">
+        <img src="images/Vlinder.gif" alt="" class="flying-butterfly3">
         <img src="images/Ladybug.gif" alt="" class="flying-ladybug">
+        <img src="images/Ladybug.gif" alt="" class="flying-ladybug2">
     </div>
 
     <!-- Hero Section -->
@@ -2645,7 +2687,7 @@
             setInterval(rotateHeroImages, 4000);
         }
 
-        // Growing Garden - flowers appear over time
+        // Growing Garden - flowers appear over time with localStorage persistence
         const gardenFlowers = [
             { src: 'images/Klaproos.png', size: 'medium' },
             { src: 'images/Klaprozen.png', size: 'medium' },
@@ -2658,7 +2700,6 @@
             { src: 'images/Lisdodde2.png', size: 'small' },
             { src: 'images/Lisdodde3.png', size: 'medium' },
             { src: 'images/Veldoeket.png', size: 'small' },
-            // Extra flowers for more variety
             { src: 'images/Klaproos.png', size: 'small' },
             { src: 'images/Ridderspoor.png', size: 'small' },
             { src: 'images/Digitalis.png', size: 'small' },
@@ -2669,38 +2710,40 @@
 
         const garden = document.getElementById('headerGarden');
         const grassContainer = document.getElementById('headerGrass');
-        const usedPositions = [];
-        let flowerIndex = 0;
         
-        // Pond position (fixed)
+        // Load saved state from localStorage
+        let gardenState = JSON.parse(localStorage.getItem('natuurrijkGarden')) || {
+            flowers: [],
+            pondAdded: false,
+            flowerIndex: 0
+        };
+        
+        const usedPositions = gardenState.flowers.map(f => f.position);
+        let flowerIndex = gardenState.flowerIndex;
+        
         const pondPosition = 78;
-        const pondWidth = 10; // percentage width of pond image
+        const pondWidth = 10;
         
-        // Grass positions - cover whole bar, displayed immediately
         const grassPositions = [
-            { left: -5, width: 28 },   // Far left
-            { left: 20, width: 28 },   // Left-center
-            { left: 45, width: 28 },   // Center
-            { left: 70, width: 28 },   // Right of center
-            { left: 92, width: 18 }    // Far right
+            { left: -5, width: 28 },
+            { left: 20, width: 28 },
+            { left: 45, width: 28 },
+            { left: 70, width: 28 },
+            { left: 92, width: 18 }
         ];
 
-        // Check if position overlaps with pond area (wider zone to keep flowers away)
         function overlapsWithPond(position) {
             return position > (pondPosition - 6) && position < (pondPosition + pondWidth + 4);
         }
 
-        // Available zones for flowers (avoiding text and pond)
-        // Desktop zones: 0-3%, 23-52%, 53-72%, 93-100%
         const flowerZones = [
-            { start: 0, end: 3, weight: 1 },      // Far left edge
-            { start: 23, end: 38, weight: 3 },    // Left of center
-            { start: 39, end: 54, weight: 3 },    // Center
-            { start: 55, end: 72, weight: 3 },    // Right of center (before pond)
-            { start: 93, end: 100, weight: 2 }    // Far right (after pond)
+            { start: 0, end: 3, weight: 1 },
+            { start: 23, end: 38, weight: 3 },
+            { start: 39, end: 54, weight: 3 },
+            { start: 55, end: 72, weight: 3 },
+            { start: 93, end: 100, weight: 2 }
         ];
 
-        // Positions where flowers can grow - evenly distributed
         function getValidPosition() {
             const windowWidth = window.innerWidth;
             let position;
@@ -2708,7 +2751,6 @@
             
             do {
                 if (windowWidth > 768) {
-                    // Desktop: pick a random zone weighted by size, then random position within
                     const totalWeight = flowerZones.reduce((sum, z) => sum + z.weight, 0);
                     let rand = Math.random() * totalWeight;
                     let selectedZone = flowerZones[0];
@@ -2720,15 +2762,13 @@
                             break;
                         }
                     }
-                    
                     position = selectedZone.start + Math.random() * (selectedZone.end - selectedZone.start);
                 } else {
-                    // Mobile: avoid "Natuurrijk Ankeveen" text (5-55%)
                     const rand = Math.random();
                     if (rand < 0.15) {
-                        position = Math.random() * 5; // Far left
+                        position = Math.random() * 5;
                     } else {
-                        position = 56 + Math.random() * 44; // Right side (avoid pond area too)
+                        position = 56 + Math.random() * 44;
                     }
                 }
                 attempts++;
@@ -2738,26 +2778,65 @@
             return position;
         }
 
-        function plantFlower() {
+        function saveGardenState() {
+            localStorage.setItem('natuurrijkGarden', JSON.stringify(gardenState));
+        }
+
+        function createFlowerElement(flowerData, position, mirrored) {
+            const img = document.createElement('img');
+            img.src = flowerData.src;
+            img.className = 'garden-flower ' + flowerData.size;
+            img.style.left = position + '%';
+            img.style.zIndex = '3';
+            if (mirrored) {
+                img.classList.add('mirrored');
+            }
+            // Skip animation for restored flowers
+            img.style.animation = 'none';
+            img.style.opacity = '1';
+            img.style.transform = mirrored ? 'scaleX(-1)' : 'none';
+            garden.appendChild(img);
+        }
+
+        function plantFlower(restore = false) {
             if (flowerIndex >= gardenFlowers.length * 2) return;
             
             const flower = gardenFlowers[flowerIndex % gardenFlowers.length];
-            const img = document.createElement('img');
-            img.src = flower.src;
-            img.className = 'garden-flower ' + flower.size;
-            img.style.left = getValidPosition() + '%';
-            img.style.zIndex = '3'; // Above grass
+            const position = restore ? null : getValidPosition();
+            const mirrored = restore ? null : Math.random() > 0.5;
             
-            if (Math.random() > 0.5) {
-                img.classList.add('mirrored');
+            if (!restore) {
+                const img = document.createElement('img');
+                img.src = flower.src;
+                img.className = 'garden-flower ' + flower.size;
+                img.style.left = position + '%';
+                img.style.zIndex = '3';
+                if (mirrored) {
+                    img.classList.add('mirrored');
+                }
+                garden.appendChild(img);
+                
+                // Save to state
+                gardenState.flowers.push({
+                    index: flowerIndex,
+                    position: position,
+                    mirrored: mirrored
+                });
+                gardenState.flowerIndex = flowerIndex + 1;
+                saveGardenState();
             }
             
-            garden.appendChild(img);
             flowerIndex++;
         }
 
+        function restoreFlowers() {
+            gardenState.flowers.forEach(savedFlower => {
+                const flower = gardenFlowers[savedFlower.index % gardenFlowers.length];
+                createFlowerElement(flower, savedFlower.position, savedFlower.mirrored);
+            });
+        }
+
         function addAllGrass() {
-            // Add all grass patches immediately to the grass container (behind animals)
             grassPositions.forEach(pos => {
                 const img = document.createElement('img');
                 img.src = 'images/Gras.webp';
@@ -2768,51 +2847,80 @@
             });
         }
 
-        function addPondWithLisdodde() {
-            // Add pond
+        function addPondWithLisdodde(instant = false) {
             const pond = document.createElement('img');
             pond.src = 'images/Poel1.png';
             pond.className = 'garden-pond';
             pond.style.left = pondPosition + '%';
-            pond.style.zIndex = '2'; // Above grass
+            pond.style.zIndex = '2';
+            if (instant) {
+                pond.style.animation = 'none';
+                pond.style.opacity = '1';
+            }
             garden.appendChild(pond);
             
-            // Add Lisdodde on LEFT side of pond
+            const delay1 = instant ? 0 : 800;
+            const delay2 = instant ? 0 : 1200;
+            
             setTimeout(() => {
                 const lisdoddeLeft = document.createElement('img');
                 lisdoddeLeft.src = 'images/Lisdodde.png';
                 lisdoddeLeft.className = 'pond-lisdodde';
                 lisdoddeLeft.style.left = (pondPosition - 2) + '%';
                 lisdoddeLeft.style.zIndex = '4';
+                if (instant) {
+                    lisdoddeLeft.style.animation = 'none';
+                    lisdoddeLeft.style.opacity = '1';
+                }
                 garden.appendChild(lisdoddeLeft);
-            }, 800);
+            }, delay1);
             
-            // Add Lisdodde on RIGHT side of pond
             setTimeout(() => {
                 const lisdoddeRight = document.createElement('img');
                 lisdoddeRight.src = 'images/Lisdodde.png';
                 lisdoddeRight.className = 'pond-lisdodde-right';
                 lisdoddeRight.style.zIndex = '4';
+                if (instant) {
+                    lisdoddeRight.style.animation = 'none';
+                    lisdoddeRight.style.opacity = '1';
+                }
                 garden.appendChild(lisdoddeRight);
-            }, 1200);
+            }, delay2);
+            
+            gardenState.pondAdded = true;
+            saveGardenState();
         }
 
         // Build the garden
-        // 1. Grass is shown immediately as the header line
         addAllGrass();
 
-        // 2. Pond with lisdodde appears after 3 seconds
-        setTimeout(() => {
-            addPondWithLisdodde();
-        }, 3000);
+        // Check if we have saved state to restore
+        if (gardenState.flowers.length > 0 || gardenState.pondAdded) {
+            // Restore saved garden instantly
+            if (gardenState.pondAdded) {
+                addPondWithLisdodde(true);
+            }
+            restoreFlowers();
+            
+            // Continue adding new flowers
+            if (flowerIndex < gardenFlowers.length * 2) {
+                setInterval(() => {
+                    plantFlower();
+                }, 3000 + Math.random() * 2000);
+            }
+        } else {
+            // Fresh start - build garden gradually
+            setTimeout(() => {
+                addPondWithLisdodde(false);
+            }, 3000);
 
-        // 3. Start planting flowers after 2 seconds, then every 3-5 seconds
-        setTimeout(() => {
-            plantFlower();
-            setInterval(() => {
+            setTimeout(() => {
                 plantFlower();
-            }, 3000 + Math.random() * 2000);
-        }, 2000);
+                setInterval(() => {
+                    plantFlower();
+                }, 3000 + Math.random() * 2000);
+            }, 2000);
+        }
     </script>
 </body>
 </html>
