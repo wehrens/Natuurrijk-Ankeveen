@@ -127,7 +127,7 @@
 
 .garden-pond {
     position: absolute;
-    top: -5px;
+    top: 2px; /* Lager, was -5px */
     left: 72%;
     height: 28px;
     width: auto;
@@ -164,10 +164,10 @@
     top: var(--nav-height);
     left: 0;
     right: 0;
-    height: var(--grass-height);
+    height: 50px; /* Groter zodat egel zichtbaar is */
     pointer-events: none;
     overflow: visible;
-    z-index: 1005;
+    z-index: 1008; /* Boven background (1000), onder gras (1010) */
 }
 
 /* ===== VLIEGENDE DIEREN CONTAINER ===== */
@@ -185,7 +185,7 @@
 /* ===== EGEL ===== */
 .walking-hedgehog {
     position: absolute;
-    bottom: -5px; /* Hoger, was -12px */
+    top: -18px; /* Positioneer vanaf top van container */
     height: 30px;
     width: auto;
 }
@@ -288,12 +288,22 @@
     width: auto;
 }
 
+/* Oranje vlinder (Vlinder.gif) - sneller, zigzag */
 .flying-butterfly.flutter-right {
-    animation: butterflyFlutterRight 20s ease-in-out forwards;
+    animation: butterflyFlutterRight 18s ease-in-out forwards;
 }
 
 .flying-butterfly.flutter-left {
-    animation: butterflyFlutterLeft 20s ease-in-out forwards;
+    animation: butterflyFlutterLeft 18s ease-in-out forwards;
+}
+
+/* Blauwe vlinder (Vlinder2.gif) - langzamer, soepeler, kan van boven komen */
+.flying-butterfly.flutter-right-smooth {
+    animation: butterflyGlideFromTop 25s ease-in-out forwards;
+}
+
+.flying-butterfly.flutter-left-smooth {
+    animation: butterflyGlideToTop 25s ease-in-out forwards;
 }
 
 @keyframes butterflyFlutterRight {
@@ -324,6 +334,30 @@
     100% { left: -50px; top: 40px; transform: scaleX(-1) rotate(10deg); }
 }
 
+/* Soepele vlucht van boven naar beneden en door */
+@keyframes butterflyGlideFromTop {
+    0% { left: 20%; top: -40px; transform: rotate(25deg); }
+    15% { left: 30%; top: 30px; transform: rotate(10deg); }
+    30% { left: 45%; top: 50px; transform: rotate(-5deg); }
+    45% { left: 55%; top: 35px; transform: rotate(8deg); }
+    60% { left: 68%; top: 55px; transform: rotate(-10deg); }
+    75% { left: 80%; top: 40px; transform: rotate(5deg); }
+    90% { left: 92%; top: 20px; transform: rotate(-15deg); }
+    100% { left: calc(100% + 50px); top: -30px; transform: rotate(-25deg); }
+}
+
+/* Soepele vlucht naar boven uit beeld */
+@keyframes butterflyGlideToTop {
+    0% { left: calc(100% + 50px); top: 60px; transform: scaleX(-1) rotate(20deg); }
+    15% { left: 85%; top: 45px; transform: scaleX(-1) rotate(5deg); }
+    30% { left: 70%; top: 55px; transform: scaleX(-1) rotate(-8deg); }
+    45% { left: 55%; top: 35px; transform: scaleX(-1) rotate(10deg); }
+    60% { left: 40%; top: 50px; transform: scaleX(-1) rotate(-5deg); }
+    75% { left: 25%; top: 25px; transform: scaleX(-1) rotate(-15deg); }
+    90% { left: 12%; top: 5px; transform: scaleX(-1) rotate(-25deg); }
+    100% { left: -40px; top: -40px; transform: scaleX(-1) rotate(-35deg); }
+}
+
 /* ===== LIEVEHEERSBEESTJE ===== */
 .flying-ladybug {
     position: absolute;
@@ -349,31 +383,82 @@
     width: auto;
 }
 
-/* Naar rechts vliegend - gespiegeld want afbeelding kijkt naar links */
+/* Naar rechts vliegend - moet gespiegeld want afbeeldingen kijken naar links */
 .flying-swallow.swoop-right {
-    transform: scaleX(-1);
-    animation: swallowSwoopRight 6s linear forwards;
+    animation: swallowSwoopRight 5s ease-in-out forwards;
 }
 
 /* Naar links vliegend - niet gespiegeld */
 .flying-swallow.swoop-left {
-    animation: swallowSwoopLeft 6s linear forwards;
+    animation: swallowSwoopLeft 5s ease-in-out forwards;
 }
 
+/* Elegante glijvlucht naar rechts */
 @keyframes swallowSwoopRight {
-    0% { left: -60px; top: 25px; }
-    25% { left: 25%; top: 50px; }
-    50% { left: 50%; top: 20px; }
-    75% { left: 75%; top: 45px; }
-    100% { left: calc(100% + 60px); top: 30px; }
+    0% { 
+        left: -80px; 
+        top: 45px; 
+        transform: scaleX(-1) rotate(-5deg);
+    }
+    20% { 
+        left: 15%; 
+        top: 25px; 
+        transform: scaleX(-1) rotate(8deg);
+    }
+    40% { 
+        left: 35%; 
+        top: 55px; 
+        transform: scaleX(-1) rotate(-3deg);
+    }
+    60% { 
+        left: 55%; 
+        top: 20px; 
+        transform: scaleX(-1) rotate(10deg);
+    }
+    80% { 
+        left: 78%; 
+        top: 50px; 
+        transform: scaleX(-1) rotate(-5deg);
+    }
+    100% { 
+        left: calc(100% + 80px); 
+        top: 30px; 
+        transform: scaleX(-1) rotate(5deg);
+    }
 }
 
+/* Elegante glijvlucht naar links */
 @keyframes swallowSwoopLeft {
-    0% { left: calc(100% + 60px); top: 30px; }
-    25% { left: 75%; top: 50px; }
-    50% { left: 50%; top: 20px; }
-    75% { left: 25%; top: 45px; }
-    100% { left: -60px; top: 25px; }
+    0% { 
+        left: calc(100% + 80px); 
+        top: 35px; 
+        transform: rotate(-5deg);
+    }
+    20% { 
+        left: 80%; 
+        top: 55px; 
+        transform: rotate(5deg);
+    }
+    40% { 
+        left: 60%; 
+        top: 20px; 
+        transform: rotate(-8deg);
+    }
+    60% { 
+        left: 40%; 
+        top: 50px; 
+        transform: rotate(3deg);
+    }
+    80% { 
+        left: 20%; 
+        top: 25px; 
+        transform: rotate(-5deg);
+    }
+    100% { 
+        left: -80px; 
+        top: 40px; 
+        transform: rotate(8deg);
+    }
 }
 
 /* ===== RESPONSIVE ===== */
@@ -386,7 +471,7 @@
     .garden-flower.size-sm { height: 25px; }
     .garden-flower.size-md { height: 35px; }
     .garden-flower.size-lg { height: 45px; }
-    .walking-hedgehog { height: 22px; bottom: -3px; }
+    .walking-hedgehog { height: 22px; top: -12px; }
     .crawling-caterpillar { height: 12px; }
     .flying-butterfly { height: 18px; }
     .flying-swallow { height: 20px; }
@@ -402,7 +487,7 @@
     .garden-flower.size-sm { height: 30px; }
     .garden-flower.size-md { height: 42px; }
     .garden-flower.size-lg { height: 55px; }
-    .walking-hedgehog { height: 26px; bottom: -4px; }
+    .walking-hedgehog { height: 26px; top: -15px; }
     .garden-roerdomp { height: 48px; }
 }
 
@@ -415,7 +500,7 @@
     .garden-flower.size-sm { height: 40px; }
     .garden-flower.size-md { height: 55px; }
     .garden-flower.size-lg { height: 75px; }
-    .walking-hedgehog { height: 35px; bottom: -6px; }
+    .walking-hedgehog { height: 35px; top: -22px; }
     .flying-butterfly { height: 30px; }
     .flying-swallow { height: 32px; }
     .garden-roerdomp { height: 65px; }

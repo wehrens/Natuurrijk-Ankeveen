@@ -14,8 +14,8 @@
             totalFlowerTime: 120000,    // 2 min voor alle bloemen
             pondAppears: 50000,         // Vijver na 50s
             roerdompAppears: 100000,    // Roerdomp na 100s
-            animalStartDelay: 8000,     // Eerste dier al na 8s (was 20s)
-            animalInterval: 12000,      // Check elke 12s voor nieuw dier
+            animalStartDelay: 5000,     // Eerste dier al na 5s!
+            animalInterval: 10000,      // Check elke 10s voor nieuw dier
         },
         maxAnimalsVisible: 3,
         maxFlowers: 10,
@@ -187,12 +187,24 @@
         if (!canAddAnimal()) return;
 
         const img = document.createElement('img');
-        img.src = Math.random() > 0.5 ? 'images/Vlinder.gif' : 'images/Vlinder2.gif';
-        img.className = 'flying-butterfly ' + (Math.random() > 0.5 ? 'flutter-right' : 'flutter-left');
+        const isBlue = Math.random() > 0.5;
+        img.src = isBlue ? 'images/Vlinder2.gif' : 'images/Vlinder.gif';
         
-        flyingEl.appendChild(img);
-        state.activeAnimals.push({ type: 'butterfly', el: img });
-        removeAnimal(img, 20000);
+        // Blauwe vlinder krijgt soepele animatie, oranje de fladderende
+        const goingRight = Math.random() > 0.5;
+        if (isBlue) {
+            // Blauwe: soepel, kan van/naar boven
+            img.className = 'flying-butterfly ' + (goingRight ? 'flutter-right-smooth' : 'flutter-left-smooth');
+            flyingEl.appendChild(img);
+            state.activeAnimals.push({ type: 'butterfly', el: img });
+            removeAnimal(img, 26000); // 25s animatie
+        } else {
+            // Oranje: fladderend
+            img.className = 'flying-butterfly ' + (goingRight ? 'flutter-right' : 'flutter-left');
+            flyingEl.appendChild(img);
+            state.activeAnimals.push({ type: 'butterfly', el: img });
+            removeAnimal(img, 19000); // 18s animatie
+        }
     }
 
     // Lieveheersbeestje
@@ -221,7 +233,7 @@
         
         flyingEl.appendChild(img);
         state.activeAnimals.push({ type: 'swallow', el: img });
-        removeAnimal(img, 6500); // 6s animatie + marge
+        removeAnimal(img, 5500); // 5s animatie + marge
     }
 
     // Random dier spawnen
@@ -272,9 +284,9 @@
         // Fase 3: Roerdomp
         setTimeout(showRoerdomp, CONFIG.timing.roerdompAppears);
 
-        // Fase 4: Dieren beginnen
+        // Fase 4: Dieren beginnen - EERSTE IS EEN ZWALUW
         setTimeout(() => {
-            spawnRandomAnimal();
+            spawnSwallow(); // Eerste dier is altijd een zwaluw
             
             // Regelmatig nieuwe dieren
             setInterval(() => {
