@@ -560,7 +560,7 @@
             position: absolute;
             bottom: -20px; /* Pond sits below the ground line */
             height: 22px;
-            width: auto;
+            width: 120px; /* Fixed width for consistent lisdodde positioning */
             opacity: 0;
             animation: fadeInPond 1.5s ease-out forwards;
         }
@@ -578,6 +578,24 @@
             width: auto;
             opacity: 0;
             animation: bloomFlower 1s ease-out forwards;
+        }
+
+        .pond-lisdodde-right {
+            position: absolute;
+            bottom: -15px;
+            height: 50px;
+            width: auto;
+            opacity: 0;
+            left: calc(78% + 95px); /* Right side of pond on desktop */
+            animation: bloomFlowerMirrored 1s ease-out forwards;
+        }
+
+        @media (max-width: 768px) {
+            .pond-lisdodde-right {
+                left: calc(78% + 40px) !important; /* Smaller pond on mobile */
+                height: 30px !important;
+                bottom: -12px !important;
+            }
         }
 
         /* Hero Section */
@@ -2619,9 +2637,9 @@
         const usedPositions = [];
         let flowerIndex = 0;
         
-        // Pond position (fixed) - around 75-85% from left
+        // Pond position (fixed)
         const pondPosition = 78;
-        const pondWidth = 12; // percentage width of pond area
+        const pondWidth = 10; // percentage width of pond image
         
         // Grass positions - cover whole bar, displayed immediately
         const grassPositions = [
@@ -2632,12 +2650,22 @@
             { left: 92, width: 18 }    // Far right
         ];
 
-        // Check if position overlaps with pond
+        // Check if position overlaps with pond area (wider zone to keep flowers away)
         function overlapsWithPond(position) {
-            return position > (pondPosition - 3) && position < (pondPosition + pondWidth + 3);
+            return position > (pondPosition - 6) && position < (pondPosition + pondWidth + 4);
         }
 
-        // Positions where flowers can grow - spread across whole bar but avoid text and pond
+        // Available zones for flowers (avoiding text and pond)
+        // Desktop zones: 0-3%, 23-52%, 53-72%, 93-100%
+        const flowerZones = [
+            { start: 0, end: 3, weight: 1 },      // Far left edge
+            { start: 23, end: 38, weight: 3 },    // Left of center
+            { start: 39, end: 54, weight: 3 },    // Center
+            { start: 55, end: 72, weight: 3 },    // Right of center (before pond)
+            { start: 93, end: 100, weight: 2 }    // Far right (after pond)
+        ];
+
+        // Positions where flowers can grow - evenly distributed
         function getValidPosition() {
             const windowWidth = window.innerWidth;
             let position;
@@ -2645,28 +2673,31 @@
             
             do {
                 if (windowWidth > 768) {
-                    // Desktop: avoid "Natuurrijk Ankeveen" text (3-22%) and pond area
-                    const rand = Math.random();
-                    if (rand < 0.05) {
-                        position = Math.random() * 3; // Far left edge
-                    } else if (rand < 0.35) {
-                        position = 22 + Math.random() * 30; // Middle-left area (22-52%)
-                    } else if (rand < 0.6) {
-                        position = 52 + Math.random() * 23; // Middle-right area (52-75%, before pond)
-                    } else {
-                        position = 92 + Math.random() * 8; // Far right (after pond)
+                    // Desktop: pick a random zone weighted by size, then random position within
+                    const totalWeight = flowerZones.reduce((sum, z) => sum + z.weight, 0);
+                    let rand = Math.random() * totalWeight;
+                    let selectedZone = flowerZones[0];
+                    
+                    for (const zone of flowerZones) {
+                        rand -= zone.weight;
+                        if (rand <= 0) {
+                            selectedZone = zone;
+                            break;
+                        }
                     }
+                    
+                    position = selectedZone.start + Math.random() * (selectedZone.end - selectedZone.start);
                 } else {
                     // Mobile: avoid "Natuurrijk Ankeveen" text (5-55%)
                     const rand = Math.random();
                     if (rand < 0.15) {
                         position = Math.random() * 5; // Far left
                     } else {
-                        position = 55 + Math.random() * 45; // Right side
+                        position = 56 + Math.random() * 44; // Right side (avoid pond area too)
                     }
                 }
                 attempts++;
-            } while ((usedPositions.some(p => Math.abs(p - position) < 4) || overlapsWithPond(position)) && attempts < 20);
+            } while ((usedPositions.some(p => Math.abs(p - position) < 5) || overlapsWithPond(position)) && attempts < 30);
             
             usedPositions.push(position);
             return position;
@@ -2717,7 +2748,7 @@
                 const lisdoddeLeft = document.createElement('img');
                 lisdoddeLeft.src = 'images/Lisdodde.png';
                 lisdoddeLeft.className = 'pond-lisdodde';
-                lisdoddeLeft.style.left = (pondPosition - 3) + '%';
+                lisdoddeLeft.style.left = (pondPosition - 2) + '%';
                 lisdoddeLeft.style.zIndex = '4';
                 garden.appendChild(lisdoddeLeft);
             }, 800);
@@ -2726,8 +2757,7 @@
             setTimeout(() => {
                 const lisdoddeRight = document.createElement('img');
                 lisdoddeRight.src = 'images/Lisdodde.png';
-                lisdoddeRight.className = 'pond-lisdodde mirrored';
-                lisdoddeRight.style.left = (pondPosition + pondWidth - 1) + '%';
+                lisdoddeRight.className = 'pond-lisdodde-right';
                 lisdoddeRight.style.zIndex = '4';
                 garden.appendChild(lisdoddeRight);
             }, 1200);
