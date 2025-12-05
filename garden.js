@@ -1,6 +1,6 @@
 /* ===========================================
    NATUURRIJK ANKEVEEN - Header Garden Script
-   FASE 1: Robuuste basis - scroll reset + gras
+   FASE 2: Biotoop met bloemen - langzaam opbloeien
    =========================================== */
 
 (function() {
@@ -8,62 +8,75 @@
 
     // ===== CONFIGURATIE =====
     const CONFIG = {
-        grassImage: 'images/Gras-cropped.png',
-        grassSegments: 10  // Meer segmenten voor kleinere grashoogte
+        // Timing (in milliseconden)
+        firstFlowerDelay: 3000,      // 3 seconden na laden
+        totalBloomTime: 120000,       // 2 minuten voor alle bloemen
+        
+        // State
+        navigationKey: 'natuurrijk_navigating',
+        gardenStateKey: 'natuurrijk_garden_state'
     };
 
-    // ===== NAVIGATIE STATE =====
-    // Voor later: state behouden bij navigatie binnen de site
-    const isNavigation = sessionStorage.getItem('natuurrijk_navigating') === 'true';
-    sessionStorage.removeItem('natuurrijk_navigating');
+    // ===== NAVIGATIE DETECTIE =====
+    const isNavigation = sessionStorage.getItem(CONFIG.navigationKey) === 'true';
+    sessionStorage.removeItem(CONFIG.navigationKey);
     
     if (!isNavigation) {
-        sessionStorage.removeItem('natuurrijk_garden');
+        sessionStorage.removeItem(CONFIG.gardenStateKey);
     }
     
-    // Zet flag bij interne navigatie
     document.addEventListener('click', function(e) {
         const link = e.target.closest('a');
         if (link && link.href && 
             !link.href.startsWith('javascript:') &&
             link.href.includes(window.location.hostname)) {
-            sessionStorage.setItem('natuurrijk_navigating', 'true');
+            sessionStorage.setItem(CONFIG.navigationKey, 'true');
         }
     });
 
-    // ===== HTML STRUCTUUR MAKEN =====
-    function createHeaderStructure() {
-        // Check of structuur al bestaat
-        if (document.getElementById('headerGrass')) {
-            return;
-        }
+    // ===== BLOEMEN LATEN BLOEIEN =====
+    function bloomFlowers() {
+        const flowers = document.querySelectorAll('.garden-flower');
+        if (flowers.length === 0) return;
 
-        const nav = document.querySelector('nav');
-        if (!nav) {
-            console.warn('Garden: nav element niet gevonden');
-            return;
-        }
-
-        // Maak gras images HTML
-        let grassHTML = '';
-        for (let i = 0; i < CONFIG.grassSegments; i++) {
-            grassHTML += `<img src="${CONFIG.grassImage}" class="garden-grass" alt="" aria-hidden="true">`;
-        }
-
-        // Maak de header elementen
-        const html = `
-            <div class="header-background"></div>
-            <div class="header-grass" id="headerGrass">${grassHTML}</div>
-        `;
+        // Check of we al gebloeid waren (navigatie binnen site)
+        const savedState = sessionStorage.getItem(CONFIG.gardenStateKey);
         
-        // Voeg in direct na de nav
-        nav.insertAdjacentHTML('afterend', html);
+        if (savedState === 'bloomed') {
+            // Direct alle bloemen tonen
+            flowers.forEach(flower => {
+                flower.style.opacity = '1';
+                flower.style.transform = flower.classList.contains('mirrored') 
+                    ? 'scaleX(-1) scale(1)' 
+                    : 'scale(1)';
+            });
+            return;
+        }
+
+        // Bereken interval tussen bloemen
+        const flowerCount = flowers.length;
+        const interval = CONFIG.totalBloomTime / flowerCount;
+        
+        // Shuffle de bloemen voor willekeurige volgorde
+        const shuffledFlowers = Array.from(flowers).sort(() => Math.random() - 0.5);
+        
+        // Start bloemen laten opbloeien
+        shuffledFlowers.forEach((flower, index) => {
+            setTimeout(() => {
+                flower.classList.add('blooming');
+            }, CONFIG.firstFlowerDelay + (index * interval));
+        });
+
+        // Sla state op na alle bloemen
+        setTimeout(() => {
+            sessionStorage.setItem(CONFIG.gardenStateKey, 'bloomed');
+        }, CONFIG.firstFlowerDelay + CONFIG.totalBloomTime);
     }
 
     // ===== INITIALISATIE =====
     function init() {
-        createHeaderStructure();
-        console.log('Garden: geïnitialiseerd (fase 1 - alleen gras)');
+        // Wacht even tot alles geladen is
+        setTimeout(bloomFlowers, 100);
     }
 
     // Start zodra DOM klaar is
