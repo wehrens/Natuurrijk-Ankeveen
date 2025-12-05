@@ -3,13 +3,13 @@
    =========================================== */
 
 /* ===== HEADER ACHTERGROND ===== */
-/* Hoogte: 140px + 20% = 168px */
+/* Nav is ~60px, gras direct daaronder */
 .header-background {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 168px;
+    height: 80px;
     background-color: #f8f6f0;
     z-index: 1008;
     pointer-events: none;
@@ -24,7 +24,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 200px;
+    height: 140px;
     overflow: visible;
     pointer-events: none;
 }
@@ -35,13 +35,12 @@
 .header-animals-flying { z-index: 1013; }
 
 /* ===== GRAS ===== */
-/* Originele afbeelding: 853px hoog, eerste 317px transparant */
-/* Bij height: 60px -> schaal = 60/853 = 0.07 */
-/* Transparant deel wordt: 317 * 0.07 = 22px */
-/* Om zichtbaar gras op 168px te krijgen: top = 168 - 22 = 146px */
+/* Transparant deel = 22px bij height 60px */
+/* Zichtbaar gras moet op 80px starten */
+/* Dus top = 80 - 22 = 58px */
 .garden-grass {
     position: absolute;
-    top: 146px;
+    top: 58px;
     height: 60px;
     width: auto;
 }
@@ -231,41 +230,41 @@
 /* ===== MOBIEL ===== */
 @media (max-width: 768px) {
     .header-background {
-        height: 96px;
+        height: 70px;
     }
     
     .header-grass,
     .header-garden,
     .header-animals-ground,
     .header-animals-flying {
-        height: 130px;
+        height: 110px;
     }
     
-    /* height: 40px -> transparant deel = 317 * (40/853) = 15px */
-    /* Zichtbaar gras op 96px: top = 96 - 15 = 81px */
+    /* height 40px -> transparant = 15px */
+    /* top = 70 - 15 = 55px */
     .garden-grass {
         height: 40px;
-        top: 81px;
+        top: 55px;
     }
 }
 
 /* ===== TABLET ===== */
 @media (min-width: 769px) and (max-width: 1024px) {
     .header-background {
-        height: 120px;
+        height: 75px;
     }
     
     .header-grass,
     .header-garden,
     .header-animals-ground,
     .header-animals-flying {
-        height: 160px;
+        height: 125px;
     }
     
-    /* height: 50px -> transparant deel = 317 * (50/853) = 19px */
-    /* Zichtbaar gras op 120px: top = 120 - 19 = 101px */
+    /* height 50px -> transparant = 19px */
+    /* top = 75 - 19 = 56px */
     .garden-grass {
         height: 50px;
-        top: 101px;
+        top: 56px;
     }
 }
