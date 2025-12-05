@@ -1,6 +1,6 @@
 /* ===========================================
    NATUURRIJK ANKEVEEN - Header Garden Styles
-   FASE 1: Robuuste basis - gras op headergrens
+   FASE 2: Biotoop met bloemen
    =========================================== */
 
 /* ===== HEADER HOOGTES ===== */
@@ -12,8 +12,6 @@
 }
 
 /* ===== HEADER ACHTERGROND ===== */
-/* Solide achtergrond die ALLES afdekt (nav + gras area) 
-   zodat content eronder verdwijnt bij scrollen */
 .header-background {
     position: fixed;
     top: 0;
@@ -45,7 +43,6 @@
     width: auto;
 }
 
-/* 10 segmenten voor volledige dekking bij kleine hoogte */
 .garden-grass:nth-child(1) { left: 0; }
 .garden-grass:nth-child(2) { left: 10%; }
 .garden-grass:nth-child(3) { left: 20%; }
@@ -57,9 +54,99 @@
 .garden-grass:nth-child(9) { left: 80%; }
 .garden-grass:nth-child(10) { left: 90%; }
 
-/* ===== TOEKOMSTIGE BIOTOOP CONTAINERS ===== */
-/* Voorbereid voor fase 2: bloemen, dieren, etc. */
-.header-garden,
+/* ===== BLOEMEN CONTAINER ===== */
+.header-garden {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: calc(var(--nav-height) + var(--grass-height) + 5px);
+    pointer-events: none;
+    overflow: visible;
+    z-index: 1008; /* Tussen background en gras */
+}
+
+/* ===== BLOEMEN BASIS ===== */
+.garden-flower {
+    position: absolute;
+    bottom: 0; /* Verankerd aan onderkant container (= graslijn) */
+    height: auto;
+    opacity: 0;
+    transform: scale(0.3) translateY(20px);
+    transform-origin: bottom center;
+    animation: bloomFlower 1.2s ease-out forwards;
+    pointer-events: none;
+}
+
+/* Gespiegelde bloemen */
+.garden-flower.mirrored {
+    transform: scaleX(-1) scale(0.3) translateY(20px);
+    animation: bloomFlowerMirrored 1.2s ease-out forwards;
+}
+
+/* ===== BLOEM GROOTTES ===== */
+/* Klein - kleine accenten */
+.garden-flower.size-xs {
+    height: 25px;
+}
+
+/* Medium - standaard bloemen */
+.garden-flower.size-sm {
+    height: 35px;
+}
+
+/* Groter - opvallende bloemen */
+.garden-flower.size-md {
+    height: 50px;
+}
+
+/* Groot - statement bloemen */
+.garden-flower.size-lg {
+    height: 65px;
+}
+
+/* ===== BLOEM ANIMATIES ===== */
+@keyframes bloomFlower {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(20px);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.05) translateY(-2px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes bloomFlowerMirrored {
+    0% {
+        opacity: 0;
+        transform: scaleX(-1) scale(0.3) translateY(20px);
+    }
+    60% {
+        opacity: 1;
+        transform: scaleX(-1) scale(1.05) translateY(-2px);
+    }
+    100% {
+        opacity: 1;
+        transform: scaleX(-1) scale(1) translateY(0);
+    }
+}
+
+/* Vertraagde animaties voor geleidelijk opbloeien */
+.garden-flower.delay-1 { animation-delay: 0.5s; }
+.garden-flower.delay-2 { animation-delay: 1.2s; }
+.garden-flower.delay-3 { animation-delay: 2.0s; }
+.garden-flower.delay-4 { animation-delay: 2.8s; }
+.garden-flower.delay-5 { animation-delay: 3.5s; }
+.garden-flower.delay-6 { animation-delay: 4.2s; }
+.garden-flower.delay-7 { animation-delay: 5.0s; }
+.garden-flower.delay-8 { animation-delay: 5.8s; }
+
+/* ===== TOEKOMSTIGE DIEREN CONTAINERS ===== */
 .header-animals-ground,
 .header-animals-flying {
     position: fixed;
@@ -71,9 +158,8 @@
     overflow: visible;
 }
 
-.header-garden { z-index: 1012; display: none; }
-.header-animals-ground { z-index: 1011; display: none; }
-.header-animals-flying { z-index: 1013; display: none; }
+.header-animals-ground { z-index: 1009; display: none; }
+.header-animals-flying { z-index: 1015; display: none; }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 767px) {
@@ -81,6 +167,12 @@
         --nav-height: 60px;
         --grass-height: 12px;
     }
+    
+    /* Kleinere bloemen op mobiel */
+    .garden-flower.size-xs { height: 18px; }
+    .garden-flower.size-sm { height: 25px; }
+    .garden-flower.size-md { height: 35px; }
+    .garden-flower.size-lg { height: 45px; }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -88,6 +180,11 @@
         --nav-height: 65px;
         --grass-height: 14px;
     }
+    
+    .garden-flower.size-xs { height: 22px; }
+    .garden-flower.size-sm { height: 30px; }
+    .garden-flower.size-md { height: 42px; }
+    .garden-flower.size-lg { height: 55px; }
 }
 
 @media (min-width: 1200px) {
@@ -95,4 +192,9 @@
         --nav-height: 75px;
         --grass-height: 18px;
     }
+    
+    .garden-flower.size-xs { height: 30px; }
+    .garden-flower.size-sm { height: 40px; }
+    .garden-flower.size-md { height: 55px; }
+    .garden-flower.size-lg { height: 75px; }
 }
