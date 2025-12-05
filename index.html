@@ -178,15 +178,25 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 70px;
-            overflow: hidden;
+            height: 77px; /* Match nav height */
+            overflow: visible; /* Allow animals to be visible on the border */
             pointer-events: none;
             z-index: 1002;
         }
 
         @media (max-width: 768px) {
             .header-animals {
-                height: 65px;
+                height: 62px; /* Mobile nav height */
+            }
+            .walking-hedgehog,
+            .walking-hedgehog-reverse,
+            .crawling-caterpillar {
+                bottom: -15px !important;
+                width: 28px !important;
+            }
+            .flying-ladybug {
+                bottom: -15px !important;
+                width: 20px !important;
             }
         }
 
@@ -283,7 +293,7 @@
         /* Walking Hedgehog - Right to Left (normal) */
         .walking-hedgehog {
             position: absolute;
-            bottom: -5px;
+            bottom: -18px; /* On the ground line with grass */
             right: -50px;
             width: 35px;
             height: auto;
@@ -320,7 +330,7 @@
         /* Walking Hedgehog Reverse - Left to Right (flipped) */
         .walking-hedgehog-reverse {
             position: absolute;
-            bottom: -5px;
+            bottom: -18px; /* On the ground line with grass */
             left: -50px;
             width: 35px;
             height: auto;
@@ -360,7 +370,7 @@
         /* Crawling Caterpillar - Right to Left (flipped to face left) */
         .crawling-caterpillar {
             position: absolute;
-            bottom: -5px;
+            bottom: -18px; /* On the ground line with grass */
             left: calc(100% + 60px);
             width: 45px;
             height: auto;
@@ -421,7 +431,7 @@
         /* Flying Ladybug */
         .flying-ladybug {
             position: absolute;
-            bottom: -5px;
+            bottom: -18px;
             left: 30%;
             width: 25px;
             height: auto;
@@ -430,18 +440,18 @@
         }
 
         @keyframes flyLadybug {
-            0%, 70% { bottom: -5px; left: 30%; transform: rotate(0deg); opacity: 0; }
+            0%, 70% { bottom: -18px; left: 30%; transform: rotate(0deg); opacity: 0; }
             /* Appear */
-            70.5% { bottom: -5px; left: 30%; transform: rotate(0deg); opacity: 1; }
+            70.5% { bottom: -18px; left: 30%; transform: rotate(0deg); opacity: 1; }
             /* Walk a tiny bit */
-            72% { bottom: -5px; left: 28%; transform: rotate(0deg); opacity: 1; }
+            72% { bottom: -18px; left: 28%; transform: rotate(0deg); opacity: 1; }
             /* Prepare to fly */
-            72.5% { bottom: -5px; left: 28%; transform: rotate(-10deg); opacity: 1; }
+            72.5% { bottom: -18px; left: 28%; transform: rotate(-10deg); opacity: 1; }
             /* Fly up and away */
-            74% { bottom: 25px; left: 22%; transform: rotate(-25deg); opacity: 1; }
-            76% { bottom: 45px; left: 15%; transform: rotate(-35deg); opacity: 1; }
-            78% { bottom: 95px; left: 5%; transform: rotate(-45deg); opacity: 0; }
-            78.1%, 100% { bottom: -5px; left: 30%; transform: rotate(0deg); opacity: 0; }
+            74% { bottom: 15px; left: 22%; transform: rotate(-25deg); opacity: 1; }
+            76% { bottom: 35px; left: 15%; transform: rotate(-35deg); opacity: 1; }
+            78% { bottom: 85px; left: 5%; transform: rotate(-45deg); opacity: 0; }
+            78.1%, 100% { bottom: -18px; left: 30%; transform: rotate(0deg); opacity: 0; }
         }
 
         /* Growing Garden - flowers that appear over time */
@@ -450,14 +460,23 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 75px;
+            height: 77px; /* Match nav height exactly */
             pointer-events: none;
             z-index: 1001;
         }
 
-        .garden-flower {
+        /* The ground level - this is where the header ends */
+        .garden-ground {
             position: absolute;
             bottom: 0;
+            left: 0;
+            right: 0;
+            height: 0;
+        }
+
+        .garden-flower {
+            position: absolute;
+            bottom: -18px; /* Grow from ground level */
             height: 45px;
             width: auto;
             opacity: 0;
@@ -505,10 +524,11 @@
 
         @media (max-width: 768px) {
             .header-garden {
-                height: 70px;
+                height: 62px; /* Mobile nav height */
             }
             .garden-flower {
                 height: 30px;
+                bottom: -15px !important;
             }
             .garden-flower.small {
                 height: 22px;
@@ -520,30 +540,33 @@
                 height: 38px;
             }
             .garden-grass {
-                height: 28px !important;
+                height: 20px !important;
+                bottom: -12px !important;
             }
             .garden-pond {
-                height: 14px !important;
-                width: 70px !important;
+                height: 12px !important;
+                width: 60px !important;
+                bottom: -14px !important;
             }
             .pond-lisdodde {
-                height: 35px !important;
+                height: 30px !important;
+                bottom: -15px !important;
             }
         }
 
-        /* Grass base layer - visible immediately as header line */
+        /* Grass base layer - sits exactly on header border */
         .garden-grass {
             position: absolute;
-            bottom: 0;
+            bottom: -20px; /* Centered on the header border line */
             height: 38px;
             width: auto;
             opacity: 1;
         }
 
-        /* Pond */
+        /* Pond - sits on the ground, slightly below */
         .garden-pond {
             position: absolute;
-            bottom: 2px;
+            bottom: -22px; /* Slightly below the line */
             height: 22px;
             width: auto;
             opacity: 0;
@@ -558,7 +581,7 @@
         /* Lisdodde next to pond */
         .pond-lisdodde {
             position: absolute;
-            bottom: 0;
+            bottom: -18px;
             height: 50px;
             width: auto;
             opacity: 0;
