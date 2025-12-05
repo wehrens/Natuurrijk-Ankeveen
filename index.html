@@ -168,105 +168,196 @@
             position: relative;
         }
 
-        /* Flying Swallow Animation */
-        .flying-swallow {
+        /* ============================================
+           HEADER ANIMATIONS - Swallow, Hedgehog, Caterpillar
+           ============================================ */
+        
+        /* Container to keep animals in header area only */
+        .header-animals {
             position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 75px;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        @media (max-width: 768px) {
+            .header-animals {
+                height: 70px;
+            }
+        }
+
+        /* Flying Swallow - 3 different routes */
+        .flying-swallow {
+            position: absolute;
             top: -50px;
             left: -50px;
             width: 40px;
             height: auto;
-            z-index: 9999;
             pointer-events: none;
-            animation: flySwallow 20s linear infinite;
+            animation: flySwallowRoutes 60s linear infinite;
         }
 
-        @keyframes flySwallow {
+        @keyframes flySwallowRoutes {
+            /* Route 1: Full U-curve left to right */
             0% {
                 top: -50px;
                 left: -50px;
                 transform: rotate(45deg);
             }
-            3% {
-                top: 60px;
+            1.5% {
+                top: 45px;
                 left: 15%;
                 transform: rotate(15deg);
             }
-            6.25% {
-                top: 80px;
+            3% {
+                top: 55px;
                 left: 50%;
                 transform: rotate(0deg);
             }
-            9.5% {
-                top: 60px;
+            4.5% {
+                top: 45px;
                 left: 85%;
                 transform: rotate(-15deg);
             }
-            12.5% {
+            6% {
                 top: -50px;
                 left: calc(100% + 50px);
                 transform: rotate(-45deg);
             }
-            12.6%, 100% {
+            /* Hidden */
+            6.1%, 32% {
+                top: -50px;
+                left: -50px;
+                transform: rotate(45deg);
+            }
+            /* Route 2: Enter left, exit top middle */
+            33% {
+                top: 50px;
+                left: -50px;
+                transform: rotate(-20deg);
+            }
+            35% {
+                top: 45px;
+                left: 25%;
+                transform: rotate(-30deg);
+            }
+            37% {
+                top: -50px;
+                left: 45%;
+                transform: rotate(-60deg);
+            }
+            /* Hidden */
+            37.1%, 65% {
+                top: -50px;
+                left: -50px;
+                transform: rotate(45deg);
+            }
+            /* Route 3: Enter top middle, exit right */
+            66% {
+                top: -50px;
+                left: 50%;
+                transform: rotate(60deg);
+            }
+            68% {
+                top: 45px;
+                left: 70%;
+                transform: rotate(20deg);
+            }
+            70% {
+                top: 50px;
+                left: calc(100% + 50px);
+                transform: rotate(0deg);
+            }
+            /* Hidden until restart */
+            70.1%, 100% {
                 top: -50px;
                 left: -50px;
                 transform: rotate(45deg);
             }
         }
 
-        /* Walking Hedgehog Animation */
+        /* Walking Hedgehog - Right to Left (normal) */
         .walking-hedgehog {
-            position: fixed;
-            top: 55px;
+            position: absolute;
+            bottom: 0;
             right: -50px;
             width: 35px;
             height: auto;
-            z-index: 9998;
             pointer-events: none;
-            animation: walkHedgehog 30s linear infinite;
+            animation: walkHedgehogRTL 75s linear infinite;
         }
 
-        @media (max-width: 768px) {
-            .walking-hedgehog {
-                top: 65px;
-            }
+        @keyframes walkHedgehogRTL {
+            /* Walk right to left with sniffing */
+            0% { right: -50px; }
+            5% { right: 15%; }
+            /* Sniff */
+            5%, 7% { right: 15%; }
+            12% { right: 45%; }
+            /* Sniff */
+            12%, 14.5% { right: 45%; }
+            19% { right: 75%; }
+            /* Sniff */
+            19%, 21% { right: 75%; }
+            26% { right: calc(100% + 50px); }
+            /* Stay hidden while caterpillar and reverse hedgehog go */
+            26%, 100% { right: calc(100% + 50px); }
         }
 
-        @keyframes walkHedgehog {
-            0% {
-                right: -50px;
-            }
-            /* Walk */
-            12% {
-                right: 20%;
-            }
-            /* Stop and sniff - 2 sec */
-            12%, 19% {
-                right: 20%;
-            }
-            /* Walk more */
-            32% {
-                right: 50%;
-            }
-            /* Stop and sniff - 3 sec */
-            32%, 42% {
-                right: 50%;
-            }
-            /* Walk more */
-            55% {
-                right: 80%;
-            }
-            /* Stop and look - 3 sec */
-            55%, 65% {
-                right: 80%;
-            }
-            /* Final walk off screen */
-            73% {
-                right: calc(100% + 50px);
-            }
+        /* Walking Hedgehog Reverse - Left to Right (flipped) */
+        .walking-hedgehog-reverse {
+            position: absolute;
+            bottom: 0;
+            left: -50px;
+            width: 35px;
+            height: auto;
+            pointer-events: none;
+            transform: scaleX(-1);
+            animation: walkHedgehogLTR 75s linear infinite;
+        }
+
+        @keyframes walkHedgehogLTR {
+            /* Wait for first hedgehog + pause + caterpillar + pause */
+            0%, 52% { left: -50px; }
+            /* Walk left to right with sniffing */
+            53% { left: -50px; }
+            58% { left: 15%; }
+            /* Sniff */
+            58%, 60% { left: 15%; }
+            65% { left: 45%; }
+            /* Sniff */
+            65%, 67.5% { left: 45%; }
+            72% { left: 75%; }
+            /* Sniff */
+            72%, 74% { left: 75%; }
+            79% { left: calc(100% + 50px); }
+            /* Stay hidden until restart */
+            79%, 100% { left: calc(100% + 50px); }
+        }
+
+        /* Crawling Caterpillar - Right to Left */
+        .crawling-caterpillar {
+            position: absolute;
+            bottom: 2px;
+            right: -60px;
+            width: 45px;
+            height: auto;
+            pointer-events: none;
+            animation: crawlCaterpillar 75s linear infinite;
+        }
+
+        @keyframes crawlCaterpillar {
+            /* Wait for hedgehog + 3 sec pause */
+            0%, 30% { right: -60px; }
+            /* Crawl across - no stopping */
+            31% { right: -60px; }
+            46% { right: calc(100% + 60px); }
             /* Stay hidden */
-            73%, 100% {
-                right: calc(100% + 50px);
-            }
+            46%, 100% { right: calc(100% + 60px); }
         }
 
         /* Hero Section */
@@ -1525,11 +1616,13 @@
         </div>
     </nav>
 
-    <!-- Flying Swallow Animation -->
-    <img src="images/huiszwaluw.png" alt="" class="flying-swallow">
-
-    <!-- Walking Hedgehog Animation -->
-    <img src="images/egel.png" alt="" class="walking-hedgehog">
+    <!-- Header Animals Container - keeps animations in header only -->
+    <div class="header-animals">
+        <img src="images/huiszwaluw.png" alt="" class="flying-swallow">
+        <img src="images/egel.png" alt="" class="walking-hedgehog">
+        <img src="images/egel.png" alt="" class="walking-hedgehog-reverse">
+        <img src="images/Rups1.gif" alt="" class="crawling-caterpillar">
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
