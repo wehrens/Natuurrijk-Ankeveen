@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Natuurvriendelijke Oevers - Natuurrijk Ankeveen</title>
-    <meta name="description" content="Natuurrijk Ankeveen legt natuurvriendelijke oevers aan met inheemse planten voor meer biodiversiteit.">
+    <meta name="description" content="Natuurrijk Ankeveen legt natuurvriendelijke oevers aan. Winnaar Toekomstversnellers 2024!">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="garden.css">
     <style>
-        :root { --green-dark: #2d4a3e; --green-medium: #4a7c59; --green-light: #7fb069; --green-pale: #d4e6c3; --cream: #f8f6f0; --cream-dark: #e8e4d9; --brown: #8b6914; --text-dark: #1a2e22; --text-medium: #3d5a4a; }
+        :root { --green-dark: #2d4a3e; --green-medium: #4a7c59; --green-light: #7fb069; --green-pale: #d4e6c3; --cream: #f8f6f0; --cream-dark: #e8e4d9; --brown: #8b6914; --brown-light: #d4a84b; --text-dark: #1a2e22; --text-medium: #3d5a4a; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Source Sans 3', sans-serif; background-color: var(--cream); color: var(--text-dark); line-height: 1.6; }
         h1, h2, h3, h4 { font-family: 'Fraunces', serif; font-weight: 600; }
@@ -29,7 +30,6 @@
         .page-header p { font-size: 1.25rem; color: var(--text-medium); max-width: 600px; margin: 0 auto; }
         .content-section { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
         .content-section h2 { font-size: 2rem; color: var(--green-dark); margin-bottom: 1.5rem; }
-        .content-section h3 { font-size: 1.5rem; color: var(--green-dark); margin: 2rem 0 1rem; }
         .content-section p { color: var(--text-medium); margin-bottom: 1.5rem; font-size: 1.1rem; }
         .content-section ul { margin: 1.5rem 0 1.5rem 1.5rem; color: var(--text-medium); }
         .content-section li { margin-bottom: 0.75rem; font-size: 1.1rem; }
@@ -38,15 +38,20 @@
         .image-grid img:hover { transform: scale(1.02); }
         .image-grid.single { grid-template-columns: 1fr; }
         .image-grid.single img { height: 400px; }
+        
+        /* Timeline styles */
+        .timeline { position: relative; padding-left: 2rem; border-left: 3px solid var(--green-light); margin: 2rem 0; }
+        .timeline-item { margin-bottom: 2.5rem; position: relative; }
+        .timeline-item::before { content: ''; position: absolute; left: -2.45rem; top: 0.3rem; width: 14px; height: 14px; background: var(--green-medium); border: 3px solid var(--cream); border-radius: 50%; }
+        .timeline-date { font-weight: 600; color: var(--brown); margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .timeline-content h3 { font-size: 1.3rem; color: var(--green-dark); margin-bottom: 0.5rem; }
+        .timeline-content p { color: var(--text-medium); margin-bottom: 1rem; }
+        .timeline-image { max-width: 400px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; }
+        .timeline-highlight { background: linear-gradient(135deg, var(--green-pale) 0%, #fff9e6 100%); padding: 1.5rem; border-radius: 15px; border: 2px solid var(--brown-light); }
+        .timeline-highlight::before { background: var(--brown); }
+        
         .highlight-box { background: var(--green-pale); padding: 2rem; border-radius: 15px; margin: 2rem 0; border-left: 4px solid var(--green-medium); }
         .highlight-box p { margin-bottom: 0; font-size: 1.2rem; color: var(--green-dark); font-weight: 500; }
-        
-        /* Award box */
-        .award-box { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 2rem; border-radius: 15px; margin: 2rem 0; border: 2px solid var(--brown); text-align: center; }
-        .award-box h3 { color: var(--brown); margin-bottom: 0.5rem; }
-        .award-box p { color: var(--text-dark); margin-bottom: 0; }
-        .award-emoji { font-size: 3rem; margin-bottom: 1rem; }
-        
         .cta-section { padding: 4rem 2rem; background: var(--green-dark); text-align: center; }
         .cta-section h2 { font-size: 2rem; color: white; margin-bottom: 1rem; }
         .cta-section p { color: rgba(255,255,255,0.9); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
@@ -77,17 +82,14 @@
         .contact-option-text strong { display: block; font-size: 1.1rem; color: var(--green-dark); }
         .contact-option-text span { font-size: 0.9rem; color: var(--text-medium); }
         .contact-modal-footer { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--cream-dark); text-align: center; color: var(--text-medium); }
-        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .btn-secondary { margin-left: 0; margin-top: 1rem; } }
+        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .btn-secondary { margin-left: 0; margin-top: 1rem; } .timeline-image { max-width: 100%; } }
     </style>
 </head>
 <body>
     <nav>
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <div class="logo-icon"><img src="images/libelle.png" alt="Libelle"></div>
                 <span class="logo-text">Natuurrijk Ankeveen</span>
-                <div class="logo-icon"><img src="images/huiszwaluw.png" alt="Huiszwaluw"></div>
-                <div class="logo-icon logo-egel"><img src="images/egel.png" alt="Egel"></div>
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
@@ -101,71 +103,79 @@
 
     <section class="page-header">
         <h1>🌊 Natuurvriendelijke Oevers</h1>
-        <p>Bloeiende oevers voor kikkers, libellen en watervogels</p>
+        <p>Van steile kades naar bloemrijke waterranden</p>
     </section>
 
     <section class="content-section">
-        <div class="image-grid single">
-            <img src="images/Oeveraanleg.jpg" alt="Aanleg van een natuurvriendelijke oever" onclick="openLightbox(this.src)">
+        <h2>Waarom natuurvriendelijke oevers?</h2>
+        <p>Steile, beschoeide oevers zijn een ecologische woestijn. Vissen kunnen er niet paaien, vogels vinden er geen voedsel, en planten krijgen geen kans. Door oevers flauw af te graven en in te planten met inheemse soorten, creëren we een rijke overgangszone tussen water en land.</p>
+
+        <p>Het resultaat? Een explosie van biodiversiteit: libellen, kikkers, watervogels, vissen en tientallen plantensoorten vinden hier een thuis.</p>
+
+        <h2>Het proces</h2>
+        <p>Klik op de foto's om ze te vergroten:</p>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">Stap 1 – Afschrapen</div>
+                <div class="timeline-content">
+                    <h3>Graafmachine aan het werk</h3>
+                    <p>Een graafmachine schraapt de steile oever af tot een flauw talud. Dit creëert een geleidelijke overgang van water naar land, ideaal voor planten en dieren.</p>
+                    <img src="Oeveraanleg.jpg" alt="Graafmachine schraapt oever af" class="timeline-image" onclick="openLightbox(this.src)">
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">Stap 2 – Aanplanten</div>
+                <div class="timeline-content">
+                    <h3>Honderden planten met de hand</h3>
+                    <p>Vrijwilligers planten honderden inheemse water- en oeverplanten: gele lis, dotterbloem, watermunt, moerasvergeet-mij-nietje, en nog veel meer.</p>
+                    <img src="oever-planten.jpg" alt="Vrijwilligers planten oeverplanten" class="timeline-image" onclick="openLightbox(this.src)">
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">Stap 3 – In bloei</div>
+                <div class="timeline-content">
+                    <h3>Een jaar later: prachtig in bloei</h3>
+                    <p>Na een jaar staan de oevers prachtig in bloei. Gele lis, dotterbloemen en watermunt trekken bijen, vlinders en libellen aan.</p>
+                    <img src="IjsbaanJul2024.jpg" alt="Bloeiende oever bij de IJsclub" class="timeline-image" onclick="openLightbox(this.src)">
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">Stap 4 – Onderhoud</div>
+                <div class="timeline-content">
+                    <h3>Jaarlijks onderhoud</h3>
+                    <p>Elk jaar trekken vrijwilligers hun waadpakken aan om woekerende planten uit te dunnen en de oever in balans te houden. Zwaar werk, maar heel bevredigend!</p>
+                    <img src="oever-onderhoud.jpg" alt="Vrijwilligers in waadpakken" class="timeline-image" onclick="openLightbox(this.src)">
+                </div>
+            </div>
+
+            <div class="timeline-item timeline-highlight">
+                <div class="timeline-date">🏆 2024 – Toekomstversnellers</div>
+                <div class="timeline-content">
+                    <h3>Winnaar provinciale prijs Noord-Holland!</h3>
+                    <p>Ons project 'Bloemrijke en natuurrijke oevers in Ankeveen' won de Toekomstversnellers prijs van de provincie Noord-Holland. Een erkenning voor jaren hard werken én €5.000 om nog meer oevers aan te leggen!</p>
+                </div>
+            </div>
         </div>
 
-        <h2>Waarom natuurvriendelijke oevers?</h2>
-        <p>Traditionele oevers met beschoeiing of steile kanten bieden weinig ruimte voor planten en dieren. Een natuurvriendelijke oever heeft een flauw talud met inheemse water- en moerasplanten. Dit trekt libellen, kikkers, watervogels en talloze insecten aan.</p>
+        <h2>Onze oeverlocaties</h2>
+        <ul>
+            <li><strong>IJsclub Ankeveen (2021)</strong> – Onze eerste en grootste oever, langs de ijsbaan</li>
+            <li><strong>Bergse Pad (2022)</strong> – Langs het fietspad richting 's-Graveland</li>
+            <li><strong>Buhrmanlaan (2023)</strong> – In de woonwijk, met hulp van buurtbewoners</li>
+        </ul>
 
         <div class="highlight-box">
-            <p>🐸 Een natuurvriendelijke oever is een paradijs voor amfibieën! Kikkers en salamanders vinden er voedsel, schuilplaatsen en voortplantingsplekken.</p>
+            <p>💡 Wist je dat... een natuurvriendelijke oever tot wel 10x meer soorten herbergt dan een beschoeide oever?</p>
         </div>
-
-        <h2>Onze oeverprojecten</h2>
-        <p>Op drie locaties in Ankeveen hebben we natuurvriendelijke oevers aangelegd:</p>
-
-        <h3>1. Bij de IJsclub</h3>
-        <p>De grootste en meest zichtbare oever. In de zomer staat deze vol met gele lis, grote kattenstaart en andere bloeiende planten. Een prachtig gezicht!</p>
-
-        <div class="image-grid">
-            <img src="images/oever-planten.jpg" alt="Vrijwilligers planten oeverplanten" onclick="openLightbox(this.src)">
-            <img src="images/IjsbaanJul2024.jpg" alt="Bloeiende oever bij de IJsclub in juli 2024" onclick="openLightbox(this.src)">
-        </div>
-
-        <h3>2. Langs het Bergse Pad</h3>
-        <p>Aan de dorpszijde van het Bergse Pad hebben we een strook oeverplanten aangelegd. Deze oever profiteert van het heldere water van de Ankeveense Plassen.</p>
-
-        <h3>3. Bij de Buhrmanlaan</h3>
-        <p>Een kleinere oever in een woonwijk, waar bewoners nu kunnen genieten van bloemen en vlinders recht voor hun deur.</p>
-
-        <h2>Het onderhoud</h2>
-        <p>Na de aanleg is het werk niet klaar. Elk jaar komen we terug om de oevers te onderhouden:</p>
-
-        <ul>
-            <li><strong>Woekeraars uitdunnen</strong> – Egelskop en liesgras kunnen andere planten verdringen</li>
-            <li><strong>Bijplanten</strong> – Waar nodig planten we extra inheemse soorten</li>
-            <li><strong>Kort maaien</strong> – Sommige stukken maaien we om verruiging tegen te gaan</li>
-            <li><strong>Afval verwijderen</strong> – Helaas belandt er soms zwerfvuil in de oever</li>
-        </ul>
-
-        <div class="image-grid single">
-            <img src="images/oever-onderhoud.jpg" alt="Vrijwilligers onderhouden de oever" onclick="openLightbox(this.src)">
-        </div>
-
-        <div class="award-box">
-            <div class="award-emoji">🏆</div>
-            <h3>Winnaar Toekomstversnellers 2024!</h3>
-            <p>Ons project 'Bloemrijke en natuurrijke oevers in Ankeveen' won de provinciale prijs van Noord-Holland. Met het prijzengeld van €5.000 kunnen we nog meer oevers aanleggen!</p>
-        </div>
-
-        <h2>Wat plant je in een oever?</h2>
-        <p>We gebruiken uitsluitend inheemse planten die passen bij de vochtige omstandigheden:</p>
-
-        <ul>
-            <li><strong>Waterzone</strong> – Gele lis, waterviolier, watermunt</li>
-            <li><strong>Moeraszone</strong> – Grote kattenstaart, moerasspirea, koninginnenkruid</li>
-            <li><strong>Oeverzone</strong> – Dotterbloem, echte koekoeksbloem, moerasandoorn</li>
-        </ul>
     </section>
 
     <section class="cta-section">
-        <h2>Help mee met de oevers!</h2>
-        <p>Wil je een keer meehelpen met planten of onderhoud? Neem contact met ons op!</p>
+        <h2>Help mee met oeveronderhoud!</h2>
+        <p>Elk jaar in het najaar onderhouden we de oevers. Trek je waadpak aan en doe mee!</p>
         <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Neem contact op →</a>
         <a href="index.html" class="btn btn-secondary">← Terug naar home</a>
     </section>
@@ -186,9 +196,9 @@
             <h3>📬 Neem contact op</h3>
             <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
             <div class="contact-options">
-                <a href="mailto:natuurrijkankeveen@protonmail.com" class="contact-option">
+                <a href="/cdn-cgi/l/email-protection#84eae5f0f1f1f6f6edeeefe5eaefe1f2e1e1eac4f4f6ebf0ebeae9e5ede8aae7ebe9" class="contact-option">
                     <div class="contact-option-icon email"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
-                    <div class="contact-option-text"><strong>E-mail</strong><span>natuurrijkankeveen@protonmail.com</span></div>
+                    <div class="contact-option-text"><strong>E-mail</strong><span><span class="__cf_email__" data-cfemail="66080712131314140f0c0d07080d0310030308261614091209080b070f0a4805090b">[email&#160;protected]</span></span></div>
                 </a>
                 <a href="https://wa.me/31646293590" target="_blank" class="contact-option">
                     <div class="contact-option-icon whatsapp"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></div>
@@ -207,12 +217,12 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         function openContactModal() { document.getElementById('contactModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeContactModal(event) { if (event && event.target.closest('.contact-modal-content')) return; document.getElementById('contactModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
         function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); document.body.style.overflow = 'auto'; }
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeContactModal(); closeLightbox(); } });
     </script>
+    <script src="garden.js"></script>
 </body>
 </html>

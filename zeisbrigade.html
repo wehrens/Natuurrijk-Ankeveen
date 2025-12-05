@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zeisbrigade & Groenbeheer - Natuurrijk Ankeveen</title>
-    <meta name="description" content="De Zeisbrigade van Natuurrijk Ankeveen onderhoudt bloemrijke bermen, De Ruige Hoek en veldjes met de zeis. Traditioneel maaibeheer voor biodiversiteit.">
+    <title>De Zeisbrigade - Natuurrijk Ankeveen</title>
+    <meta name="description" content="De Zeisbrigade van Natuurrijk Ankeveen onderhoudt bloemrijke bermen en weilanden met de zeis. Traditioneel maaibeheer voor biodiversiteit.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="garden.css">
     <style>
         :root { --green-dark: #2d4a3e; --green-medium: #4a7c59; --green-light: #7fb069; --green-pale: #d4e6c3; --cream: #f8f6f0; --cream-dark: #e8e4d9; --brown: #8b6914; --text-dark: #1a2e22; --text-medium: #3d5a4a; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,7 +30,6 @@
         .page-header p { font-size: 1.25rem; color: var(--text-medium); max-width: 600px; margin: 0 auto; }
         .content-section { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
         .content-section h2 { font-size: 2rem; color: var(--green-dark); margin-bottom: 1.5rem; }
-        .content-section h3 { font-size: 1.5rem; color: var(--green-dark); margin: 2rem 0 1rem; }
         .content-section p { color: var(--text-medium); margin-bottom: 1.5rem; font-size: 1.1rem; }
         .content-section ul { margin: 1.5rem 0 1.5rem 1.5rem; color: var(--text-medium); }
         .content-section li { margin-bottom: 0.75rem; font-size: 1.1rem; }
@@ -40,20 +40,6 @@
         .image-grid.single img { height: 400px; }
         .highlight-box { background: var(--green-pale); padding: 2rem; border-radius: 15px; margin: 2rem 0; border-left: 4px solid var(--green-medium); }
         .highlight-box p { margin-bottom: 0; font-size: 1.2rem; color: var(--green-dark); font-weight: 500; }
-        
-        /* Egel box */
-        .egel-box { background: linear-gradient(135deg, var(--green-pale) 0%, var(--cream) 100%); padding: 2rem; border-radius: 20px; margin: 2rem 0; border: 2px solid var(--green-light); display: flex; align-items: center; gap: 1.5rem; }
-        .egel-box img { width: 80px; height: auto; flex-shrink: 0; }
-        .egel-box-content h4 { font-size: 1.2rem; color: var(--green-dark); margin-bottom: 0.5rem; }
-        .egel-box-content p { color: var(--text-medium); margin: 0; }
-        
-        /* Locatie kaarten */
-        .location-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
-        .location-card { background: white; border-radius: 15px; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border: 1px solid var(--cream-dark); }
-        .location-card h4 { color: var(--green-dark); margin-bottom: 0.5rem; font-size: 1.2rem; }
-        .location-card p { color: var(--text-medium); font-size: 0.95rem; margin: 0; }
-        .location-card .location-emoji { font-size: 1.5rem; margin-bottom: 0.5rem; }
-        
         .cta-section { padding: 4rem 2rem; background: var(--green-dark); text-align: center; }
         .cta-section h2 { font-size: 2rem; color: white; margin-bottom: 1rem; }
         .cta-section p { color: rgba(255,255,255,0.9); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
@@ -84,17 +70,14 @@
         .contact-option-text strong { display: block; font-size: 1.1rem; color: var(--green-dark); }
         .contact-option-text span { font-size: 0.9rem; color: var(--text-medium); }
         .contact-modal-footer { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--cream-dark); text-align: center; color: var(--text-medium); }
-        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .btn-secondary { margin-left: 0; margin-top: 1rem; } .egel-box { flex-direction: column; text-align: center; } }
+        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .btn-secondary { margin-left: 0; margin-top: 1rem; } }
     </style>
 </head>
 <body>
     <nav>
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <div class="logo-icon"><img src="images/libelle.png" alt="Libelle"></div>
                 <span class="logo-text">Natuurrijk Ankeveen</span>
-                <div class="logo-icon"><img src="images/huiszwaluw.png" alt="Huiszwaluw"></div>
-                <div class="logo-icon logo-egel"><img src="images/egel.png" alt="Egel"></div>
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
@@ -107,13 +90,13 @@
     </nav>
 
     <section class="page-header">
-        <h1>🌾 Zeisbrigade & Groenbeheer</h1>
-        <p>Traditioneel maaibeheer voor bloemrijke bermen en veldjes</p>
+        <h1>🌾 De Zeisbrigade</h1>
+        <p>Traditioneel maaibeheer voor bloemrijke bermen</p>
     </section>
 
     <section class="content-section">
         <div class="image-grid single">
-            <img src="images/Zeismaai.jpg" alt="De Zeisbrigade in actie" onclick="openLightbox(this.src)">
+            <img src="Zeismaai.jpg" alt="De Zeisbrigade in actie" onclick="openLightbox(this.src)">
         </div>
 
         <h2>Waarom zeisen?</h2>
@@ -128,53 +111,14 @@
         <h2>Wat wij doen</h2>
         <ul>
             <li><strong>Bermen maaien</strong> – Langs wegen en paden in Ankeveen</li>
-            <li><strong>Veldjes onderhouden</strong> – Zoals De Ruige Hoek</li>
+            <li><strong>Weilanden onderhouden</strong> – Voor bloemrijke hooilanden</li>
             <li><strong>Maaisel afvoeren</strong> – Naar composthopen of als veevoer</li>
             <li><strong>Hooioppers maken</strong> – Op de traditionele manier</li>
-            <li><strong>Struiken planten</strong> – Inheemse soorten voor vogels en insecten</li>
         </ul>
 
         <div class="image-grid">
-            <img src="images/hooiopper.jpg" alt="Traditionele hooiopper" onclick="openLightbox(this.src)">
-            <img src="images/groepsfoto-zeisbrigade.jpg" alt="De zeisbrigade groepsfoto" onclick="openLightbox(this.src)">
-        </div>
-
-        <h2>Onze locaties</h2>
-        <p>In goed overleg met de gemeente Wijdemeren beheren we verschillende plekken in Ankeveen:</p>
-
-        <div class="location-grid">
-            <div class="location-card">
-                <div class="location-emoji">🌳</div>
-                <h4>De Ruige Hoek</h4>
-                <p>Een klein natuurgebiedje met picknickbank waarvan we het beheer van de gemeente hebben overgenomen. Hier planten we inheemse struiken en laten we de natuur grotendeels haar gang gaan.</p>
-            </div>
-            <div class="location-card">
-                <div class="location-emoji">🌸</div>
-                <h4>Bermen langs wegen</h4>
-                <p>Diverse bermen in het dorp waar we met de zeis maaien voor meer wilde bloemen en insecten.</p>
-            </div>
-            <div class="location-card">
-                <div class="location-emoji">🌱</div>
-                <h4>Voedselbos Kostelijk</h4>
-                <p>We helpen zorgkwekerij Kostelijk bij de aanleg van een voedselbos met eetbare planten en struiken.</p>
-            </div>
-        </div>
-
-        <h3>De Ruige Hoek</h3>
-        <p>De Ruige Hoek is een stukje wilde natuur aan de rand van Ankeveen. Geen strak gemaaid gazon, maar wilde bloemen, dichte struiken en omgevallen takken. Dit soort "rommelige" natuur is juist heel waardevol voor vogels, insecten en kleine zoogdieren.</p>
-
-        <div class="image-grid single">
-            <img src="images/RuigeHoek.jpg" alt="De Ruige Hoek" onclick="openLightbox(this.src)">
-        </div>
-
-        <p>We hebben er tientallen inheemse struiken geplant: meidoorn, sleedoorn, hondsroos, gelderse roos, hazelaar en vuilboom. Deze bieden voedsel en beschutting aan vogels en insecten.</p>
-
-        <div class="egel-box">
-            <img src="images/egel.png" alt="Egel">
-            <div class="egel-box-content">
-                <h4>🦔 Wist je dat...</h4>
-                <p>De Ruige Hoek is een ideale plek voor egels! De dichte struiken bieden beschutting en de insectenrijke omgeving zorgt voor voldoende voedsel. 's Winters kunnen egels hier veilig overwinteren onder de bladhopen.</p>
-            </div>
+            <img src="hooiopper.jpg" alt="Traditionele hooiopper" onclick="openLightbox(this.src)">
+            <img src="groepsfoto-zeisbrigade.jpg" alt="De zeisbrigade groepsfoto" onclick="openLightbox(this.src)">
         </div>
 
         <h2>De zeiscursus</h2>
@@ -183,19 +127,19 @@
         <p>De cursus vindt plaats in september – houd onze website en sociale media in de gaten voor de exacte datum!</p>
 
         <div class="image-grid">
-            <img src="images/zeiscursus-smid.jpg" alt="Zeiscursus met smid" onclick="openLightbox(this.src)">
-            <img src="images/tractor-zeisdag.jpg" alt="Tractor helpt met afvoer maaisel" onclick="openLightbox(this.src)">
+            <img src="zeiscursus-smid.jpg" alt="Zeiscursus met smid" onclick="openLightbox(this.src)">
+            <img src="tractor-zeisdag.jpg" alt="Tractor helpt met afvoer maaisel" onclick="openLightbox(this.src)">
         </div>
 
         <h2>Meedoen?</h2>
         <p>Je hoeft geen ervaring te hebben om mee te doen. We hebben zeisen beschikbaar en ervaren zeisers helpen je graag op weg. Na afloop is er altijd koffie, thee en wat lekkers!</p>
 
-        <p>De zeisdagen worden aangekondigd via onze Signal App-groep. Meestal werken we op zaterdagochtenden in het voorjaar en de nazomer. Vaak is de klus al met 1 of 2 uurtjes geklaard!</p>
+        <p>De zeisdagen worden aangekondigd via onze nieuwsbrief en WhatsApp-groep. Meestal werken we op zaterdagochtenden in het voorjaar en de nazomer.</p>
     </section>
 
     <section class="cta-section">
-        <h2>Doe mee met de Zeisbrigade!</h2>
-        <p>Wil je een keer meehelpen met zeisen, harken of planten? Neem contact met ons op!</p>
+        <h2>Doe mee met zeisen!</h2>
+        <p>Wil je een keer meehelpen of meer weten over onze zeisdagen? Neem contact met ons op!</p>
         <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Neem contact op →</a>
         <a href="index.html" class="btn btn-secondary">← Terug naar home</a>
     </section>
@@ -216,9 +160,9 @@
             <h3>📬 Neem contact op</h3>
             <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
             <div class="contact-options">
-                <a href="mailto:natuurrijkankeveen@protonmail.com" class="contact-option">
+                <a href="/cdn-cgi/l/email-protection#cba5aabfbebeb9b9a2a1a0aaa5a0aebdaeaea58bbbb9a4bfa4a5a6aaa2a7e5a8a4a6" class="contact-option">
                     <div class="contact-option-icon email"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
-                    <div class="contact-option-text"><strong>E-mail</strong><span>natuurrijkankeveen@protonmail.com</span></div>
+                    <div class="contact-option-text"><strong>E-mail</strong><span><span class="__cf_email__" data-cfemail="5f313e2b2a2a2d2d3635343e31343a293a3a311f2f2d302b3031323e3633713c3032">[email&#160;protected]</span></span></div>
                 </a>
                 <a href="https://wa.me/31646293590" target="_blank" class="contact-option">
                     <div class="contact-option-icon whatsapp"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></div>
@@ -237,12 +181,12 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         function openContactModal() { document.getElementById('contactModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeContactModal(event) { if (event && event.target.closest('.contact-modal-content')) return; document.getElementById('contactModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
         function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); document.body.style.overflow = 'auto'; }
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeContactModal(); closeLightbox(); } });
     </script>
+    <script src="garden.js"></script>
 </body>
 </html>

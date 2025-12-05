@@ -7,6 +7,7 @@
     <meta name="description" content="Natuurrijk Ankeveen plant inheemse bomen, struiken en bloemen voor meer biodiversiteit in het dorp.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="garden.css">
     <style>
         :root { --green-dark: #2d4a3e; --green-medium: #4a7c59; --green-light: #7fb069; --green-pale: #d4e6c3; --cream: #f8f6f0; --cream-dark: #e8e4d9; --brown: #8b6914; --text-dark: #1a2e22; --text-medium: #3d5a4a; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -81,10 +82,7 @@
     <nav>
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <div class="logo-icon"><img src="images/libelle.png" alt="Libelle"></div>
                 <span class="logo-text">Natuurrijk Ankeveen</span>
-                <div class="logo-icon"><img src="images/huiszwaluw.png" alt="Huiszwaluw"></div>
-                <div class="logo-icon logo-egel"><img src="images/egel.png" alt="Egel"></div>
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
@@ -154,13 +152,7 @@
             <li><strong>De Ruige Hoek</strong> – Inheemse struiken voor vogels en kleine zoogdieren</li>
             <li><strong>Bermen en weilanden</strong> – Wilde bloemen voor bijen en vlinders</li>
             <li><strong>Joseph Lokin school</strong> – Bloemen en struiken op het schoolplein samen met de kinderen</li>
-            <li><strong>Bollen planten</strong> – Elk najaar planten we op allerlei plekken bloembollen</li>
         </ul>
-
-        <h2>Bollen voor het vroege voorjaar</h2>
-        <p>Elk najaar planten we op allerlei plekken in Ankeveen bloembollen – uiteraard inheemse soorten van biologische kwekerijen. Denk aan krokussen, wilde tulpen en sneeuwklokjes.</p>
-        
-        <p>Deze vroege bloeiers zijn enorm belangrijk voor insecten: na een lange winter zijn zij de eerste nectarbronnen voor bijen en hommels die uit hun winterslaap komen. Bovendien ziet het er voor ons mensen ook meteen weer wat vrolijker uit na zo'n lange, grijze winterperiode!</p>
 
         <h2>Zelf aan de slag?</h2>
         <p>Ook in je eigen tuin kun je veel doen! Vervang exotische planten door inheemse soorten en je zult zien dat er veel meer vlinders, bijen en vogels op af komen.</p>
@@ -191,9 +183,9 @@
             <h3>📬 Neem contact op</h3>
             <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
             <div class="contact-options">
-                <a href="mailto:natuurrijkankeveen@protonmail.com" class="contact-option">
+                <a href="/cdn-cgi/l/email-protection#aac4cbdedfdfd8d8c3c0c1cbc4c1cfdccfcfc4eadad8c5dec5c4c7cbc3c684c9c5c7" class="contact-option">
                     <div class="contact-option-icon email"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
-                    <div class="contact-option-text"><strong>E-mail</strong><span>natuurrijkankeveen@protonmail.com</span></div>
+                    <div class="contact-option-text"><strong>E-mail</strong><span><span class="__cf_email__" data-cfemail="9df3fce9e8e8efeff4f7f6fcf3f6f8ebf8f8f3ddedeff2e9f2f3f0fcf4f1b3fef2f0">[email&#160;protected]</span></span></div>
                 </a>
                 <a href="https://wa.me/31646293590" target="_blank" class="contact-option">
                     <div class="contact-option-icon whatsapp"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></div>
@@ -212,12 +204,12 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         function openContactModal() { document.getElementById('contactModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeContactModal(event) { if (event && event.target.closest('.contact-modal-content')) return; document.getElementById('contactModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
         function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); document.body.style.overflow = 'auto'; }
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeContactModal(); closeLightbox(); } });
     </script>
+    <script src="garden.js"></script>
 </body>
 </html>
