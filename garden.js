@@ -6,33 +6,25 @@
 (function() {
     'use strict';
 
-    // Detect if this is a page refresh vs navigation
-    let isRefresh = false;
+    // Simple and reliable: use sessionStorage for garden state
+    // sessionStorage is cleared when tab is closed, but persists during navigation
+    // localStorage is only used to track if we're navigating vs refreshing
     
-    // Check if we navigated here from another page on this site
-    const cameFromNavigation = sessionStorage.getItem('natuurrijkNavigating') === 'true';
-    
-    // Clear the navigation flag
-    sessionStorage.removeItem('natuurrijkNavigating');
-    
-    // If we didn't come from navigation, this is either a refresh, new tab, or direct URL
-    // In all these cases, we want to rebuild the garden
-    if (!cameFromNavigation) {
-        isRefresh = true;
-    }
-    
-    // Set up: when leaving this page (clicking a link), mark that we're navigating
+    // When clicking any link, we set a flag
     document.addEventListener('click', function(e) {
         const link = e.target.closest('a');
-        if (link && link.href && link.href.includes(window.location.hostname)) {
-            // Navigating to another page on this site
+        if (link && link.href) {
             sessionStorage.setItem('natuurrijkNavigating', 'true');
         }
     });
     
-    // On refresh: clear garden state so it rebuilds with animations
-    if (isRefresh) {
-        localStorage.removeItem('natuurrijkGarden');
+    // Check if we came via navigation
+    const cameFromNav = sessionStorage.getItem('natuurrijkNavigating') === 'true';
+    sessionStorage.removeItem('natuurrijkNavigating');
+    
+    // If NOT from navigation (= refresh or new visit), clear the garden
+    if (!cameFromNav) {
+        sessionStorage.removeItem('natuurrijkGarden');
     }
 
     // Create HTML structure for garden
@@ -157,7 +149,7 @@
 
     function saveGardenState() {
         try {
-            localStorage.setItem('natuurrijkGarden', JSON.stringify(gardenState));
+            sessionStorage.setItem('natuurrijkGarden', JSON.stringify(gardenState));
         } catch (e) {
             // localStorage might not be available
         }
@@ -165,7 +157,7 @@
 
     function loadGardenState() {
         try {
-            const saved = localStorage.getItem('natuurrijkGarden');
+            const saved = sessionStorage.getItem('natuurrijkGarden');
             return saved ? JSON.parse(saved) : null;
         } catch (e) {
             return null;
