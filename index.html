@@ -519,6 +519,43 @@
             .garden-flower.large {
                 height: 38px;
             }
+            .garden-grass {
+                height: 18px !important;
+            }
+            .garden-pond {
+                height: 12px !important;
+                width: 60px !important;
+            }
+        }
+
+        /* Grass base layer */
+        .garden-grass {
+            position: absolute;
+            bottom: 0;
+            height: 25px;
+            width: auto;
+            opacity: 0;
+            animation: fadeInGrass 2s ease-out forwards;
+        }
+
+        @keyframes fadeInGrass {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Pond */
+        .garden-pond {
+            position: absolute;
+            bottom: 2px;
+            height: 18px;
+            width: auto;
+            opacity: 0;
+            animation: fadeInPond 1.5s ease-out forwards;
+        }
+
+        @keyframes fadeInPond {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         /* Hero Section */
@@ -2545,14 +2582,34 @@
             { src: 'images/Gelelis.png', size: 'medium' },
             { src: 'images/Lisdodde.png', size: 'medium' },
             { src: 'images/Lisdodde2.png', size: 'small' },
+            { src: 'images/Lisdodde3.png', size: 'medium' },
             { src: 'images/Veldoeket.png', size: 'small' }
         ];
 
         const garden = document.getElementById('headerGarden');
         const usedPositions = [];
         let flowerIndex = 0;
+        let grassIndex = 0;
         
-        // Positions where flowers can grow - spread across whole bar but avoid "Natuurrijk Ankeveen" text
+        // Pond position (fixed) - around 75-85% from left
+        const pondPosition = 78;
+        const pondWidth = 12; // percentage width of pond area
+        
+        // Grass positions - cover whole bar except pond area
+        const grassPositions = [
+            { left: -5, width: 25 },   // Far left
+            { left: 18, width: 25 },   // Left-center (under text, subtle)
+            { left: 40, width: 25 },   // Center
+            { left: 58, width: 20 },   // Right of center (before pond)
+            { left: 90, width: 15 }    // Far right (after pond)
+        ];
+
+        // Check if position overlaps with pond
+        function overlapsWithPond(position) {
+            return position > (pondPosition - 3) && position < (pondPosition + pondWidth + 3);
+        }
+
+        // Positions where flowers can grow - spread across whole bar but avoid text and pond
         function getValidPosition() {
             const windowWidth = window.innerWidth;
             let position;
@@ -2560,20 +2617,19 @@
             
             do {
                 if (windowWidth > 768) {
-                    // Desktop: avoid the "Natuurrijk Ankeveen" text area (roughly 3-22%)
-                    // Flowers can grow: 0-3%, 22-100%
+                    // Desktop: avoid "Natuurrijk Ankeveen" text (3-22%) and pond area
                     const rand = Math.random();
                     if (rand < 0.05) {
                         position = Math.random() * 3; // Far left edge
-                    } else if (rand < 0.4) {
-                        position = 22 + Math.random() * 30; // Middle-left area
-                    } else if (rand < 0.7) {
-                        position = 52 + Math.random() * 25; // Middle-right area
+                    } else if (rand < 0.35) {
+                        position = 22 + Math.random() * 30; // Middle-left area (22-52%)
+                    } else if (rand < 0.6) {
+                        position = 52 + Math.random() * 23; // Middle-right area (52-75%, before pond)
                     } else {
-                        position = 77 + Math.random() * 23; // Right side
+                        position = 92 + Math.random() * 8; // Far right (after pond)
                     }
                 } else {
-                    // Mobile: avoid "Natuurrijk Ankeveen" text (roughly 5-55%)
+                    // Mobile: avoid "Natuurrijk Ankeveen" text (5-55%)
                     const rand = Math.random();
                     if (rand < 0.15) {
                         position = Math.random() * 5; // Far left
@@ -2582,22 +2638,22 @@
                     }
                 }
                 attempts++;
-            } while (usedPositions.some(p => Math.abs(p - position) < 4) && attempts < 20);
+            } while ((usedPositions.some(p => Math.abs(p - position) < 4) || overlapsWithPond(position)) && attempts < 20);
             
             usedPositions.push(position);
             return position;
         }
 
         function plantFlower() {
-            if (flowerIndex >= gardenFlowers.length * 2) return; // Max flowers (including mirrored)
+            if (flowerIndex >= gardenFlowers.length * 2) return;
             
             const flower = gardenFlowers[flowerIndex % gardenFlowers.length];
             const img = document.createElement('img');
             img.src = flower.src;
             img.className = 'garden-flower ' + flower.size;
             img.style.left = getValidPosition() + '%';
+            img.style.zIndex = '3'; // Above grass
             
-            // Randomly mirror some flowers
             if (Math.random() > 0.5) {
                 img.classList.add('mirrored');
             }
@@ -2606,13 +2662,52 @@
             flowerIndex++;
         }
 
-        // Start planting flowers after 3 seconds, then every 4-6 seconds
+        function addGrass() {
+            if (grassIndex >= grassPositions.length) return;
+            
+            const pos = grassPositions[grassIndex];
+            const img = document.createElement('img');
+            img.src = 'images/Gras.webp';
+            img.className = 'garden-grass';
+            img.style.left = pos.left + '%';
+            img.style.width = pos.width + '%';
+            img.style.zIndex = '1'; // Below flowers
+            
+            garden.appendChild(img);
+            grassIndex++;
+        }
+
+        function addPond() {
+            const img = document.createElement('img');
+            img.src = 'images/Poel1.png';
+            img.className = 'garden-pond';
+            img.style.left = pondPosition + '%';
+            img.style.zIndex = '2'; // Above grass, below flowers
+            
+            garden.appendChild(img);
+        }
+
+        // Start building the garden
+        // First add pond (appears after 5 seconds)
+        setTimeout(() => {
+            addPond();
+        }, 5000);
+
+        // Add grass patches gradually
+        setTimeout(() => {
+            addGrass(); // First grass patch
+            setInterval(() => {
+                addGrass();
+            }, 3000);
+        }, 2000);
+
+        // Start planting flowers after 4 seconds, then every 4-6 seconds
         setTimeout(() => {
             plantFlower();
             setInterval(() => {
                 plantFlower();
             }, 4000 + Math.random() * 2000);
-        }, 3000);
+        }, 4000);
     </script>
 </body>
 </html>
