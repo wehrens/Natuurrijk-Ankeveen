@@ -178,7 +178,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 75px;
+            height: 80px;
             overflow: hidden;
             pointer-events: none;
             z-index: 999;
@@ -186,14 +186,14 @@
 
         @media (max-width: 768px) {
             .header-animals {
-                height: 70px;
+                height: 75px;
             }
         }
 
         /* Flying Swallow - 3 different routes */
         .flying-swallow {
             position: absolute;
-            top: -50px;
+            top: 0px;
             left: -50px;
             width: 40px;
             height: auto;
@@ -209,17 +209,17 @@
                 transform: rotate(45deg);
             }
             1.5% {
-                top: 45px;
+                top: 35px;
                 left: 15%;
                 transform: rotate(15deg);
             }
             3% {
-                top: 55px;
+                top: 45px;
                 left: 50%;
                 transform: rotate(0deg);
             }
             4.5% {
-                top: 45px;
+                top: 35px;
                 left: 85%;
                 transform: rotate(-15deg);
             }
@@ -236,12 +236,12 @@
             }
             /* Route 2: Enter left, exit top middle */
             33% {
-                top: 50px;
+                top: 40px;
                 left: -50px;
                 transform: rotate(-20deg);
             }
             35% {
-                top: 45px;
+                top: 35px;
                 left: 25%;
                 transform: rotate(-30deg);
             }
@@ -263,12 +263,12 @@
                 transform: rotate(60deg);
             }
             68% {
-                top: 45px;
+                top: 35px;
                 left: 70%;
                 transform: rotate(20deg);
             }
             70% {
-                top: 50px;
+                top: 40px;
                 left: calc(100% + 50px);
                 transform: rotate(0deg);
             }
@@ -283,7 +283,7 @@
         /* Walking Hedgehog - Right to Left (normal) */
         .walking-hedgehog {
             position: absolute;
-            bottom: 0;
+            bottom: 5px;
             right: -50px;
             width: 35px;
             height: auto;
@@ -311,7 +311,7 @@
         /* Walking Hedgehog Reverse - Left to Right (flipped) */
         .walking-hedgehog-reverse {
             position: absolute;
-            bottom: 0;
+            bottom: 5px;
             left: -50px;
             width: 35px;
             height: auto;
@@ -342,7 +342,7 @@
         /* Crawling Caterpillar - Right to Left */
         .crawling-caterpillar {
             position: absolute;
-            bottom: 2px;
+            bottom: 5px;
             right: -60px;
             width: 45px;
             height: auto;
