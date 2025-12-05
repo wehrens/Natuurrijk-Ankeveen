@@ -178,7 +178,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 80px;
+            height: 70px;
             overflow: hidden;
             pointer-events: none;
             z-index: 1001;
@@ -186,12 +186,7 @@
 
         @media (max-width: 768px) {
             .header-animals {
-                height: 90px;
-            }
-            .walking-hedgehog,
-            .walking-hedgehog-reverse,
-            .crawling-caterpillar {
-                bottom: 0px !important;
+                height: 65px;
             }
         }
 
@@ -288,7 +283,7 @@
         /* Walking Hedgehog - Right to Left (normal) */
         .walking-hedgehog {
             position: absolute;
-            bottom: 5px;
+            bottom: -5px;
             right: -50px;
             width: 35px;
             height: auto;
@@ -325,7 +320,7 @@
         /* Walking Hedgehog Reverse - Left to Right (flipped) */
         .walking-hedgehog-reverse {
             position: absolute;
-            bottom: 5px;
+            bottom: -5px;
             left: -50px;
             width: 35px;
             height: auto;
@@ -365,7 +360,7 @@
         /* Crawling Caterpillar - Right to Left (flipped to face left) */
         .crawling-caterpillar {
             position: absolute;
-            bottom: 5px;
+            bottom: -5px;
             left: calc(100% + 60px);
             width: 45px;
             height: auto;
@@ -426,7 +421,7 @@
         /* Flying Ladybug */
         .flying-ladybug {
             position: absolute;
-            bottom: 5px;
+            bottom: -5px;
             left: 30%;
             width: 25px;
             height: auto;
@@ -435,18 +430,75 @@
         }
 
         @keyframes flyLadybug {
-            0%, 70% { bottom: 5px; left: 30%; transform: rotate(0deg); opacity: 0; }
+            0%, 70% { bottom: -5px; left: 30%; transform: rotate(0deg); opacity: 0; }
             /* Appear */
-            70.5% { bottom: 5px; left: 30%; transform: rotate(0deg); opacity: 1; }
+            70.5% { bottom: -5px; left: 30%; transform: rotate(0deg); opacity: 1; }
             /* Walk a tiny bit */
-            72% { bottom: 5px; left: 28%; transform: rotate(0deg); opacity: 1; }
+            72% { bottom: -5px; left: 28%; transform: rotate(0deg); opacity: 1; }
             /* Prepare to fly */
-            72.5% { bottom: 5px; left: 28%; transform: rotate(-10deg); opacity: 1; }
+            72.5% { bottom: -5px; left: 28%; transform: rotate(-10deg); opacity: 1; }
             /* Fly up and away */
-            74% { bottom: 30px; left: 22%; transform: rotate(-25deg); opacity: 1; }
-            76% { bottom: 50px; left: 15%; transform: rotate(-35deg); opacity: 1; }
-            78% { bottom: 100px; left: 5%; transform: rotate(-45deg); opacity: 0; }
-            78.1%, 100% { bottom: 5px; left: 30%; transform: rotate(0deg); opacity: 0; }
+            74% { bottom: 25px; left: 22%; transform: rotate(-25deg); opacity: 1; }
+            76% { bottom: 45px; left: 15%; transform: rotate(-35deg); opacity: 1; }
+            78% { bottom: 95px; left: 5%; transform: rotate(-45deg); opacity: 0; }
+            78.1%, 100% { bottom: -5px; left: 30%; transform: rotate(0deg); opacity: 0; }
+        }
+
+        /* Growing Garden - flowers that appear over time */
+        .header-garden {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 998;
+        }
+
+        .garden-flower {
+            position: absolute;
+            bottom: -10px;
+            height: 50px;
+            width: auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .garden-flower.bloomed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .garden-flower.small {
+            height: 35px;
+        }
+
+        .garden-flower.medium {
+            height: 45px;
+        }
+
+        .garden-flower.large {
+            height: 55px;
+        }
+
+        @media (max-width: 768px) {
+            .header-garden {
+                height: 65px;
+            }
+            .garden-flower {
+                height: 40px;
+            }
+            .garden-flower.small {
+                height: 28px;
+            }
+            .garden-flower.medium {
+                height: 35px;
+            }
+            .garden-flower.large {
+                height: 45px;
+            }
         }
 
         /* Hero Section */
@@ -1702,6 +1754,9 @@
         </div>
     </nav>
 
+    <!-- Growing Garden Container - flowers appear over time -->
+    <div class="header-garden" id="headerGarden"></div>
+
     <!-- Header Animals Container - keeps animations in header only -->
     <div class="header-animals">
         <img src="images/huiszwaluw.png" alt="" class="flying-swallow">
@@ -2458,6 +2513,89 @@
         if (heroImages.length > 1) {
             setInterval(rotateHeroImages, 4000);
         }
+
+        // Growing Garden - flowers appear over time
+        const gardenFlowers = [
+            { src: 'images/Klaproos.png', size: 'medium' },
+            { src: 'images/Klaprozen.png', size: 'large' },
+            { src: 'images/Klaprozen2.png', size: 'small' },
+            { src: 'images/Ridderspoor.png', size: 'large' },
+            { src: 'images/Ridderspoor2.png', size: 'medium' },
+            { src: 'images/Digitalis.png', size: 'large' },
+            { src: 'images/Gelelis.png', size: 'medium' },
+            { src: 'images/Lisdodde.png', size: 'large' },
+            { src: 'images/Lisdodde2.png', size: 'small' },
+            { src: 'images/Veldoeket.png', size: 'medium' }
+        ];
+
+        const garden = document.getElementById('headerGarden');
+        const usedPositions = [];
+        let flowerIndex = 0;
+        
+        // Positions where flowers can grow (avoiding menu text area - roughly 200-700px from left on desktop)
+        function getValidPosition() {
+            const windowWidth = window.innerWidth;
+            let position;
+            let attempts = 0;
+            
+            do {
+                // Avoid the center where menu text is (roughly 15%-75% on desktop)
+                if (windowWidth > 768) {
+                    // Desktop: flowers on left side (0-12%) or right side (78-100%)
+                    if (Math.random() > 0.5) {
+                        position = Math.random() * 12;
+                    } else {
+                        position = 78 + Math.random() * 22;
+                    }
+                } else {
+                    // Mobile: flowers on left (0-20%) or right (65-100%)
+                    if (Math.random() > 0.5) {
+                        position = Math.random() * 20;
+                    } else {
+                        position = 65 + Math.random() * 35;
+                    }
+                }
+                attempts++;
+            } while (usedPositions.some(p => Math.abs(p - position) < 5) && attempts < 20);
+            
+            usedPositions.push(position);
+            return position;
+        }
+
+        function plantFlower() {
+            if (flowerIndex >= gardenFlowers.length * 2) return; // Max flowers (including mirrored)
+            
+            const flower = gardenFlowers[flowerIndex % gardenFlowers.length];
+            const img = document.createElement('img');
+            img.src = flower.src;
+            img.className = 'garden-flower ' + flower.size;
+            img.style.left = getValidPosition() + '%';
+            
+            // Randomly mirror some flowers
+            if (Math.random() > 0.5) {
+                img.style.transform = 'translateY(20px) scaleX(-1)';
+            }
+            
+            garden.appendChild(img);
+            
+            // Trigger bloom animation
+            setTimeout(() => {
+                if (img.style.transform && img.style.transform.includes('scaleX(-1)')) {
+                    img.style.transform = 'translateY(0) scaleX(-1)';
+                }
+                img.classList.add('bloomed');
+            }, 50);
+            
+            flowerIndex++;
+        }
+
+        // Start planting flowers after 3 seconds, then every 4-6 seconds
+        setTimeout(() => {
+            plantFlower();
+            setInterval(() => {
+                plantFlower();
+            }, 4000 + Math.random() * 2000);
+        }, 3000);
     </script>
 </body>
 </html>
