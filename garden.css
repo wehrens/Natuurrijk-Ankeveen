@@ -1,9 +1,9 @@
 /* ===========================================
    NATUURRIJK ANKEVEEN - Header Garden Styles
+   Alles gepositioneerd met TOP voor consistentie
    =========================================== */
 
 /* ===== CONTAINERS ===== */
-/* Containers zijn hoger voor lucht boven de biotoop */
 .header-grass,
 .header-garden,
 .header-animals-ground,
@@ -12,7 +12,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 110px;
+    height: 120px;
     overflow: visible;
     pointer-events: none;
 }
@@ -23,10 +23,10 @@
 .header-animals-flying { z-index: 1013; }
 
 /* ===== GRAS ===== */
-/* Gras zit aan de onderkant - markeert de grens header/content */
+/* Gras op 85px vanaf top = net onder de nav */
 .garden-grass {
     position: absolute;
-    bottom: -25px;
+    top: 85px;
     height: 60px;
     width: auto;
 }
@@ -35,7 +35,7 @@
 /* Bloemen groeien vanuit het gras omhoog */
 .garden-flower {
     position: absolute;
-    bottom: -10px;
+    top: 55px;
     height: 45px;
     width: auto;
     opacity: 0;
@@ -43,9 +43,9 @@
     animation: bloomFlower 1s ease-out forwards;
 }
 
-.garden-flower.small { height: 30px; }
-.garden-flower.medium { height: 40px; }
-.garden-flower.large { height: 52px; }
+.garden-flower.small { height: 30px; top: 70px; }
+.garden-flower.medium { height: 40px; top: 60px; }
+.garden-flower.large { height: 52px; top: 48px; }
 
 .garden-flower.mirrored {
     animation: bloomFlowerMirrored 1s ease-out forwards;
@@ -62,10 +62,10 @@
 }
 
 /* ===== POEL ===== */
-/* Poel zit net onder de graslijn */
+/* Poel zit op grasniveau */
 .garden-pond {
     position: absolute;
-    bottom: -20px;
+    top: 95px;
     height: 24px;
     width: 120px;
     opacity: 0;
@@ -81,7 +81,7 @@
 /* Lisdodde groeit vanuit het gras bij de poel */
 .pond-lisdodde {
     position: absolute;
-    bottom: -10px;
+    top: 55px;
     height: 50px;
     width: auto;
     opacity: 0;
@@ -90,7 +90,7 @@
 
 .pond-lisdodde-right {
     position: absolute;
-    bottom: -10px;
+    top: 55px;
     height: 50px;
     width: auto;
     left: calc(78% + 100px);
@@ -102,7 +102,7 @@
 /* Roerdomp staat achter de poel */
 .pond-roerdomp {
     position: absolute;
-    bottom: -15px;
+    top: 35px;
     height: 75px;
     width: auto;
     opacity: 0;
@@ -118,7 +118,7 @@
 /* Egel en rups lopen over het gras */
 .walking-hedgehog {
     position: absolute;
-    bottom: -8px;
+    top: 75px;
     right: -50px;
     width: 35px;
     height: auto;
@@ -145,7 +145,7 @@
 
 .walking-hedgehog-reverse {
     position: absolute;
-    bottom: -8px;
+    top: 75px;
     left: -50px;
     width: 35px;
     height: auto;
@@ -173,7 +173,7 @@
 
 .crawling-caterpillar {
     position: absolute;
-    bottom: -8px;
+    top: 75px;
     left: calc(100% + 60px);
     width: 45px;
     height: auto;
@@ -256,7 +256,7 @@
 
 .flying-ladybug {
     position: absolute;
-    bottom: -10px;
+    top: 80px;
     left: 30%;
     width: 25px;
     height: auto;
@@ -265,18 +265,18 @@
 }
 
 @keyframes flyLadybug {
-    0%, 70% { bottom: -10px; left: 30%; opacity: 0; }
-    70.5% { bottom: -10px; left: 30%; opacity: 1; }
-    72% { bottom: -10px; left: 28%; opacity: 1; }
-    74% { bottom: 15px; left: 22%; transform: rotate(-25deg); opacity: 1; }
-    76% { bottom: 40px; left: 15%; transform: rotate(-35deg); opacity: 1; }
-    78% { bottom: 80px; left: 5%; transform: rotate(-45deg); opacity: 0; }
-    78.1%, 100% { bottom: -10px; left: 30%; opacity: 0; }
+    0%, 70% { top: 80px; left: 30%; opacity: 0; }
+    70.5% { top: 80px; left: 30%; opacity: 1; }
+    72% { top: 80px; left: 28%; opacity: 1; }
+    74% { top: 60px; left: 22%; transform: rotate(-25deg); opacity: 1; }
+    76% { top: 35px; left: 15%; transform: rotate(-35deg); opacity: 1; }
+    78% { top: -20px; left: 5%; transform: rotate(-45deg); opacity: 0; }
+    78.1%, 100% { top: 80px; left: 30%; opacity: 0; }
 }
 
 .flying-ladybug2 {
     position: absolute;
-    bottom: -10px;
+    top: 80px;
     left: 65%;
     width: 23px;
     height: auto;
@@ -285,74 +285,74 @@
 }
 
 @keyframes flyLadybug2 {
-    0%, 35% { bottom: -10px; left: 65%; transform: scaleX(-1); opacity: 0; }
-    35.5% { bottom: -10px; left: 65%; transform: scaleX(-1); opacity: 1; }
-    37% { bottom: -10px; left: 67%; transform: scaleX(-1); opacity: 1; }
-    39% { bottom: 15px; left: 72%; transform: scaleX(-1) rotate(25deg); opacity: 1; }
-    41% { bottom: 40px; left: 80%; transform: scaleX(-1) rotate(35deg); opacity: 1; }
-    43% { bottom: 80px; left: 90%; transform: scaleX(-1) rotate(45deg); opacity: 0; }
-    43.1%, 100% { bottom: -10px; left: 65%; transform: scaleX(-1); opacity: 0; }
+    0%, 35% { top: 80px; left: 65%; transform: scaleX(-1); opacity: 0; }
+    35.5% { top: 80px; left: 65%; transform: scaleX(-1); opacity: 1; }
+    37% { top: 80px; left: 67%; transform: scaleX(-1); opacity: 1; }
+    39% { top: 60px; left: 72%; transform: scaleX(-1) rotate(25deg); opacity: 1; }
+    41% { top: 35px; left: 80%; transform: scaleX(-1) rotate(35deg); opacity: 1; }
+    43% { top: -20px; left: 90%; transform: scaleX(-1) rotate(45deg); opacity: 0; }
+    43.1%, 100% { top: 80px; left: 65%; transform: scaleX(-1); opacity: 0; }
 }
 
 /* ===== MOBIEL ===== */
 @media (max-width: 768px) {
-    /* Op mobiel: kleinere header, alles compacter */
+    /* Op mobiel: kleinere header */
     .header-grass,
     .header-garden,
     .header-animals-ground,
     .header-animals-flying {
-        height: 70px;
+        height: 80px;
     }
     
-    /* Gras lager - op de grens header/content */
+    /* Gras op 55px vanaf top */
     .garden-grass {
         height: 35px;
-        bottom: -22px;
+        top: 55px;
     }
     
-    /* Bloemen kleiner en lager */
+    /* Bloemen kleiner, op 35px */
     .garden-flower {
         height: 28px;
-        bottom: -15px;
+        top: 35px;
     }
-    .garden-flower.small { height: 20px; }
-    .garden-flower.medium { height: 26px; }
-    .garden-flower.large { height: 32px; }
+    .garden-flower.small { height: 20px; top: 45px; }
+    .garden-flower.medium { height: 26px; top: 39px; }
+    .garden-flower.large { height: 32px; top: 33px; }
     
-    /* Poel lager */
+    /* Poel op 60px */
     .garden-pond {
         height: 14px;
         width: 60px;
-        bottom: -22px;
+        top: 62px;
     }
     
-    /* Lisdodde lager */
+    /* Lisdodde op 35px */
     .pond-lisdodde,
     .pond-lisdodde-right {
         height: 30px;
-        bottom: -15px;
+        top: 38px;
     }
     
     .pond-lisdodde-right {
         left: calc(78% + 45px);
     }
     
-    /* Roerdomp lager */
+    /* Roerdomp op 28px */
     .pond-roerdomp {
         height: 45px;
-        bottom: -18px;
+        top: 25px;
     }
     
-    /* Egel en rups op het gras */
+    /* Egel en rups op 48px */
     .walking-hedgehog,
     .walking-hedgehog-reverse {
         width: 24px;
-        bottom: -15px;
+        top: 48px;
     }
     
     .crawling-caterpillar {
         width: 30px;
-        bottom: -15px;
+        top: 48px;
     }
     
     /* Vliegende dieren kleiner */
@@ -368,15 +368,26 @@
     .flying-ladybug,
     .flying-ladybug2 {
         width: 16px;
-        bottom: -15px;
+        top: 52px;
     }
 }
 
 /* ===== TABLET ===== */
 @media (min-width: 769px) and (max-width: 1024px) {
+    .header-grass,
+    .header-garden,
+    .header-animals-ground,
+    .header-animals-flying {
+        height: 100px;
+    }
+    
     .garden-grass {
         height: 50px;
-        bottom: 0px;
+        top: 70px;
+    }
+    
+    .garden-flower {
+        top: 45px;
     }
     
     .pond-lisdodde-right {
@@ -385,5 +396,6 @@
     
     .pond-roerdomp {
         height: 65px;
+        top: 30px;
     }
 }
