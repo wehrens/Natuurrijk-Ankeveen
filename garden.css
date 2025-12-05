@@ -12,7 +12,9 @@
     height: 77px;
     overflow: visible;
     pointer-events: none;
-    z-index: 999;
+    z-index: 1003;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 .header-animals-ground {
@@ -23,7 +25,9 @@
     height: 77px;
     overflow: visible;
     pointer-events: none;
-    z-index: 1000;
+    z-index: 1004;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 .header-garden {
@@ -34,7 +38,9 @@
     height: 77px;
     overflow: visible;
     pointer-events: none;
-    z-index: 1001;
+    z-index: 1005;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 .header-animals-flying {
@@ -45,7 +51,9 @@
     height: 77px;
     overflow: visible;
     pointer-events: none;
-    z-index: 1002;
+    z-index: 1006;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 /* Grass */
@@ -55,6 +63,8 @@
     height: 55px;
     width: auto;
     opacity: 1;
+    transform: translateZ(0); /* Force GPU rendering for Safari */
+    -webkit-transform: translateZ(0);
 }
 
 /* Pond */
@@ -344,6 +354,7 @@
     .header-animals-flying,
     .header-garden {
         height: 60px;
+        -webkit-overflow-scrolling: touch;
     }
     
     .walking-hedgehog,
@@ -361,7 +372,9 @@
     
     .garden-grass {
         height: 35px !important;
-        bottom: -18px !important;
+        bottom: -15px !important;
+        -webkit-transform: translateZ(0) !important;
+        transform: translateZ(0) !important;
     }
     
     .garden-pond {

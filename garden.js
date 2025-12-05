@@ -6,25 +6,37 @@
 (function() {
     'use strict';
 
-    // Simple and reliable: use sessionStorage for garden state
-    // sessionStorage is cleared when tab is closed, but persists during navigation
-    // localStorage is only used to track if we're navigating vs refreshing
+    // Detect page refresh using multiple methods for cross-browser support
+    let isPageRefresh = false;
     
-    // When clicking any link, we set a flag
-    document.addEventListener('click', function(e) {
-        const link = e.target.closest('a');
-        if (link && link.href) {
-            sessionStorage.setItem('natuurrijkNavigating', 'true');
+    // Method 1: Modern PerformanceNavigationTiming API
+    try {
+        const navEntries = performance.getEntriesByType('navigation');
+        if (navEntries && navEntries.length > 0 && navEntries[0].type === 'reload') {
+            isPageRefresh = true;
         }
-    });
+    } catch (e) {}
     
-    // Check if we came via navigation
-    const cameFromNav = sessionStorage.getItem('natuurrijkNavigating') === 'true';
-    sessionStorage.removeItem('natuurrijkNavigating');
+    // Method 2: Older performance.navigation API (Safari, older browsers)
+    if (!isPageRefresh && window.performance && window.performance.navigation) {
+        if (performance.navigation.type === 1) { // TYPE_RELOAD = 1
+            isPageRefresh = true;
+        }
+    }
     
-    // If NOT from navigation (= refresh or new visit), clear the garden
-    if (!cameFromNav) {
+    // Method 3: Check if page was accessed via back/forward (also rebuild)
+    if (!isPageRefresh && window.performance && window.performance.navigation) {
+        if (performance.navigation.type === 2) { // TYPE_BACK_FORWARD = 2
+            // Don't rebuild on back/forward, that's navigation
+        }
+    }
+    
+    // If page was refreshed, clear the garden state to rebuild with animations
+    if (isPageRefresh) {
         sessionStorage.removeItem('natuurrijkGarden');
+        console.log('🌱 Garden: Page refresh detected - rebuilding garden');
+    } else {
+        console.log('🌿 Garden: Navigation detected - keeping garden state');
     }
 
     // Create HTML structure for garden
