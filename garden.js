@@ -7,15 +7,28 @@
     'use strict';
 
     // Detect if this is a page refresh vs navigation
-    // Using Performance API - most reliable method
     let isRefresh = false;
     
-    if (window.performance) {
-        const navEntries = performance.getEntriesByType('navigation');
-        if (navEntries.length > 0 && navEntries[0].type === 'reload') {
-            isRefresh = true;
-        }
+    // Check if we navigated here from another page on this site
+    const cameFromNavigation = sessionStorage.getItem('natuurrijkNavigating') === 'true';
+    
+    // Clear the navigation flag
+    sessionStorage.removeItem('natuurrijkNavigating');
+    
+    // If we didn't come from navigation, this is either a refresh, new tab, or direct URL
+    // In all these cases, we want to rebuild the garden
+    if (!cameFromNavigation) {
+        isRefresh = true;
     }
+    
+    // Set up: when leaving this page (clicking a link), mark that we're navigating
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (link && link.href && link.href.includes(window.location.hostname)) {
+            // Navigating to another page on this site
+            sessionStorage.setItem('natuurrijkNavigating', 'true');
+        }
+    });
     
     // On refresh: clear garden state so it rebuilds with animations
     if (isRefresh) {
