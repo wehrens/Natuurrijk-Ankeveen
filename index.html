@@ -1204,6 +1204,13 @@
 
         .contact-modal-footer strong { color: var(--green-dark); }
     </style>
+    <script>
+        // Zorg dat pagina altijd bovenaan start
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+    </script>
 </head>
 <body>
     <!-- Navigation -->

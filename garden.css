@@ -35,10 +35,13 @@
 .header-animals-flying { z-index: 1013; }
 
 /* ===== GRAS ===== */
-/* Bovenkant gras afbeelding EXACT op header lijn (168px) */
+/* Originele afbeelding: 853px hoog, eerste 317px transparant */
+/* Bij height: 60px -> schaal = 60/853 = 0.07 */
+/* Transparant deel wordt: 317 * 0.07 = 22px */
+/* Om zichtbaar gras op 168px te krijgen: top = 168 - 22 = 146px */
 .garden-grass {
     position: absolute;
-    top: 168px;
+    top: 146px;
     height: 60px;
     width: auto;
 }
@@ -227,7 +230,6 @@
 
 /* ===== MOBIEL ===== */
 @media (max-width: 768px) {
-    /* Hoogte +20%: was ~80px, nu 96px */
     .header-background {
         height: 96px;
     }
@@ -239,16 +241,16 @@
         height: 130px;
     }
     
-    /* Gras exact op header lijn (96px) */
+    /* height: 40px -> transparant deel = 317 * (40/853) = 15px */
+    /* Zichtbaar gras op 96px: top = 96 - 15 = 81px */
     .garden-grass {
         height: 40px;
-        top: 96px;
+        top: 81px;
     }
 }
 
 /* ===== TABLET ===== */
 @media (min-width: 769px) and (max-width: 1024px) {
-    /* Hoogte +20%: was ~100px, nu 120px */
     .header-background {
         height: 120px;
     }
@@ -260,9 +262,10 @@
         height: 160px;
     }
     
-    /* Gras exact op header lijn (120px) */
+    /* height: 50px -> transparant deel = 317 * (50/853) = 19px */
+    /* Zichtbaar gras op 120px: top = 120 - 19 = 101px */
     .garden-grass {
         height: 50px;
-        top: 120px;
+        top: 101px;
     }
 }
