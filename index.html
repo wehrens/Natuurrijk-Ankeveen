@@ -7,6 +7,7 @@
     <meta name="description" content="Werkgroep Natuurrijk Ankeveen zet zich in voor meer biodiversiteit in Ankeveen. Van zeismaaien tot zwaluwbescherming – doe mee!">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="garden.css">
     <style>
         :root {
             --green-dark: #2d4a3e;
@@ -71,34 +72,6 @@
             gap: 0.75rem;
             text-decoration: none;
             color: var(--green-dark);
-        }
-
-        .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: transparent;
-            border-radius: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--green-dark);
-            font-size: 2rem;
-        }
-
-        .logo-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .logo-egel {
-            margin-left: 0.5rem;
-            animation: egelWalk 3s ease-in-out infinite;
-        }
-
-        @keyframes egelWalk {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(5px); }
         }
 
         .logo-text {
@@ -166,502 +139,6 @@
             color: var(--green-dark);
             z-index: 100;
             position: relative;
-        }
-
-        /* ============================================
-           HEADER ANIMATIONS - Swallow, Hedgehog, Caterpillar
-           ============================================ */
-        
-        /* Grass layer - BEHIND everything */
-        .header-grass {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 77px;
-            overflow: visible;
-            pointer-events: none;
-            z-index: 999; /* Lowest - grass is behind all animals */
-        }
-
-        /* Ground Animals - walk IN FRONT of grass, BEHIND flowers */
-        .header-animals-ground {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 77px;
-            overflow: visible;
-            pointer-events: none;
-            z-index: 1000; /* Above grass, below flowers */
-        }
-
-        /* Flying Animals - fly IN FRONT of everything */
-        .header-animals-flying {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 77px;
-            overflow: visible;
-            pointer-events: none;
-            z-index: 1002; /* Above flowers */
-        }
-
-        @media (max-width: 768px) {
-            .header-grass,
-            .header-animals-ground,
-            .header-animals-flying {
-                height: 60px;
-            }
-            .walking-hedgehog,
-            .walking-hedgehog-reverse,
-            .crawling-caterpillar {
-                width: 28px !important;
-                bottom: -12px !important;
-            }
-            .flying-ladybug {
-                width: 20px !important;
-                bottom: -12px !important;
-            }
-        }
-
-        /* Flying Swallow - 3 different routes */
-        .flying-swallow {
-            position: absolute;
-            top: 0px;
-            left: -50px;
-            width: 40px;
-            height: auto;
-            pointer-events: none;
-            animation: flySwallowRoutes 60s linear infinite;
-        }
-
-        @keyframes flySwallowRoutes {
-            /* Route 1: Full U-curve left to right */
-            0% {
-                top: -50px;
-                left: -50px;
-                transform: rotate(45deg);
-            }
-            1.5% {
-                top: 35px;
-                left: 15%;
-                transform: rotate(15deg);
-            }
-            3% {
-                top: 45px;
-                left: 50%;
-                transform: rotate(0deg);
-            }
-            4.5% {
-                top: 35px;
-                left: 85%;
-                transform: rotate(-15deg);
-            }
-            6% {
-                top: -50px;
-                left: calc(100% + 50px);
-                transform: rotate(-45deg);
-            }
-            /* Hidden */
-            6.1%, 32% {
-                top: -50px;
-                left: -50px;
-                transform: rotate(45deg);
-            }
-            /* Route 2: Enter left, exit top middle */
-            33% {
-                top: 40px;
-                left: -50px;
-                transform: rotate(-20deg);
-            }
-            35% {
-                top: 35px;
-                left: 25%;
-                transform: rotate(-30deg);
-            }
-            37% {
-                top: -50px;
-                left: 45%;
-                transform: rotate(-60deg);
-            }
-            /* Hidden */
-            37.1%, 65% {
-                top: -50px;
-                left: -50px;
-                transform: rotate(45deg);
-            }
-            /* Route 3: Enter top middle, exit right */
-            66% {
-                top: -50px;
-                left: 50%;
-                transform: rotate(60deg);
-            }
-            68% {
-                top: 35px;
-                left: 70%;
-                transform: rotate(20deg);
-            }
-            70% {
-                top: 40px;
-                left: calc(100% + 50px);
-                transform: rotate(0deg);
-            }
-            /* Hidden until restart */
-            70.1%, 100% {
-                top: -50px;
-                left: -50px;
-                transform: rotate(45deg);
-            }
-        }
-
-        /* Walking Hedgehog - Right to Left (normal) */
-        .walking-hedgehog {
-            position: absolute;
-            bottom: -15px; /* Feet on the ground with grass */
-            right: -50px;
-            width: 35px;
-            height: auto;
-            pointer-events: none;
-            animation: walkHedgehogRTL 75s linear infinite;
-        }
-
-        @keyframes walkHedgehogRTL {
-            /* Walk right to left with sniffing */
-            0% { right: -50px; transform: rotate(0deg); }
-            5% { right: 15%; transform: rotate(0deg); }
-            /* Sniff - tilt head up */
-            5.1% { right: 15%; transform: rotate(-8deg); }
-            6% { right: 15%; transform: rotate(5deg); }
-            6.5% { right: 15%; transform: rotate(-5deg); }
-            7% { right: 15%; transform: rotate(0deg); }
-            12% { right: 45%; transform: rotate(0deg); }
-            /* Sniff */
-            12.1% { right: 45%; transform: rotate(-8deg); }
-            13% { right: 45%; transform: rotate(5deg); }
-            13.5% { right: 45%; transform: rotate(-5deg); }
-            14.5% { right: 45%; transform: rotate(0deg); }
-            19% { right: 75%; transform: rotate(0deg); }
-            /* Sniff */
-            19.1% { right: 75%; transform: rotate(-8deg); }
-            20% { right: 75%; transform: rotate(5deg); }
-            20.5% { right: 75%; transform: rotate(-5deg); }
-            21% { right: 75%; transform: rotate(0deg); }
-            26% { right: calc(100% + 50px); transform: rotate(0deg); }
-            /* Stay hidden */
-            26%, 100% { right: calc(100% + 50px); transform: rotate(0deg); }
-        }
-
-        /* Walking Hedgehog Reverse - Left to Right (flipped) */
-        .walking-hedgehog-reverse {
-            position: absolute;
-            bottom: -15px; /* Feet on the ground with grass */
-            left: -50px;
-            width: 35px;
-            height: auto;
-            pointer-events: none;
-            transform: scaleX(-1);
-            animation: walkHedgehogLTR 75s linear infinite;
-        }
-
-        @keyframes walkHedgehogLTR {
-            /* Wait for first hedgehog + pause + caterpillar + pause */
-            0%, 52% { left: -50px; transform: scaleX(-1) rotate(0deg); }
-            /* Walk left to right with sniffing */
-            53% { left: -50px; transform: scaleX(-1) rotate(0deg); }
-            58% { left: 15%; transform: scaleX(-1) rotate(0deg); }
-            /* Sniff */
-            58.1% { left: 15%; transform: scaleX(-1) rotate(-8deg); }
-            59% { left: 15%; transform: scaleX(-1) rotate(5deg); }
-            59.5% { left: 15%; transform: scaleX(-1) rotate(-5deg); }
-            60% { left: 15%; transform: scaleX(-1) rotate(0deg); }
-            65% { left: 45%; transform: scaleX(-1) rotate(0deg); }
-            /* Sniff */
-            65.1% { left: 45%; transform: scaleX(-1) rotate(-8deg); }
-            66% { left: 45%; transform: scaleX(-1) rotate(5deg); }
-            66.5% { left: 45%; transform: scaleX(-1) rotate(-5deg); }
-            67.5% { left: 45%; transform: scaleX(-1) rotate(0deg); }
-            72% { left: 75%; transform: scaleX(-1) rotate(0deg); }
-            /* Sniff */
-            72.1% { left: 75%; transform: scaleX(-1) rotate(-8deg); }
-            73% { left: 75%; transform: scaleX(-1) rotate(5deg); }
-            73.5% { left: 75%; transform: scaleX(-1) rotate(-5deg); }
-            74% { left: 75%; transform: scaleX(-1) rotate(0deg); }
-            79% { left: calc(100% + 50px); transform: scaleX(-1) rotate(0deg); }
-            /* Stay hidden */
-            79%, 100% { left: calc(100% + 50px); transform: scaleX(-1) rotate(0deg); }
-        }
-
-        /* Crawling Caterpillar - Right to Left (flipped to face left) */
-        .crawling-caterpillar {
-            position: absolute;
-            bottom: -15px; /* Body on the ground with grass */
-            left: calc(100% + 60px);
-            width: 45px;
-            height: auto;
-            pointer-events: none;
-            transform: scaleX(-1);
-            animation: crawlCaterpillar 120s ease-in-out infinite;
-        }
-
-        @keyframes crawlCaterpillar {
-            /* Wait for hedgehog + 3 sec pause */
-            0%, 20% { left: calc(100% + 60px); }
-            /* Crawl across very slowly with varying speed */
-            21% { left: calc(100% + 60px); }
-            /* Slow start */
-            26% { left: 80%; }
-            /* Tiny pause - sniffing leaf? */
-            27% { left: 78%; }
-            /* Slow crawl */
-            32% { left: 65%; }
-            /* Speed up a bit */
-            35% { left: 55%; }
-            /* Slow down */
-            40% { left: 45%; }
-            /* Pause */
-            41% { left: 43%; }
-            /* Continue slow */
-            47% { left: 30%; }
-            /* Speed up */
-            50% { left: 18%; }
-            /* Slow finish */
-            55% { left: -60px; }
-            /* Stay hidden */
-            55%, 100% { left: -60px; }
-        }
-
-        /* Flying Butterfly - Orange */
-        .flying-butterfly2 {
-            position: absolute;
-            top: -40px;
-            left: calc(100% + 40px);
-            width: 35px;
-            height: auto;
-            pointer-events: none;
-            animation: flyButterfly2 90s ease-in-out infinite;
-        }
-
-        @keyframes flyButterfly2 {
-            0%, 55% { top: -40px; left: calc(100% + 40px); transform: rotate(-30deg) scaleX(-1); }
-            57% { top: 30px; left: 85%; transform: rotate(-15deg) scaleX(-1); }
-            59% { top: 20px; left: 70%; transform: rotate(10deg) scaleX(-1); }
-            61% { top: 40px; left: 55%; transform: rotate(-20deg) scaleX(-1); }
-            63% { top: 15px; left: 40%; transform: rotate(5deg) scaleX(-1); }
-            65% { top: 35px; left: 25%; transform: rotate(-15deg) scaleX(-1); }
-            67% { top: -40px; left: 10%; transform: rotate(30deg) scaleX(-1); }
-            67.1%, 100% { top: -40px; left: calc(100% + 40px); transform: rotate(-30deg) scaleX(-1); }
-        }
-
-        /* Flying Butterfly 3 - Mirrored, different timing (left to right) */
-        .flying-butterfly3 {
-            position: absolute;
-            top: -40px;
-            left: -40px;
-            width: 32px;
-            height: auto;
-            pointer-events: none;
-            animation: flyButterfly3 90s ease-in-out infinite;
-        }
-
-        @keyframes flyButterfly3 {
-            0%, 20% { top: -40px; left: -40px; transform: rotate(30deg); }
-            22% { top: 25px; left: 10%; transform: rotate(15deg); }
-            24% { top: 35px; left: 25%; transform: rotate(-10deg); }
-            26% { top: 20px; left: 40%; transform: rotate(20deg); }
-            28% { top: 40px; left: 55%; transform: rotate(-5deg); }
-            30% { top: 15px; left: 70%; transform: rotate(15deg); }
-            32% { top: -40px; left: 85%; transform: rotate(-30deg); }
-            32.1%, 100% { top: -40px; left: -40px; transform: rotate(30deg); }
-        }
-
-        /* Flying Ladybug */
-        .flying-ladybug {
-            position: absolute;
-            bottom: -15px;
-            left: 30%;
-            width: 25px;
-            height: auto;
-            pointer-events: none;
-            animation: flyLadybug 120s ease-in-out infinite;
-        }
-
-        @keyframes flyLadybug {
-            0%, 70% { bottom: -15px; left: 30%; transform: rotate(0deg); opacity: 0; }
-            70.5% { bottom: -15px; left: 30%; transform: rotate(0deg); opacity: 1; }
-            72% { bottom: -15px; left: 28%; transform: rotate(0deg); opacity: 1; }
-            72.5% { bottom: -15px; left: 28%; transform: rotate(-10deg); opacity: 1; }
-            74% { bottom: 20px; left: 22%; transform: rotate(-25deg); opacity: 1; }
-            76% { bottom: 45px; left: 15%; transform: rotate(-35deg); opacity: 1; }
-            78% { bottom: 90px; left: 5%; transform: rotate(-45deg); opacity: 0; }
-            78.1%, 100% { bottom: -15px; left: 30%; transform: rotate(0deg); opacity: 0; }
-        }
-
-        /* Flying Ladybug 2 - Mirrored, different timing (from right side) */
-        .flying-ladybug2 {
-            position: absolute;
-            bottom: -15px;
-            left: 65%;
-            width: 23px;
-            height: auto;
-            pointer-events: none;
-            animation: flyLadybug2 120s ease-in-out infinite;
-        }
-
-        @keyframes flyLadybug2 {
-            0%, 35% { bottom: -15px; left: 65%; transform: rotate(0deg) scaleX(-1); opacity: 0; }
-            35.5% { bottom: -15px; left: 65%; transform: rotate(0deg) scaleX(-1); opacity: 1; }
-            37% { bottom: -15px; left: 67%; transform: rotate(0deg) scaleX(-1); opacity: 1; }
-            37.5% { bottom: -15px; left: 67%; transform: rotate(10deg) scaleX(-1); opacity: 1; }
-            39% { bottom: 20px; left: 72%; transform: rotate(25deg) scaleX(-1); opacity: 1; }
-            41% { bottom: 45px; left: 80%; transform: rotate(35deg) scaleX(-1); opacity: 1; }
-            43% { bottom: 90px; left: 90%; transform: rotate(45deg) scaleX(-1); opacity: 0; }
-            43.1%, 100% { bottom: -15px; left: 65%; transform: rotate(0deg) scaleX(-1); opacity: 0; }
-        }
-
-        /* Growing Garden - flowers that appear over time */
-        .header-garden {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 77px; /* Match nav height exactly */
-            overflow: visible; /* Allow elements to extend below */
-            pointer-events: none;
-            z-index: 1001;
-        }
-
-        .garden-flower {
-            position: absolute;
-            bottom: -15px; /* Stem base on the ground with grass */
-            height: 45px;
-            width: auto;
-            opacity: 0;
-            transform-origin: bottom center;
-            animation: bloomFlower 1s ease-out forwards;
-        }
-
-        @keyframes bloomFlower {
-            0% {
-                opacity: 0;
-                transform: scale(0.3) translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        @keyframes bloomFlowerMirrored {
-            0% {
-                opacity: 0;
-                transform: scaleX(-1) scale(0.3) translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: scaleX(-1) scale(1) translateY(0);
-            }
-        }
-
-        .garden-flower.mirrored {
-            animation: bloomFlowerMirrored 1s ease-out forwards;
-        }
-
-        .garden-flower.small {
-            height: 30px;
-        }
-
-        .garden-flower.medium {
-            height: 40px;
-        }
-
-        .garden-flower.large {
-            height: 52px;
-        }
-
-        @media (max-width: 768px) {
-            .header-garden {
-                height: 60px; /* Mobile nav height */
-            }
-            .garden-flower {
-                height: 30px;
-                bottom: -12px !important;
-            }
-            .garden-flower.small {
-                height: 22px;
-            }
-            .garden-flower.medium {
-                height: 28px;
-            }
-            .garden-flower.large {
-                height: 38px;
-            }
-            .garden-grass {
-                height: 35px !important;
-                bottom: -18px !important;
-            }
-            .garden-pond {
-                height: 14px !important;
-                width: 60px !important;
-                bottom: -15px !important;
-            }
-            .pond-lisdodde {
-                height: 30px !important;
-                bottom: -12px !important;
-            }
-        }
-
-        /* Grass base layer - larger to properly cover the border line */
-        .garden-grass {
-            position: absolute;
-            bottom: -25px; /* Position so grass overlaps the border line */
-            height: 55px; /* Larger grass */
-            width: auto;
-            opacity: 1;
-        }
-
-        /* Pond - extends below the grass line */
-        .garden-pond {
-            position: absolute;
-            bottom: -20px; /* Pond sits below the ground line */
-            height: 22px;
-            width: 120px; /* Fixed width for consistent lisdodde positioning */
-            opacity: 0;
-            animation: fadeInPond 1.5s ease-out forwards;
-        }
-
-        @keyframes fadeInPond {
-            0% { opacity: 0; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        /* Lisdodde next to pond */
-        .pond-lisdodde {
-            position: absolute;
-            bottom: -15px; /* Stem base on the ground with grass */
-            height: 50px;
-            width: auto;
-            opacity: 0;
-            animation: bloomFlower 1s ease-out forwards;
-        }
-
-        .pond-lisdodde-right {
-            position: absolute;
-            bottom: -15px;
-            height: 50px;
-            width: auto;
-            opacity: 0;
-            left: calc(78% + 95px); /* Right side of pond on desktop */
-            animation: bloomFlowerMirrored 1s ease-out forwards;
-        }
-
-        @media (max-width: 768px) {
-            .pond-lisdodde-right {
-                left: calc(78% + 40px) !important; /* Smaller pond on mobile */
-                height: 30px !important;
-                bottom: -12px !important;
-            }
         }
 
         /* Hero Section */
@@ -985,10 +462,6 @@
             width: 100%;
             height: auto;
             border-radius: 10px;
-        }
-
-        .results-image.large {
-            grid-column: span 3;
         }
 
         /* CTA Section */
@@ -1478,14 +951,8 @@
 
         /* Animations */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .hero-content, .hero-visual {
@@ -1498,168 +965,39 @@
 
         /* Responsive */
         @media (max-width: 1024px) {
-            .hero-container {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .hero-content p {
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .hero-buttons {
-                justify-content: center;
-            }
-
-            .hero-visual {
-                max-width: 500px;
-                margin: 0 auto;
-                width: 100%;
-                display: block;
-            }
-
-            .hero-image-main {
-                height: 350px;
-                min-height: 350px;
-                display: block;
-            }
-
-            .large-logo {
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .activities-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .stats-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .team-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .footer-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .results-content {
-                grid-template-columns: 1fr;
-            }
-
-            .gallery-grid {
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: auto;
-            }
-
-            .gallery-item.tall {
-                grid-row: span 1;
-            }
-
-            .sponsors-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+            .hero-container { grid-template-columns: 1fr; text-align: center; }
+            .hero-content p { margin-left: auto; margin-right: auto; }
+            .hero-buttons { justify-content: center; }
+            .hero-visual { max-width: 500px; margin: 0 auto; }
+            .hero-image-main { height: 350px; }
+            .large-logo { margin-left: auto; margin-right: auto; }
+            .activities-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-container { grid-template-columns: repeat(2, 1fr); }
+            .team-grid { grid-template-columns: repeat(3, 1fr); }
+            .footer-container { grid-template-columns: repeat(2, 1fr); }
+            .results-content { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
+            .gallery-item.tall { grid-row: span 1; }
+            .sponsors-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                padding: 1rem;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-                gap: 0.5rem;
-            }
-
-            .nav-links.mobile-open {
-                display: flex;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-
-            .activities-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .news-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .team-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .footer-container {
-                grid-template-columns: 1fr;
-            }
-
-            .gallery-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .gallery-item.large {
-                grid-column: span 1;
-            }
-
-            .hero-image-main {
-                height: 300px;
-                min-height: 300px;
-            }
-
-            .hero-image-main img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                position: absolute;
-                top: 0;
-                left: 0;
-            }
-
-            .sponsors-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .results-images {
-                grid-template-columns: 1fr;
-            }
-
-            .results-image.large {
-                grid-column: span 1;
-            }
-
-            .volunteers-grid {
-                gap: 1rem;
-            }
-
-            .volunteer-avatar {
-                width: 60px;
-                height: 60px;
-                font-size: 1.2rem;
-            }
-
-            .hero-visual {
-                width: 100%;
-                max-width: 100%;
-                display: block;
-            }
-
-            .hero-badge {
-                bottom: -10px;
-                left: 10px;
-            }
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); gap: 0.5rem; }
+            .nav-links.mobile-open { display: flex; }
+            .mobile-menu-btn { display: block; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .activities-grid { grid-template-columns: 1fr; }
+            .news-grid { grid-template-columns: 1fr; }
+            .team-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-container { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .gallery-item.large { grid-column: span 1; }
+            .hero-image-main { height: 300px; }
+            .sponsors-grid { grid-template-columns: repeat(2, 1fr); }
+            .results-images { grid-template-columns: 1fr; }
+            .volunteers-grid { gap: 1rem; }
+            .volunteer-avatar { width: 60px; height: 60px; font-size: 1.2rem; }
+            .hero-badge { bottom: -10px; left: 10px; }
         }
 
         /* Lightbox */
@@ -1678,9 +1016,7 @@
             padding: 2rem;
         }
 
-        .lightbox.active {
-            display: flex;
-        }
+        .lightbox.active { display: flex; }
 
         .lightbox-content {
             display: flex;
@@ -1739,24 +1075,12 @@
             transition: opacity 0.3s;
         }
 
-        .lightbox-close:hover {
-            opacity: 1;
-        }
+        .lightbox-close:hover { opacity: 1; }
 
         @media (max-width: 768px) {
-            .lightbox-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .lightbox-content img {
-                max-width: 80vw;
-                max-height: 40vh;
-            }
-
-            .lightbox-text {
-                max-width: 90vw;
-            }
+            .lightbox-content { flex-direction: column; text-align: center; }
+            .lightbox-content img { max-width: 80vw; max-height: 40vh; }
+            .lightbox-text { max-width: 90vw; }
         }
 
         /* Contact Modal */
@@ -1774,9 +1098,7 @@
             padding: 1rem;
         }
 
-        .contact-modal.active {
-            display: flex;
-        }
+        .contact-modal.active { display: flex; }
 
         .contact-modal-content {
             background: white;
@@ -1790,14 +1112,8 @@
         }
 
         @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .contact-modal-close {
@@ -1811,9 +1127,7 @@
             line-height: 1;
         }
 
-        .contact-modal-close:hover {
-            color: var(--green-dark);
-        }
+        .contact-modal-close:hover { color: var(--green-dark); }
 
         .contact-modal h3 {
             font-size: 1.8rem;
@@ -1869,20 +1183,9 @@
         .contact-option-icon.signal { background: #3A76F0; color: white; }
         .contact-option-icon.phone { background: var(--green-medium); color: white; }
 
-        .contact-option-text {
-            flex: 1;
-        }
-
-        .contact-option-text strong {
-            display: block;
-            font-size: 1.1rem;
-            color: var(--green-dark);
-        }
-
-        .contact-option-text span {
-            font-size: 0.9rem;
-            color: var(--text-medium);
-        }
+        .contact-option-text { flex: 1; }
+        .contact-option-text strong { display: block; font-size: 1.1rem; color: var(--green-dark); }
+        .contact-option-text span { font-size: 0.9rem; color: var(--text-medium); }
 
         .contact-modal-footer {
             margin-top: 1.5rem;
@@ -1893,16 +1196,14 @@
             font-size: 0.9rem;
         }
 
-        .contact-modal-footer strong {
-            color: var(--green-dark);
-        }
+        .contact-modal-footer strong { color: var(--green-dark); }
     </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
-            <a href="#" class="logo">
+            <a href="index.html" class="logo">
                 <span class="logo-text">Natuurrijk Ankeveen</span>
             </a>
             <ul class="nav-links">
@@ -1917,28 +1218,7 @@
         </div>
     </nav>
 
-    <!-- Growing Garden Container - flowers appear over time -->
-    <!-- Grass layer - BEHIND everything -->
-    <div class="header-grass" id="headerGrass"></div>
-
-    <!-- Garden flowers and pond - in front of grass and ground animals -->
-    <div class="header-garden" id="headerGarden"></div>
-
-    <!-- Ground Animals - walk BEHIND flowers but IN FRONT of grass -->
-    <div class="header-animals-ground">
-        <img src="images/egel.png" alt="" class="walking-hedgehog">
-        <img src="images/egel.png" alt="" class="walking-hedgehog-reverse">
-        <img src="images/Rups1.gif" alt="" class="crawling-caterpillar">
-    </div>
-
-    <!-- Flying Animals - fly IN FRONT of everything -->
-    <div class="header-animals-flying">
-        <img src="images/huiszwaluw.png" alt="" class="flying-swallow">
-        <img src="images/Vlinder.gif" alt="" class="flying-butterfly2">
-        <img src="images/Vlinder.gif" alt="" class="flying-butterfly3">
-        <img src="images/Ladybug.gif" alt="" class="flying-ladybug">
-        <img src="images/Ladybug.gif" alt="" class="flying-ladybug2">
-    </div>
+    <!-- GARDEN WORDT AUTOMATISCH TOEGEVOEGD DOOR garden.js -->
 
     <!-- Hero Section -->
     <section class="hero">
@@ -1950,12 +1230,8 @@
                 <h1>Samen bouwen aan een <span>natuurrijker</span> Ankeveen</h1>
                 <p>Wij zijn een enthousiaste werkgroep van vrijwilligers die zich inzet voor meer biodiversiteit in en om Ankeveen. Van zeismaaien tot zwaluwbescherming – elke actie telt!</p>
                 <div class="hero-buttons">
-                    <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">
-                        Word vrijwilliger →
-                    </a>
-                    <a href="#activiteiten" class="btn btn-secondary">
-                        Ontdek ons werk
-                    </a>
+                    <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Word vrijwilliger →</a>
+                    <a href="#activiteiten" class="btn btn-secondary">Ontdek ons werk</a>
                 </div>
             </div>
             <div class="hero-visual">
@@ -1980,22 +1256,10 @@
     <!-- Stats Bar -->
     <section class="stats-bar">
         <div class="stats-container">
-            <div class="stat-item">
-                <div class="stat-number">35+</div>
-                <div class="stat-label">Vrijwilligers</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">70</div>
-                <div class="stat-label">Zwaluwnesten in 2025</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">3</div>
-                <div class="stat-label">Natuurvriendelijke oevers</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">5</div>
-                <div class="stat-label">Jaar ervaring</div>
-            </div>
+            <div class="stat-item"><div class="stat-number">35+</div><div class="stat-label">Vrijwilligers</div></div>
+            <div class="stat-item"><div class="stat-number">70</div><div class="stat-label">Zwaluwnesten in 2025</div></div>
+            <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">Natuurvriendelijke oevers</div></div>
+            <div class="stat-item"><div class="stat-number">5</div><div class="stat-label">Jaar ervaring</div></div>
         </div>
     </section>
 
@@ -2007,62 +1271,50 @@
         </div>
         <div class="activities-grid">
             <div class="activity-card" onclick="window.location='zeisbrigade.html'">
-                <div class="activity-image">
-                    <img src="images/Zeismaai.jpg" alt="Vrijwilligers maaien met de zeis">
-                </div>
+                <div class="activity-image"><img src="images/Zeismaai.jpg" alt="Vrijwilligers maaien met de zeis"></div>
                 <div class="activity-content">
                     <h3>Zeisbrigade 🦋🐛</h3>
-                    <p>In goed overleg met de gemeente onderhouden we bermen, veldjes en De Ruige Hoek met de zeis. We planten inheemse struiken en voeren het maaisel af zodat de bodem verschraalt en wilde bloemen de kans krijgen. Ook helpen we bij de aanleg van een voedselbos.</p>
+                    <p>In goed overleg met de gemeente onderhouden we bermen, veldjes en De Ruige Hoek met de zeis. We planten inheemse struiken en voeren het maaisel af zodat de bodem verschraalt en wilde bloemen de kans krijgen.</p>
                     <span class="activity-link">Meer info →</span>
                 </div>
             </div>
             <div class="activity-card" onclick="window.location='oevers.html'">
-                <div class="activity-image">
-                    <img src="images/IjsbaanJul2024.jpg" alt="Bloeiende natuurvriendelijke oever bij de ijsbaan">
-                </div>
+                <div class="activity-image"><img src="images/IjsbaanJul2024.jpg" alt="Bloeiende natuurvriendelijke oever bij de ijsbaan"></div>
                 <div class="activity-content">
                     <h3>Natuurvriendelijke oevers 🐸</h3>
-                    <p>Bij de IJsclub, Bergse Pad en Buhrmanlaan legden we al natuurvriendelijke oevers aan met inheemse planten. Daarna onderhouden we ze door woekerende soorten als egelskop uit te dunnen, bij te planten of kort te maaien.</p>
+                    <p>Bij de IJsclub, Bergse Pad en Buhrmanlaan legden we al natuurvriendelijke oevers aan met inheemse planten. Daarna onderhouden we ze door woekerende soorten uit te dunnen.</p>
                     <span class="activity-link">Meer info →</span>
                 </div>
             </div>
             <div class="activity-card" onclick="window.location='bergsepad.html'">
-                <div class="activity-image">
-                    <img src="images/BergsePad.jpg" alt="Vrijwilligers snoeien langs het Bergse Pad">
-                </div>
+                <div class="activity-image"><img src="images/BergsePad.jpg" alt="Vrijwilligers snoeien langs het Bergse Pad"></div>
                 <div class="activity-content">
                     <h3>Onderhoud Bergse Pad 🦡🦉</h3>
-                    <p>Nieuw in 2025! In samenwerking met Waternet en Natuurmonumenten onderhouden we het hele Bergse Pad van de Gele brug tot de Goog brug. We snoeien begroeiing terug en verwijderen opschietende houtsoorten zodat de rietkraag ruimte houdt.</p>
+                    <p>Nieuw in 2025! In samenwerking met Waternet en Natuurmonumenten onderhouden we het hele Bergse Pad van de Gele brug tot de Goog brug.</p>
                     <span class="activity-link">Meer info →</span>
                 </div>
             </div>
             <div class="activity-card" onclick="window.location='zwaluwen.html'">
-                <div class="activity-image">
-                    <img src="images/Huiszwaluwteam.jpg" alt="Het huiszwaluwteam met kunstnesten">
-                </div>
+                <div class="activity-image"><img src="images/Huiszwaluwteam.jpg" alt="Het huiszwaluwteam met kunstnesten"></div>
                 <div class="activity-content">
                     <h3>Huiszwaluw­bescherming 🐦</h3>
-                    <p>Van 6 naar 25 succesvolle nesten in één jaar! Met kunstnesten en een zwaluwtil helpen we deze sympathieke trekvogeltjes. We gingen in gesprek met bewoners die bezorgd waren over poepoverlast en boden poepplankjes aan. Het resultaat: trotse bewoners die ons foto's sturen van hun zwaluwen!</p>
+                    <p>Van 6 naar 25 succesvolle nesten in één jaar! Met kunstnesten en een zwaluwtil helpen we deze sympathieke trekvogeltjes.</p>
                     <span class="activity-link">Meer info →</span>
                 </div>
             </div>
             <div class="activity-card" onclick="window.location='aanplanten.html'">
-                <div class="activity-image">
-                    <img src="images/oever-planten.jpg" alt="Vrijwilligers planten oeverplanten">
-                </div>
+                <div class="activity-image"><img src="images/oever-planten.jpg" alt="Vrijwilligers planten oeverplanten"></div>
                 <div class="activity-content">
                     <h3>Aanplanten 🪻🐝</h3>
-                    <p>We werken uitsluitend met inheemse planten, struiken en bomen die biologisch gekweekt zijn bij gerenommeerde kwekers. Zonder pesticiden, dus veilig voor nectarverzamelende insecten!</p>
+                    <p>We werken uitsluitend met inheemse planten, struiken en bomen die biologisch gekweekt zijn bij gerenommeerde kwekers.</p>
                     <span class="activity-link">Meer info →</span>
                 </div>
             </div>
             <div class="activity-card" onclick="window.location='educatie.html'">
-                <div class="activity-image">
-                    <img src="images/Huiszwaluwschool.JPG" alt="Kinderen met kunstnesten op de Joseph Lokin school">
-                </div>
+                <div class="activity-image"><img src="images/Huiszwaluwschool.JPG" alt="Kinderen met kunstnesten op de Joseph Lokin school"></div>
                 <div class="activity-content">
                     <h3>Educatie 🐦🐞</h3>
-                    <p>We organiseren regelmatig activiteiten met de Joseph Lokin school: vogelhuisjes en insectenhotels maken, helpen met planten, en uitleg over biodiversiteit. Ook hebben we er kunstnesten voor huiszwaluwen en nestkastjes voor huismussen opgehangen.</p>
+                    <p>We organiseren regelmatig activiteiten met de Joseph Lokin school: vogelhuisjes en insectenhotels maken, helpen met planten, en uitleg over biodiversiteit.</p>
                     <span class="activity-link">Meer info →</span>
                 </div>
             </div>
@@ -2083,18 +1335,10 @@
                     <p class="highlight">In heel Ankeveen telden we in 2025 zo'n 70 succesvolle broedgevallen!</p>
                 </div>
                 <div class="results-images">
-                    <div class="results-image">
-                        <img src="images/Huiszwaluwen_grafiek_2022_-_2025.jpg" alt="Grafiek aantal bewoonde nesten huiszwaluw 2022-2025" onclick="openLightbox('images/Huiszwaluwen_grafiek_2022_-_2025.jpg')" style="cursor: pointer; object-fit: contain; background: white;">
-                    </div>
-                    <div class="results-image">
-                        <img src="images/Huiszwaluwnestkastje.png" alt="Huiszwaluwkunstnest onder de dakgoot">
-                    </div>
-                    <div class="results-image">
-                        <img src="images/IMG_5525.jpg" alt="Vrijwilligers bij de zwaluwtil">
-                    </div>
-                    <div class="results-image">
-                        <img src="images/zwaluwtil-speeltuin.jpg" alt="De huiszwaluwtil bij de speeltuin">
-                    </div>
+                    <div class="results-image"><img src="images/Huiszwaluwen_grafiek_2022_-_2025.jpg" alt="Grafiek" onclick="openLightbox('images/Huiszwaluwen_grafiek_2022_-_2025.jpg')" style="cursor: pointer; object-fit: contain; background: white;"></div>
+                    <div class="results-image"><img src="images/Huiszwaluwnestkastje.png" alt="Huiszwaluwkunstnest"></div>
+                    <div class="results-image"><img src="images/IMG_5525.jpg" alt="Vrijwilligers bij de zwaluwtil"></div>
+                    <div class="results-image"><img src="images/zwaluwtil-speeltuin.jpg" alt="De huiszwaluwtil"></div>
                 </div>
             </div>
         </div>
@@ -2106,7 +1350,7 @@
             <div class="cta-card" style="text-align: left;">
                 <div class="cta-icon">🙋</div>
                 <h3>Doe mee als vrijwilliger</h3>
-                <p>Sluit je aan bij de zeisbrigade! Je kunt bij ons het zeisen leren, we hebben leenzeisen beschikbaar en er is altijd behoefte aan mensen die helpen het maaisel bij elkaar te harken en op de kar te werpen. Of je nu wilt zeisen, planten of gewoon gezellig meehelpen – iedereen is welkom!</p>
+                <p>Sluit je aan bij de zeisbrigade! Je kunt bij ons het zeisen leren, we hebben leenzeisen beschikbaar en er is altijd behoefte aan mensen die helpen het maaisel bij elkaar te harken en op de kar te werpen.</p>
                 <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Aanmelden</a>
             </div>
         </div>
@@ -2129,21 +1373,9 @@
                     </div>
                 </div>
                 <div class="news-sidebar">
-                    <div class="news-small">
-                        <span class="news-date">Zomer 2025</span>
-                        <h4>70 zwaluwnesten geteld!</h4>
-                        <p>Recordaantal broedgevallen in Ankeveen dankzij kunstnesten en zwaluwtil.</p>
-                    </div>
-                    <div class="news-small">
-                        <span class="news-date">September 2026</span>
-                        <h4>Zeiscursus – datum volgt!</h4>
-                        <p>Wil je leren zeisen? Houd deze plek in de gaten voor de exacte datum.</p>
-                    </div>
-                    <div class="news-small">
-                        <span class="news-date">April 2025</span>
-                        <h4>Zwaluwtil geplaatst</h4>
-                        <p>Gefinancierd door de Vogelwerkgroep 't Gooi. De gemeente hielp om het 6 meter hoge gevaarte met een kraantje geplaatst te krijgen.</p>
-                    </div>
+                    <div class="news-small"><span class="news-date">Zomer 2025</span><h4>70 zwaluwnesten geteld!</h4><p>Recordaantal broedgevallen in Ankeveen dankzij kunstnesten en zwaluwtil.</p></div>
+                    <div class="news-small"><span class="news-date">September 2026</span><h4>Zeiscursus – datum volgt!</h4><p>Wil je leren zeisen? Houd deze plek in de gaten voor de exacte datum.</p></div>
+                    <div class="news-small"><span class="news-date">April 2025</span><h4>Zwaluwtil geplaatst</h4><p>Gefinancierd door de Vogelwerkgroep 't Gooi.</p></div>
                 </div>
             </div>
         </div>
@@ -2156,24 +1388,12 @@
             <p>Een impressie van onze activiteiten door de jaren heen</p>
         </div>
         <div class="gallery-grid">
-            <div class="gallery-item large">
-                <img src="images/zeiscursus-smid.jpg" alt="De smid leert zeisen slijpen">
-            </div>
-            <div class="gallery-item">
-                <img src="images/hooiopper.jpg" alt="Traditionele hooiopper">
-            </div>
-            <div class="gallery-item">
-                <img src="images/zwaluwtil-plaatsen.jpg" alt="Plaatsen van de zwaluwtil">
-            </div>
-            <div class="gallery-item tall">
-                <img src="images/oever-graven.jpg" alt="Graafwerk voor natuurlijke oever">
-            </div>
-            <div class="gallery-item">
-                <img src="images/tractor-zeisdag.jpg" alt="Zeisdag met tractor">
-            </div>
-            <div class="gallery-item">
-                <img src="images/buurtbijeenkomst.jpg" alt="Uitleg aan buurtbewoners">
-            </div>
+            <div class="gallery-item large"><img src="images/zeiscursus-smid.jpg" alt="De smid leert zeisen slijpen"></div>
+            <div class="gallery-item"><img src="images/hooiopper.jpg" alt="Traditionele hooiopper"></div>
+            <div class="gallery-item"><img src="images/zwaluwtil-plaatsen.jpg" alt="Plaatsen van de zwaluwtil"></div>
+            <div class="gallery-item tall"><img src="images/oever-graven.jpg" alt="Graafwerk voor natuurlijke oever"></div>
+            <div class="gallery-item"><img src="images/tractor-zeisdag.jpg" alt="Zeisdag met tractor"></div>
+            <div class="gallery-item"><img src="images/buurtbijeenkomst.jpg" alt="Uitleg aan buurtbewoners"></div>
         </div>
     </section>
 
@@ -2185,44 +1405,14 @@
             <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><em>Klik op een foto om te vergroten</em></p>
         </div>
         <div style="max-width: 600px; margin: 0 auto 3rem; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(45, 74, 62, 0.15); cursor: pointer;">
-            <img src="images/NatuurwerkgroepAnkeveen.png" alt="Het kernteam van Natuurrijk Ankeveen" style="width: 100%; display: block;" onclick="openLightbox('images/NatuurwerkgroepAnkeveen.png')">
+            <img src="images/NatuurwerkgroepAnkeveen.png" alt="Het kernteam" style="width: 100%; display: block;" onclick="openLightbox('images/NatuurwerkgroepAnkeveen.png')">
         </div>
         <div class="team-grid">
-            <div class="team-member">
-                <div class="team-avatar">
-                    <img src="images/Arda.jpg" alt="Arda van der Lee" onclick="openLightbox('images/Arda.jpg')">
-                </div>
-                <h4>Arda van der Lee <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                <p>Biologe</p>
-            </div>
-            <div class="team-member">
-                <div class="team-avatar">
-                    <img src="images/Martin.jpg" alt="Martin Ockhuijsen" onclick="openLightbox('images/Martin.jpg')">
-                </div>
-                <h4>Martin Ockhuijsen <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                <p>Vrijwillig boswachter</p>
-            </div>
-            <div class="team-member">
-                <div class="team-avatar">
-                    <img src="images/Wijnand.jpg" alt="Wijnand Smit" onclick="openLightbox('images/Wijnand.jpg')">
-                </div>
-                <h4>Wijnand Smit <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                <p>Ecologisch hovenier</p>
-            </div>
-            <div class="team-member">
-                <div class="team-avatar">
-                    <img src="images/Ron.jpg" alt="Ron Wehrens" onclick="openLightbox('images/Ron.jpg')">
-                </div>
-                <h4>Ron Wehrens <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                <p>Apotheker</p>
-            </div>
-            <div class="team-member">
-                <div class="team-avatar">
-                    <img src="images/Hans.jpg" alt="Hans Hazes" onclick="openLightbox('images/Hans.jpg')">
-                </div>
-                <h4>Hans Hazes <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                <p>Ondernemer</p>
-            </div>
+            <div class="team-member"><div class="team-avatar"><img src="images/Arda.jpg" alt="Arda van der Lee" onclick="openLightbox('images/Arda.jpg')"></div><h4>Arda van der Lee <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4><p>Biologe</p></div>
+            <div class="team-member"><div class="team-avatar"><img src="images/Martin.jpg" alt="Martin Ockhuijsen" onclick="openLightbox('images/Martin.jpg')"></div><h4>Martin Ockhuijsen <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4><p>Vrijwillig boswachter</p></div>
+            <div class="team-member"><div class="team-avatar"><img src="images/Wijnand.jpg" alt="Wijnand Smit" onclick="openLightbox('images/Wijnand.jpg')"></div><h4>Wijnand Smit <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4><p>Ecologisch hovenier</p></div>
+            <div class="team-member"><div class="team-avatar"><img src="images/Ron.jpg" alt="Ron Wehrens" onclick="openLightbox('images/Ron.jpg')"></div><h4>Ron Wehrens <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4><p>Apotheker</p></div>
+            <div class="team-member"><div class="team-avatar"><img src="images/Hans.jpg" alt="Hans Hazes" onclick="openLightbox('images/Hans.jpg')"></div><h4>Hans Hazes <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4><p>Ondernemer</p></div>
         </div>
 
         <!-- Extra Vrijwilligers -->
@@ -2237,196 +1427,46 @@
                 <em>Zeiscursus gevolgd</em>
             </p>
             <div class="volunteers-grid">
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar gold">
-                        <img src="images/Alex.jpg" alt="Alex" onclick="openLightbox(this.src, true)">
-                    </div>
-                    <h4>Alex</h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar gold">
-                        <img src="images/Coos.jpg" alt="Coos" onclick="openLightbox(this.src, true)">
-                    </div>
-                    <h4>Coos</h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar gold" data-name="Cor">🦋</div>
-                    <h4>Cor <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Daan">🐸</div>
-                    <h4>Daan <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Dagmar">🌸</div>
-                    <h4>Dagmar <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Desiree">🌻</div>
-                    <h4>Desiree</h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Diana">🦆</div>
-                    <h4>Diana <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar">
-                        <img src="images/Ed.jpg" alt="Ed" onclick="openLightbox(this.src, false)">
-                    </div>
-                    <h4>Ed <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar gold">
-                        <img src="images/Els.jpg" alt="Els" onclick="openLightbox(this.src, true)">
-                    </div>
-                    <h4>Els <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar">
-                        <img src="images/Eric.jpg" alt="Eric" onclick="openLightbox(this.src, false)">
-                    </div>
-                    <h4>Eric <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Erik">🦎</div>
-                    <h4>Erik <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Femke">🌺</div>
-                    <h4>Femke <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar gold">
-                        <img src="images/Fen.jpg" alt="Fen" onclick="openLightbox(this.src, true)">
-                    </div>
-                    <h4>Fen <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Francette">🌼</div>
-                    <h4>Francette <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar">
-                        <img src="images/Ge.jpg" alt="Gé" onclick="openLightbox(this.src, false)">
-                    </div>
-                    <h4>Gé <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar gold">
-                        <img src="images/Gerrit.jpg" alt="Gerrit" onclick="openLightbox(this.src, true)">
-                    </div>
-                    <h4>Gerrit <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar gold">
-                        <img src="images/Harry.jpg" alt="Harry" onclick="openLightbox(this.src, true)">
-                    </div>
-                    <h4>Harry <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Henk">🦔</div>
-                    <h4>Henk <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Ingmar">🦡</div>
-                    <h4>Ingmar <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Jaap">🐿️</div>
-                    <h4>Jaap <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Jan">🌾</div>
-                    <h4>Jan <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="JanWillem">🦊</div>
-                    <h4>Jan Willem</h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Jantien">🦢</div>
-                    <h4>Jantien <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Joop">🌷</div>
-                    <h4>Joop <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Karin">🦜</div>
-                    <h4>Karin <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Karin2">🍀</div>
-                    <h4>Karin</h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Loes">🌿</div>
-                    <h4>Loes <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Marjolein">🌲</div>
-                    <h4>Marjolein</h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar">
-                        <img src="images/MartinZ.jpg" alt="Martin Z" onclick="openLightbox(this.src, false)">
-                    </div>
-                    <h4>Martin Z</h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar gold">
-                        <img src="images/Nynke.jpg" alt="Nynke" onclick="openLightbox(this.src, true)">
-                    </div>
-                    <h4>Nynke <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Patrick">🐢</div>
-                    <h4>Patrick <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar gold">
-                        <img src="images/Peter.jpg" alt="Peter" onclick="openLightbox(this.src, true)">
-                    </div>
-                    <h4>Peter <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="PeterdG">🌱</div>
-                    <h4>Peter d G <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar gold" data-name="Rene">🦩</div>
-                    <h4>Rene <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Rob">🦇</div>
-                    <h4>Rob <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Stephan">🐟</div>
-                    <h4>Stephan <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar" data-name="Tatakh">🌴</div>
-                    <h4>Tatakh <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar">
-                        <img src="images/Tilly.jpg" alt="Tilly" onclick="openLightbox(this.src, false)">
-                    </div>
-                    <h4>Tilly <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar">
-                        <img src="images/Willem.jpg" alt="Willem" onclick="openLightbox(this.src, false)">
-                    </div>
-                    <h4>Willem <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4>
-                </div>
-                <div class="volunteer-item">
-                    <div class="volunteer-avatar">
-                        <img src="images/Wilma.jpg" alt="Wilma" onclick="openLightbox(this.src, false)">
-                    </div>
-                    <h4>Wilma</h4>
-                </div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Alex.jpg" alt="Alex" onclick="openLightbox(this.src, true)"></div><h4>Alex</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Coos.jpg" alt="Coos" onclick="openLightbox(this.src, true)"></div><h4>Coos</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold">🦋</div><h4>Cor <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🐸</div><h4>Daan <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌸</div><h4>Dagmar <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌻</div><h4>Desiree</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦆</div><h4>Diana <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Ed.jpg" alt="Ed" onclick="openLightbox(this.src, false)"></div><h4>Ed <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Els.jpg" alt="Els" onclick="openLightbox(this.src, true)"></div><h4>Els <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Eric.jpg" alt="Eric" onclick="openLightbox(this.src, false)"></div><h4>Eric <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦎</div><h4>Erik <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌺</div><h4>Femke <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Fen.jpg" alt="Fen" onclick="openLightbox(this.src, true)"></div><h4>Fen <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌼</div><h4>Francette <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Ge.jpg" alt="Gé" onclick="openLightbox(this.src, false)"></div><h4>Gé <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Gerrit.jpg" alt="Gerrit" onclick="openLightbox(this.src, true)"></div><h4>Gerrit <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Harry.jpg" alt="Harry" onclick="openLightbox(this.src, true)"></div><h4>Harry <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦔</div><h4>Henk <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦡</div><h4>Ingmar <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🐿️</div><h4>Jaap <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌾</div><h4>Jan <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦊</div><h4>Jan Willem</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦢</div><h4>Jantien <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌷</div><h4>Joop <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦜</div><h4>Karin <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🍀</div><h4>Karin</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌿</div><h4>Loes <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌲</div><h4>Marjolein</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/MartinZ.jpg" alt="Martin Z" onclick="openLightbox(this.src, false)"></div><h4>Martin Z</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Nynke.jpg" alt="Nynke" onclick="openLightbox(this.src, true)"></div><h4>Nynke <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🐢</div><h4>Patrick <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Peter.jpg" alt="Peter" onclick="openLightbox(this.src, true)"></div><h4>Peter <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌱</div><h4>Peter d G <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold">🦩</div><h4>Rene <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦇</div><h4>Rob <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🐟</div><h4>Stephan <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌴</div><h4>Tatakh <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Tilly.jpg" alt="Tilly" onclick="openLightbox(this.src, false)"></div><h4>Tilly <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Willem.jpg" alt="Willem" onclick="openLightbox(this.src, false)"></div><h4>Willem <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Wilma.jpg" alt="Wilma" onclick="openLightbox(this.src, false)"></div><h4>Wilma</h4></div>
             </div>
         </div>
     </section>
@@ -2439,30 +1479,14 @@
                 <p>Met dank aan deze organisaties die ons werk mogelijk maken</p>
             </div>
             <div class="sponsors-grid">
-                <div class="sponsor-item">
-                    <img src="images/Landschap_NH.jpg" alt="Landschap Noord-Holland">
-                </div>
-                <div class="sponsor-item">
-                    <img src="images/VWG.jpg" alt="Vogelwerkgroep Gooi en Omstreken">
-                </div>
-                <div class="sponsor-item">
-                    <img src="images/wijdemeren.png" alt="Gemeente Wijdemeren">
-                </div>
-                <div class="sponsor-item">
-                    <img src="images/Ankeveenseijsclub.png" alt="Ankeveense IJsclub">
-                </div>
-                <div class="sponsor-item">
-                    <img src="images/Appelboom.png" alt="De Appelboom">
-                </div>
-                <div class="sponsor-item">
-                    <img src="images/BruisendAnkeveen.GIF" alt="Bruisend Ankeveen">
-                </div>
-                <div class="sponsor-item">
-                    <img src="images/Kostelijk.svg" alt="Zorgkwekerij Kostelijk">
-                </div>
-                <div class="sponsor-item">
-                    <img src="images/Smittuinen.png" alt="Wijnand Smit Tuinen">
-                </div>
+                <div class="sponsor-item"><img src="images/Landschap_NH.jpg" alt="Landschap Noord-Holland"></div>
+                <div class="sponsor-item"><img src="images/VWG.jpg" alt="Vogelwerkgroep Gooi en Omstreken"></div>
+                <div class="sponsor-item"><img src="images/wijdemeren.png" alt="Gemeente Wijdemeren"></div>
+                <div class="sponsor-item"><img src="images/Ankeveenseijsclub.png" alt="Ankeveense IJsclub"></div>
+                <div class="sponsor-item"><img src="images/Appelboom.png" alt="De Appelboom"></div>
+                <div class="sponsor-item"><img src="images/BruisendAnkeveen.GIF" alt="Bruisend Ankeveen"></div>
+                <div class="sponsor-item"><img src="images/Kostelijk.svg" alt="Zorgkwekerij Kostelijk"></div>
+                <div class="sponsor-item"><img src="images/Smittuinen.png" alt="Wijnand Smit Tuinen"></div>
             </div>
         </div>
     </section>
@@ -2471,44 +1495,26 @@
     <footer id="contact">
         <div class="footer-container">
             <div class="footer-brand">
-                <a href="#" class="logo" style="color: white;">
-                    <span class="logo-text">Natuurrijk Ankeveen</span>
-                </a>
+                <a href="index.html" class="logo" style="color: white;"><span class="logo-text">Natuurrijk Ankeveen</span></a>
                 <p>Samen bouwen aan biodiversiteit in Ankeveen. Onze werkgroep opereert onder Stichting Bruisend Ankeveen.</p>
-                <div class="footer-logo">
-                    <img src="images/logo.jpg" alt="Natuurrijk Ankeveen logo">
-                </div>
+                <div class="footer-logo"><img src="images/logo.jpg" alt="Natuurrijk Ankeveen logo"></div>
             </div>
             <div class="footer-column">
                 <h4>Navigatie</h4>
-                <ul>
-                    <li><a href="#over-ons">Over ons</a></li>
-                    <li><a href="#activiteiten">Wat we doen</a></li>
-                    <li><a href="#resultaten">Resultaten</a></li>
-                    <li><a href="#nieuws">Nieuws</a></li>
-                </ul>
+                <ul><li><a href="#over-ons">Over ons</a></li><li><a href="#activiteiten">Wat we doen</a></li><li><a href="#resultaten">Resultaten</a></li><li><a href="#nieuws">Nieuws</a></li></ul>
             </div>
             <div class="footer-column">
                 <h4>Meedoen</h4>
-                <ul>
-                    <li><a href="javascript:void(0)" onclick="openContactModal()">Word vrijwilliger</a></li>
-                    <li><a href="javascript:void(0)" onclick="openContactModal()">Zeiscursus (sept. 2026)</a></li>
-                </ul>
+                <ul><li><a href="javascript:void(0)" onclick="openContactModal()">Word vrijwilliger</a></li><li><a href="javascript:void(0)" onclick="openContactModal()">Zeiscursus (sept. 2026)</a></li></ul>
             </div>
             <div class="footer-column">
                 <h4>Contact</h4>
-                <ul>
-                    <li>Ron Wehrens</li>
-                    <li><a href="tel:0646293590">06-46293590</a></li>
-                    <li><a href="/cdn-cgi/l/email-protection#7d131c0908080f0f1417161c1316180b1818133d0d0f12091213101c1411531e1210">natuurrijkankeveen<br>@protonmail.com</a></li>
-                </ul>
+                <ul><li>Ron Wehrens</li><li><a href="tel:0646293590">06-46293590</a></li><li><a href="mailto:natuurrijkankeveen@protonmail.com">natuurrijkankeveen<br>@protonmail.com</a></li></ul>
             </div>
         </div>
         <div class="footer-bottom">
             <span>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van Stichting Bruisend Ankeveen · IBAN: NL97 INGB 0006 3150 11</span>
-            <div class="footer-egel">
-                <img src="images/egel.png" alt="Egel">
-            </div>
+            <div class="footer-egel"><img src="images/egel.png" alt="Egel"></div>
         </div>
     </footer>
 
@@ -2525,63 +1531,56 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <!-- Contact Modal -->
+    <div class="contact-modal" id="contactModal" onclick="closeContactModal(event)">
+        <div class="contact-modal-content" onclick="event.stopPropagation()">
+            <span class="contact-modal-close" onclick="closeContactModal()">&times;</span>
+            <h3>📬 Neem contact op</h3>
+            <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
+            <div class="contact-options">
+                <a href="mailto:natuurrijkankeveen@protonmail.com" class="contact-option">
+                    <div class="contact-option-icon email"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+                    <div class="contact-option-text"><strong>E-mail</strong><span>natuurrijkankeveen@protonmail.com</span></div>
+                </a>
+                <a href="https://wa.me/31646293590" target="_blank" class="contact-option">
+                    <div class="contact-option-icon whatsapp"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+                    <div class="contact-option-text"><strong>WhatsApp</strong><span>Stuur ons een berichtje</span></div>
+                </a>
+                <a href="https://signal.me/#p/+31646293590" target="_blank" class="contact-option">
+                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.4c5.302 0 9.6 4.298 9.6 9.6s-4.298 9.6-9.6 9.6S2.4 17.302 2.4 12 6.698 2.4 12 2.4zm4.8 4.8c-.636 0-1.2.564-1.2 1.2s.564 1.2 1.2 1.2 1.2-.564 1.2-1.2-.564-1.2-1.2-1.2zm-9.6 0c-.636 0-1.2.564-1.2 1.2s.564 1.2 1.2 1.2S8.4 9.036 8.4 8.4s-.564-1.2-1.2-1.2zM12 15.6c-2.206 0-4.14-1.19-5.19-2.963a.6.6 0 111.032-.612C8.68 13.428 10.252 14.4 12 14.4s3.32-.972 4.158-2.375a.6.6 0 111.032.612C16.14 14.41 14.206 15.6 12 15.6z"/></svg></div>
+                    <div class="contact-option-text"><strong>Signal</strong><span>Veilig en privé chatten</span></div>
+                </a>
+                <a href="tel:+31646293590" class="contact-option">
+                    <div class="contact-option-icon phone"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
+                    <div class="contact-option-text"><strong>Bellen</strong><span>06-46293590</span></div>
+                </a>
+            </div>
+            <div class="contact-modal-footer">Contactpersoon: <strong>Ron Wehrens</strong></div>
+        </div>
+    </div>
+
+    <script>
         const teamData = {
-            'images/Arda.jpg': {
-                name: 'Arda van der Lee',
-                role: 'Biologe',
-                quote: 'Als biologe zie ik dagelijks hoe waardevol biodiversiteit is. Het is prachtig om te zien hoe snel de natuur zich herstelt als je haar de ruimte geeft. Samen met de werkgroep kunnen we echt het verschil maken voor de planten en dieren in Ankeveen.'
-            },
-            'images/Martin.jpg': {
-                name: 'Martin Ockhuijsen',
-                role: 'Vrijwillig boswachter',
-                quote: 'Als vrijwillig boswachter ken ik elk hoekje van de Ankeveense natuur. Het geeft enorme voldoening om te zien hoe onze projecten de biodiversiteit versterken. Van elke nieuwe plantensoort die terugkomt word ik blij!'
-            },
-            'images/Wijnand.jpg': {
-                name: 'Wijnand Smit',
-                role: 'Ecologisch hovenier',
-                quote: 'Als ecologisch hovenier weet ik welke inheemse planten hier thuishoren en hoe je ze het beste kunt laten gedijen. Het mooiste is om te zien hoe een kale oever verandert in een bloeiende biotoop vol leven.'
-            },
-            'images/Ron.jpg': {
-                name: 'Ron Wehrens',
-                role: 'Apotheker',
-                quote: 'Ik ben erg bezorgd over de opwarming van de aarde en het verlies van biodiversiteit. Maar in plaats van bij de pakken neer te zitten zet ik me in voor de natuur in m\'n directe omgeving. Dat voelt goed, je ziet resultaat en het is heerlijk met meer mensen te zijn die er net zo over denken en de handen uit de mouwen willen steken!'
-            },
-            'images/Hans.jpg': {
-                name: 'Hans Hazes',
-                role: 'Ondernemer',
-                quote: 'Als ondernemer weet ik hoe belangrijk het is om te investeren in de toekomst. En wat is er belangrijker dan investeren in onze natuur? De energie en het enthousiasme van onze vrijwilligers zijn aanstekelijk!'
-            },
-            'images/NatuurwerkgroepAnkeveen.png': {
-                name: 'Het kernteam',
-                role: 'v.l.n.r.: Wijnand, Arda, Hans, Ron, Martin',
-                quote: 'Samen zetten we ons in voor een natuurrijker Ankeveen. Met verschillende achtergronden en expertises vullen we elkaar perfect aan. Van zeisen tot zwaluwen, van oevers tot educatie – we pakken het samen aan!'
-            }
+            'images/Arda.jpg': { name: 'Arda van der Lee', role: 'Biologe', quote: 'Als biologe zie ik dagelijks hoe waardevol biodiversiteit is. Het is prachtig om te zien hoe snel de natuur zich herstelt als je haar de ruimte geeft.' },
+            'images/Martin.jpg': { name: 'Martin Ockhuijsen', role: 'Vrijwillig boswachter', quote: 'Als vrijwillig boswachter ken ik elk hoekje van de Ankeveense natuur. Het geeft enorme voldoening om te zien hoe onze projecten de biodiversiteit versterken.' },
+            'images/Wijnand.jpg': { name: 'Wijnand Smit', role: 'Ecologisch hovenier', quote: 'Als ecologisch hovenier weet ik welke inheemse planten hier thuishoren. Het mooiste is om te zien hoe een kale oever verandert in een bloeiende biotoop.' },
+            'images/Ron.jpg': { name: 'Ron Wehrens', role: 'Apotheker', quote: 'Ik ben bezorgd over de opwarming van de aarde en het verlies van biodiversiteit. Maar in plaats van bij de pakken neer te zitten zet ik me in voor de natuur in m\'n directe omgeving.' },
+            'images/Hans.jpg': { name: 'Hans Hazes', role: 'Ondernemer', quote: 'Als ondernemer weet ik hoe belangrijk het is om te investeren in de toekomst. En wat is er belangrijker dan investeren in onze natuur?' },
+            'images/NatuurwerkgroepAnkeveen.png': { name: 'Het kernteam', role: 'v.l.n.r.: Wijnand, Arda, Hans, Ron, Martin', quote: 'Samen zetten we ons in voor een natuurrijker Ankeveen. Van zeisen tot zwaluwen – we pakken het samen aan!' }
         };
 
         function openLightbox(src, isGold = false) {
             const lightboxImg = document.getElementById('lightbox-img');
             lightboxImg.src = src;
-            
-            // Add or remove gold border class
-            if (isGold) {
-                lightboxImg.classList.add('gold-border');
-            } else {
-                lightboxImg.classList.remove('gold-border');
-            }
-            
+            if (isGold) { lightboxImg.classList.add('gold-border'); } else { lightboxImg.classList.remove('gold-border'); }
             const data = teamData[src];
             const textDiv = document.getElementById('lightbox-text');
-            
             if (data) {
                 document.getElementById('lightbox-name').textContent = data.name;
                 document.getElementById('lightbox-role').textContent = data.role;
                 document.getElementById('lightbox-quote').textContent = data.quote;
                 textDiv.style.display = 'block';
-            } else {
-                textDiv.style.display = 'none';
-            }
-            
+            } else { textDiv.style.display = 'none'; }
             document.getElementById('lightbox').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -2592,72 +1591,6 @@
             document.body.style.overflow = 'auto';
         }
 
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeLightbox();
-        });
-
-        // Mobile menu toggle
-        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
-            document.querySelector('.nav-links').classList.toggle('mobile-open');
-        });
-    </script>
-
-    <!-- Contact Modal -->
-    <div class="contact-modal" id="contactModal" onclick="closeContactModal(event)">
-        <div class="contact-modal-content" onclick="event.stopPropagation()">
-            <span class="contact-modal-close" onclick="closeContactModal()">&times;</span>
-            <h3>📬 Neem contact op</h3>
-            <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
-            
-            <div class="contact-options">
-                <a href="/cdn-cgi/l/email-protection#a5cbc4d1d0d0d7d7cccfcec4cbcec0d3c0c0cbe5d5d7cad1cacbc8c4ccc98bc6cac8" class="contact-option">
-                    <div class="contact-option-icon email">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                    </div>
-                    <div class="contact-option-text">
-                        <strong>E-mail</strong>
-                        <span><span class="__cf_email__" data-cfemail="741a1500010106061d1e1f151a1f110211111a3404061b001b1a19151d185a171b19">[email&#160;protected]</span></span>
-                    </div>
-                </a>
-                
-                <a href="https://wa.me/31646293590" target="_blank" class="contact-option">
-                    <div class="contact-option-icon whatsapp">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    </div>
-                    <div class="contact-option-text">
-                        <strong>WhatsApp</strong>
-                        <span>Stuur ons een berichtje</span>
-                    </div>
-                </a>
-                
-                <a href="https://signal.me/#p/+31646293590" target="_blank" class="contact-option">
-                    <div class="contact-option-icon signal">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.4c5.302 0 9.6 4.298 9.6 9.6s-4.298 9.6-9.6 9.6S2.4 17.302 2.4 12 6.698 2.4 12 2.4zm4.8 4.8c-.636 0-1.2.564-1.2 1.2s.564 1.2 1.2 1.2 1.2-.564 1.2-1.2-.564-1.2-1.2-1.2zm-9.6 0c-.636 0-1.2.564-1.2 1.2s.564 1.2 1.2 1.2S8.4 9.036 8.4 8.4s-.564-1.2-1.2-1.2zM12 15.6c-2.206 0-4.14-1.19-5.19-2.963a.6.6 0 111.032-.612C8.68 13.428 10.252 14.4 12 14.4s3.32-.972 4.158-2.375a.6.6 0 111.032.612C16.14 14.41 14.206 15.6 12 15.6z"/></svg>
-                    </div>
-                    <div class="contact-option-text">
-                        <strong>Signal</strong>
-                        <span>Veilig en privé chatten</span>
-                    </div>
-                </a>
-                
-                <a href="tel:+31646293590" class="contact-option">
-                    <div class="contact-option-icon phone">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                    </div>
-                    <div class="contact-option-text">
-                        <strong>Bellen</strong>
-                        <span>06-46293590</span>
-                    </div>
-                </a>
-            </div>
-            
-            <div class="contact-modal-footer">
-                Contactpersoon: <strong>Ron Wehrens</strong>
-            </div>
-        </div>
-    </div>
-
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         function openContactModal() {
             document.getElementById('contactModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -2670,257 +1603,25 @@
         }
 
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeContactModal();
+            if (e.key === 'Escape') { closeLightbox(); closeContactModal(); }
         });
 
-        // Hero slideshow - 4 seconden per foto
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('mobile-open');
+        });
+
+        // Hero slideshow
         const heroImages = document.querySelectorAll('.hero-image-main img');
         let currentHero = 0;
-        
         function rotateHeroImages() {
             heroImages[currentHero].classList.remove('active');
             currentHero = (currentHero + 1) % heroImages.length;
             heroImages[currentHero].classList.add('active');
         }
-        
-        if (heroImages.length > 1) {
-            setInterval(rotateHeroImages, 4000);
-        }
-
-        // Growing Garden - flowers appear over time with localStorage persistence
-        const gardenFlowers = [
-            { src: 'images/Klaproos.png', size: 'medium' },
-            { src: 'images/Klaprozen.png', size: 'medium' },
-            { src: 'images/Klaprozen2.png', size: 'small' },
-            { src: 'images/Ridderspoor.png', size: 'medium' },
-            { src: 'images/Ridderspoor2.png', size: 'small' },
-            { src: 'images/Digitalis.png', size: 'medium' },
-            { src: 'images/Gelelis.png', size: 'medium' },
-            { src: 'images/Lisdodde.png', size: 'medium' },
-            { src: 'images/Lisdodde2.png', size: 'small' },
-            { src: 'images/Lisdodde3.png', size: 'medium' },
-            { src: 'images/Veldoeket.png', size: 'small' },
-            { src: 'images/Klaproos.png', size: 'small' },
-            { src: 'images/Ridderspoor.png', size: 'small' },
-            { src: 'images/Digitalis.png', size: 'small' },
-            { src: 'images/Gelelis.png', size: 'small' },
-            { src: 'images/Klaprozen2.png', size: 'medium' },
-            { src: 'images/Veldoeket.png', size: 'medium' }
-        ];
-
-        const garden = document.getElementById('headerGarden');
-        const grassContainer = document.getElementById('headerGrass');
-        
-        // Load saved state from localStorage
-        let gardenState = JSON.parse(localStorage.getItem('natuurrijkGarden')) || {
-            flowers: [],
-            pondAdded: false,
-            flowerIndex: 0
-        };
-        
-        const usedPositions = gardenState.flowers.map(f => f.position);
-        let flowerIndex = gardenState.flowerIndex;
-        
-        const pondPosition = 78;
-        const pondWidth = 10;
-        
-        const grassPositions = [
-            { left: -5, width: 28 },
-            { left: 20, width: 28 },
-            { left: 45, width: 28 },
-            { left: 70, width: 28 },
-            { left: 92, width: 18 }
-        ];
-
-        function overlapsWithPond(position) {
-            return position > (pondPosition - 6) && position < (pondPosition + pondWidth + 4);
-        }
-
-        const flowerZones = [
-            { start: 0, end: 3, weight: 1 },
-            { start: 23, end: 38, weight: 3 },
-            { start: 39, end: 54, weight: 3 },
-            { start: 55, end: 72, weight: 3 },
-            { start: 93, end: 100, weight: 2 }
-        ];
-
-        function getValidPosition() {
-            const windowWidth = window.innerWidth;
-            let position;
-            let attempts = 0;
-            
-            do {
-                if (windowWidth > 768) {
-                    const totalWeight = flowerZones.reduce((sum, z) => sum + z.weight, 0);
-                    let rand = Math.random() * totalWeight;
-                    let selectedZone = flowerZones[0];
-                    
-                    for (const zone of flowerZones) {
-                        rand -= zone.weight;
-                        if (rand <= 0) {
-                            selectedZone = zone;
-                            break;
-                        }
-                    }
-                    position = selectedZone.start + Math.random() * (selectedZone.end - selectedZone.start);
-                } else {
-                    const rand = Math.random();
-                    if (rand < 0.15) {
-                        position = Math.random() * 5;
-                    } else {
-                        position = 56 + Math.random() * 44;
-                    }
-                }
-                attempts++;
-            } while ((usedPositions.some(p => Math.abs(p - position) < 5) || overlapsWithPond(position)) && attempts < 30);
-            
-            usedPositions.push(position);
-            return position;
-        }
-
-        function saveGardenState() {
-            localStorage.setItem('natuurrijkGarden', JSON.stringify(gardenState));
-        }
-
-        function createFlowerElement(flowerData, position, mirrored) {
-            const img = document.createElement('img');
-            img.src = flowerData.src;
-            img.className = 'garden-flower ' + flowerData.size;
-            img.style.left = position + '%';
-            img.style.zIndex = '3';
-            if (mirrored) {
-                img.classList.add('mirrored');
-            }
-            // Skip animation for restored flowers
-            img.style.animation = 'none';
-            img.style.opacity = '1';
-            img.style.transform = mirrored ? 'scaleX(-1)' : 'none';
-            garden.appendChild(img);
-        }
-
-        function plantFlower(restore = false) {
-            if (flowerIndex >= gardenFlowers.length * 2) return;
-            
-            const flower = gardenFlowers[flowerIndex % gardenFlowers.length];
-            const position = restore ? null : getValidPosition();
-            const mirrored = restore ? null : Math.random() > 0.5;
-            
-            if (!restore) {
-                const img = document.createElement('img');
-                img.src = flower.src;
-                img.className = 'garden-flower ' + flower.size;
-                img.style.left = position + '%';
-                img.style.zIndex = '3';
-                if (mirrored) {
-                    img.classList.add('mirrored');
-                }
-                garden.appendChild(img);
-                
-                // Save to state
-                gardenState.flowers.push({
-                    index: flowerIndex,
-                    position: position,
-                    mirrored: mirrored
-                });
-                gardenState.flowerIndex = flowerIndex + 1;
-                saveGardenState();
-            }
-            
-            flowerIndex++;
-        }
-
-        function restoreFlowers() {
-            gardenState.flowers.forEach(savedFlower => {
-                const flower = gardenFlowers[savedFlower.index % gardenFlowers.length];
-                createFlowerElement(flower, savedFlower.position, savedFlower.mirrored);
-            });
-        }
-
-        function addAllGrass() {
-            grassPositions.forEach(pos => {
-                const img = document.createElement('img');
-                img.src = 'images/Gras.webp';
-                img.className = 'garden-grass';
-                img.style.left = pos.left + '%';
-                img.style.width = pos.width + '%';
-                grassContainer.appendChild(img);
-            });
-        }
-
-        function addPondWithLisdodde(instant = false) {
-            const pond = document.createElement('img');
-            pond.src = 'images/Poel1.png';
-            pond.className = 'garden-pond';
-            pond.style.left = pondPosition + '%';
-            pond.style.zIndex = '2';
-            if (instant) {
-                pond.style.animation = 'none';
-                pond.style.opacity = '1';
-            }
-            garden.appendChild(pond);
-            
-            const delay1 = instant ? 0 : 800;
-            const delay2 = instant ? 0 : 1200;
-            
-            setTimeout(() => {
-                const lisdoddeLeft = document.createElement('img');
-                lisdoddeLeft.src = 'images/Lisdodde.png';
-                lisdoddeLeft.className = 'pond-lisdodde';
-                lisdoddeLeft.style.left = (pondPosition - 2) + '%';
-                lisdoddeLeft.style.zIndex = '4';
-                if (instant) {
-                    lisdoddeLeft.style.animation = 'none';
-                    lisdoddeLeft.style.opacity = '1';
-                }
-                garden.appendChild(lisdoddeLeft);
-            }, delay1);
-            
-            setTimeout(() => {
-                const lisdoddeRight = document.createElement('img');
-                lisdoddeRight.src = 'images/Lisdodde.png';
-                lisdoddeRight.className = 'pond-lisdodde-right';
-                lisdoddeRight.style.zIndex = '4';
-                if (instant) {
-                    lisdoddeRight.style.animation = 'none';
-                    lisdoddeRight.style.opacity = '1';
-                }
-                garden.appendChild(lisdoddeRight);
-            }, delay2);
-            
-            gardenState.pondAdded = true;
-            saveGardenState();
-        }
-
-        // Build the garden
-        addAllGrass();
-
-        // Check if we have saved state to restore
-        if (gardenState.flowers.length > 0 || gardenState.pondAdded) {
-            // Restore saved garden instantly
-            if (gardenState.pondAdded) {
-                addPondWithLisdodde(true);
-            }
-            restoreFlowers();
-            
-            // Continue adding new flowers
-            if (flowerIndex < gardenFlowers.length * 2) {
-                setInterval(() => {
-                    plantFlower();
-                }, 3000 + Math.random() * 2000);
-            }
-        } else {
-            // Fresh start - build garden gradually
-            setTimeout(() => {
-                addPondWithLisdodde(false);
-            }, 3000);
-
-            setTimeout(() => {
-                plantFlower();
-                setInterval(() => {
-                    plantFlower();
-                }, 3000 + Math.random() * 2000);
-            }, 2000);
-        }
+        if (heroImages.length > 1) { setInterval(rotateHeroImages, 4000); }
     </script>
+
+    <!-- EXTERNE GARDEN - LAADT ALLE ANIMATIES EN BIOTOOP -->
+    <script src="garden.js"></script>
 </body>
 </html>
