@@ -1,9 +1,9 @@
 /* ===========================================
-   NATUURRIJK ANKEVEEN - Header Garden Styles
-   FASE 2: Biotoop met bloemen
+   NATUURRIJK ANKEVEEN - Biotoop Styles
+   Volledige styling voor de levende header
    =========================================== */
 
-/* ===== HEADER HOOGTES ===== */
+/* ===== VARIABELEN ===== */
 :root {
     --nav-height: 70px;
     --grass-height: 15px;
@@ -12,7 +12,6 @@
 }
 
 /* ===== HEADER ACHTERGROND ===== */
-/* Dekt content af, maar bloemen mogen erboven */
 .header-background {
     position: fixed;
     top: 0;
@@ -24,93 +23,18 @@
     pointer-events: none;
 }
 
-/* ===== BLOEMEN CONTAINER ===== */
-/* Positioneer zodat bottom = onderkant gras */
-.header-garden {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: var(--header-total);
-    pointer-events: none;
-    overflow: visible;
-    z-index: 1002; /* BOVEN header-background */
-}
-
-/* ===== BLOEMEN BASIS ===== */
-.garden-flower {
-    position: absolute;
-    bottom: -5px; /* Voeten NET onder de container, worden door gras bedekt */
-    height: auto;
-    opacity: 0;
-    transform-origin: bottom center;
-    pointer-events: none;
-}
-
-/* Bloem animatie - start onzichtbaar, bloeit op */
-.garden-flower.blooming {
-    animation: bloomFlower 2s ease-out forwards;
-}
-
-.garden-flower.blooming.mirrored {
-    animation: bloomFlowerMirrored 2s ease-out forwards;
-}
-
-/* ===== BLOEM GROOTTES ===== */
-.garden-flower.size-xs { height: 25px; }
-.garden-flower.size-sm { height: 35px; }
-.garden-flower.size-md { height: 50px; }
-.garden-flower.size-lg { height: 65px; }
-
-/* ===== BLOEM ANIMATIES ===== */
-@keyframes bloomFlower {
-    0% {
-        opacity: 0;
-        transform: scale(0.2) translateY(10px);
-    }
-    50% {
-        opacity: 0.7;
-    }
-    80% {
-        transform: scale(1.03) translateY(-1px);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
-@keyframes bloomFlowerMirrored {
-    0% {
-        opacity: 0;
-        transform: scaleX(-1) scale(0.2) translateY(10px);
-    }
-    50% {
-        opacity: 0.7;
-    }
-    80% {
-        transform: scaleX(-1) scale(1.03) translateY(-1px);
-    }
-    100% {
-        opacity: 1;
-        transform: scaleX(-1) scale(1) translateY(0);
-    }
-}
-
-/* ===== GRAS CONTAINER ===== */
-/* BOVEN de bloemen - bedekt de voeten */
+/* ===== GRAS ===== */
 .header-grass {
     position: fixed;
     top: var(--nav-height);
     left: 0;
     right: 0;
     height: var(--grass-height);
-    z-index: 1005; /* BOVEN bloemen */
+    z-index: 1010;
     pointer-events: none;
     overflow: hidden;
 }
 
-/* ===== GRAS AFBEELDINGEN ===== */
 .garden-grass {
     position: absolute;
     bottom: 0;
@@ -129,20 +53,325 @@
 .garden-grass:nth-child(9) { left: 80%; }
 .garden-grass:nth-child(10) { left: 90%; }
 
-/* ===== TOEKOMSTIGE DIEREN ===== */
-.header-animals-ground,
+/* ===== BLOEMEN CONTAINER ===== */
+.header-garden {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: var(--header-total);
+    pointer-events: none;
+    overflow: visible;
+    z-index: 1025;
+}
+
+/* ===== BLOEMEN ===== */
+.garden-flower {
+    position: absolute;
+    bottom: -5px;
+    height: auto;
+    opacity: 0;
+    transform-origin: bottom center;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.garden-flower.size-xs { height: 25px; }
+.garden-flower.size-sm { height: 35px; }
+.garden-flower.size-md { height: 50px; }
+.garden-flower.size-lg { height: 65px; }
+
+.garden-flower.blooming {
+    animation: bloomFlower 2.5s ease-out forwards;
+}
+
+.garden-flower.blooming.mirrored {
+    animation: bloomFlowerMirrored 2.5s ease-out forwards;
+}
+
+.garden-flower.wilting {
+    animation: wiltFlower 1.5s ease-in forwards;
+}
+
+@keyframes bloomFlower {
+    0% { opacity: 0; transform: scale(0.2) translateY(15px); }
+    40% { opacity: 0.6; }
+    70% { transform: scale(1.05) translateY(-2px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes bloomFlowerMirrored {
+    0% { opacity: 0; transform: scaleX(-1) scale(0.2) translateY(15px); }
+    40% { opacity: 0.6; }
+    70% { transform: scaleX(-1) scale(1.05) translateY(-2px); }
+    100% { opacity: 1; transform: scaleX(-1) scale(1) translateY(0); }
+}
+
+@keyframes wiltFlower {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.5) translateY(10px); }
+}
+
+/* ===== VIJVER CONTAINER ===== */
+/* Vijver komt VOOR het gras - enige element dat mag uitsteken */
+.header-pond {
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    height: 40px;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 1015; /* BOVEN gras (1010), ONDER bloemen (1025) */
+}
+
+.garden-pond {
+    position: absolute;
+    top: -5px;
+    left: 72%;
+    height: 28px;
+    width: auto;
+    opacity: 0;
+    animation: fadeInPond 3s ease-out forwards;
+}
+
+@keyframes fadeInPond {
+    0% { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* ===== ROERDOMP ===== */
+.garden-roerdomp {
+    position: absolute;
+    bottom: 8px;
+    left: 76%;
+    height: 55px;
+    width: auto;
+    opacity: 0;
+    z-index: -1; /* Achter de vijver */
+    animation: roerdompRise 3s ease-out forwards;
+}
+
+@keyframes roerdompRise {
+    0% { opacity: 0; transform: translateY(20px); }
+    60% { opacity: 1; }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== GROND DIEREN CONTAINER ===== */
+.header-animals-ground {
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    height: var(--grass-height);
+    pointer-events: none;
+    overflow: visible;
+    z-index: 1005;
+}
+
+/* ===== VLIEGENDE DIEREN CONTAINER ===== */
 .header-animals-flying {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: calc(var(--nav-height) + 60px);
+    height: calc(var(--nav-height) + 30px);
     pointer-events: none;
     overflow: visible;
+    z-index: 1030;
 }
 
-.header-animals-ground { z-index: 1003; display: none; }
-.header-animals-flying { z-index: 1010; display: none; }
+/* ===== EGEL ===== */
+.walking-hedgehog {
+    position: absolute;
+    bottom: -12px;
+    height: 30px;
+    width: auto;
+}
+
+.walking-hedgehog.walk-right {
+    animation: hedgehogWalkRight 45s linear forwards;
+}
+
+.walking-hedgehog.walk-left {
+    animation: hedgehogWalkLeft 45s linear forwards;
+}
+
+@keyframes hedgehogWalkRight {
+    0% { left: -60px; transform: scaleX(-1); }
+    /* Lopen */
+    12% { left: 18%; transform: scaleX(-1); }
+    /* Stop 1 - snuffelen */
+    13% { left: 18%; transform: scaleX(-1) rotate(-8deg); }
+    14% { left: 18%; transform: scaleX(-1) rotate(5deg); }
+    15% { left: 18%; transform: scaleX(-1) rotate(-4deg); }
+    16% { left: 18%; transform: scaleX(-1) rotate(0deg); }
+    /* Verder lopen */
+    35% { left: 50%; transform: scaleX(-1); }
+    /* Stop 2 - snuffelen */
+    36% { left: 50%; transform: scaleX(-1) rotate(-8deg); }
+    37% { left: 50%; transform: scaleX(-1) rotate(5deg); }
+    38% { left: 50%; transform: scaleX(-1) rotate(0deg); }
+    /* Verder lopen */
+    60% { left: 85%; transform: scaleX(-1); }
+    /* Stop 3 - snuffelen */
+    61% { left: 85%; transform: scaleX(-1) rotate(-6deg); }
+    62% { left: 85%; transform: scaleX(-1) rotate(4deg); }
+    63% { left: 85%; transform: scaleX(-1) rotate(0deg); }
+    /* Uit beeld */
+    80% { left: calc(100% + 60px); transform: scaleX(-1); }
+    100% { left: calc(100% + 60px); transform: scaleX(-1); }
+}
+
+@keyframes hedgehogWalkLeft {
+    0% { left: calc(100% + 60px); transform: scaleX(1); }
+    /* Lopen */
+    15% { left: 80%; transform: scaleX(1); }
+    /* Stop 1 */
+    16% { left: 80%; transform: scaleX(1) rotate(-8deg); }
+    17% { left: 80%; transform: scaleX(1) rotate(5deg); }
+    18% { left: 80%; transform: scaleX(1) rotate(0deg); }
+    /* Verder */
+    40% { left: 45%; transform: scaleX(1); }
+    /* Stop 2 */
+    41% { left: 45%; transform: scaleX(1) rotate(-6deg); }
+    42% { left: 45%; transform: scaleX(1) rotate(4deg); }
+    43% { left: 45%; transform: scaleX(1) rotate(0deg); }
+    /* Verder */
+    70% { left: 10%; transform: scaleX(1); }
+    /* Stop 3 */
+    71% { left: 10%; transform: scaleX(1) rotate(-8deg); }
+    72% { left: 10%; transform: scaleX(1) rotate(5deg); }
+    73% { left: 10%; transform: scaleX(1) rotate(0deg); }
+    /* Uit beeld */
+    90% { left: -60px; transform: scaleX(1); }
+    100% { left: -60px; transform: scaleX(1); }
+}
+
+/* ===== RUPS ===== */
+.crawling-caterpillar {
+    position: absolute;
+    bottom: -5px;
+    height: 18px;
+    width: auto;
+    animation: caterpillarCrawl 60s linear forwards;
+}
+
+@keyframes caterpillarCrawl {
+    0% { left: calc(100% + 40px); }
+    /* Kruipen */
+    10% { left: 85%; }
+    /* Stop 1 */
+    12% { left: 85%; }
+    /* Verder */
+    30% { left: 55%; }
+    /* Stop 2 */
+    33% { left: 55%; }
+    /* Verder */
+    55% { left: 30%; }
+    /* Stop 3 */
+    58% { left: 30%; }
+    /* Verder */
+    80% { left: 5%; }
+    /* Stop 4 */
+    82% { left: 5%; }
+    /* Uit beeld */
+    95% { left: -40px; }
+    100% { left: -40px; }
+}
+
+/* ===== VLINDER ===== */
+.flying-butterfly {
+    position: absolute;
+    height: 25px;
+    width: auto;
+}
+
+.flying-butterfly.flutter-right {
+    animation: butterflyFlutterRight 20s ease-in-out forwards;
+}
+
+.flying-butterfly.flutter-left {
+    animation: butterflyFlutterLeft 20s ease-in-out forwards;
+}
+
+@keyframes butterflyFlutterRight {
+    0% { left: -40px; top: 60px; transform: rotate(15deg); }
+    10% { left: 10%; top: 35px; transform: rotate(-10deg); }
+    20% { left: 22%; top: 55px; transform: rotate(20deg); }
+    30% { left: 35%; top: 25px; transform: rotate(-15deg); }
+    40% { left: 48%; top: 50px; transform: rotate(10deg); }
+    50% { left: 58%; top: 30px; transform: rotate(-20deg); }
+    60% { left: 70%; top: 55px; transform: rotate(15deg); }
+    70% { left: 80%; top: 35px; transform: rotate(-10deg); }
+    80% { left: 90%; top: 50px; transform: rotate(20deg); }
+    90% { left: 98%; top: 25px; transform: rotate(-15deg); }
+    100% { left: calc(100% + 40px); top: 45px; transform: rotate(10deg); }
+}
+
+@keyframes butterflyFlutterLeft {
+    0% { left: calc(100% + 40px); top: 50px; transform: scaleX(-1) rotate(15deg); }
+    10% { left: 90%; top: 30px; transform: scaleX(-1) rotate(-10deg); }
+    20% { left: 78%; top: 55px; transform: scaleX(-1) rotate(20deg); }
+    30% { left: 65%; top: 25px; transform: scaleX(-1) rotate(-15deg); }
+    40% { left: 52%; top: 50px; transform: scaleX(-1) rotate(10deg); }
+    50% { left: 40%; top: 35px; transform: scaleX(-1) rotate(-20deg); }
+    60% { left: 28%; top: 55px; transform: scaleX(-1) rotate(15deg); }
+    70% { left: 18%; top: 30px; transform: scaleX(-1) rotate(-10deg); }
+    80% { left: 8%; top: 50px; transform: scaleX(-1) rotate(20deg); }
+    90% { left: -2%; top: 25px; transform: scaleX(-1) rotate(-15deg); }
+    100% { left: -50px; top: 40px; transform: scaleX(-1) rotate(10deg); }
+}
+
+/* ===== LIEVEHEERSBEESTJE ===== */
+.flying-ladybug {
+    position: absolute;
+    bottom: 10px;
+    height: 18px;
+    width: auto;
+    animation: ladybugFlyAway 8s ease-in forwards;
+}
+
+@keyframes ladybugFlyAway {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    20% { transform: translateY(-5px) rotate(-5deg); }
+    40% { transform: translateY(-20px) rotate(-15deg); opacity: 1; }
+    60% { transform: translateY(-40px) rotate(-25deg); }
+    80% { transform: translateY(-70px) rotate(-35deg); opacity: 0.5; }
+    100% { transform: translateY(-120px) rotate(-45deg); opacity: 0; }
+}
+
+/* ===== ZWALUW ===== */
+.flying-swallow {
+    position: absolute;
+    height: 22px;
+    width: auto;
+}
+
+.flying-swallow.swoop-right {
+    animation: swallowSwoopRight 12s ease-in-out forwards;
+}
+
+.flying-swallow.swoop-left {
+    animation: swallowSwoopLeft 12s ease-in-out forwards;
+}
+
+@keyframes swallowSwoopRight {
+    0% { left: -50px; top: -20px; transform: rotate(25deg); }
+    25% { left: 25%; top: 55px; transform: rotate(-5deg); }
+    50% { left: 55%; top: 20px; transform: rotate(-15deg); }
+    75% { left: 80%; top: 60px; transform: rotate(5deg); }
+    100% { left: calc(100% + 50px); top: -10px; transform: rotate(-20deg); }
+}
+
+@keyframes swallowSwoopLeft {
+    0% { left: calc(100% + 50px); top: -15px; transform: scaleX(-1) rotate(25deg); }
+    25% { left: 75%; top: 50px; transform: scaleX(-1) rotate(-5deg); }
+    50% { left: 45%; top: 25px; transform: scaleX(-1) rotate(-15deg); }
+    75% { left: 20%; top: 55px; transform: scaleX(-1) rotate(5deg); }
+    100% { left: -50px; top: -10px; transform: scaleX(-1) rotate(-20deg); }
+}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 767px) {
@@ -154,6 +383,11 @@
     .garden-flower.size-sm { height: 25px; }
     .garden-flower.size-md { height: 35px; }
     .garden-flower.size-lg { height: 45px; }
+    .walking-hedgehog { height: 22px; bottom: -9px; }
+    .crawling-caterpillar { height: 12px; }
+    .flying-butterfly { height: 18px; }
+    .flying-swallow { height: 16px; }
+    .garden-roerdomp { height: 40px; }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -165,6 +399,8 @@
     .garden-flower.size-sm { height: 30px; }
     .garden-flower.size-md { height: 42px; }
     .garden-flower.size-lg { height: 55px; }
+    .walking-hedgehog { height: 26px; bottom: -10px; }
+    .garden-roerdomp { height: 48px; }
 }
 
 @media (min-width: 1200px) {
@@ -176,4 +412,8 @@
     .garden-flower.size-sm { height: 40px; }
     .garden-flower.size-md { height: 55px; }
     .garden-flower.size-lg { height: 75px; }
+    .walking-hedgehog { height: 35px; bottom: -14px; }
+    .flying-butterfly { height: 30px; }
+    .flying-swallow { height: 26px; }
+    .garden-roerdomp { height: 65px; }
 }
