@@ -203,7 +203,6 @@
     // ===== HTML STRUCTUUR =====
     function createHTML() {
         const html = `
-            <div class="header-background"></div>
             <div class="header-grass" id="headerGrass"></div>
             <div class="header-garden" id="headerGarden"></div>
             <div class="header-animals-ground">
