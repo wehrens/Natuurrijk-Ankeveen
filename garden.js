@@ -6,6 +6,22 @@
 (function() {
     'use strict';
 
+    // Detect if this is a page refresh vs navigation
+    // Using Performance API - most reliable method
+    let isRefresh = false;
+    
+    if (window.performance) {
+        const navEntries = performance.getEntriesByType('navigation');
+        if (navEntries.length > 0 && navEntries[0].type === 'reload') {
+            isRefresh = true;
+        }
+    }
+    
+    // On refresh: clear garden state so it rebuilds with animations
+    if (isRefresh) {
+        localStorage.removeItem('natuurrijkGarden');
+    }
+
     // Create HTML structure for garden
     function createGardenHTML() {
         const gardenHTML = `
@@ -242,6 +258,22 @@
         saveGardenState();
     }
 
+    function addRoerdomp(instant) {
+        const roerdomp = document.createElement('img');
+        roerdomp.src = 'images/Roerdomp.png';
+        roerdomp.className = 'pond-roerdomp';
+        roerdomp.style.left = (pondPosition + 2) + '%'; // Just behind the pond
+        roerdomp.style.zIndex = '1'; // Behind pond (z-index 2) and lisdodde (z-index 4)
+        if (instant) {
+            roerdomp.style.animation = 'none';
+            roerdomp.style.opacity = '1';
+        }
+        garden.appendChild(roerdomp);
+        
+        gardenState.roerdompAdded = true;
+        saveGardenState();
+    }
+
     function initGarden() {
         // Create HTML elements
         createGardenHTML();
@@ -260,6 +292,7 @@
         gardenState = savedState || {
             flowers: [],
             pondAdded: false,
+            roerdompAdded: false,
             flowerIndex: 0
         };
 
@@ -275,6 +308,9 @@
             if (gardenState.pondAdded) {
                 addPondWithLisdodde(true);
             }
+            if (gardenState.roerdompAdded) {
+                addRoerdomp(true);
+            }
             restoreFlowers();
 
             // Continue adding new flowers
@@ -282,6 +318,13 @@
                 setInterval(() => {
                     plantFlower();
                 }, 3000 + Math.random() * 2000);
+            }
+            
+            // Add Roerdomp if not yet added (late arrival!)
+            if (!gardenState.roerdompAdded) {
+                setTimeout(() => {
+                    addRoerdomp(false);
+                }, 15000);
             }
         } else {
             // Fresh start - build garden gradually
@@ -295,6 +338,11 @@
                     plantFlower();
                 }, 3000 + Math.random() * 2000);
             }, 2000);
+            
+            // Roerdomp appears last - the cherry on top! (after ~30 seconds)
+            setTimeout(() => {
+                addRoerdomp(false);
+            }, 30000);
         }
     }
 
