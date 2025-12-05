@@ -520,34 +520,31 @@
                 height: 38px;
             }
             .garden-grass {
-                height: 18px !important;
+                height: 28px !important;
             }
             .garden-pond {
-                height: 12px !important;
-                width: 60px !important;
+                height: 14px !important;
+                width: 70px !important;
+            }
+            .pond-lisdodde {
+                height: 35px !important;
             }
         }
 
-        /* Grass base layer */
+        /* Grass base layer - visible immediately as header line */
         .garden-grass {
             position: absolute;
             bottom: 0;
-            height: 25px;
+            height: 38px;
             width: auto;
-            opacity: 0;
-            animation: fadeInGrass 2s ease-out forwards;
-        }
-
-        @keyframes fadeInGrass {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+            opacity: 1;
         }
 
         /* Pond */
         .garden-pond {
             position: absolute;
             bottom: 2px;
-            height: 18px;
+            height: 22px;
             width: auto;
             opacity: 0;
             animation: fadeInPond 1.5s ease-out forwards;
@@ -556,6 +553,16 @@
         @keyframes fadeInPond {
             0% { opacity: 0; transform: scale(0.8); }
             100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Lisdodde next to pond */
+        .pond-lisdodde {
+            position: absolute;
+            bottom: 0;
+            height: 50px;
+            width: auto;
+            opacity: 0;
+            animation: bloomFlower 1s ease-out forwards;
         }
 
         /* Hero Section */
@@ -2583,25 +2590,31 @@
             { src: 'images/Lisdodde.png', size: 'medium' },
             { src: 'images/Lisdodde2.png', size: 'small' },
             { src: 'images/Lisdodde3.png', size: 'medium' },
-            { src: 'images/Veldoeket.png', size: 'small' }
+            { src: 'images/Veldoeket.png', size: 'small' },
+            // Extra flowers for more variety
+            { src: 'images/Klaproos.png', size: 'small' },
+            { src: 'images/Ridderspoor.png', size: 'small' },
+            { src: 'images/Digitalis.png', size: 'small' },
+            { src: 'images/Gelelis.png', size: 'small' },
+            { src: 'images/Klaprozen2.png', size: 'medium' },
+            { src: 'images/Veldoeket.png', size: 'medium' }
         ];
 
         const garden = document.getElementById('headerGarden');
         const usedPositions = [];
         let flowerIndex = 0;
-        let grassIndex = 0;
         
         // Pond position (fixed) - around 75-85% from left
         const pondPosition = 78;
         const pondWidth = 12; // percentage width of pond area
         
-        // Grass positions - cover whole bar except pond area
+        // Grass positions - cover whole bar, displayed immediately
         const grassPositions = [
-            { left: -5, width: 25 },   // Far left
-            { left: 18, width: 25 },   // Left-center (under text, subtle)
-            { left: 40, width: 25 },   // Center
-            { left: 58, width: 20 },   // Right of center (before pond)
-            { left: 90, width: 15 }    // Far right (after pond)
+            { left: -5, width: 28 },   // Far left
+            { left: 20, width: 28 },   // Left-center
+            { left: 45, width: 28 },   // Center
+            { left: 70, width: 28 },   // Right of center
+            { left: 92, width: 18 }    // Far right
         ];
 
         // Check if position overlaps with pond
@@ -2662,52 +2675,65 @@
             flowerIndex++;
         }
 
-        function addGrass() {
-            if (grassIndex >= grassPositions.length) return;
-            
-            const pos = grassPositions[grassIndex];
-            const img = document.createElement('img');
-            img.src = 'images/Gras.webp';
-            img.className = 'garden-grass';
-            img.style.left = pos.left + '%';
-            img.style.width = pos.width + '%';
-            img.style.zIndex = '1'; // Below flowers
-            
-            garden.appendChild(img);
-            grassIndex++;
+        function addAllGrass() {
+            // Add all grass patches immediately
+            grassPositions.forEach(pos => {
+                const img = document.createElement('img');
+                img.src = 'images/Gras.webp';
+                img.className = 'garden-grass';
+                img.style.left = pos.left + '%';
+                img.style.width = pos.width + '%';
+                img.style.zIndex = '1'; // Below everything
+                garden.appendChild(img);
+            });
         }
 
-        function addPond() {
-            const img = document.createElement('img');
-            img.src = 'images/Poel1.png';
-            img.className = 'garden-pond';
-            img.style.left = pondPosition + '%';
-            img.style.zIndex = '2'; // Above grass, below flowers
+        function addPondWithLisdodde() {
+            // Add pond
+            const pond = document.createElement('img');
+            pond.src = 'images/Poel1.png';
+            pond.className = 'garden-pond';
+            pond.style.left = pondPosition + '%';
+            pond.style.zIndex = '2'; // Above grass
+            garden.appendChild(pond);
             
-            garden.appendChild(img);
+            // Add Lisdodde on LEFT side of pond
+            setTimeout(() => {
+                const lisdoddeLeft = document.createElement('img');
+                lisdoddeLeft.src = 'images/Lisdodde.png';
+                lisdoddeLeft.className = 'pond-lisdodde';
+                lisdoddeLeft.style.left = (pondPosition - 3) + '%';
+                lisdoddeLeft.style.zIndex = '4';
+                garden.appendChild(lisdoddeLeft);
+            }, 800);
+            
+            // Add Lisdodde on RIGHT side of pond
+            setTimeout(() => {
+                const lisdoddeRight = document.createElement('img');
+                lisdoddeRight.src = 'images/Lisdodde.png';
+                lisdoddeRight.className = 'pond-lisdodde mirrored';
+                lisdoddeRight.style.left = (pondPosition + pondWidth - 1) + '%';
+                lisdoddeRight.style.zIndex = '4';
+                garden.appendChild(lisdoddeRight);
+            }, 1200);
         }
 
-        // Start building the garden
-        // First add pond (appears after 5 seconds)
-        setTimeout(() => {
-            addPond();
-        }, 5000);
+        // Build the garden
+        // 1. Grass is shown immediately as the header line
+        addAllGrass();
 
-        // Add grass patches gradually
+        // 2. Pond with lisdodde appears after 3 seconds
         setTimeout(() => {
-            addGrass(); // First grass patch
-            setInterval(() => {
-                addGrass();
-            }, 3000);
-        }, 2000);
+            addPondWithLisdodde();
+        }, 3000);
 
-        // Start planting flowers after 4 seconds, then every 4-6 seconds
+        // 3. Start planting flowers after 2 seconds, then every 3-5 seconds
         setTimeout(() => {
             plantFlower();
             setInterval(() => {
                 plantFlower();
-            }, 4000 + Math.random() * 2000);
-        }, 4000);
+            }, 3000 + Math.random() * 2000);
+        }, 2000);
     </script>
 </body>
 </html>
