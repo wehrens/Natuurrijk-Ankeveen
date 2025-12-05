@@ -103,7 +103,7 @@
     function createGrass() {
         GRASS_POSITIONS.forEach(pos => {
             const img = document.createElement('img');
-            img.src = 'images/Gras.webp';
+            img.src = 'images/Gras-cropped.png';
             img.className = 'garden-grass';
             img.style.left = pos.left + '%';
             img.style.width = pos.width + '%';
@@ -203,6 +203,7 @@
     // ===== HTML STRUCTUUR =====
     function createHTML() {
         const html = `
+            <div class="header-background"></div>
             <div class="header-grass" id="headerGrass"></div>
             <div class="header-garden" id="headerGarden"></div>
             <div class="header-animals-ground">
