@@ -68,7 +68,7 @@
 /* ===== BLOEMEN ===== */
 .garden-flower {
     position: absolute;
-    bottom: -5px;
+    bottom: 3px; /* Hoger zodat ze niet onder gras uitsteken */
     height: auto;
     opacity: 0;
     transform-origin: bottom center;
@@ -185,7 +185,7 @@
 /* ===== EGEL ===== */
 .walking-hedgehog {
     position: absolute;
-    bottom: -12px;
+    bottom: -5px; /* Hoger, was -12px */
     height: 30px;
     width: auto;
 }
@@ -345,32 +345,35 @@
 /* ===== ZWALUW ===== */
 .flying-swallow {
     position: absolute;
-    height: 22px;
+    height: 28px;
     width: auto;
 }
 
+/* Naar rechts vliegend - gespiegeld want afbeelding kijkt naar links */
 .flying-swallow.swoop-right {
-    animation: swallowSwoopRight 12s ease-in-out forwards;
+    transform: scaleX(-1);
+    animation: swallowSwoopRight 6s linear forwards;
 }
 
+/* Naar links vliegend - niet gespiegeld */
 .flying-swallow.swoop-left {
-    animation: swallowSwoopLeft 12s ease-in-out forwards;
+    animation: swallowSwoopLeft 6s linear forwards;
 }
 
 @keyframes swallowSwoopRight {
-    0% { left: -50px; top: -20px; transform: rotate(25deg); }
-    25% { left: 25%; top: 55px; transform: rotate(-5deg); }
-    50% { left: 55%; top: 20px; transform: rotate(-15deg); }
-    75% { left: 80%; top: 60px; transform: rotate(5deg); }
-    100% { left: calc(100% + 50px); top: -10px; transform: rotate(-20deg); }
+    0% { left: -60px; top: 25px; }
+    25% { left: 25%; top: 50px; }
+    50% { left: 50%; top: 20px; }
+    75% { left: 75%; top: 45px; }
+    100% { left: calc(100% + 60px); top: 30px; }
 }
 
 @keyframes swallowSwoopLeft {
-    0% { left: calc(100% + 50px); top: -15px; transform: scaleX(-1) rotate(25deg); }
-    25% { left: 75%; top: 50px; transform: scaleX(-1) rotate(-5deg); }
-    50% { left: 45%; top: 25px; transform: scaleX(-1) rotate(-15deg); }
-    75% { left: 20%; top: 55px; transform: scaleX(-1) rotate(5deg); }
-    100% { left: -50px; top: -10px; transform: scaleX(-1) rotate(-20deg); }
+    0% { left: calc(100% + 60px); top: 30px; }
+    25% { left: 75%; top: 50px; }
+    50% { left: 50%; top: 20px; }
+    75% { left: 25%; top: 45px; }
+    100% { left: -60px; top: 25px; }
 }
 
 /* ===== RESPONSIVE ===== */
@@ -383,10 +386,10 @@
     .garden-flower.size-sm { height: 25px; }
     .garden-flower.size-md { height: 35px; }
     .garden-flower.size-lg { height: 45px; }
-    .walking-hedgehog { height: 22px; bottom: -9px; }
+    .walking-hedgehog { height: 22px; bottom: -3px; }
     .crawling-caterpillar { height: 12px; }
     .flying-butterfly { height: 18px; }
-    .flying-swallow { height: 16px; }
+    .flying-swallow { height: 20px; }
     .garden-roerdomp { height: 40px; }
 }
 
@@ -399,7 +402,7 @@
     .garden-flower.size-sm { height: 30px; }
     .garden-flower.size-md { height: 42px; }
     .garden-flower.size-lg { height: 55px; }
-    .walking-hedgehog { height: 26px; bottom: -10px; }
+    .walking-hedgehog { height: 26px; bottom: -4px; }
     .garden-roerdomp { height: 48px; }
 }
 
@@ -412,8 +415,8 @@
     .garden-flower.size-sm { height: 40px; }
     .garden-flower.size-md { height: 55px; }
     .garden-flower.size-lg { height: 75px; }
-    .walking-hedgehog { height: 35px; bottom: -14px; }
+    .walking-hedgehog { height: 35px; bottom: -6px; }
     .flying-butterfly { height: 30px; }
-    .flying-swallow { height: 26px; }
+    .flying-swallow { height: 32px; }
     .garden-roerdomp { height: 65px; }
 }

@@ -14,7 +14,7 @@
             totalFlowerTime: 120000,    // 2 min voor alle bloemen
             pondAppears: 50000,         // Vijver na 50s
             roerdompAppears: 100000,    // Roerdomp na 100s
-            animalStartDelay: 20000,    // Eerste dier na 20s
+            animalStartDelay: 8000,     // Eerste dier al na 8s (was 20s)
             animalInterval: 12000,      // Check elke 12s voor nieuw dier
         },
         maxAnimalsVisible: 3,
@@ -221,7 +221,7 @@
         
         flyingEl.appendChild(img);
         state.activeAnimals.push({ type: 'swallow', el: img });
-        removeAnimal(img, 12000);
+        removeAnimal(img, 6500); // 6s animatie + marge
     }
 
     // Random dier spawnen
