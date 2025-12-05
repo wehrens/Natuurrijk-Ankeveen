@@ -181,7 +181,7 @@
             height: 70px;
             overflow: hidden;
             pointer-events: none;
-            z-index: 1001;
+            z-index: 1002;
         }
 
         @media (max-width: 768px) {
@@ -450,25 +450,45 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 70px;
-            overflow: hidden;
+            height: 75px;
             pointer-events: none;
-            z-index: 998;
+            z-index: 1001;
         }
 
         .garden-flower {
             position: absolute;
-            bottom: -10px;
+            bottom: 0;
             height: 50px;
             width: auto;
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
+            transform-origin: bottom center;
+            animation: bloomFlower 1s ease-out forwards;
         }
 
-        .garden-flower.bloomed {
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes bloomFlower {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes bloomFlowerMirrored {
+            0% {
+                opacity: 0;
+                transform: scaleX(-1) scale(0.3) translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scaleX(-1) scale(1) translateY(0);
+            }
+        }
+
+        .garden-flower.mirrored {
+            animation: bloomFlowerMirrored 1s ease-out forwards;
         }
 
         .garden-flower.small {
@@ -480,12 +500,12 @@
         }
 
         .garden-flower.large {
-            height: 55px;
+            height: 60px;
         }
 
         @media (max-width: 768px) {
             .header-garden {
-                height: 65px;
+                height: 70px;
             }
             .garden-flower {
                 height: 40px;
@@ -497,7 +517,7 @@
                 height: 35px;
             }
             .garden-flower.large {
-                height: 45px;
+                height: 48px;
             }
         }
 
@@ -2573,19 +2593,10 @@
             
             // Randomly mirror some flowers
             if (Math.random() > 0.5) {
-                img.style.transform = 'translateY(20px) scaleX(-1)';
+                img.classList.add('mirrored');
             }
             
             garden.appendChild(img);
-            
-            // Trigger bloom animation
-            setTimeout(() => {
-                if (img.style.transform && img.style.transform.includes('scaleX(-1)')) {
-                    img.style.transform = 'translateY(0) scaleX(-1)';
-                }
-                img.classList.add('bloomed');
-            }, 50);
-            
             flowerIndex++;
         }
 
