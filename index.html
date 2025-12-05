@@ -458,7 +458,7 @@
         .garden-flower {
             position: absolute;
             bottom: 0;
-            height: 50px;
+            height: 45px;
             width: auto;
             opacity: 0;
             transform-origin: bottom center;
@@ -492,15 +492,15 @@
         }
 
         .garden-flower.small {
-            height: 35px;
+            height: 30px;
         }
 
         .garden-flower.medium {
-            height: 45px;
+            height: 40px;
         }
 
         .garden-flower.large {
-            height: 60px;
+            height: 52px;
         }
 
         @media (max-width: 768px) {
@@ -508,16 +508,16 @@
                 height: 70px;
             }
             .garden-flower {
-                height: 40px;
+                height: 30px;
             }
             .garden-flower.small {
-                height: 28px;
+                height: 22px;
             }
             .garden-flower.medium {
-                height: 35px;
+                height: 28px;
             }
             .garden-flower.large {
-                height: 48px;
+                height: 38px;
             }
         }
 
@@ -2537,46 +2537,52 @@
         // Growing Garden - flowers appear over time
         const gardenFlowers = [
             { src: 'images/Klaproos.png', size: 'medium' },
-            { src: 'images/Klaprozen.png', size: 'large' },
+            { src: 'images/Klaprozen.png', size: 'medium' },
             { src: 'images/Klaprozen2.png', size: 'small' },
-            { src: 'images/Ridderspoor.png', size: 'large' },
-            { src: 'images/Ridderspoor2.png', size: 'medium' },
-            { src: 'images/Digitalis.png', size: 'large' },
+            { src: 'images/Ridderspoor.png', size: 'medium' },
+            { src: 'images/Ridderspoor2.png', size: 'small' },
+            { src: 'images/Digitalis.png', size: 'medium' },
             { src: 'images/Gelelis.png', size: 'medium' },
-            { src: 'images/Lisdodde.png', size: 'large' },
+            { src: 'images/Lisdodde.png', size: 'medium' },
             { src: 'images/Lisdodde2.png', size: 'small' },
-            { src: 'images/Veldoeket.png', size: 'medium' }
+            { src: 'images/Veldoeket.png', size: 'small' }
         ];
 
         const garden = document.getElementById('headerGarden');
         const usedPositions = [];
         let flowerIndex = 0;
         
-        // Positions where flowers can grow (avoiding menu text area - roughly 200-700px from left on desktop)
+        // Positions where flowers can grow - spread across whole bar but avoid "Natuurrijk Ankeveen" text
         function getValidPosition() {
             const windowWidth = window.innerWidth;
             let position;
             let attempts = 0;
             
             do {
-                // Avoid the center where menu text is (roughly 15%-75% on desktop)
                 if (windowWidth > 768) {
-                    // Desktop: flowers on left side (0-12%) or right side (78-100%)
-                    if (Math.random() > 0.5) {
-                        position = Math.random() * 12;
+                    // Desktop: avoid the "Natuurrijk Ankeveen" text area (roughly 3-22%)
+                    // Flowers can grow: 0-3%, 22-100%
+                    const rand = Math.random();
+                    if (rand < 0.05) {
+                        position = Math.random() * 3; // Far left edge
+                    } else if (rand < 0.4) {
+                        position = 22 + Math.random() * 30; // Middle-left area
+                    } else if (rand < 0.7) {
+                        position = 52 + Math.random() * 25; // Middle-right area
                     } else {
-                        position = 78 + Math.random() * 22;
+                        position = 77 + Math.random() * 23; // Right side
                     }
                 } else {
-                    // Mobile: flowers on left (0-20%) or right (65-100%)
-                    if (Math.random() > 0.5) {
-                        position = Math.random() * 20;
+                    // Mobile: avoid "Natuurrijk Ankeveen" text (roughly 5-55%)
+                    const rand = Math.random();
+                    if (rand < 0.15) {
+                        position = Math.random() * 5; // Far left
                     } else {
-                        position = 65 + Math.random() * 35;
+                        position = 55 + Math.random() * 45; // Right side
                     }
                 }
                 attempts++;
-            } while (usedPositions.some(p => Math.abs(p - position) < 5) && attempts < 20);
+            } while (usedPositions.some(p => Math.abs(p - position) < 4) && attempts < 20);
             
             usedPositions.push(position);
             return position;
