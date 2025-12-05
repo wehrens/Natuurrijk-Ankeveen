@@ -1,22 +1,64 @@
 /* ===========================================
    NATUURRIJK ANKEVEEN - Header Garden Styles
+   FASE 1: Robuuste basis - gras op headergrens
    =========================================== */
 
+/* ===== HEADER HOOGTES ===== */
+:root {
+    --nav-height: 70px;
+    --grass-height: 15px;
+    --header-total: calc(var(--nav-height) + var(--grass-height));
+    --header-bg: #f8f6f0;
+}
+
 /* ===== HEADER ACHTERGROND ===== */
-/* Moet ALLES afdekken tot aan het gras */
+/* Solide achtergrond die ALLES afdekt (nav + gras area) 
+   zodat content eronder verdwijnt bij scrollen */
 .header-background {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 100px;
-    background-color: #f8f6f0;
-    z-index: 1008;
+    height: var(--header-total);
+    background-color: var(--header-bg);
+    z-index: 1005;
     pointer-events: none;
 }
 
-/* ===== CONTAINERS ===== */
-.header-grass,
+/* ===== GRAS CONTAINER ===== */
+.header-grass {
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    height: var(--grass-height);
+    z-index: 1010;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* ===== GRAS AFBEELDINGEN ===== */
+.garden-grass {
+    position: absolute;
+    bottom: 0;
+    height: var(--grass-height);
+    width: auto;
+}
+
+/* 10 segmenten voor volledige dekking bij kleine hoogte */
+.garden-grass:nth-child(1) { left: 0; }
+.garden-grass:nth-child(2) { left: 10%; }
+.garden-grass:nth-child(3) { left: 20%; }
+.garden-grass:nth-child(4) { left: 30%; }
+.garden-grass:nth-child(5) { left: 40%; }
+.garden-grass:nth-child(6) { left: 50%; }
+.garden-grass:nth-child(7) { left: 60%; }
+.garden-grass:nth-child(8) { left: 70%; }
+.garden-grass:nth-child(9) { left: 80%; }
+.garden-grass:nth-child(10) { left: 90%; }
+
+/* ===== TOEKOMSTIGE BIOTOOP CONTAINERS ===== */
+/* Voorbereid voor fase 2: bloemen, dieren, etc. */
 .header-garden,
 .header-animals-ground,
 .header-animals-flying {
@@ -24,241 +66,33 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 160px;
-    overflow: visible;
+    height: calc(var(--nav-height) + 60px);
     pointer-events: none;
+    overflow: visible;
 }
 
-.header-grass { z-index: 1010; }
-.header-animals-ground { z-index: 1011; }
-.header-garden { z-index: 1012; }
-.header-animals-flying { z-index: 1013; }
+.header-garden { z-index: 1012; display: none; }
+.header-animals-ground { z-index: 1011; display: none; }
+.header-animals-flying { z-index: 1013; display: none; }
 
-/* ===== GRAS ===== */
-/* Gras start waar header-background stopt */
-.garden-grass {
-    position: absolute;
-    top: 100px;
-    height: 45px;
-    width: auto;
-}
-
-/* ===== BLOEMEN ===== */
-/* TIJDELIJK VERBORGEN - eerst gras goed krijgen */
-.garden-flower {
-    display: none;
-}
-
-@keyframes bloomFlower {
-    0% { opacity: 0; transform: scale(0.3) translateY(10px); }
-    100% { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-@keyframes bloomFlowerMirrored {
-    0% { opacity: 0; transform: scaleX(-1) scale(0.3) translateY(10px); }
-    100% { opacity: 1; transform: scaleX(-1) scale(1) translateY(0); }
-}
-
-/* ===== POEL ===== */
-/* TIJDELIJK VERBORGEN */
-.garden-pond {
-    display: none;
-}
-
-@keyframes fadeIn {
-    0% { opacity: 0; transform: scale(0.8); }
-    100% { opacity: 1; transform: scale(1); }
-}
-
-/* ===== LISDODDE ===== */
-/* TIJDELIJK VERBORGEN */
-.pond-lisdodde,
-.pond-lisdodde-right {
-    display: none;
-}
-
-/* ===== ROERDOMP ===== */
-/* TIJDELIJK VERBORGEN */
-.pond-roerdomp {
-    display: none;
-}
-
-@keyframes roerdompRise {
-    0% { opacity: 0; transform: translateY(30px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-/* ===== DIEREN - GROND ===== */
-/* TIJDELIJK VERBORGEN */
-.walking-hedgehog {
-    display: none;
-}
-
-@keyframes walkHedgehogRTL {
-    0% { right: -50px; transform: rotate(0deg); }
-    5% { right: 15%; transform: rotate(0deg); }
-    5.1% { right: 15%; transform: rotate(-8deg); }
-    6% { right: 15%; transform: rotate(5deg); }
-    7% { right: 15%; transform: rotate(0deg); }
-    12% { right: 45%; transform: rotate(0deg); }
-    12.1% { right: 45%; transform: rotate(-8deg); }
-    13% { right: 45%; transform: rotate(5deg); }
-    14% { right: 45%; transform: rotate(0deg); }
-    19% { right: 75%; transform: rotate(0deg); }
-    19.1% { right: 75%; transform: rotate(-8deg); }
-    20% { right: 75%; transform: rotate(5deg); }
-    21% { right: 75%; transform: rotate(0deg); }
-    26% { right: calc(100% + 50px); }
-    26%, 100% { right: calc(100% + 50px); }
-}
-
-.walking-hedgehog-reverse {
-    display: none;
-}
-
-@keyframes walkHedgehogLTR {
-    0%, 52% { left: -50px; transform: scaleX(-1); }
-    58% { left: 15%; transform: scaleX(-1); }
-    58.1% { left: 15%; transform: scaleX(-1) rotate(-8deg); }
-    59% { left: 15%; transform: scaleX(-1) rotate(5deg); }
-    60% { left: 15%; transform: scaleX(-1); }
-    65% { left: 45%; transform: scaleX(-1); }
-    65.1% { left: 45%; transform: scaleX(-1) rotate(-8deg); }
-    66% { left: 45%; transform: scaleX(-1) rotate(5deg); }
-    67% { left: 45%; transform: scaleX(-1); }
-    72% { left: 75%; transform: scaleX(-1); }
-    72.1% { left: 75%; transform: scaleX(-1) rotate(-8deg); }
-    73% { left: 75%; transform: scaleX(-1) rotate(5deg); }
-    74% { left: 75%; transform: scaleX(-1); }
-    79% { left: calc(100% + 50px); transform: scaleX(-1); }
-    79%, 100% { left: calc(100% + 50px); transform: scaleX(-1); }
-}
-
-.crawling-caterpillar {
-    display: none;
-}
-
-@keyframes crawlCaterpillar {
-    0%, 20% { left: calc(100% + 60px); }
-    26% { left: 80%; }
-    32% { left: 55%; }
-    40% { left: 30%; }
-    48% { left: 5%; }
-    50%, 100% { left: -60px; }
-}
-
-/* ===== DIEREN - VLIEGEND ===== */
-/* TIJDELIJK VERBORGEN */
-.flying-swallow {
-    display: none;
-}
-
-@keyframes flySwallow {
-    0%, 3% { top: -50px; left: -50px; transform: rotate(15deg); }
-    10% { top: 45px; left: 20%; transform: rotate(-5deg); }
-    17% { top: 35px; left: 50%; transform: rotate(10deg); }
-    24% { top: 50px; left: 80%; transform: rotate(-10deg); }
-    30% { top: -50px; left: calc(100% + 50px); transform: rotate(-20deg); }
-    30.1%, 36% { top: -50px; left: calc(100% + 50px); transform: scaleX(-1) rotate(15deg); }
-    43% { top: 30px; left: 75%; transform: scaleX(-1) rotate(-10deg); }
-    50% { top: 55px; left: 45%; transform: scaleX(-1) rotate(5deg); }
-    57% { top: 25px; left: 15%; transform: scaleX(-1) rotate(-5deg); }
-    63% { top: -50px; left: -50px; transform: scaleX(-1) rotate(-20deg); }
-    63.1%, 100% { top: -50px; left: -50px; transform: rotate(15deg); }
-}
-
-.flying-butterfly2 {
-    display: none;
-}
-
-@keyframes flyButterfly2 {
-    0%, 55% { top: -40px; left: calc(100% + 40px); transform: rotate(-30deg) scaleX(-1); }
-    57% { top: 30px; left: 85%; transform: rotate(-15deg) scaleX(-1); }
-    59% { top: 20px; left: 70%; transform: rotate(10deg) scaleX(-1); }
-    61% { top: 40px; left: 55%; transform: rotate(-20deg) scaleX(-1); }
-    63% { top: 15px; left: 40%; transform: rotate(5deg) scaleX(-1); }
-    65% { top: 35px; left: 25%; transform: rotate(-15deg) scaleX(-1); }
-    67% { top: -40px; left: 10%; transform: rotate(30deg) scaleX(-1); }
-    67.1%, 100% { top: -40px; left: calc(100% + 40px); transform: rotate(-30deg) scaleX(-1); }
-}
-
-.flying-butterfly3 {
-    display: none;
-}
-
-@keyframes flyButterfly3 {
-    0%, 20% { top: -40px; left: -40px; transform: rotate(30deg); }
-    22% { top: 25px; left: 10%; transform: rotate(15deg); }
-    24% { top: 35px; left: 25%; transform: rotate(-10deg); }
-    26% { top: 20px; left: 40%; transform: rotate(20deg); }
-    28% { top: 40px; left: 55%; transform: rotate(-5deg); }
-    30% { top: 15px; left: 70%; transform: rotate(15deg); }
-    32% { top: -40px; left: 85%; transform: rotate(-30deg); }
-    32.1%, 100% { top: -40px; left: -40px; transform: rotate(30deg); }
-}
-
-.flying-ladybug {
-    display: none;
-}
-
-@keyframes flyLadybug {
-    0%, 70% { top: 78px; left: 30%; opacity: 0; }
-    70.5% { top: 78px; left: 30%; opacity: 1; }
-    72% { top: 78px; left: 28%; opacity: 1; }
-    74% { top: 58px; left: 22%; transform: rotate(-25deg); opacity: 1; }
-    76% { top: 33px; left: 15%; transform: rotate(-35deg); opacity: 1; }
-    78% { top: -15px; left: 5%; transform: rotate(-45deg); opacity: 0; }
-    78.1%, 100% { top: 78px; left: 30%; opacity: 0; }
-}
-
-.flying-ladybug2 {
-    display: none;
-}
-
-@keyframes flyLadybug2 {
-    0%, 35% { top: 78px; left: 65%; transform: scaleX(-1); opacity: 0; }
-    35.5% { top: 78px; left: 65%; transform: scaleX(-1); opacity: 1; }
-    37% { top: 78px; left: 67%; transform: scaleX(-1); opacity: 1; }
-    39% { top: 58px; left: 72%; transform: scaleX(-1) rotate(25deg); opacity: 1; }
-    41% { top: 33px; left: 80%; transform: scaleX(-1) rotate(35deg); opacity: 1; }
-    43% { top: -15px; left: 90%; transform: scaleX(-1) rotate(45deg); opacity: 0; }
-    43.1%, 100% { top: 78px; left: 65%; transform: scaleX(-1); opacity: 0; }
-}
-
-/* ===== MOBIEL ===== */
-@media (max-width: 768px) {
-    .header-background {
-        height: 80px;
-    }
-    
-    .header-grass,
-    .header-garden,
-    .header-animals-ground,
-    .header-animals-flying {
-        height: 120px;
-    }
-    
-    .garden-grass {
-        height: 30px;
-        top: 80px;
+/* ===== RESPONSIVE ===== */
+@media (max-width: 767px) {
+    :root {
+        --nav-height: 60px;
+        --grass-height: 12px;
     }
 }
 
-/* ===== TABLET ===== */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .header-background {
-        height: 90px;
+@media (min-width: 768px) and (max-width: 1024px) {
+    :root {
+        --nav-height: 65px;
+        --grass-height: 14px;
     }
-    
-    .header-grass,
-    .header-garden,
-    .header-animals-ground,
-    .header-animals-flying {
-        height: 140px;
-    }
-    
-    .garden-grass {
-        height: 38px;
-        top: 90px;
+}
+
+@media (min-width: 1200px) {
+    :root {
+        --nav-height: 75px;
+        --grass-height: 18px;
     }
 }
