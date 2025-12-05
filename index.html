@@ -192,9 +192,11 @@
             .walking-hedgehog-reverse,
             .crawling-caterpillar {
                 width: 28px !important;
+                bottom: -12px !important;
             }
             .flying-ladybug {
                 width: 20px !important;
+                bottom: -12px !important;
             }
         }
 
@@ -291,7 +293,7 @@
         /* Walking Hedgehog - Right to Left (normal) */
         .walking-hedgehog {
             position: absolute;
-            bottom: 0; /* Feet on the ground line */
+            bottom: -15px; /* Feet on the ground with grass */
             right: -50px;
             width: 35px;
             height: auto;
@@ -328,7 +330,7 @@
         /* Walking Hedgehog Reverse - Left to Right (flipped) */
         .walking-hedgehog-reverse {
             position: absolute;
-            bottom: 0; /* Feet on the ground line */
+            bottom: -15px; /* Feet on the ground with grass */
             left: -50px;
             width: 35px;
             height: auto;
@@ -368,7 +370,7 @@
         /* Crawling Caterpillar - Right to Left (flipped to face left) */
         .crawling-caterpillar {
             position: absolute;
-            bottom: 0; /* Body on the ground line */
+            bottom: -15px; /* Body on the ground with grass */
             left: calc(100% + 60px);
             width: 45px;
             height: auto;
@@ -429,7 +431,7 @@
         /* Flying Ladybug */
         .flying-ladybug {
             position: absolute;
-            bottom: 0; /* Feet on the ground line */
+            bottom: -15px; /* Feet on the ground with grass */
             left: 30%;
             width: 25px;
             height: auto;
@@ -438,18 +440,18 @@
         }
 
         @keyframes flyLadybug {
-            0%, 70% { bottom: 0; left: 30%; transform: rotate(0deg); opacity: 0; }
+            0%, 70% { bottom: -15px; left: 30%; transform: rotate(0deg); opacity: 0; }
             /* Appear */
-            70.5% { bottom: 0; left: 30%; transform: rotate(0deg); opacity: 1; }
+            70.5% { bottom: -15px; left: 30%; transform: rotate(0deg); opacity: 1; }
             /* Walk a tiny bit */
-            72% { bottom: 0; left: 28%; transform: rotate(0deg); opacity: 1; }
+            72% { bottom: -15px; left: 28%; transform: rotate(0deg); opacity: 1; }
             /* Prepare to fly */
-            72.5% { bottom: 0; left: 28%; transform: rotate(-10deg); opacity: 1; }
+            72.5% { bottom: -15px; left: 28%; transform: rotate(-10deg); opacity: 1; }
             /* Fly up and away */
-            74% { bottom: 30px; left: 22%; transform: rotate(-25deg); opacity: 1; }
-            76% { bottom: 50px; left: 15%; transform: rotate(-35deg); opacity: 1; }
-            78% { bottom: 100px; left: 5%; transform: rotate(-45deg); opacity: 0; }
-            78.1%, 100% { bottom: 0; left: 30%; transform: rotate(0deg); opacity: 0; }
+            74% { bottom: 20px; left: 22%; transform: rotate(-25deg); opacity: 1; }
+            76% { bottom: 45px; left: 15%; transform: rotate(-35deg); opacity: 1; }
+            78% { bottom: 90px; left: 5%; transform: rotate(-45deg); opacity: 0; }
+            78.1%, 100% { bottom: -15px; left: 30%; transform: rotate(0deg); opacity: 0; }
         }
 
         /* Growing Garden - flowers that appear over time */
@@ -466,7 +468,7 @@
 
         .garden-flower {
             position: absolute;
-            bottom: 0; /* Stem base on the ground line */
+            bottom: -15px; /* Stem base on the ground with grass */
             height: 45px;
             width: auto;
             opacity: 0;
@@ -518,6 +520,7 @@
             }
             .garden-flower {
                 height: 30px;
+                bottom: -12px !important;
             }
             .garden-flower.small {
                 height: 22px;
@@ -529,31 +532,33 @@
                 height: 38px;
             }
             .garden-grass {
-                height: 20px !important;
+                height: 35px !important;
+                bottom: -18px !important;
             }
             .garden-pond {
-                height: 12px !important;
+                height: 14px !important;
                 width: 60px !important;
-                bottom: -5px !important;
+                bottom: -15px !important;
             }
             .pond-lisdodde {
                 height: 30px !important;
+                bottom: -12px !important;
             }
         }
 
-        /* Grass base layer - bottom of grass on the line */
+        /* Grass base layer - larger to properly cover the border line */
         .garden-grass {
             position: absolute;
-            bottom: 0; /* Bottom of grass on the ground line */
-            height: 38px;
+            bottom: -25px; /* Position so grass overlaps the border line */
+            height: 55px; /* Larger grass */
             width: auto;
             opacity: 1;
         }
 
-        /* Pond - extends slightly below the line */
+        /* Pond - extends below the grass line */
         .garden-pond {
             position: absolute;
-            bottom: -8px; /* Pond dips below the ground line */
+            bottom: -20px; /* Pond sits below the ground line */
             height: 22px;
             width: auto;
             opacity: 0;
@@ -568,7 +573,7 @@
         /* Lisdodde next to pond */
         .pond-lisdodde {
             position: absolute;
-            bottom: 0; /* Stem base on the ground line */
+            bottom: -15px; /* Stem base on the ground with grass */
             height: 50px;
             width: auto;
             opacity: 0;
