@@ -366,17 +366,105 @@
             height: auto;
             pointer-events: none;
             transform: scaleX(-1);
-            animation: crawlCaterpillar 75s linear infinite;
+            animation: crawlCaterpillar 120s ease-in-out infinite;
         }
 
         @keyframes crawlCaterpillar {
             /* Wait for hedgehog + 3 sec pause */
-            0%, 30% { left: calc(100% + 60px); }
-            /* Crawl across slowly - no stopping */
-            31% { left: calc(100% + 60px); }
-            50% { left: -60px; }
+            0%, 20% { left: calc(100% + 60px); }
+            /* Crawl across very slowly with varying speed */
+            21% { left: calc(100% + 60px); }
+            /* Slow start */
+            26% { left: 80%; }
+            /* Tiny pause - sniffing leaf? */
+            27% { left: 78%; }
+            /* Slow crawl */
+            32% { left: 65%; }
+            /* Speed up a bit */
+            35% { left: 55%; }
+            /* Slow down */
+            40% { left: 45%; }
+            /* Pause */
+            41% { left: 43%; }
+            /* Continue slow */
+            47% { left: 30%; }
+            /* Speed up */
+            50% { left: 18%; }
+            /* Slow finish */
+            55% { left: -60px; }
             /* Stay hidden */
-            50%, 100% { left: -60px; }
+            55%, 100% { left: -60px; }
+        }
+
+        /* Flying Butterfly 1 - Blue */
+        .flying-butterfly1 {
+            position: absolute;
+            top: -40px;
+            left: -40px;
+            width: 30px;
+            height: auto;
+            pointer-events: none;
+            animation: flyButterfly1 90s ease-in-out infinite;
+        }
+
+        @keyframes flyButterfly1 {
+            0%, 10% { top: -40px; left: -40px; transform: rotate(30deg); }
+            12% { top: 25px; left: 10%; transform: rotate(15deg); }
+            14% { top: 35px; left: 20%; transform: rotate(-10deg); }
+            16% { top: 20px; left: 30%; transform: rotate(20deg); }
+            18% { top: 40px; left: 40%; transform: rotate(-5deg); }
+            20% { top: 15px; left: 50%; transform: rotate(15deg); }
+            22% { top: 30px; left: 60%; transform: rotate(-15deg); }
+            24% { top: -40px; left: 75%; transform: rotate(-30deg); }
+            24.1%, 100% { top: -40px; left: -40px; transform: rotate(30deg); }
+        }
+
+        /* Flying Butterfly 2 - Orange */
+        .flying-butterfly2 {
+            position: absolute;
+            top: -40px;
+            left: calc(100% + 40px);
+            width: 35px;
+            height: auto;
+            pointer-events: none;
+            animation: flyButterfly2 90s ease-in-out infinite;
+        }
+
+        @keyframes flyButterfly2 {
+            0%, 55% { top: -40px; left: calc(100% + 40px); transform: rotate(-30deg) scaleX(-1); }
+            57% { top: 30px; left: 85%; transform: rotate(-15deg) scaleX(-1); }
+            59% { top: 20px; left: 70%; transform: rotate(10deg) scaleX(-1); }
+            61% { top: 40px; left: 55%; transform: rotate(-20deg) scaleX(-1); }
+            63% { top: 15px; left: 40%; transform: rotate(5deg) scaleX(-1); }
+            65% { top: 35px; left: 25%; transform: rotate(-15deg) scaleX(-1); }
+            67% { top: -40px; left: 10%; transform: rotate(30deg) scaleX(-1); }
+            67.1%, 100% { top: -40px; left: calc(100% + 40px); transform: rotate(-30deg) scaleX(-1); }
+        }
+
+        /* Flying Ladybug */
+        .flying-ladybug {
+            position: absolute;
+            bottom: 5px;
+            left: 30%;
+            width: 25px;
+            height: auto;
+            pointer-events: none;
+            animation: flyLadybug 120s ease-in-out infinite;
+        }
+
+        @keyframes flyLadybug {
+            0%, 70% { bottom: 5px; left: 30%; transform: rotate(0deg); opacity: 0; }
+            /* Appear */
+            70.5% { bottom: 5px; left: 30%; transform: rotate(0deg); opacity: 1; }
+            /* Walk a tiny bit */
+            72% { bottom: 5px; left: 28%; transform: rotate(0deg); opacity: 1; }
+            /* Prepare to fly */
+            72.5% { bottom: 5px; left: 28%; transform: rotate(-10deg); opacity: 1; }
+            /* Fly up and away */
+            74% { bottom: 30px; left: 22%; transform: rotate(-25deg); opacity: 1; }
+            76% { bottom: 50px; left: 15%; transform: rotate(-35deg); opacity: 1; }
+            78% { bottom: 100px; left: 5%; transform: rotate(-45deg); opacity: 0; }
+            78.1%, 100% { bottom: 5px; left: 30%; transform: rotate(0deg); opacity: 0; }
         }
 
         /* Hero Section */
@@ -1641,6 +1729,9 @@
         <img src="images/egel.png" alt="" class="walking-hedgehog">
         <img src="images/egel.png" alt="" class="walking-hedgehog-reverse">
         <img src="images/Rups1.gif" alt="" class="crawling-caterpillar">
+        <img src="images/Vlinder2.gif" alt="" class="flying-butterfly1">
+        <img src="images/Vlinder.gif" alt="" class="flying-butterfly2">
+        <img src="images/Ladybug.gif" alt="" class="flying-ladybug">
     </div>
 
     <!-- Hero Section -->
