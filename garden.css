@@ -3,12 +3,13 @@
    =========================================== */
 
 /* ===== HEADER ACHTERGROND ===== */
+/* Moet ALLES afdekken tot aan het gras */
 .header-background {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 80px;
+    height: 100px;
     background-color: #f8f6f0;
     z-index: 1008;
     pointer-events: none;
@@ -23,7 +24,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 140px;
+    height: 160px;
     overflow: visible;
     pointer-events: none;
 }
@@ -34,11 +35,10 @@
 .header-animals-flying { z-index: 1013; }
 
 /* ===== GRAS ===== */
-/* Gecropte afbeelding: geen transparante bovenkant meer! */
-/* top = header hoogte, simpel en consistent */
+/* Gras start waar header-background stopt */
 .garden-grass {
     position: absolute;
-    top: 80px;
+    top: 100px;
     height: 45px;
     width: auto;
 }
@@ -228,39 +228,37 @@
 /* ===== MOBIEL ===== */
 @media (max-width: 768px) {
     .header-background {
-        height: 70px;
+        height: 80px;
     }
     
     .header-grass,
     .header-garden,
     .header-animals-ground,
     .header-animals-flying {
-        height: 110px;
+        height: 120px;
     }
     
-    /* Simpel: top = header hoogte */
     .garden-grass {
         height: 30px;
-        top: 70px;
+        top: 80px;
     }
 }
 
 /* ===== TABLET ===== */
 @media (min-width: 769px) and (max-width: 1024px) {
     .header-background {
-        height: 75px;
+        height: 90px;
     }
     
     .header-grass,
     .header-garden,
     .header-animals-ground,
     .header-animals-flying {
-        height: 125px;
+        height: 140px;
     }
     
-    /* Simpel: top = header hoogte */
     .garden-grass {
         height: 38px;
-        top: 75px;
+        top: 90px;
     }
 }
