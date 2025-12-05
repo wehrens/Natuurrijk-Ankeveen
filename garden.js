@@ -221,46 +221,48 @@
         removeAnimal(img, 8000);
     }
 
-    // Zwaluw - met correcte spiegeling per afbeelding
-    // Swallowflight.png en Swallowflight2.png kijken naar LINKS
-    // Swallowflight3.png kijkt naar RECHTS
+    // Zwaluw - correcte oriëntatie per afbeelding
+    // Swallowflight.png → kop naar RECHTS (vliegt naar rechts in origineel)
+    // Swallowflight2.png → kop naar LINKS (vliegt naar links in origineel)
+    // Swallowflight3.png → kop naar LINKS (vliegt naar links in origineel)
     function spawnSwallow(forceDirection, delayMs) {
         const spawn = () => {
-            // Zwaluwen zijn snel, tel ze niet mee voor limiet
+            // Zwaluwen zijn snel, tel ze apart
             const nonSwallowAnimals = state.activeAnimals.filter(a => a.type !== 'swallow').length;
             if (nonSwallowAnimals >= 3) return false;
 
             const img = document.createElement('img');
             
-            // Kies afbeelding en bepaal of die gespiegeld moet worden
+            // Kies afbeelding met correcte oriëntatie
             const swallowOptions = [
-                { src: 'images/Swallowflight.png', facesLeft: true },
-                { src: 'images/Swallowflight2.png', facesLeft: true },
-                { src: 'images/Swallowflight3.png', facesLeft: false }
+                { src: 'images/Swallowflight.png', facesRight: true },   // Kijkt naar RECHTS
+                { src: 'images/Swallowflight2.png', facesRight: false }, // Kijkt naar LINKS
+                { src: 'images/Swallowflight3.png', facesRight: false }  // Kijkt naar LINKS
             ];
             const chosen = swallowOptions[Math.floor(Math.random() * swallowOptions.length)];
             img.src = chosen.src;
             
             // Bepaal vliegrichting
-            const goingRight = forceDirection !== undefined ? forceDirection : Math.random() > 0.5;
+            const fliesRight = forceDirection !== undefined ? forceDirection : Math.random() > 0.5;
             
-            // Kies een van de vluchtpaden
-            const pathVariant = Math.floor(Math.random() * 3); // 0, 1, of 2
-            
-            // Spiegeling logica
-            const needsMirror = (chosen.facesLeft && goingRight) || (!chosen.facesLeft && !goingRight);
+            // Spiegeling nodig als richting niet overeenkomt met oriëntatie
+            // - Vogel kijkt rechts, vliegt rechts → NIET spiegelen
+            // - Vogel kijkt rechts, vliegt links → WEL spiegelen
+            // - Vogel kijkt links, vliegt links → NIET spiegelen
+            // - Vogel kijkt links, vliegt rechts → WEL spiegelen
+            const needsMirror = chosen.facesRight !== fliesRight;
             
             let className = 'flying-swallow ';
-            if (goingRight) {
-                className += needsMirror ? `swoop-right-${pathVariant}` : `swoop-right-nm-${pathVariant}`;
+            if (fliesRight) {
+                className += needsMirror ? 'fly-right-mirrored' : 'fly-right-normal';
             } else {
-                className += needsMirror ? `swoop-left-nm-${pathVariant}` : `swoop-left-${pathVariant}`;
+                className += needsMirror ? 'fly-left-mirrored' : 'fly-left-normal';
             }
-            img.className = className;
             
+            img.className = className;
             flyingEl.appendChild(img);
             state.activeAnimals.push({ type: 'swallow', el: img });
-            removeAnimal(img, 5500);
+            removeAnimal(img, 6500);
             return true;
         };
         
@@ -271,13 +273,13 @@
         }
     }
 
-    // Groep zwaluwen spawnen (2-3 achter elkaar)
+    // Groep zwaluwen spawnen (2-3 achter elkaar, zelfde richting)
     function spawnSwallowGroup() {
-        const count = Math.random() > 0.4 ? 3 : 2; // Vaker 3 dan 2
-        const direction = Math.random() > 0.5; // Allemaal dezelfde kant op
+        const count = Math.random() > 0.4 ? 3 : 2;
+        const direction = Math.random() > 0.5;
         
         for (let i = 0; i < count; i++) {
-            spawnSwallow(direction, i * 600); // 0.6s tussen elke zwaluw
+            spawnSwallow(direction, i * 700);
         }
     }
 

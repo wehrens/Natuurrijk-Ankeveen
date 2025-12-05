@@ -127,7 +127,7 @@
 
 .garden-pond {
     position: absolute;
-    top: 8px; /* Nog lager */
+    top: 12px; /* Nog lager */
     left: 72%;
     height: 28px;
     width: auto;
@@ -161,13 +161,13 @@
 /* ===== GROND DIEREN CONTAINER ===== */
 .header-animals-ground {
     position: fixed;
-    top: calc(var(--nav-height) - 25px); /* Hoger starten */
+    top: var(--nav-height); /* Start onder de nav */
     left: 0;
     right: 0;
-    height: 60px;
+    height: 40px;
     pointer-events: none;
     overflow: visible;
-    z-index: 1012; /* BOVEN gras (1010), zodat ze zichtbaar zijn */
+    z-index: 1025; /* BOVEN nav (1020) - egel loopt VOOR de nav */
 }
 
 /* ===== VLIEGENDE DIEREN CONTAINER ===== */
@@ -185,7 +185,7 @@
 /* ===== EGEL ===== */
 .walking-hedgehog {
     position: absolute;
-    bottom: 8px; /* Loopt op het gras */
+    top: -15px; /* Steekt omhoog vanaf graslijn, maar niet in nav */
     height: 30px;
     width: auto;
 }
@@ -252,7 +252,7 @@
 /* ===== RUPS ===== */
 .crawling-caterpillar {
     position: absolute;
-    bottom: 12px; /* Hoger, kruipt over het gras */
+    top: -10px; /* Kruipt over het gras */
     height: 18px;
     width: auto;
     animation: caterpillarCrawl 60s linear forwards;
@@ -383,119 +383,70 @@
     width: auto;
 }
 
-/* ===== NAAR RECHTS - MET SPIEGELING (voor vogels die naar links kijken) ===== */
-.flying-swallow.swoop-right-0 { animation: swallowRight0 5s ease-in-out forwards; }
-.flying-swallow.swoop-right-1 { animation: swallowRight1 4.5s ease-in-out forwards; }
-.flying-swallow.swoop-right-2 { animation: swallowRight2 5.5s ease-in-out forwards; }
-
-/* Pad 0: Midden - klassieke parabool */
-@keyframes swallowRight0 {
-    0% { left: -80px; top: 40px; transform: scaleX(-1) rotate(-5deg); }
-    25% { left: 20%; top: 25px; transform: scaleX(-1) rotate(8deg); }
-    50% { left: 45%; top: 55px; transform: scaleX(-1) rotate(-3deg); }
-    75% { left: 72%; top: 20px; transform: scaleX(-1) rotate(10deg); }
-    100% { left: calc(100% + 80px); top: 35px; transform: scaleX(-1) rotate(-5deg); }
+/* Naar RECHTS vliegend - NIET gespiegeld (vogel kijkt al naar rechts) */
+.flying-swallow.fly-right-normal {
+    animation: flyRight 6s linear forwards;
 }
 
-/* Pad 1: Hoog - over de top */
-@keyframes swallowRight1 {
-    0% { left: -80px; top: 50px; transform: scaleX(-1) rotate(-10deg); }
-    30% { left: 25%; top: 10px; transform: scaleX(-1) rotate(5deg); }
-    60% { left: 55%; top: 15px; transform: scaleX(-1) rotate(-3deg); }
-    100% { left: calc(100% + 80px); top: 5px; transform: scaleX(-1) rotate(8deg); }
+/* Naar RECHTS vliegend - WEL gespiegeld (vogel kijkt naar links) */
+.flying-swallow.fly-right-mirrored {
+    animation: flyRightMirrored 6s linear forwards;
 }
 
-/* Pad 2: Laag - dicht bij gras */
-@keyframes swallowRight2 {
-    0% { left: -80px; top: 20px; transform: scaleX(-1) rotate(5deg); }
-    25% { left: 18%; top: 55px; transform: scaleX(-1) rotate(-8deg); }
-    50% { left: 40%; top: 45px; transform: scaleX(-1) rotate(3deg); }
-    75% { left: 68%; top: 60px; transform: scaleX(-1) rotate(-5deg); }
-    100% { left: calc(100% + 80px); top: 50px; transform: scaleX(-1) rotate(5deg); }
+/* Naar LINKS vliegend - NIET gespiegeld (vogel kijkt al naar links) */
+.flying-swallow.fly-left-normal {
+    animation: flyLeft 6s linear forwards;
 }
 
-/* ===== NAAR RECHTS - ZONDER SPIEGELING (voor vogels die naar rechts kijken) ===== */
-.flying-swallow.swoop-right-nm-0 { animation: swallowRightNM0 5s ease-in-out forwards; }
-.flying-swallow.swoop-right-nm-1 { animation: swallowRightNM1 4.5s ease-in-out forwards; }
-.flying-swallow.swoop-right-nm-2 { animation: swallowRightNM2 5.5s ease-in-out forwards; }
-
-@keyframes swallowRightNM0 {
-    0% { left: -80px; top: 40px; transform: rotate(5deg); }
-    25% { left: 20%; top: 25px; transform: rotate(-8deg); }
-    50% { left: 45%; top: 55px; transform: rotate(3deg); }
-    75% { left: 72%; top: 20px; transform: rotate(-10deg); }
-    100% { left: calc(100% + 80px); top: 35px; transform: rotate(5deg); }
+/* Naar LINKS vliegend - WEL gespiegeld (vogel kijkt naar rechts) */
+.flying-swallow.fly-left-mirrored {
+    animation: flyLeftMirrored 6s linear forwards;
 }
 
-@keyframes swallowRightNM1 {
-    0% { left: -80px; top: 50px; transform: rotate(10deg); }
-    30% { left: 25%; top: 10px; transform: rotate(-5deg); }
-    60% { left: 55%; top: 15px; transform: rotate(3deg); }
-    100% { left: calc(100% + 80px); top: 5px; transform: rotate(-8deg); }
+/* ===== VLUCHTPADEN - Mooie langgerekte U-baan, constante snelheid ===== */
+
+/* Naar RECHTS - normaal */
+@keyframes flyRight {
+    0%   { left: -100px; top: 15px; transform: scaleX(1); }
+    15%  { left: 10%;    top: 45px; transform: scaleX(1); }
+    35%  { left: 30%;    top: 60px; transform: scaleX(1); }
+    50%  { left: 50%;    top: 55px; transform: scaleX(1); }
+    65%  { left: 70%;    top: 45px; transform: scaleX(1); }
+    85%  { left: 90%;    top: 20px; transform: scaleX(1); }
+    100% { left: calc(100% + 100px); top: 10px; transform: scaleX(1); }
 }
 
-@keyframes swallowRightNM2 {
-    0% { left: -80px; top: 20px; transform: rotate(-5deg); }
-    25% { left: 18%; top: 55px; transform: rotate(8deg); }
-    50% { left: 40%; top: 45px; transform: rotate(-3deg); }
-    75% { left: 68%; top: 60px; transform: rotate(5deg); }
-    100% { left: calc(100% + 80px); top: 50px; transform: rotate(-5deg); }
+/* Naar RECHTS - gespiegeld */
+@keyframes flyRightMirrored {
+    0%   { left: -100px; top: 15px; transform: scaleX(-1); }
+    15%  { left: 10%;    top: 45px; transform: scaleX(-1); }
+    35%  { left: 30%;    top: 60px; transform: scaleX(-1); }
+    50%  { left: 50%;    top: 55px; transform: scaleX(-1); }
+    65%  { left: 70%;    top: 45px; transform: scaleX(-1); }
+    85%  { left: 90%;    top: 20px; transform: scaleX(-1); }
+    100% { left: calc(100% + 100px); top: 10px; transform: scaleX(-1); }
 }
 
-/* ===== NAAR LINKS - ZONDER SPIEGELING (voor vogels die naar links kijken) ===== */
-.flying-swallow.swoop-left-0 { animation: swallowLeft0 5s ease-in-out forwards; }
-.flying-swallow.swoop-left-1 { animation: swallowLeft1 4.5s ease-in-out forwards; }
-.flying-swallow.swoop-left-2 { animation: swallowLeft2 5.5s ease-in-out forwards; }
-
-@keyframes swallowLeft0 {
-    0% { left: calc(100% + 80px); top: 35px; transform: rotate(-5deg); }
-    25% { left: 75%; top: 55px; transform: rotate(5deg); }
-    50% { left: 50%; top: 20px; transform: rotate(-8deg); }
-    75% { left: 25%; top: 50px; transform: rotate(3deg); }
-    100% { left: -80px; top: 40px; transform: rotate(8deg); }
+/* Naar LINKS - normaal */
+@keyframes flyLeft {
+    0%   { left: calc(100% + 100px); top: 10px; transform: scaleX(1); }
+    15%  { left: 90%;    top: 35px; transform: scaleX(1); }
+    35%  { left: 70%;    top: 55px; transform: scaleX(1); }
+    50%  { left: 50%;    top: 60px; transform: scaleX(1); }
+    65%  { left: 30%;    top: 50px; transform: scaleX(1); }
+    85%  { left: 10%;    top: 25px; transform: scaleX(1); }
+    100% { left: -100px; top: 15px; transform: scaleX(1); }
 }
 
-@keyframes swallowLeft1 {
-    0% { left: calc(100% + 80px); top: 10px; transform: rotate(5deg); }
-    35% { left: 65%; top: 15px; transform: rotate(-3deg); }
-    70% { left: 30%; top: 5px; transform: rotate(8deg); }
-    100% { left: -80px; top: 20px; transform: rotate(-5deg); }
-}
-
-@keyframes swallowLeft2 {
-    0% { left: calc(100% + 80px); top: 55px; transform: rotate(3deg); }
-    25% { left: 70%; top: 45px; transform: rotate(-5deg); }
-    50% { left: 45%; top: 60px; transform: rotate(8deg); }
-    75% { left: 20%; top: 50px; transform: rotate(-3deg); }
-    100% { left: -80px; top: 55px; transform: rotate(5deg); }
-}
-
-/* ===== NAAR LINKS - MET SPIEGELING (voor vogels die naar rechts kijken) ===== */
-.flying-swallow.swoop-left-nm-0 { animation: swallowLeftNM0 5s ease-in-out forwards; }
-.flying-swallow.swoop-left-nm-1 { animation: swallowLeftNM1 4.5s ease-in-out forwards; }
-.flying-swallow.swoop-left-nm-2 { animation: swallowLeftNM2 5.5s ease-in-out forwards; }
-
-@keyframes swallowLeftNM0 {
-    0% { left: calc(100% + 80px); top: 35px; transform: scaleX(-1) rotate(5deg); }
-    25% { left: 75%; top: 55px; transform: scaleX(-1) rotate(-5deg); }
-    50% { left: 50%; top: 20px; transform: scaleX(-1) rotate(8deg); }
-    75% { left: 25%; top: 50px; transform: scaleX(-1) rotate(-3deg); }
-    100% { left: -80px; top: 40px; transform: scaleX(-1) rotate(-8deg); }
-}
-
-@keyframes swallowLeftNM1 {
-    0% { left: calc(100% + 80px); top: 10px; transform: scaleX(-1) rotate(-5deg); }
-    35% { left: 65%; top: 15px; transform: scaleX(-1) rotate(3deg); }
-    70% { left: 30%; top: 5px; transform: scaleX(-1) rotate(-8deg); }
-    100% { left: -80px; top: 20px; transform: scaleX(-1) rotate(5deg); }
-}
-
-@keyframes swallowLeftNM2 {
-    0% { left: calc(100% + 80px); top: 55px; transform: scaleX(-1) rotate(-3deg); }
-    25% { left: 70%; top: 45px; transform: scaleX(-1) rotate(5deg); }
-    50% { left: 45%; top: 60px; transform: scaleX(-1) rotate(-8deg); }
-    75% { left: 20%; top: 50px; transform: scaleX(-1) rotate(3deg); }
-    100% { left: -80px; top: 55px; transform: scaleX(-1) rotate(-5deg); }
+/* Naar LINKS - gespiegeld */
+@keyframes flyLeftMirrored {
+    0%   { left: calc(100% + 100px); top: 10px; transform: scaleX(-1); }
+    15%  { left: 90%;    top: 35px; transform: scaleX(-1); }
+    35%  { left: 70%;    top: 55px; transform: scaleX(-1); }
+    50%  { left: 50%;    top: 60px; transform: scaleX(-1); }
+    65%  { left: 30%;    top: 50px; transform: scaleX(-1); }
+    85%  { left: 10%;    top: 25px; transform: scaleX(-1); }
+    100% { left: -100px; top: 15px; transform: scaleX(-1); }
 }
 
 /* ===== RESPONSIVE ===== */
@@ -508,8 +459,8 @@
     .garden-flower.size-sm { height: 25px; }
     .garden-flower.size-md { height: 35px; }
     .garden-flower.size-lg { height: 45px; }
-    .walking-hedgehog { height: 22px; bottom: 6px; }
-    .crawling-caterpillar { height: 12px; bottom: 10px; }
+    .walking-hedgehog { height: 22px; top: -12px; }
+    .crawling-caterpillar { height: 12px; top: -8px; }
     .flying-butterfly { height: 18px; }
     .flying-swallow { height: 20px; }
     .garden-roerdomp { height: 40px; }
@@ -524,8 +475,8 @@
     .garden-flower.size-sm { height: 30px; }
     .garden-flower.size-md { height: 42px; }
     .garden-flower.size-lg { height: 55px; }
-    .walking-hedgehog { height: 26px; bottom: 7px; }
-    .crawling-caterpillar { height: 15px; bottom: 11px; }
+    .walking-hedgehog { height: 26px; top: -14px; }
+    .crawling-caterpillar { height: 15px; top: -10px; }
     .garden-roerdomp { height: 48px; }
 }
 
@@ -538,8 +489,8 @@
     .garden-flower.size-sm { height: 40px; }
     .garden-flower.size-md { height: 55px; }
     .garden-flower.size-lg { height: 75px; }
-    .walking-hedgehog { height: 35px; bottom: 10px; }
-    .crawling-caterpillar { height: 20px; bottom: 14px; }
+    .walking-hedgehog { height: 35px; top: -18px; }
+    .crawling-caterpillar { height: 20px; top: -12px; }
     .flying-butterfly { height: 30px; }
     .flying-swallow { height: 32px; }
     .garden-roerdomp { height: 65px; }
