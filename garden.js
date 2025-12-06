@@ -215,9 +215,8 @@
     let otterCount = 0; // Bijhouden hoe vaak otter verschijnt
     
     function spawnOtter() {
-        // Otter loopt achter het gras (in pond container, z-index 1005)
-        const pondEl = document.getElementById('headerPond');
-        if (!pondEl) return;
+        // Otter loopt in de ground container (z-index 1025, VOOR de nav)
+        if (!groundEl) return;
         
         otterCount++;
         
@@ -229,14 +228,14 @@
         
         if (shouldHide) {
             img.className = 'swimming-otter hiding';
-            pondEl.appendChild(img);
+            groundEl.appendChild(img);
             // Langere animatie (50s) voor verstop-gedrag
             setTimeout(() => {
                 if (img.parentNode) img.remove();
             }, 51000);
         } else {
             img.className = 'swimming-otter';
-            pondEl.appendChild(img);
+            groundEl.appendChild(img);
             // Normale animatie (20s)
             setTimeout(() => {
                 if (img.parentNode) img.remove();
