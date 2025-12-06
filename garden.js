@@ -206,7 +206,8 @@
         // Otter loopt over de grond (in ground container)
         const img = document.createElement('img');
         img.src = 'images/Otter.gif';
-        img.className = 'swimming-otter ' + (Math.random() > 0.5 ? 'walk-left' : 'walk-right');
+        // Otter loopt altijd van rechts naar links
+        img.className = 'swimming-otter';
         
         groundEl.appendChild(img);
         

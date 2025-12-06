@@ -1381,7 +1381,7 @@
                 </div>
             </div>
             <div class="activity-card" onclick="window.location='educatie.html'">
-                <div class="activity-image"><img src="images/Huiszwaluwschool.JPG" alt="Kinderen met kunstnesten op de Joseph Lokin school"></div>
+                <div class="activity-image"><img src="images/Huiszwaluwschool.jpg" alt="Kinderen met kunstnesten op de Joseph Lokin school"></div>
                 <div class="activity-content">
                     <h3>Educatie 🐦🐞</h3>
                     <p>We organiseren regelmatig activiteiten met de Joseph Lokin school: vogelhuisjes en insectenhotels maken, helpen met planten, en uitleg over biodiversiteit.</p>
@@ -1587,7 +1587,7 @@
 
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-        <span class="lightbox-close">&times;</span>
+        <span class="lightbox-close" onclick="event.stopPropagation(); closeLightbox();">&times;</span>
         <div class="lightbox-content" onclick="event.stopPropagation()">
             <img id="lightbox-img" src="" alt="">
             <div class="lightbox-text" id="lightbox-text">
@@ -1653,7 +1653,10 @@
         }
 
         function closeLightbox(event) {
-            if (event && event.target.closest('.lightbox-content')) return;
+            if (event) {
+                event.preventDefault();
+                if (event.target.closest('.lightbox-content') && !event.target.closest('.lightbox-close')) return;
+            }
             document.getElementById('lightbox').classList.remove('active');
             document.body.style.overflow = 'auto';
         }

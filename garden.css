@@ -223,35 +223,23 @@
 }
 
 /* ===== OTTER ===== */
-/* Originele afbeelding kijkt naar RECHTS */
+/* Originele GIF: otter rent naar RECHTS */
+/* Gewenst: otter beweegt van RECHTS naar LINKS */
+/* Dus: WEL spiegelen zodat otter naar links kijkt en naar links loopt */
 .swimming-otter {
     position: absolute;
     top: -22px;
     height: 35px;
     width: auto;
     z-index: 2;
+    transform: scaleX(-1);
+    animation: otterWalk 20s linear forwards;
 }
 
-/* Otter loopt naar rechts - NIET gespiegeld */
-.swimming-otter.walk-right {
-    animation: otterWalkRight 20s linear forwards;
-}
-
-/* Otter loopt naar links - WEL gespiegeld */
-.swimming-otter.walk-left {
-    animation: otterWalkLeft 20s linear forwards;
-}
-
-/* Soepele beweging van links naar rechts */
-@keyframes otterWalkRight {
-    0% { left: -80px; transform: scaleX(1); }
-    100% { left: calc(100% + 80px); transform: scaleX(1); }
-}
-
-/* Soepele beweging van rechts naar links - gespiegeld */
-@keyframes otterWalkLeft {
-    0% { left: calc(100% + 80px); transform: scaleX(-1); }
-    100% { left: -80px; transform: scaleX(-1); }
+/* Beweging van rechts naar links */
+@keyframes otterWalk {
+    0% { left: calc(100% + 80px); }
+    100% { left: -80px; }
 }
 
 /* ===== GROND DIEREN CONTAINER ===== */
