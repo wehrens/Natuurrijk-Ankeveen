@@ -224,41 +224,20 @@
 
 /* ===== OTTER ===== */
 /* De GIF toont otter die naar RECHTS rent */
-/* Otter beweegt van RECHTS naar LINKS, verstopt zich soms in het gras */
-/* In ground container (z-index 1025) */
+/* Otter beweegt van RECHTS naar LINKS over de hele breedte */
 .swimming-otter {
     position: absolute;
-    top: -18px; /* Hoger - boven de nav */
+    top: -18px;
     height: 35px;
     width: auto;
-    z-index: 5; /* Binnen ground container */
+    z-index: 5;
     animation: otterMove 20s linear forwards;
 }
 
-/* Otter die zich verstopt in het gras */
-.swimming-otter.hiding {
-    animation: otterHide 50s ease-in-out forwards;
-}
-
-/* Normale beweging van rechts naar links */
+/* Beweging van rechts naar links over hele scherm */
 @keyframes otterMove {
     from { left: 100%; }
     to { left: -100px; }
-}
-
-/* Otter komt binnen, verstopt zich, wacht, en gaat verder */
-@keyframes otterHide {
-    0% { left: 100%; top: -18px; }
-    /* Loopt naar 55% */
-    20% { left: 55%; top: -18px; }
-    /* Zakt iets naar beneden (deels achter het gras) */
-    25% { left: 55%; top: -8px; }
-    /* Blijft verstopt */
-    75% { left: 55%; top: -8px; }
-    /* Komt weer omhoog */
-    80% { left: 55%; top: -18px; }
-    /* Loopt verder naar links */
-    100% { left: -100px; top: -18px; }
 }
 
 /* ===== GROND DIEREN CONTAINER ===== */
