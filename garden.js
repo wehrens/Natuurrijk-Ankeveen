@@ -213,7 +213,7 @@
         // Verwijder na animatie
         setTimeout(() => {
             if (img.parentNode) img.remove();
-        }, 19000); // 18s animatie + marge
+        }, 21000); // 20s animatie + marge
     }
 
     function startOtterCycle() {

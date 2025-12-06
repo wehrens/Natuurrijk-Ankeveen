@@ -136,7 +136,7 @@
 }
 
 /* ===== VIJVER CONTAINER ===== */
-/* Vijver komt VOOR het gras - enige element dat mag uitsteken */
+/* Vijver komt ACHTER het gras */
 .header-pond {
     position: fixed;
     top: var(--nav-height);
@@ -145,7 +145,7 @@
     height: 40px;
     pointer-events: none;
     overflow: visible;
-    z-index: 1015; /* BOVEN gras (1010), ONDER bloemen (1025) */
+    z-index: 1005; /* ONDER gras (1010) */
 }
 
 .garden-pond {
@@ -223,56 +223,34 @@
 }
 
 /* ===== OTTER ===== */
+/* Originele afbeelding kijkt naar RECHTS */
 .swimming-otter {
     position: absolute;
-    top: -22px; /* Hoger - loopt op het gras */
+    top: -22px;
     height: 35px;
     width: auto;
-    z-index: 2; /* Boven vijver */
+    z-index: 2;
 }
 
-/* Otter loopt naar rechts - NIET gespiegeld (kijkt al naar rechts) */
+/* Otter loopt naar rechts - NIET gespiegeld */
 .swimming-otter.walk-right {
-    animation: otterWalkRight 18s ease-in-out forwards;
+    animation: otterWalkRight 20s linear forwards;
 }
 
 /* Otter loopt naar links - WEL gespiegeld */
 .swimming-otter.walk-left {
-    animation: otterWalkLeft 18s ease-in-out forwards;
+    animation: otterWalkLeft 20s linear forwards;
 }
 
-/* Otter komt van links, loopt naar vijver, stopt even, loopt door naar rechts */
+/* Soepele beweging van links naar rechts */
 @keyframes otterWalkRight {
     0% { left: -80px; transform: scaleX(1); }
-    30% { left: 35%; transform: scaleX(1); }
-    /* Stop - kijken */
-    35% { left: 35%; transform: scaleX(1); }
-    38% { left: 35%; transform: scaleX(1) rotate(-3deg); }
-    40% { left: 35%; transform: scaleX(1); }
-    /* Naar vijver */
-    60% { left: 70%; transform: scaleX(1); }
-    /* Stop bij vijver */
-    65% { left: 70%; transform: scaleX(1); }
-    68% { left: 70%; transform: scaleX(1) rotate(5deg); }
-    70% { left: 70%; transform: scaleX(1); }
-    /* Uit beeld */
     100% { left: calc(100% + 80px); transform: scaleX(1); }
 }
 
-/* Otter komt van rechts, loopt naar vijver, stopt even, loopt door naar links */
+/* Soepele beweging van rechts naar links - gespiegeld */
 @keyframes otterWalkLeft {
     0% { left: calc(100% + 80px); transform: scaleX(-1); }
-    25% { left: 78%; transform: scaleX(-1); }
-    /* Stop bij vijver - snuffelen */
-    30% { left: 78%; transform: scaleX(-1); }
-    35% { left: 78%; transform: scaleX(-1) rotate(-5deg); }
-    38% { left: 78%; transform: scaleX(-1) rotate(3deg); }
-    40% { left: 78%; transform: scaleX(-1); }
-    /* Verder lopen */
-    70% { left: 40%; transform: scaleX(-1); }
-    /* Nog een stop */
-    75% { left: 40%; transform: scaleX(-1); }
-    /* Uit beeld */
     100% { left: -80px; transform: scaleX(-1); }
 }
 
