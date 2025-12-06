@@ -16,10 +16,23 @@
             roerdompAppears: 100000,    // Roerdomp na 100s
             animalStartDelay: 4000,     // Eerste dier al na 4s!
             animalInterval: 8000,       // Check elke 8s voor nieuw dier
+            biotoopReset: 480000,       // 8 minuten = 480000ms, dan reset
+            roerdompFlipInterval: 25000, // Roerdomp kijkt elke 25s andere kant
         },
-        maxAnimalsVisible: 5,           // Meer dieren tegelijk (voor groepjes zwaluwen)
+        maxAnimalsVisible: 5,
         maxFlowers: 10,
         navKey: 'natuurrijk_navigating'
+    };
+
+    // Timers opslaan zodat we ze kunnen clearen
+    let biotoopTimers = {
+        flowers: null,
+        pond: null,
+        roerdomp: null,
+        animals: null,
+        flowerCycle: null,
+        reset: null,
+        roerdompFlip: null
     };
 
     // ===== BLOEMEN DATA =====
@@ -43,6 +56,7 @@
         flowers: [],
         pondVisible: false,
         roerdompVisible: false,
+        roerdompMirrored: false,
         activeAnimals: []
     };
 
@@ -135,17 +149,52 @@
     function showRoerdomp() {
         if (!state.pondVisible || state.roerdompVisible) return;
 
+        createRoerdomp();
+        state.roerdompVisible = true;
+
+        // Start roerdomp flip timer
+        startRoerdompFlip();
+    }
+
+    function createRoerdomp() {
+        // Verwijder bestaande roerdomp
+        const existing = document.getElementById('roerdomp');
+        if (existing) existing.remove();
+
         // Roerdomp komt in garden container (achter vijver door z-index)
         const roerdomp = document.createElement('img');
         roerdomp.src = 'images/Roerdomp.png';
+        roerdomp.id = 'roerdomp';
         
-        // 50% kans op gespiegeld, altijd met beweging
+        // 50% kans op gespiegeld
         const isMirrored = Math.random() > 0.5;
+        state.roerdompMirrored = isMirrored;
         roerdomp.className = 'garden-roerdomp moving' + (isMirrored ? ' mirrored' : '');
         
         gardenEl.appendChild(roerdomp);
+    }
 
-        state.roerdompVisible = true;
+    // Roerdomp draait af en toe om
+    function startRoerdompFlip() {
+        biotoopTimers.roerdompFlip = setInterval(() => {
+            if (state.roerdompVisible) {
+                // Toggle orientation
+                state.roerdompMirrored = !state.roerdompMirrored;
+                
+                // Verwijder oude en maak nieuwe met andere richting
+                const existing = document.getElementById('roerdomp');
+                if (existing) {
+                    existing.remove();
+                    
+                    const roerdomp = document.createElement('img');
+                    roerdomp.src = 'images/Roerdomp.png';
+                    roerdomp.id = 'roerdomp';
+                    roerdomp.className = 'garden-roerdomp moving' + (state.roerdompMirrored ? ' mirrored' : '');
+                    roerdomp.style.opacity = '1'; // Skip fade-in
+                    gardenEl.appendChild(roerdomp);
+                }
+            }
+        }, CONFIG.timing.roerdompFlipInterval);
     }
 
     // ===== DIEREN =====
@@ -183,7 +232,7 @@
         }
     }
 
-    // Rups - kan normaal kruipen of zich ingraven
+    // Rups - kan normaal kruipen of zich ingraven (LANGZAMER)
     function spawnCaterpillar() {
         if (!canAddAnimal()) return;
 
@@ -197,12 +246,12 @@
             img.className = 'crawling-caterpillar crawl-burrow';
             groundEl.appendChild(img);
             state.activeAnimals.push({ type: 'caterpillar', el: img });
-            removeAnimal(img, 35000);
+            removeAnimal(img, 50000); // 50s animatie
         } else {
             img.className = 'crawling-caterpillar crawl-normal';
             groundEl.appendChild(img);
             state.activeAnimals.push({ type: 'caterpillar', el: img });
-            removeAnimal(img, 60000);
+            removeAnimal(img, 90000); // 90s animatie
         }
     }
 
@@ -342,6 +391,36 @@
     }
 
     // ===== CHOREOGRAFIE =====
+    // Wis de biotoop volledig
+    function clearBiotoop() {
+        // Stop alle timers
+        Object.keys(biotoopTimers).forEach(key => {
+            if (biotoopTimers[key]) {
+                clearInterval(biotoopTimers[key]);
+                clearTimeout(biotoopTimers[key]);
+                biotoopTimers[key] = null;
+            }
+        });
+
+        // Verwijder alle elementen
+        if (gardenEl) gardenEl.innerHTML = '';
+        if (groundEl) groundEl.innerHTML = '';
+        if (flyingEl) flyingEl.innerHTML = '';
+        
+        // Verwijder vijver container inhoud
+        const pondEl = document.getElementById('headerPond');
+        if (pondEl) pondEl.innerHTML = '';
+
+        // Reset state
+        state = {
+            flowers: [],
+            pondVisible: false,
+            roerdompVisible: false,
+            roerdompMirrored: false,
+            activeAnimals: []
+        };
+    }
+
     function startFreshBiotoop() {
         // Fase 1: Bloemen verschijnen geleidelijk
         let flowerCount = 0;
@@ -351,22 +430,22 @@
         flowerCount++;
 
         // Rest van de bloemen
-        const flowerTimer = setInterval(() => {
+        biotoopTimers.flowers = setInterval(() => {
             addFlower();
             flowerCount++;
             if (flowerCount >= CONFIG.maxFlowers) {
-                clearInterval(flowerTimer);
+                clearInterval(biotoopTimers.flowers);
             }
         }, CONFIG.timing.flowerInterval);
 
         // Fase 2: Vijver
-        setTimeout(showPond, CONFIG.timing.pondAppears);
+        biotoopTimers.pond = setTimeout(showPond, CONFIG.timing.pondAppears);
 
         // Fase 3: Roerdomp
-        setTimeout(showRoerdomp, CONFIG.timing.roerdompAppears);
+        biotoopTimers.roerdomp = setTimeout(showRoerdomp, CONFIG.timing.roerdompAppears);
 
         // Fase 4: Dieren beginnen - START MET ZWALUW
-        setTimeout(() => {
+        biotoopTimers.animals = setTimeout(() => {
             spawnSwallow(true); // Eerste zwaluw naar rechts
             
             // Na 3s een groepje zwaluwen
@@ -384,7 +463,7 @@
 
         // Fase 5: Bloemen wisselen (na 2 min)
         setTimeout(() => {
-            setInterval(() => {
+            biotoopTimers.flowerCycle = setInterval(() => {
                 // Soms een bloem verwijderen
                 if (Math.random() > 0.6 && state.flowers.length > 5) {
                     removeRandomFlower();
@@ -397,6 +476,15 @@
                 }, rand(2000, 6000));
             }, 15000);
         }, CONFIG.timing.totalFlowerTime);
+
+        // Fase 6: Reset na 8 minuten
+        biotoopTimers.reset = setTimeout(() => {
+            clearBiotoop();
+            // Wacht even en begin opnieuw
+            setTimeout(() => {
+                startFreshBiotoop();
+            }, 500);
+        }, CONFIG.timing.biotoopReset);
     }
 
     function startInstantBiotoop() {
@@ -422,6 +510,14 @@
                 if (Math.random() > 0.3) spawnRandomAnimal();
             }, CONFIG.timing.animalInterval);
         }, 3000);
+
+        // Reset na 8 minuten ook bij instant
+        biotoopTimers.reset = setTimeout(() => {
+            clearBiotoop();
+            setTimeout(() => {
+                startFreshBiotoop();
+            }, 500);
+        }, CONFIG.timing.biotoopReset);
     }
 
     // ===== NAVIGATIE =====

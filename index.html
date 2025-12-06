@@ -1010,6 +1010,36 @@
             .hero-badge { bottom: -10px; left: 10px; }
         }
 
+        /* Portrait mode - ensure hero is visible */
+        @media (orientation: portrait) {
+            .hero-visual {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+            .hero-image-main {
+                min-height: 250px;
+                height: auto;
+                aspect-ratio: 4/3;
+            }
+            .hero-image-main img {
+                object-fit: cover;
+            }
+        }
+
+        @media (max-width: 480px) and (orientation: portrait) {
+            .hero-image-main {
+                height: 220px;
+                min-height: 200px;
+            }
+            .hero-badge {
+                bottom: -8px;
+                left: 8px;
+                padding: 0.7rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
         /* Lightbox */
         .lightbox {
             display: none;
