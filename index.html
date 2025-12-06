@@ -1602,8 +1602,8 @@
 
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
-        <button type="button" class="lightbox-close" onclick="closeLightbox()">&times;</button>
-        <div class="lightbox-content">
+        <button type="button" class="lightbox-close" onclick="closeLightbox(); return false;">&times;</button>
+        <div class="lightbox-content" onclick="event.stopPropagation();">
             <img id="lightbox-img" src="" alt="">
             <div class="lightbox-text" id="lightbox-text">
                 <h3 id="lightbox-name"></h3>
@@ -1611,7 +1611,7 @@
                 <div class="quote" id="lightbox-quote"></div>
             </div>
         </div>
-        <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
+        <div class="lightbox-backdrop" onclick="closeLightbox(); return false;"></div>
     </div>
 
     <!-- Contact Modal -->
