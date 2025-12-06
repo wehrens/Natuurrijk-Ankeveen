@@ -573,7 +573,9 @@
     document.addEventListener('click', e => {
         const link = e.target.closest('a');
         if (link && link.href && !link.href.startsWith('javascript:')) {
-            if (link.href.includes(window.location.hostname) || link.href.startsWith('/')) {
+            // Negeer anchor-only links op dezelfde pagina
+            const isAnchorOnly = link.getAttribute('href').startsWith('#');
+            if (!isAnchorOnly && (link.href.includes(window.location.hostname) || link.href.startsWith('/'))) {
                 sessionStorage.setItem(CONFIG.navKey, 'true');
             }
         }
