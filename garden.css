@@ -224,21 +224,40 @@
 
 /* ===== OTTER ===== */
 /* De GIF toont otter die naar RECHTS rent */
-/* Otter beweegt van RECHTS naar LINKS */
-/* NIET gespiegeld - otter kijkt naar rechts terwijl hij naar links loopt */
+/* Otter beweegt van RECHTS naar LINKS, verstopt zich soms in het gras */
 .swimming-otter {
     position: absolute;
-    top: 5px;
+    top: -5px; /* Hoger - binnen de header */
     height: 35px;
     width: auto;
     z-index: 2;
-    /* Geen transform - originele richting behouden */
     animation: otterMove 20s linear forwards;
 }
 
+/* Otter die zich verstopt in het gras */
+.swimming-otter.hiding {
+    animation: otterHide 50s ease-in-out forwards;
+}
+
+/* Normale beweging van rechts naar links */
 @keyframes otterMove {
     from { left: 100%; }
     to { left: -100px; }
+}
+
+/* Otter komt binnen, verstopt zich, wacht, en gaat verder */
+@keyframes otterHide {
+    0% { left: 100%; top: -5px; }
+    /* Loopt naar 55% */
+    20% { left: 55%; top: -5px; }
+    /* Zakt iets naar beneden (deels achter het gras) */
+    25% { left: 55%; top: 3px; }
+    /* Blijft verstopt */
+    75% { left: 55%; top: 3px; }
+    /* Komt weer omhoog */
+    80% { left: 55%; top: -5px; }
+    /* Loopt verder naar links */
+    100% { left: -100px; top: -5px; }
 }
 
 /* ===== GROND DIEREN CONTAINER ===== */
@@ -668,7 +687,7 @@
     .flying-butterfly { height: 18px; }
     .flying-swallow { height: 20px; }
     .garden-roerdomp { height: 40px; }
-    .swimming-otter { height: 25px; top: 3px; }
+    .swimming-otter { height: 25px; top: -3px; }
     .garden-lisdodde.size-md { height: 40px; }
     .garden-lisdodde.size-lg { height: 50px; }
 }
@@ -685,7 +704,7 @@
     .walking-hedgehog { height: 26px; top: -14px; }
     .crawling-caterpillar { height: 15px; top: -10px; }
     .garden-roerdomp { height: 48px; }
-    .swimming-otter { height: 30px; top: 4px; }
+    .swimming-otter { height: 30px; top: -4px; }
     .garden-lisdodde.size-md { height: 48px; }
     .garden-lisdodde.size-lg { height: 60px; }
 }
@@ -704,7 +723,7 @@
     .flying-butterfly { height: 30px; }
     .flying-swallow { height: 32px; }
     .garden-roerdomp { height: 65px; }
-    .swimming-otter { height: 40px; top: 6px; }
+    .swimming-otter { height: 40px; top: -6px; }
     .garden-lisdodde.size-md { height: 60px; }
     .garden-lisdodde.size-lg { height: 75px; }
 }
