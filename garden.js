@@ -138,7 +138,11 @@
         // Roerdomp komt in garden container (achter vijver door z-index)
         const roerdomp = document.createElement('img');
         roerdomp.src = 'images/Roerdomp.png';
-        roerdomp.className = 'garden-roerdomp';
+        
+        // 50% kans op gespiegeld, altijd met beweging
+        const isMirrored = Math.random() > 0.5;
+        roerdomp.className = 'garden-roerdomp moving' + (isMirrored ? ' mirrored' : '');
+        
         gardenEl.appendChild(roerdomp);
 
         state.roerdompVisible = true;
@@ -156,30 +160,50 @@
         }, duration);
     }
 
-    // Egel
+    // Egel - kan normaal lopen of zich ingraven
     function spawnHedgehog() {
         if (!canAddAnimal()) return;
 
         const img = document.createElement('img');
         img.src = 'images/egel.png';
-        img.className = 'walking-hedgehog ' + (Math.random() > 0.5 ? 'walk-right' : 'walk-left');
         
-        groundEl.appendChild(img);
-        state.activeAnimals.push({ type: 'hedgehog', el: img });
-        removeAnimal(img, 45000);
+        // 25% kans dat egel zich ingraaft
+        const willBurrow = Math.random() < 0.25;
+        
+        if (willBurrow) {
+            img.className = 'walking-hedgehog burrow';
+            groundEl.appendChild(img);
+            state.activeAnimals.push({ type: 'hedgehog', el: img });
+            removeAnimal(img, 20000);
+        } else {
+            img.className = 'walking-hedgehog ' + (Math.random() > 0.5 ? 'walk-right' : 'walk-left');
+            groundEl.appendChild(img);
+            state.activeAnimals.push({ type: 'hedgehog', el: img });
+            removeAnimal(img, 45000);
+        }
     }
 
-    // Rups
+    // Rups - kan normaal kruipen of zich ingraven
     function spawnCaterpillar() {
         if (!canAddAnimal()) return;
 
         const img = document.createElement('img');
         img.src = 'images/Rups1.gif';
-        img.className = 'crawling-caterpillar';
         
-        groundEl.appendChild(img);
-        state.activeAnimals.push({ type: 'caterpillar', el: img });
-        removeAnimal(img, 60000);
+        // 30% kans dat rups zich ingraaft
+        const willBurrow = Math.random() < 0.3;
+        
+        if (willBurrow) {
+            img.className = 'crawling-caterpillar crawl-burrow';
+            groundEl.appendChild(img);
+            state.activeAnimals.push({ type: 'caterpillar', el: img });
+            removeAnimal(img, 35000);
+        } else {
+            img.className = 'crawling-caterpillar crawl-normal';
+            groundEl.appendChild(img);
+            state.activeAnimals.push({ type: 'caterpillar', el: img });
+            removeAnimal(img, 60000);
+        }
     }
 
     // Vlinder
@@ -190,14 +214,14 @@
         const isBlue = Math.random() > 0.5;
         img.src = isBlue ? 'images/Vlinder2.gif' : 'images/Vlinder.gif';
         
-        // Blauwe vlinder krijgt soepele animatie, oranje de fladderende
+        // Blauwe vlinder krijgt rustende animatie (stopt 2x op bloem), oranje de fladderende
         const goingRight = Math.random() > 0.5;
         if (isBlue) {
-            // Blauwe: soepel, kan van/naar boven
+            // Blauwe: stopt 2x om te rusten
             img.className = 'flying-butterfly ' + (goingRight ? 'flutter-right-smooth' : 'flutter-left-smooth');
             flyingEl.appendChild(img);
             state.activeAnimals.push({ type: 'butterfly', el: img });
-            removeAnimal(img, 26000); // 25s animatie
+            removeAnimal(img, 29000); // 28s animatie
         } else {
             // Oranje: fladderend
             img.className = 'flying-butterfly ' + (goingRight ? 'flutter-right' : 'flutter-left');
@@ -221,7 +245,7 @@
         removeAnimal(img, 8000);
     }
 
-    // Zwaluw - correcte oriëntatie per afbeelding
+    // Zwaluw - correcte oriëntatie per afbeelding, soms omhoog uit beeld
     // Swallowflight.png → kop naar RECHTS (vliegt naar rechts in origineel)
     // Swallowflight2.png → kop naar LINKS (vliegt naar links in origineel)
     // Swallowflight3.png → kop naar LINKS (vliegt naar links in origineel)
@@ -245,24 +269,33 @@
             // Bepaal vliegrichting
             const fliesRight = forceDirection !== undefined ? forceDirection : Math.random() > 0.5;
             
+            // 30% kans om omhoog uit beeld te vliegen
+            const fliesUp = Math.random() < 0.3;
+            
             // Spiegeling nodig als richting niet overeenkomt met oriëntatie
-            // - Vogel kijkt rechts, vliegt rechts → NIET spiegelen
-            // - Vogel kijkt rechts, vliegt links → WEL spiegelen
-            // - Vogel kijkt links, vliegt links → NIET spiegelen
-            // - Vogel kijkt links, vliegt rechts → WEL spiegelen
             const needsMirror = chosen.facesRight !== fliesRight;
             
             let className = 'flying-swallow ';
-            if (fliesRight) {
-                className += needsMirror ? 'fly-right-mirrored' : 'fly-right-normal';
+            if (fliesUp) {
+                // Omhoog uit beeld
+                if (fliesRight) {
+                    className += needsMirror ? 'fly-right-up-mirrored' : 'fly-right-up-normal';
+                } else {
+                    className += needsMirror ? 'fly-left-up-mirrored' : 'fly-left-up-normal';
+                }
             } else {
-                className += needsMirror ? 'fly-left-mirrored' : 'fly-left-normal';
+                // Normale U-baan
+                if (fliesRight) {
+                    className += needsMirror ? 'fly-right-mirrored' : 'fly-right-normal';
+                } else {
+                    className += needsMirror ? 'fly-left-mirrored' : 'fly-left-normal';
+                }
             }
             
             img.className = className;
             flyingEl.appendChild(img);
             state.activeAnimals.push({ type: 'swallow', el: img });
-            removeAnimal(img, 6500);
+            removeAnimal(img, fliesUp ? 5500 : 6500);
             return true;
         };
         
