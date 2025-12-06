@@ -1065,6 +1065,8 @@
             align-items: center;
             justify-content: center;
             cursor: default;
+            position: relative;
+            z-index: 5;
         }
 
         .lightbox-content img {
@@ -1113,9 +1115,22 @@
             cursor: pointer;
             opacity: 0.8;
             transition: opacity 0.3s;
+            background: none;
+            border: none;
+            padding: 0;
+            z-index: 10;
         }
 
         .lightbox-close:hover { opacity: 1; }
+
+        .lightbox-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+        }
 
         @media (max-width: 768px) {
             .lightbox-content { flex-direction: column; text-align: center; }
@@ -1586,9 +1601,9 @@
     </footer>
 
     <!-- Lightbox -->
-    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-        <span class="lightbox-close" onclick="event.stopPropagation(); closeLightbox();">&times;</span>
-        <div class="lightbox-content" onclick="event.stopPropagation()">
+    <div class="lightbox" id="lightbox">
+        <button type="button" class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <div class="lightbox-content">
             <img id="lightbox-img" src="" alt="">
             <div class="lightbox-text" id="lightbox-text">
                 <h3 id="lightbox-name"></h3>
@@ -1596,6 +1611,7 @@
                 <div class="quote" id="lightbox-quote"></div>
             </div>
         </div>
+        <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
     </div>
 
     <!-- Contact Modal -->
@@ -1653,10 +1669,6 @@
         }
 
         function closeLightbox(event) {
-            if (event) {
-                event.preventDefault();
-                if (event.target.closest('.lightbox-content') && !event.target.closest('.lightbox-close')) return;
-            }
             document.getElementById('lightbox').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
