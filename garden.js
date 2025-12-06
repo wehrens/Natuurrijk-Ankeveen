@@ -127,11 +127,11 @@
         pond.className = 'garden-pond';
         pondEl.appendChild(pond);
 
-        // Lisdodde links van vijver (in garden container, achter vijver)
+        // Lisdodde links van vijver (in garden container, over het gras)
         setTimeout(() => {
             const left = document.createElement('img');
             left.src = 'images/Lisdodde.png';
-            left.className = 'garden-flower size-md';
+            left.className = 'garden-lisdodde size-lg';
             left.style.left = '69%';
             gardenEl.appendChild(left);
             requestAnimationFrame(() => left.classList.add('blooming'));
@@ -141,7 +141,7 @@
         setTimeout(() => {
             const right = document.createElement('img');
             right.src = 'images/Lisdodde3.png';
-            right.className = 'garden-flower size-md mirrored';
+            right.className = 'garden-lisdodde size-md mirrored';
             right.style.left = '84%';
             gardenEl.appendChild(right);
             requestAnimationFrame(() => right.classList.add('blooming'));
