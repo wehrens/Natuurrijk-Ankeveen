@@ -137,6 +137,16 @@
             requestAnimationFrame(() => left.classList.add('blooming'));
         }, 1500);
 
+        // Tweede lisdodde - rechts van de eerste (roerdomp komt hier tussenin)
+        setTimeout(() => {
+            const second = document.createElement('img');
+            second.src = 'images/Lisdodde.png';
+            second.className = 'garden-lisdodde size-md mirrored';
+            second.style.left = '76%';
+            gardenEl.appendChild(second);
+            requestAnimationFrame(() => second.classList.add('blooming'));
+        }, 2500);
+
         // Lisdodde rechts van vijver
         setTimeout(() => {
             const right = document.createElement('img');
