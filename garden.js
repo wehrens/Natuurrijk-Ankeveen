@@ -203,13 +203,16 @@
 
     // ===== OTTER =====
     function spawnOtter() {
-        // Otter loopt over de grond (in ground container)
+        // Otter loopt achter het gras (in pond container, z-index 1005)
+        const pondEl = document.getElementById('headerPond');
+        if (!pondEl) return;
+        
         const img = document.createElement('img');
         img.src = 'images/Otter.gif';
         // Otter loopt altijd van rechts naar links
         img.className = 'swimming-otter';
         
-        groundEl.appendChild(img);
+        pondEl.appendChild(img);
         
         // Verwijder na animatie
         setTimeout(() => {
