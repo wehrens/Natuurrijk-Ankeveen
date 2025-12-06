@@ -14,6 +14,8 @@
             totalFlowerTime: 120000,    // 2 min voor alle bloemen
             pondAppears: 50000,         // Vijver na 50s
             roerdompAppears: 100000,    // Roerdomp na 100s
+            otterAppears: 140000,       // Otter na 140s (na roerdomp)
+            otterInterval: 90000,       // Otter komt elke 90s terug (zeldzaam!)
             animalStartDelay: 4000,     // Eerste dier al na 4s!
             animalInterval: 8000,       // Check elke 8s voor nieuw dier
             biotoopReset: 480000,       // 8 minuten = 480000ms, dan reset
@@ -29,6 +31,8 @@
         flowers: null,
         pond: null,
         roerdomp: null,
+        otter: null,
+        otterInterval: null,
         animals: null,
         flowerCycle: null,
         reset: null,
@@ -195,6 +199,33 @@
                 }
             }
         }, CONFIG.timing.roerdompFlipInterval);
+    }
+
+    // ===== OTTER =====
+    function spawnOtter() {
+        // Otter loopt over de grond (in ground container)
+        const img = document.createElement('img');
+        img.src = 'images/Otter.gif';
+        img.className = 'swimming-otter ' + (Math.random() > 0.5 ? 'walk-left' : 'walk-right');
+        
+        groundEl.appendChild(img);
+        
+        // Verwijder na animatie
+        setTimeout(() => {
+            if (img.parentNode) img.remove();
+        }, 19000); // 18s animatie + marge
+    }
+
+    function startOtterCycle() {
+        // Eerste otter
+        spawnOtter();
+        
+        // Daarna elke 90s een kans op otter (50% kans)
+        biotoopTimers.otterInterval = setInterval(() => {
+            if (Math.random() > 0.5) {
+                spawnOtter();
+            }
+        }, CONFIG.timing.otterInterval);
     }
 
     // ===== DIEREN =====
@@ -444,6 +475,9 @@
         // Fase 3: Roerdomp
         biotoopTimers.roerdomp = setTimeout(showRoerdomp, CONFIG.timing.roerdompAppears);
 
+        // Fase 3b: Otter (na roerdomp)
+        biotoopTimers.otter = setTimeout(startOtterCycle, CONFIG.timing.otterAppears);
+
         // Fase 4: Dieren beginnen - START MET ZWALUW
         biotoopTimers.animals = setTimeout(() => {
             spawnSwallow(true); // Eerste zwaluw naar rechts
@@ -503,6 +537,9 @@
 
         showPond();
         setTimeout(showRoerdomp, 500);
+        
+        // Start otter cyclus na 30s
+        biotoopTimers.otter = setTimeout(startOtterCycle, 30000);
 
         // Start dieren cyclus
         setTimeout(() => {

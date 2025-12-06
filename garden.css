@@ -199,6 +199,60 @@
     100% { transform: scaleX(-1) rotate(0deg); }
 }
 
+/* ===== OTTER ===== */
+.swimming-otter {
+    position: absolute;
+    bottom: 5px;
+    height: 35px;
+    width: auto;
+    z-index: 2; /* Boven vijver */
+}
+
+/* Otter loopt naar links (richting vijver) - moet gespiegeld want kijkt naar rechts */
+.swimming-otter.walk-left {
+    animation: otterWalkLeft 18s ease-in-out forwards;
+}
+
+/* Otter loopt naar rechts - niet gespiegeld */
+.swimming-otter.walk-right {
+    animation: otterWalkRight 18s ease-in-out forwards;
+}
+
+/* Otter komt van rechts, loopt naar vijver, stopt even, loopt door naar links */
+@keyframes otterWalkLeft {
+    0% { left: calc(100% + 80px); transform: scaleX(-1); }
+    25% { left: 78%; transform: scaleX(-1); }
+    /* Stop bij vijver - snuffelen */
+    30% { left: 78%; transform: scaleX(-1); }
+    35% { left: 78%; transform: scaleX(-1) rotate(-5deg); }
+    38% { left: 78%; transform: scaleX(-1) rotate(3deg); }
+    40% { left: 78%; transform: scaleX(-1); }
+    /* Verder lopen */
+    70% { left: 40%; transform: scaleX(-1); }
+    /* Nog een stop */
+    75% { left: 40%; transform: scaleX(-1); }
+    /* Uit beeld */
+    100% { left: -80px; transform: scaleX(-1); }
+}
+
+/* Otter komt van links, loopt langs vijver naar rechts */
+@keyframes otterWalkRight {
+    0% { left: -80px; transform: scaleX(1); }
+    30% { left: 35%; transform: scaleX(1); }
+    /* Stop - kijken */
+    35% { left: 35%; transform: scaleX(1); }
+    38% { left: 35%; transform: scaleX(1) rotate(-3deg); }
+    40% { left: 35%; transform: scaleX(1); }
+    /* Naar vijver */
+    60% { left: 70%; transform: scaleX(1); }
+    /* Stop bij vijver */
+    65% { left: 70%; transform: scaleX(1); }
+    68% { left: 70%; transform: scaleX(1) rotate(5deg); }
+    70% { left: 70%; transform: scaleX(1); }
+    /* Uit beeld */
+    100% { left: calc(100% + 80px); transform: scaleX(1); }
+}
+
 /* ===== GROND DIEREN CONTAINER ===== */
 .header-animals-ground {
     position: fixed;
@@ -626,6 +680,7 @@
     .flying-butterfly { height: 18px; }
     .flying-swallow { height: 20px; }
     .garden-roerdomp { height: 40px; }
+    .swimming-otter { height: 25px; bottom: 3px; }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -640,6 +695,7 @@
     .walking-hedgehog { height: 26px; top: -14px; }
     .crawling-caterpillar { height: 15px; top: -10px; }
     .garden-roerdomp { height: 48px; }
+    .swimming-otter { height: 30px; bottom: 4px; }
 }
 
 @media (min-width: 1200px) {
@@ -656,4 +712,5 @@
     .flying-butterfly { height: 30px; }
     .flying-swallow { height: 32px; }
     .garden-roerdomp { height: 65px; }
+    .swimming-otter { height: 40px; bottom: 6px; }
 }
