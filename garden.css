@@ -588,21 +588,21 @@
 /* Afbeelding kijkt naar links = geen spiegeling nodig */
 .flying-eagle {
     position: absolute;
-    height: 25px; /* Klein in de verte */
+    height: 20px; /* Klein in de verte */
     width: auto;
-    z-index: 100; /* Boven alles */
+    z-index: 100;
     opacity: 0.75;
-    animation: eagleFly 12s linear forwards;
+    animation: eagleFly 18s linear forwards;
 }
 
 @keyframes eagleFly {
     0% { 
         left: calc(100% + 30px); 
-        top: 8px; 
+        top: 35px; /* Start lager */
     }
     100% { 
-        left: -50px; 
-        top: 28px; /* Licht schuin naar beneden */
+        left: 5%; /* Verdwijnt boven "Natuurrijk Ankeveen" links */
+        top: -30px; /* Stijgt uit beeld */
     }
 }
 

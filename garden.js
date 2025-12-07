@@ -18,7 +18,7 @@
             otterInterval: 90000,       // Otter komt elke 90s terug (zeldzaam!)
             kingfisherAppears: 60000,   // Ijsvogel na 60s (na vijver)
             kingfisherInterval: 45000,  // Ijsvogel komt elke 45s terug
-            eagleAppears: 15000,        // DEBUG: Zeearend na 15s voor testen (normaal 150000 = 2:30)
+            eagleAppears: 180000,       // Zeearend na 3 minuten (eenmalig)
             animalStartDelay: 4000,     // Eerste dier al na 4s!
             animalInterval: 8000,       // Check elke 8s voor nieuw dier
             biotoopReset: 480000,       // 8 minuten = 480000ms, dan reset
@@ -395,11 +395,7 @@
 
     // Zeearend - vliegt heel hoog in de verte, slechts 1x
     function spawnEagle() {
-        if (!flyingEl) {
-            console.log('🦅 Zeearend: flyingEl niet gevonden!');
-            return;
-        }
-        console.log('🦅 Zeearend verschijnt!');
+        if (!flyingEl) return;
         
         const img = document.createElement('img');
         img.src = 'images/Zeearend.png';
@@ -407,10 +403,10 @@
         
         flyingEl.appendChild(img);
         
-        // Verwijder na animatie (12s + marge)
+        // Verwijder na animatie (18s + marge)
         setTimeout(() => {
             if (img.parentNode) img.remove();
-        }, 13000);
+        }, 19000);
     }
 
     // Zwaluw - correcte oriëntatie per afbeelding, soms omhoog uit beeld
