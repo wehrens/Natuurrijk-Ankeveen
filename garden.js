@@ -18,6 +18,7 @@
             otterInterval: 90000,       // Otter komt elke 90s terug (zeldzaam!)
             kingfisherAppears: 60000,   // Ijsvogel na 60s (na vijver)
             kingfisherInterval: 45000,  // Ijsvogel komt elke 45s terug
+            eagleAppears: 150000,       // Zeearend na 2:30 (eenmalig)
             animalStartDelay: 4000,     // Eerste dier al na 4s!
             animalInterval: 8000,       // Check elke 8s voor nieuw dier
             biotoopReset: 480000,       // 8 minuten = 480000ms, dan reset
@@ -37,6 +38,7 @@
         otterInterval: null,
         kingfisher: null,
         kingfisherInterval: null,
+        eagle: null,
         animals: null,
         flowerCycle: null,
         reset: null,
@@ -391,6 +393,22 @@
         }, 6000);
     }
 
+    // Zeearend - vliegt heel hoog in de verte, slechts 1x
+    function spawnEagle() {
+        if (!flyingEl) return;
+        
+        const img = document.createElement('img');
+        img.src = 'images/Zeearend.png';
+        img.className = 'flying-eagle';
+        
+        flyingEl.appendChild(img);
+        
+        // Verwijder na animatie (12s + marge)
+        setTimeout(() => {
+            if (img.parentNode) img.remove();
+        }, 13000);
+    }
+
     // Zwaluw - correcte oriëntatie per afbeelding, soms omhoog uit beeld
     // Swallowflight.png → kop naar RECHTS (vliegt naar rechts in origineel)
     // Swallowflight2.png → kop naar LINKS (vliegt naar links in origineel)
@@ -546,6 +564,9 @@
 
         // Fase 3c: Ijsvogel (na vijver)
         biotoopTimers.kingfisher = setTimeout(startKingfisherCycle, CONFIG.timing.kingfisherAppears);
+
+        // Fase 3d: Zeearend (eenmalig na 2:30)
+        biotoopTimers.eagle = setTimeout(spawnEagle, CONFIG.timing.eagleAppears);
 
         // Fase 4: Dieren beginnen - START MET ZWALUW
         biotoopTimers.animals = setTimeout(() => {

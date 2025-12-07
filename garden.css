@@ -583,6 +583,29 @@
     }
 }
 
+/* ===== ZEEAREND ===== */
+/* Vliegt heel hoog en klein in de verte, van rechts naar links */
+/* Afbeelding kijkt naar links = geen spiegeling nodig */
+.flying-eagle {
+    position: absolute;
+    height: 25px; /* Klein in de verte */
+    width: auto;
+    z-index: 3; /* Achter andere vogels */
+    opacity: 0.7; /* Iets vervaagd door de afstand */
+    animation: eagleFly 12s linear forwards;
+}
+
+@keyframes eagleFly {
+    0% { 
+        left: calc(100% + 30px); 
+        top: 5px; 
+    }
+    100% { 
+        left: -50px; 
+        top: 25px; /* Licht schuin naar beneden */
+    }
+}
+
 /* ===== ZWALUW ===== */
 .flying-swallow {
     position: absolute;
