@@ -16,6 +16,8 @@
             roerdompAppears: 100000,    // Roerdomp na 100s
             otterAppears: 140000,       // Otter na 140s (na roerdomp)
             otterInterval: 90000,       // Otter komt elke 90s terug (zeldzaam!)
+            kingfisherAppears: 60000,   // Ijsvogel na 60s (na vijver)
+            kingfisherInterval: 45000,  // Ijsvogel komt elke 45s terug
             animalStartDelay: 4000,     // Eerste dier al na 4s!
             animalInterval: 8000,       // Check elke 8s voor nieuw dier
             biotoopReset: 480000,       // 8 minuten = 480000ms, dan reset
@@ -33,6 +35,8 @@
         roerdomp: null,
         otter: null,
         otterInterval: null,
+        kingfisher: null,
+        kingfisherInterval: null,
         animals: null,
         flowerCycle: null,
         reset: null,
@@ -253,6 +257,18 @@
         }, CONFIG.timing.otterInterval);
     }
 
+    function startKingfisherCycle() {
+        // Eerste ijsvogel
+        spawnKingfisher();
+        
+        // Daarna elke 45s een kans op ijsvogel (60% kans)
+        biotoopTimers.kingfisherInterval = setInterval(() => {
+            if (Math.random() > 0.4) {
+                spawnKingfisher();
+            }
+        }, CONFIG.timing.kingfisherInterval);
+    }
+
     // ===== DIEREN =====
     function canAddAnimal() {
         return state.activeAnimals.length < CONFIG.maxAnimalsVisible;
@@ -357,6 +373,25 @@
         flyingEl.appendChild(img);
         state.activeAnimals.push({ type: 'ladybug', el: img });
         removeAnimal(img, 8000);
+    }
+
+    // Ijsvogel - zeldzaam, komt van boven, bidt, duikt, vliegt gespiegeld terug
+    function spawnKingfisher() {
+        if (!flyingEl) return;
+        
+        const img = document.createElement('img');
+        img.src = 'images/Kingfisher.gif';
+        
+        // 50% kans vanuit links of rechts
+        const fromLeft = Math.random() > 0.5;
+        img.className = 'flying-kingfisher ' + (fromLeft ? 'dive-from-left' : 'dive-from-right');
+        
+        flyingEl.appendChild(img);
+        
+        // Verwijder na animatie (5s + marge)
+        setTimeout(() => {
+            if (img.parentNode) img.remove();
+        }, 6000);
     }
 
     // Zwaluw - correcte oriëntatie per afbeelding, soms omhoog uit beeld
@@ -512,6 +547,9 @@
         // Fase 3b: Otter (na roerdomp)
         biotoopTimers.otter = setTimeout(startOtterCycle, CONFIG.timing.otterAppears);
 
+        // Fase 3c: Ijsvogel (na vijver)
+        biotoopTimers.kingfisher = setTimeout(startKingfisherCycle, CONFIG.timing.kingfisherAppears);
+
         // Fase 4: Dieren beginnen - START MET ZWALUW
         biotoopTimers.animals = setTimeout(() => {
             spawnSwallow(true); // Eerste zwaluw naar rechts
@@ -574,6 +612,9 @@
         
         // Start otter cyclus na 30s
         biotoopTimers.otter = setTimeout(startOtterCycle, 30000);
+
+        // Start ijsvogel cyclus na 15s
+        biotoopTimers.kingfisher = setTimeout(startKingfisherCycle, 15000);
 
         // Start dieren cyclus
         setTimeout(() => {
