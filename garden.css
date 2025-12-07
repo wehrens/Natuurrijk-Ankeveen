@@ -590,19 +590,19 @@
     position: absolute;
     height: 25px; /* Klein in de verte */
     width: auto;
-    z-index: 3; /* Achter andere vogels */
-    opacity: 0.7; /* Iets vervaagd door de afstand */
+    z-index: 100; /* Boven alles */
+    opacity: 0.75;
     animation: eagleFly 12s linear forwards;
 }
 
 @keyframes eagleFly {
     0% { 
         left: calc(100% + 30px); 
-        top: 5px; 
+        top: 8px; 
     }
     100% { 
         left: -50px; 
-        top: 25px; /* Licht schuin naar beneden */
+        top: 28px; /* Licht schuin naar beneden */
     }
 }
 
