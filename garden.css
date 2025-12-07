@@ -356,7 +356,7 @@
 /* ===== RUPS ===== */
 .crawling-caterpillar {
     position: absolute;
-    top: -10px; /* Kruipt over het gras */
+    top: -5px; /* Kruipt dichter bij het gras */
     height: 18px;
     width: auto;
 }
@@ -663,7 +663,7 @@
     .garden-flower.size-md { height: 35px; }
     .garden-flower.size-lg { height: 45px; }
     .walking-hedgehog { height: 22px; top: -12px; }
-    .crawling-caterpillar { height: 12px; top: -8px; }
+    .crawling-caterpillar { height: 12px; top: -4px; }
     .flying-butterfly { height: 18px; }
     .flying-swallow { height: 20px; }
     .garden-roerdomp { height: 40px; }
@@ -682,7 +682,7 @@
     .garden-flower.size-md { height: 42px; }
     .garden-flower.size-lg { height: 55px; }
     .walking-hedgehog { height: 26px; top: -14px; }
-    .crawling-caterpillar { height: 15px; top: -10px; }
+    .crawling-caterpillar { height: 15px; top: -5px; }
     .garden-roerdomp { height: 48px; }
     .swimming-otter { height: 30px; top: -16px; }
     .garden-lisdodde.size-md { height: 48px; }
@@ -699,7 +699,7 @@
     .garden-flower.size-md { height: 55px; }
     .garden-flower.size-lg { height: 75px; }
     .walking-hedgehog { height: 35px; top: -18px; }
-    .crawling-caterpillar { height: 20px; top: -12px; }
+    .crawling-caterpillar { height: 20px; top: -6px; }
     .flying-butterfly { height: 30px; }
     .flying-swallow { height: 32px; }
     .garden-roerdomp { height: 65px; }
