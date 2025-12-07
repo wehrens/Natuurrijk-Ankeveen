@@ -276,6 +276,11 @@
         const height = 25 + Math.random() * 10;
         img.style.height = height + 'px';
         
+        // Kleinere egels lager positioneren (minder boven gras)
+        // 30px = -15px top (standaard), 25px = -12px, 35px = -18px
+        const topPos = -Math.round(height / 2);
+        img.style.top = topPos + 'px';
+        
         // 25% kans dat egel zich ingraaft
         const willBurrow = Math.random() < 0.25;
         
