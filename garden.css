@@ -527,33 +527,24 @@
 
 /* ===== IJSVOGEL ===== */
 /* GIF kijkt naar LINKS */
-/* Gedrag: komt van boven, bidt, duikt, en vliegt gespiegeld terug */
+/* Komt van rechts, bidt boven vijver, duikt, vliegt gespiegeld terug naar rechts */
 .flying-kingfisher {
     position: absolute;
     height: 45px;
     width: auto;
     z-index: 6;
+    animation: kingfisherDive 5s ease-in-out forwards;
 }
 
-/* Van linksboven: bidden, duiken, gespiegeld terug naar linksboven */
-.flying-kingfisher.dive-from-left {
-    animation: kingfisherDiveFromLeft 5s ease-in-out forwards;
-}
-
-/* Van rechtsboven: gespiegeld binnenkomen, bidden, duiken, normaal terug */
-.flying-kingfisher.dive-from-right {
-    animation: kingfisherDiveFromRight 5s ease-in-out forwards;
-}
-
-@keyframes kingfisherDiveFromLeft {
-    /* Komt van linksboven naar biddenpositie boven vijver */
+@keyframes kingfisherDive {
+    /* Komt van rechtsboven - NIET gespiegeld (kijkt naar links = vooruit) */
     0% { 
-        left: -50px; 
+        left: calc(100% + 50px); 
         top: -50px; 
         transform: scaleX(1) rotate(-20deg); 
         opacity: 1;
     }
-    /* Arriveert boven vijver, begint te bidden */
+    /* Arriveert boven vijver */
     25% { 
         left: 72%; 
         top: 15px; 
@@ -569,72 +560,25 @@
     50% { 
         left: 72%; 
         top: 45px; 
-        transform: scaleX(1) rotate(60deg); 
-    }
-    /* Plons - Loss splash */
-    55% { 
-        left: 72%; 
-        top: 50px; 
-        transform: scaleX(1) rotate(30deg); 
-    }
-    /* Komt omhoog - NU GESPIEGELD (kijkt naar rechts, vliegt terug naar links) */
-    65% { 
-        left: 72%; 
-        top: 35px; 
-        transform: scaleX(-1) rotate(-30deg); 
-    }
-    /* Vliegt terug naar linksboven */
-    100% { 
-        left: -50px; 
-        top: -50px; 
-        transform: scaleX(-1) rotate(-20deg); 
-        opacity: 1;
-    }
-}
-
-@keyframes kingfisherDiveFromRight {
-    /* Komt van rechtsboven - GESPIEGELD (kijkt naar rechts) */
-    0% { 
-        left: calc(100% + 50px); 
-        top: -50px; 
-        transform: scaleX(-1) rotate(20deg); 
-        opacity: 1;
-    }
-    /* Arriveert boven vijver */
-    25% { 
-        left: 72%; 
-        top: 15px; 
-        transform: scaleX(-1) rotate(0deg); 
-    }
-    /* Bidt */
-    40% { 
-        left: 72%; 
-        top: 18px; 
-        transform: scaleX(-1) rotate(-5deg); 
-    }
-    /* Duikt! */
-    50% { 
-        left: 72%; 
-        top: 45px; 
-        transform: scaleX(-1) rotate(-60deg); 
+        transform: scaleX(1) rotate(70deg); 
     }
     /* Plons */
     55% { 
         left: 72%; 
         top: 50px; 
-        transform: scaleX(-1) rotate(-30deg); 
+        transform: scaleX(1) rotate(45deg); 
     }
-    /* Komt omhoog - NORMAAL (kijkt naar links, vliegt terug naar rechts) */
+    /* Komt omhoog - NU GESPIEGELD (kijkt naar rechts = vooruit terug) */
     65% { 
         left: 72%; 
         top: 35px; 
-        transform: scaleX(1) rotate(30deg); 
+        transform: scaleX(-1) rotate(20deg); 
     }
     /* Vliegt terug naar rechtsboven */
     100% { 
         left: calc(100% + 50px); 
         top: -50px; 
-        transform: scaleX(1) rotate(20deg); 
+        transform: scaleX(-1) rotate(-20deg); 
         opacity: 1;
     }
 }

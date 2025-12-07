@@ -375,16 +375,13 @@
         removeAnimal(img, 8000);
     }
 
-    // Ijsvogel - zeldzaam, komt van boven, bidt, duikt, vliegt gespiegeld terug
+    // Ijsvogel - komt van rechts, bidt, duikt, vliegt gespiegeld terug naar rechts
     function spawnKingfisher() {
         if (!flyingEl) return;
         
         const img = document.createElement('img');
         img.src = 'images/Kingfisher.gif';
-        
-        // 50% kans vanuit links of rechts
-        const fromLeft = Math.random() > 0.5;
-        img.className = 'flying-kingfisher ' + (fromLeft ? 'dive-from-left' : 'dive-from-right');
+        img.className = 'flying-kingfisher';
         
         flyingEl.appendChild(img);
         
