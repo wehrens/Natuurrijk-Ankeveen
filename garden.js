@@ -40,15 +40,28 @@
     };
 
     // ===== BLOEMEN DATA =====
+    // Meerdere sizes per bloem type voor variatie
     const FLOWERS = [
+        // Klaproos variaties
+        { src: 'images/Klaproos.png', size: 'size-sm' },
         { src: 'images/Klaproos.png', size: 'size-md' },
-        { src: 'images/Ridderspoor.png', size: 'size-lg' },
-        { src: 'images/Digitalis.png', size: 'size-lg' },
+        { src: 'images/Klaprozen2.png', size: 'size-sm' },
         { src: 'images/Klaprozen2.png', size: 'size-md' },
-        { src: 'images/Gelelis.png', size: 'size-sm' },
-        { src: 'images/Ridderspoor2.png', size: 'size-md' },
-        { src: 'images/Veldoeket.png', size: 'size-lg' },
+        { src: 'images/Klaprozen.png', size: 'size-sm' },
         { src: 'images/Klaprozen.png', size: 'size-md' },
+        // Vingerhoedskruid (Digitalis) variaties
+        { src: 'images/Digitalis.png', size: 'size-md' },
+        { src: 'images/Digitalis.png', size: 'size-lg' },
+        // Ridderspoor variaties
+        { src: 'images/Ridderspoor.png', size: 'size-md' },
+        { src: 'images/Ridderspoor.png', size: 'size-lg' },
+        { src: 'images/Ridderspoor2.png', size: 'size-sm' },
+        { src: 'images/Ridderspoor2.png', size: 'size-md' },
+        // Andere bloemen
+        { src: 'images/Gelelis.png', size: 'size-sm' },
+        { src: 'images/Gelelis.png', size: 'size-md' },
+        { src: 'images/Veldoeket.png', size: 'size-md' },
+        { src: 'images/Veldoeket.png', size: 'size-lg' },
         { src: 'images/Lisdodde2.png', size: 'size-sm' },
     ];
 
@@ -258,6 +271,10 @@
 
         const img = document.createElement('img');
         img.src = 'images/egel.png';
+        
+        // Random hoogte variatie (25px - 35px) voor meer natuurlijke look
+        const height = 25 + Math.random() * 10;
+        img.style.height = height + 'px';
         
         // 25% kans dat egel zich ingraaft
         const willBurrow = Math.random() < 0.25;
