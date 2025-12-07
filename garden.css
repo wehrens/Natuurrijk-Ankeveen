@@ -606,6 +606,49 @@
     }
 }
 
+/* ===== GANZEN ===== */
+/* Enkele gans - kijkt naar links, vliegt naar links */
+.flying-goose {
+    position: absolute;
+    height: 28px;
+    width: auto;
+    z-index: 50;
+    opacity: 0.85;
+    animation: gooseFlyLeft 10s linear forwards;
+}
+
+@keyframes gooseFlyLeft {
+    0% { 
+        left: calc(100% + 40px); 
+        top: 25px;
+    }
+    100% { 
+        left: -60px;
+        top: 15px; /* Licht stijgend */
+    }
+}
+
+/* Groep ganzen - vliegen naar rechts */
+.flying-geese {
+    position: absolute;
+    height: 22px;
+    width: auto;
+    z-index: 50;
+    opacity: 0.8;
+    animation: geeseFlyRight 14s linear forwards;
+}
+
+@keyframes geeseFlyRight {
+    0% { 
+        left: -80px; 
+        top: 20px;
+    }
+    100% { 
+        left: calc(100% + 80px);
+        top: 10px; /* Licht stijgend */
+    }
+}
+
 /* ===== ZWALUW ===== */
 .flying-swallow {
     position: absolute;

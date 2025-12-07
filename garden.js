@@ -19,6 +19,8 @@
             kingfisherAppears: 60000,   // Ijsvogel na 60s (na vijver)
             kingfisherInterval: 45000,  // Ijsvogel komt elke 45s terug
             eagleAppears: 180000,       // Zeearend na 3 minuten (eenmalig)
+            geeseAppears: 120000,       // Ganzen na 2 minuten
+            geeseInterval: 60000,       // Ganzen elke 60s (kans)
             animalStartDelay: 4000,     // Eerste dier al na 4s!
             animalInterval: 8000,       // Check elke 8s voor nieuw dier
             biotoopReset: 480000,       // 8 minuten = 480000ms, dan reset
@@ -39,6 +41,8 @@
         kingfisher: null,
         kingfisherInterval: null,
         eagle: null,
+        geese: null,
+        geeseInterval: null,
         animals: null,
         flowerCycle: null,
         reset: null,
@@ -271,6 +275,27 @@
         }, CONFIG.timing.kingfisherInterval);
     }
 
+    function startGeeseCycle() {
+        // Eerste ganzen (50% kans op enkele gans of groep)
+        if (Math.random() > 0.5) {
+            spawnGoose();
+        } else {
+            spawnGeese();
+        }
+        
+        // Daarna elke 60s een kans op ganzen (40% kans)
+        biotoopTimers.geeseInterval = setInterval(() => {
+            if (Math.random() > 0.6) {
+                // 50% kans op enkele gans of groep
+                if (Math.random() > 0.5) {
+                    spawnGoose();
+                } else {
+                    spawnGeese();
+                }
+            }
+        }, CONFIG.timing.geeseInterval);
+    }
+
     // ===== DIEREN =====
     function canAddAnimal() {
         return state.activeAnimals.length < CONFIG.maxAnimalsVisible;
@@ -407,6 +432,36 @@
         setTimeout(() => {
             if (img.parentNode) img.remove();
         }, 19000);
+    }
+
+    // Enkele gans - vliegt naar links
+    function spawnGoose() {
+        if (!flyingEl) return;
+        
+        const img = document.createElement('img');
+        img.src = 'images/Goose.gif';
+        img.className = 'flying-goose';
+        
+        flyingEl.appendChild(img);
+        
+        setTimeout(() => {
+            if (img.parentNode) img.remove();
+        }, 11000);
+    }
+
+    // Groep ganzen - vliegen naar rechts
+    function spawnGeese() {
+        if (!flyingEl) return;
+        
+        const img = document.createElement('img');
+        img.src = 'images/Geese.gif';
+        img.className = 'flying-geese';
+        
+        flyingEl.appendChild(img);
+        
+        setTimeout(() => {
+            if (img.parentNode) img.remove();
+        }, 15000);
     }
 
     // Zwaluw - correcte oriëntatie per afbeelding, soms omhoog uit beeld
@@ -565,8 +620,11 @@
         // Fase 3c: Ijsvogel (na vijver)
         biotoopTimers.kingfisher = setTimeout(startKingfisherCycle, CONFIG.timing.kingfisherAppears);
 
-        // Fase 3d: Zeearend (eenmalig na 2:30)
+        // Fase 3d: Zeearend (eenmalig na 3 min)
         biotoopTimers.eagle = setTimeout(spawnEagle, CONFIG.timing.eagleAppears);
+
+        // Fase 3e: Ganzen (na 2 min, dan regelmatig)
+        biotoopTimers.geese = setTimeout(startGeeseCycle, CONFIG.timing.geeseAppears);
 
         // Fase 4: Dieren beginnen - START MET ZWALUW
         biotoopTimers.animals = setTimeout(() => {
@@ -633,6 +691,9 @@
 
         // Start ijsvogel cyclus na 15s
         biotoopTimers.kingfisher = setTimeout(startKingfisherCycle, 15000);
+
+        // Start ganzen cyclus na 30s
+        biotoopTimers.geese = setTimeout(startGeeseCycle, 30000);
 
         // Start dieren cyclus
         setTimeout(() => {
