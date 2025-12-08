@@ -11,10 +11,10 @@
             geeseFirst: 5000,
             geeseInterval: 35000,
             eagleAppears: 90000,
-            reedGrowthStart: 2000,
-            reedGrowthDuration: 20000,  // 20 sec groeiperiode
-            reedCuttingStart: 25000,    // Na 25s begint snoeien
-            reedCycleReset: 70000,      // Cyclus herhaalt na 70s
+            reedGrowthStart: 1500,
+            reedGrowthDuration: 15000,  // 15 sec groeiperiode
+            reedCuttingStart: 18000,    // Na 18s begint snoeien
+            reedCycleReset: 35000,      // Nog sneller! Cyclus herhaalt na 35s
             biotoopReset: 480000
         }
     };
@@ -23,6 +23,7 @@
     let flyingEl, reedsEl;
     let reedElements = [];
     let state = { biotoopActive: false };
+    let cycleCount = 0; // Telt cycli voor wisselende survivors
 
     // Riet en lisdodde types
     const REED_TYPES = [
@@ -42,14 +43,21 @@
     const REED_POSITIONS = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95];
     
     // Vaste posities voor bomen (verspreid over het veld)
+    // survives wordt dynamisch bepaald op basis van cycleCount
     const TREE_POSITIONS = [
-        { pos: 15, type: 0, survives: false },  // Iep links - wordt gesnoeid
-        { pos: 50, type: 1, survives: true },   // Tree midden - blijft staan
-        { pos: 85, type: 0, survives: false }   // Iep rechts - wordt gesnoeid
+        { pos: 15, type: 0 },  // Iep links
+        { pos: 50, type: 1 },  // Tree midden
+        { pos: 85, type: 0 }   // Iep rechts
     ];
     
-    // Welke posities mogen blijven staan na snoeien (minder survivors)
-    const SURVIVOR_POSITIONS = [50]; // Alleen midden blijft staan
+    // Wisselende survivor posities per cyclus
+    const SURVIVOR_SETS = [
+        { reedPos: [30], treeIndex: 1 },  // Cyclus 0: midden riet + midden boom
+        { reedPos: [70], treeIndex: 0 },  // Cyclus 1: rechts riet + linker boom
+        { reedPos: [20], treeIndex: 2 },  // Cyclus 2: links riet + rechter boom
+        { reedPos: [50], treeIndex: 1 },  // Cyclus 3: midden riet + midden boom
+        { reedPos: [80], treeIndex: 0 },  // Cyclus 4: rechts riet + linker boom
+    ];
     
     let treeElements = [];
 
@@ -68,7 +76,7 @@
 
     // ===== RIETKRAAG FUNCTIES =====
     
-    function createTree(treeConfig, delay) {
+    function createTree(treeConfig, index, delay) {
         setTimeout(() => {
             console.log('createTree aangeroepen, reedsEl:', !!reedsEl, 'biotoopActive:', state.biotoopActive);
             if (!reedsEl || !state.biotoopActive) return;
@@ -79,11 +87,10 @@
             tree.style.left = treeConfig.pos + '%';
             tree.style.height = TREE_TYPES[treeConfig.type].height + 'px';
             tree.dataset.position = treeConfig.pos;
-            tree.dataset.survives = treeConfig.survives;
 
             console.log('Boom toegevoegd:', tree.src, 'op', treeConfig.pos + '%');
             reedsEl.appendChild(tree);
-            treeElements.push({ element: tree, position: treeConfig.pos, survives: treeConfig.survives });
+            treeElements.push({ element: tree, position: treeConfig.pos, treeIndex: index });
 
             // Fade in
             requestAnimationFrame(() => tree.classList.add('visible'));
@@ -137,7 +144,7 @@
         // Plaats eerst de bomen (met kleine vertraging)
         console.log('Bomen plaatsen:', TREE_POSITIONS.length);
         TREE_POSITIONS.forEach((treeConfig, index) => {
-            createTree(treeConfig, index * 500);
+            createTree(treeConfig, index, index * 400);
         });
 
         // Start met 6 random riet plukjes (na de bomen)
@@ -146,7 +153,7 @@
         
         initialPositions.forEach((pos, index) => {
             const type = REED_TYPES[rand(0, REED_TYPES.length - 1)];
-            createReedClump(pos, type, 1500 + index * 300);
+            createReedClump(pos, type, 1200 + index * 250);
         });
     }
 
@@ -166,8 +173,13 @@
     }
 
     function startReedCutting() {
-        console.log('startReedCutting aangeroepen');
+        console.log('startReedCutting aangeroepen, cyclus:', cycleCount);
         if (!state.biotoopActive) return;
+
+        // Haal survivor set voor deze cyclus
+        const currentSurvivorSet = SURVIVOR_SETS[cycleCount % SURVIVOR_SETS.length];
+        const survivorReedPositions = currentSurvivorSet.reedPos;
+        const survivorTreeIndex = currentSurvivorSet.treeIndex;
 
         // Combineer riet en bomen, sorteer van links naar rechts
         const allElements = [
@@ -176,19 +188,22 @@
         ].sort((a, b) => a.position - b.position);
 
         let cutIndex = 0;
-        const cutInterval = 350; // Sneller! 350ms tussen elke snit
+        const cutInterval = 300; // Nog sneller! 300ms tussen elke snit
 
         function cutNextElement() {
             if (!state.biotoopActive || cutIndex >= allElements.length) {
-                // Snoeien klaar - filter de overgebleven elementen
+                // Snoeien klaar - verhoog cycleCount voor volgende ronde
+                cycleCount++;
+                
+                // Filter overgebleven elementen
                 reedElements = reedElements.filter(r => {
-                    const isSurvivor = SURVIVOR_POSITIONS.some(sp => Math.abs(r.position - sp) < 8);
+                    const isSurvivor = survivorReedPositions.some(sp => Math.abs(r.position - sp) < 12);
                     return isSurvivor && r.element.parentNode;
                 });
                 
-                treeElements = treeElements.filter(t => t.survives && t.element.parentNode);
+                treeElements = treeElements.filter(t => t.treeIndex === survivorTreeIndex && t.element.parentNode);
 
-                // Na een pauze, start nieuwe cyclus
+                // Na een korte pauze, start nieuwe cyclus
                 biotoopTimers.reedCycle = setTimeout(() => {
                     clearReeds();
                     startReedCycle();
@@ -201,9 +216,9 @@
             // Check of dit element mag blijven staan
             let shouldSurvive = false;
             if (item.isTree) {
-                shouldSurvive = item.survives;
+                shouldSurvive = (item.treeIndex === survivorTreeIndex);
             } else {
-                shouldSurvive = SURVIVOR_POSITIONS.some(sp => Math.abs(item.position - sp) < 8);
+                shouldSurvive = survivorReedPositions.some(sp => Math.abs(item.position - sp) < 12);
             }
             
             if (!shouldSurvive) {
@@ -213,7 +228,7 @@
                     if (item.element.parentNode) {
                         item.element.remove();
                     }
-                }, 600);
+                }, 500);
             }
 
             cutIndex++;
