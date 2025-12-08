@@ -149,12 +149,16 @@
         const pond = document.createElement('img');
         pond.src = 'images/Poel1.png';
         pond.id = 'currentPond';
-        pond.className = 'garden-pond';
+        pond.className = 'garden-pond poel1';
         pondEl.appendChild(pond);
 
         // Start pond cycle - wissel elke 20 seconden
-        let pondIndex = 1;
-        const ponds = ['images/Poel1.png', 'images/Poel2.png', 'images/Poel3.png'];
+        let pondIndex = 0;
+        const ponds = [
+            { src: 'images/Poel1.png', cls: 'poel1' },
+            { src: 'images/Poel2.png', cls: 'poel2' },
+            { src: 'images/Poel3.png', cls: 'poel3' }
+        ];
         
         biotoopTimers.pondCycle = setInterval(() => {
             pondIndex = (pondIndex + 1) % 3;
@@ -165,7 +169,8 @@
                 currentPond.style.opacity = '0';
                 
                 setTimeout(() => {
-                    currentPond.src = ponds[pondIndex];
+                    currentPond.src = ponds[pondIndex].src;
+                    currentPond.className = 'garden-pond ' + ponds[pondIndex].cls;
                     currentPond.style.opacity = '1';
                 }, 1000);
             }
