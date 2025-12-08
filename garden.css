@@ -150,17 +150,18 @@
 
 .garden-pond {
     position: absolute;
-    top: 12px; /* Nog lager */
-    left: 72%;
-    height: 28px;
+    top: 5px;
+    left: 77%;
+    transform: translateX(-50%);
+    height: 55px; /* Groter */
     width: auto;
     opacity: 0;
     animation: fadeInPond 3s ease-out forwards;
 }
 
 @keyframes fadeInPond {
-    0% { opacity: 0; transform: scale(0.7); }
-    100% { opacity: 1; transform: scale(1); }
+    0% { opacity: 0; transform: translateX(-50%) scale(0.7); }
+    100% { opacity: 1; transform: translateX(-50%) scale(1); }
 }
 
 /* ===== ROERDOMP ===== */
