@@ -342,20 +342,11 @@
         const topPos = -Math.round(height / 2);
         img.style.top = topPos + 'px';
         
-        // 25% kans dat egel zich ingraaft
-        const willBurrow = Math.random() < 0.25;
-        
-        if (willBurrow) {
-            img.className = 'walking-hedgehog burrow';
-            groundEl.appendChild(img);
-            state.activeAnimals.push({ type: 'hedgehog', el: img });
-            removeAnimal(img, 20000);
-        } else {
-            img.className = 'walking-hedgehog ' + (Math.random() > 0.5 ? 'walk-right' : 'walk-left');
-            groundEl.appendChild(img);
-            state.activeAnimals.push({ type: 'hedgehog', el: img });
-            removeAnimal(img, 45000);
-        }
+        // 50% kans links of rechts
+        img.className = 'walking-hedgehog ' + (Math.random() > 0.5 ? 'walk-right' : 'walk-left');
+        groundEl.appendChild(img);
+        state.activeAnimals.push({ type: 'hedgehog', el: img });
+        removeAnimal(img, 45000);
     }
 
     // Rups - kan normaal kruipen of zich ingraven (LANGZAMER)

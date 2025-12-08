@@ -605,6 +605,49 @@
     }
 }
 
+/* Laptop/desktop: ijsvogel duikt dieper */
+@media (min-width: 768px) {
+    @keyframes kingfisherDive {
+        0% { 
+            left: calc(100% + 50px); 
+            top: -50px; 
+            transform: scaleX(1) rotate(-20deg); 
+            opacity: 1;
+        }
+        25% { 
+            left: 72%; 
+            top: 20px; 
+            transform: scaleX(1) rotate(0deg); 
+        }
+        40% { 
+            left: 72%; 
+            top: 25px; 
+            transform: scaleX(1) rotate(5deg); 
+        }
+        50% { 
+            left: 72%; 
+            top: 60px; 
+            transform: scaleX(1) rotate(70deg); 
+        }
+        55% { 
+            left: 72%; 
+            top: 68px; 
+            transform: scaleX(1) rotate(45deg); 
+        }
+        65% { 
+            left: 72%; 
+            top: 45px; 
+            transform: scaleX(-1) rotate(20deg); 
+        }
+        100% { 
+            left: calc(100% + 50px); 
+            top: -50px; 
+            transform: scaleX(-1) rotate(-20deg); 
+            opacity: 1;
+        }
+    }
+}
+
 /* ===== ZEEAREND ===== */
 /* Vliegt heel hoog en klein in de verte, van rechts naar links */
 /* Afbeelding kijkt naar links = geen spiegeling nodig */
