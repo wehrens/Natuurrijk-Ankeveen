@@ -303,8 +303,9 @@
     opacity: 0;
 }
 
-.ground-scythe.mirrored {
-    transform: rotate(-75deg) scaleX(-1);
+.ground-scythe.ground-scythe-2 {
+    transform: none;
+    top: -75px;
 }
 
 @media (max-width: 768px) {

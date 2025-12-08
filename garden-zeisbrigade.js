@@ -132,8 +132,8 @@
 
             // Stap 1: Zeis verschijnt
             currentScythe = document.createElement('img');
-            currentScythe.src = 'images/Zeis.png';
-            currentScythe.className = 'ground-scythe' + (scytheMirrored ? ' mirrored' : '');
+            currentScythe.src = scytheMirrored ? 'images/Zeis2.png' : 'images/Zeis.png';
+            currentScythe.className = scytheMirrored ? 'ground-scythe ground-scythe-2' : 'ground-scythe';
             currentScythe.style.left = zeisLeft + '%';
             groundEl.appendChild(currentScythe);
             requestAnimationFrame(() => currentScythe.classList.add('visible'));
