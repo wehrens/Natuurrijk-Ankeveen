@@ -11,12 +11,10 @@
             geeseFirst: 5000,
             geeseInterval: 35000,
             eagleAppears: 90000,
-            swallowFirst: 15000,
-            swallowInterval: 25000,
-            reedGrowthStart: 2000,      // Start met initiële riet
-            reedGrowthDuration: 25000,  // 25 sec groeiperiode
-            reedCuttingStart: 30000,    // Na 30s begint snoeien
-            reedCycleReset: 90000,      // Hele cyclus herhaalt na 90s
+            reedGrowthStart: 2000,
+            reedGrowthDuration: 20000,  // 20 sec groeiperiode
+            reedCuttingStart: 25000,    // Na 25s begint snoeien
+            reedCycleReset: 70000,      // Cyclus herhaalt na 70s
             biotoopReset: 480000
         }
     };
@@ -28,10 +26,10 @@
 
     // Riet en lisdodde types
     const REED_TYPES = [
-        { src: 'images/Rietkraag.png', height: 85, overlap: true },   // Rietkraag - kan overlappen
-        { src: 'images/Lisdodde.png', height: 70, overlap: false },
-        { src: 'images/Lisdodde2.png', height: 55, overlap: false },
-        { src: 'images/Lisdodde3.png', height: 80, overlap: false }
+        { src: 'images/Rietkraag.png', height: 85, overlap: true, bottomOffset: 0 },
+        { src: 'images/Lisdodde.png', height: 70, overlap: false, bottomOffset: 0 },
+        { src: 'images/Lisdodde2.png', height: 55, overlap: false, bottomOffset: -25 },  // Lager
+        { src: 'images/Lisdodde3.png', height: 80, overlap: false, bottomOffset: -20 }   // Lager
     ];
 
     // Bomen - hoger dan riet
@@ -45,13 +43,13 @@
     
     // Vaste posities voor bomen (verspreid over het veld)
     const TREE_POSITIONS = [
-        { pos: 20, type: 0, survives: false },  // Iep links - wordt gesnoeid
+        { pos: 15, type: 0, survives: false },  // Iep links - wordt gesnoeid
         { pos: 50, type: 1, survives: true },   // Tree midden - blijft staan
-        { pos: 80, type: 0, survives: false }   // Iep rechts - wordt gesnoeid
+        { pos: 85, type: 0, survives: false }   // Iep rechts - wordt gesnoeid
     ];
     
-    // Welke posities mogen blijven staan na snoeien
-    const SURVIVOR_POSITIONS = [25, 50, 75]; // Ongeveer 3 plukjes blijven staan
+    // Welke posities mogen blijven staan na snoeien (minder survivors)
+    const SURVIVOR_POSITIONS = [50]; // Alleen midden blijft staan
     
     let treeElements = [];
 
@@ -72,6 +70,7 @@
     
     function createTree(treeConfig, delay) {
         setTimeout(() => {
+            console.log('createTree aangeroepen, reedsEl:', !!reedsEl, 'biotoopActive:', state.biotoopActive);
             if (!reedsEl || !state.biotoopActive) return;
 
             const tree = document.createElement('img');
@@ -82,6 +81,7 @@
             tree.dataset.position = treeConfig.pos;
             tree.dataset.survives = treeConfig.survives;
 
+            console.log('Boom toegevoegd:', tree.src, 'op', treeConfig.pos + '%');
             reedsEl.appendChild(tree);
             treeElements.push({ element: tree, position: treeConfig.pos, survives: treeConfig.survives });
 
@@ -98,6 +98,11 @@
             clump.className = 'reed-clump';
             clump.style.left = position + '%';
             clump.dataset.position = position;
+            
+            // Pas bottom offset toe indien aanwezig
+            if (type.bottomOffset !== undefined && type.bottomOffset !== 0) {
+                clump.style.bottom = (3 + type.bottomOffset) + 'px';
+            }
 
             // Voor rietkraag: maak 3 overlappende images voor volume
             const numImages = type.overlap ? 3 : 1;
@@ -126,15 +131,18 @@
     }
 
     function growInitialReeds() {
+        console.log('growInitialReeds aangeroepen, reedsEl:', !!reedsEl, 'biotoopActive:', state.biotoopActive);
         if (!reedsEl || !state.biotoopActive) return;
 
         // Plaats eerst de bomen (met kleine vertraging)
+        console.log('Bomen plaatsen:', TREE_POSITIONS.length);
         TREE_POSITIONS.forEach((treeConfig, index) => {
             createTree(treeConfig, index * 500);
         });
 
         // Start met 6 random riet plukjes (na de bomen)
         const initialPositions = shuffleArray(REED_POSITIONS).slice(0, 6);
+        console.log('Riet plaatsen op posities:', initialPositions);
         
         initialPositions.forEach((pos, index) => {
             const type = REED_TYPES[rand(0, REED_TYPES.length - 1)];
@@ -158,6 +166,7 @@
     }
 
     function startReedCutting() {
+        console.log('startReedCutting aangeroepen');
         if (!state.biotoopActive) return;
 
         // Combineer riet en bomen, sorteer van links naar rechts
@@ -167,7 +176,7 @@
         ].sort((a, b) => a.position - b.position);
 
         let cutIndex = 0;
-        const cutInterval = 600; // 600ms tussen elke snit
+        const cutInterval = 350; // Sneller! 350ms tussen elke snit
 
         function cutNextElement() {
             if (!state.biotoopActive || cutIndex >= allElements.length) {
@@ -204,7 +213,7 @@
                     if (item.element.parentNode) {
                         item.element.remove();
                     }
-                }, 800);
+                }, 600);
             }
 
             cutIndex++;
@@ -233,6 +242,7 @@
     }
 
     function startReedCycle() {
+        console.log('startReedCycle aangeroepen, biotoopActive:', state.biotoopActive);
         if (!state.biotoopActive) return;
 
         // Fase 1: Initiële riet
@@ -286,46 +296,10 @@
         setTimeout(() => { if (img.parentNode) img.remove(); }, 20000);
     }
 
-    function spawnSwallow() {
-        if (!flyingEl) return;
-
-        const img = document.createElement('img');
-        
-        const swallowOptions = [
-            { src: 'images/Swallowflight.png', facesRight: true },
-            { src: 'images/Swallowflight2.png', facesRight: false },
-            { src: 'images/Swallowflight3.png', facesRight: false }
-        ];
-        const chosen = swallowOptions[Math.floor(Math.random() * swallowOptions.length)];
-        img.src = chosen.src;
-        
-        const fliesRight = Math.random() > 0.5;
-        const fliesUp = Math.random() < 0.3;
-        const needsMirror = chosen.facesRight !== fliesRight;
-        
-        let className = 'flying-swallow ';
-        if (fliesUp) {
-            if (fliesRight) {
-                className += needsMirror ? 'fly-right-up-mirrored' : 'fly-right-up-normal';
-            } else {
-                className += needsMirror ? 'fly-left-up-mirrored' : 'fly-left-up-normal';
-            }
-        } else {
-            if (fliesRight) {
-                className += needsMirror ? 'fly-right-mirrored' : 'fly-right-normal';
-            } else {
-                className += needsMirror ? 'fly-left-mirrored' : 'fly-left-normal';
-            }
-        }
-        
-        img.className = className;
-        flyingEl.appendChild(img);
-        setTimeout(() => { if (img.parentNode) img.remove(); }, 8000);
-    }
-
     // ===== BIOTOOP LIFECYCLE =====
 
     function startBiotoop() {
+        console.log('startBiotoop aangeroepen');
         state.biotoopActive = true;
 
         // Rietkraag cyclus starten
@@ -341,14 +315,6 @@
 
         // Zeearend
         biotoopTimers.eagle = setTimeout(spawnEagle, CONFIG.timing.eagleAppears);
-
-        // Zwaluwen
-        biotoopTimers.swallow = setTimeout(() => {
-            spawnSwallow();
-            biotoopTimers.swallowInterval = setInterval(() => {
-                if (Math.random() > 0.4) spawnSwallow();
-            }, CONFIG.timing.swallowInterval);
-        }, CONFIG.timing.swallowFirst);
 
         // Reset
         biotoopTimers.reset = setTimeout(() => {
@@ -368,24 +334,34 @@
     }
 
     function setup() {
+        console.log('Bergse Pad biotoop setup gestart');
+        
         flyingEl = document.getElementById('headerAnimalsFlying');
+        console.log('flyingEl gevonden:', !!flyingEl);
         
         // Gebruik headerReeds als die bestaat, anders headerGarden
         reedsEl = document.getElementById('headerReeds');
+        console.log('headerReeds gevonden:', !!reedsEl);
+        
         if (!reedsEl) {
             reedsEl = document.getElementById('headerGarden');
+            console.log('headerGarden als fallback:', !!reedsEl);
         }
         
         // Als er nog steeds geen container is, maak er een aan
         if (!reedsEl) {
             const nav = document.querySelector('nav');
+            console.log('nav gevonden:', !!nav);
             if (nav) {
                 reedsEl = document.createElement('div');
                 reedsEl.id = 'headerReeds';
                 reedsEl.className = 'header-reeds';
                 nav.parentNode.insertBefore(reedsEl, nav.nextSibling);
+                console.log('headerReeds aangemaakt');
             }
         }
+        
+        console.log('reedsEl final:', reedsEl);
         
         setTimeout(startBiotoop, CONFIG.timing.startDelay);
     }
