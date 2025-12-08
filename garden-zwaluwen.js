@@ -2,6 +2,7 @@
  * Natuurrijk Ankeveen - Biotoop Zwaluwen
  * Lucht en beweging: veel zwaluwen, dynamisch
  * Met zwaluwtil waar zwaluwen omheen cirkelen
+ * En huiszwaluwnestjes onder de dakrand
  */
 (function() {
     'use strict';
@@ -18,6 +19,10 @@
         til: {
             position: 78,  // % van links
             height: 85     // px hoogte (kleiner zodat til zichtbaar is)
+        },
+        nests: {
+            positions: [12, 22, 32],  // % van links - aan de linkerkant, weg van de til
+            size: 45  // px hoogte
         }
     };
 
@@ -31,6 +36,23 @@
     ];
 
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    // ===== HUISZWALUWNESTJES =====
+    
+    function placeNests() {
+        if (!gardenEl) return;
+        
+        CONFIG.nests.positions.forEach((pos, index) => {
+            const nest = document.createElement('img');
+            nest.src = 'images/HouseMartinnest.png';
+            nest.className = 'swallow-nest';
+            nest.style.left = pos + '%';
+            nest.style.height = CONFIG.nests.size + 'px';
+            nest.style.animationDelay = (index * 0.2) + 's';
+            
+            gardenEl.appendChild(nest);
+        });
+    }
 
     // ===== ZWALUWTIL =====
     
@@ -121,6 +143,9 @@
     // ===== BIOTOOP LIFECYCLE =====
 
     function startBiotoop() {
+        // Plaats de nestjes (direct zichtbaar)
+        placeNests();
+        
         // Plaats de zwaluwtil
         placeZwaluwtil();
         
@@ -169,6 +194,8 @@
         if (gardEl) {
             const til = gardEl.querySelector('.zwaluwtil');
             if (til) til.remove();
+            // Verwijder nestjes
+            gardEl.querySelectorAll('.swallow-nest').forEach(n => n.remove());
         }
     }
 
