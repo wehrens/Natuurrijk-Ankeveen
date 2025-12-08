@@ -111,6 +111,10 @@
     // Wisselende posities voor maaisel hoopjes
     const MAAISEL_POSITIONS = [20, 35, 50, 65, 80];
     let maaiselPositionIndex = 0;
+    
+    // Wisselende posities voor de zeis
+    const ZEIS_POSITIONS = [15, 30, 45, 60, 75];
+    let zeisPositionIndex = 0;
 
     function startMaaiselZeisCyclus() {
         if (!groundEl || !state.biotoopActive) return;
@@ -121,11 +125,16 @@
             // Kies positie voor dit hoopje
             const maaiselLeft = MAAISEL_POSITIONS[maaiselPositionIndex];
             maaiselPositionIndex = (maaiselPositionIndex + 1) % MAAISEL_POSITIONS.length;
+            
+            // Kies positie voor de zeis
+            const zeisLeft = ZEIS_POSITIONS[zeisPositionIndex];
+            zeisPositionIndex = (zeisPositionIndex + 1) % ZEIS_POSITIONS.length;
 
             // Stap 1: Zeis verschijnt
             currentScythe = document.createElement('img');
             currentScythe.src = 'images/Zeis.png';
             currentScythe.className = 'ground-scythe' + (scytheMirrored ? ' mirrored' : '');
+            currentScythe.style.left = zeisLeft + '%';
             groundEl.appendChild(currentScythe);
             requestAnimationFrame(() => currentScythe.classList.add('visible'));
 
@@ -192,6 +201,7 @@
         state.biotoopActive = true;
         scytheMirrored = false;
         maaiselPositionIndex = 0;
+        zeisPositionIndex = 0;
         
         // Start de zeis en maaisel cyclus
         startMaaiselZeisCyclus();

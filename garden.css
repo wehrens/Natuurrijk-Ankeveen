@@ -286,7 +286,6 @@
     position: absolute;
     height: 110px;
     width: auto;
-    left: 30%;
     top: -65px;
     transform: rotate(-75deg);
     transform-origin: center center;
@@ -305,18 +304,13 @@
 }
 
 .ground-scythe.mirrored {
-    transform: rotate(75deg);
-    top: -45px;
+    transform: rotate(-75deg) scaleX(-1);
 }
 
 @media (max-width: 768px) {
     .ground-scythe {
         height: 90px;
-        left: 15%;
         top: -55px;
-    }
-    .ground-scythe.mirrored {
-        top: -35px;
     }
 }
 
