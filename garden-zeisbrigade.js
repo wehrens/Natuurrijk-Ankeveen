@@ -114,14 +114,14 @@
         function runCycle() {
             if (!state.biotoopActive) return;
 
-            // Stap 1: Zeis verschijnt (afwisselend gespiegeld)
+            // Stap 1: Zeis verschijnt
             currentScythe = document.createElement('img');
             currentScythe.src = 'images/Zeis.png';
             currentScythe.className = 'ground-scythe' + (scytheMirrored ? ' mirrored' : '');
             groundEl.appendChild(currentScythe);
             requestAnimationFrame(() => currentScythe.classList.add('visible'));
 
-            // Stap 2: Na 2 sec, Maaisel2 verschijnt
+            // Stap 2: Na 3 sec, vers maaisel (Maaisel2) verschijnt
             setTimeout(() => {
                 if (!state.biotoopActive) return;
                 
@@ -131,7 +131,7 @@
                 groundEl.appendChild(maaisel2);
                 requestAnimationFrame(() => maaisel2.classList.add('visible'));
 
-                // Stap 3: Na 10 sec, Maaisel verschijnt
+                // Stap 3: Na 8 sec, gedroogd maaisel verschijnt er overheen
                 setTimeout(() => {
                     if (!state.biotoopActive) return;
                     
@@ -141,13 +141,13 @@
                     groundEl.appendChild(maaisel1);
                     requestAnimationFrame(() => maaisel1.classList.add('visible'));
 
-                    // Stap 4: Na 8 sec, Maaisel2 vervaagt
+                    // Stap 4: Na 5 sec, vers maaisel verdwijnt (is nu "gedroogd")
                     setTimeout(() => {
                         if (!state.biotoopActive) return;
                         maaisel2.classList.add('removed');
                         setTimeout(() => { if (maaisel2.parentNode) maaisel2.remove(); }, 1500);
 
-                        // Stap 5: Na 8 sec, Maaisel vervaagt
+                        // Stap 5: Na 6 sec, gedroogd maaisel vervaagt (afgevoerd)
                         setTimeout(() => {
                             if (!state.biotoopActive) return;
                             maaisel1.classList.add('removed');
@@ -168,10 +168,10 @@
                                 }, 1500);
                             }, 3000);
 
-                        }, 8000);
-                    }, 8000);
-                }, 10000);
-            }, 2000);
+                        }, 6000);
+                    }, 5000);
+                }, 8000);
+            }, 3000);
         }
 
         // Start de eerste cyclus

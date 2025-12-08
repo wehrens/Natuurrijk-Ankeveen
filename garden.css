@@ -305,7 +305,7 @@
 }
 
 .ground-scythe.mirrored {
-    transform: rotate(-75deg) scaleX(-1);
+    transform: rotate(-75deg) scaleY(-1);
 }
 
 @media (max-width: 768px) {
@@ -322,10 +322,10 @@
     height: 35px;
     width: auto;
     top: -18px;
+    left: 65%;
     opacity: 0;
     transition: opacity 1.5s ease;
     filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.2));
-    z-index: 4;
 }
 
 .ground-maaisel.visible {
@@ -336,26 +336,31 @@
     opacity: 0;
 }
 
-.ground-maaisel.maaisel-1 {
-    left: 55%;
+/* Maaisel2 = vers groen, ligt onderop */
+.ground-maaisel.maaisel-2 {
+    z-index: 4;
+    height: 32px;
 }
 
-.ground-maaisel.maaisel-2 {
-    left: 75%;
-    height: 30px;
+/* Maaisel = gedroogd hooi, ligt bovenop */
+.ground-maaisel.maaisel-1 {
+    z-index: 5;
+    height: 28px;
+    top: -15px;
 }
 
 @media (max-width: 768px) {
     .ground-maaisel {
-        height: 25px;
-        top: -12px;
-    }
-    .ground-maaisel.maaisel-1 {
-        left: 50%;
+        height: 28px;
+        top: -14px;
+        left: 55%;
     }
     .ground-maaisel.maaisel-2 {
-        left: 70%;
+        height: 26px;
+    }
+    .ground-maaisel.maaisel-1 {
         height: 22px;
+        top: -12px;
     }
 }
 
