@@ -1097,16 +1097,16 @@
     position: fixed;
     left: 0;
     right: 0;
-    top: var(--nav-height, 70px);
-    height: 120px;
+    top: 70px;
+    height: 150px;
     pointer-events: none;
     overflow: visible;
-    z-index: 1008; /* Tussen gras (1010) en achtergrond */
+    z-index: 1015; /* BOVEN gras zodat we het zien */
 }
 
 .reed-clump {
     position: absolute;
-    bottom: -5px;
+    bottom: 0;
     display: flex;
     align-items: flex-end;
     opacity: 0;
@@ -1132,7 +1132,7 @@
 /* Bomen */
 .garden-tree {
     position: absolute;
-    bottom: -5px;
+    bottom: 0;
     width: auto;
     opacity: 0;
     transition: opacity 1.5s ease;
@@ -1152,6 +1152,10 @@
 
 /* Responsive rietkraag */
 @media (max-width: 767px) {
+    .header-reeds {
+        top: 60px;
+        height: 120px;
+    }
     .reed-clump .reed-plant {
         height: 50px !important;
     }

@@ -72,6 +72,7 @@
     
     function createTree(treeConfig, delay) {
         setTimeout(() => {
+            console.log('createTree aangeroepen, reedsEl:', !!reedsEl, 'biotoopActive:', state.biotoopActive);
             if (!reedsEl || !state.biotoopActive) return;
 
             const tree = document.createElement('img');
@@ -82,6 +83,7 @@
             tree.dataset.position = treeConfig.pos;
             tree.dataset.survives = treeConfig.survives;
 
+            console.log('Boom toegevoegd:', tree.src, 'op', treeConfig.pos + '%');
             reedsEl.appendChild(tree);
             treeElements.push({ element: tree, position: treeConfig.pos, survives: treeConfig.survives });
 
@@ -126,15 +128,18 @@
     }
 
     function growInitialReeds() {
+        console.log('growInitialReeds aangeroepen, reedsEl:', !!reedsEl, 'biotoopActive:', state.biotoopActive);
         if (!reedsEl || !state.biotoopActive) return;
 
         // Plaats eerst de bomen (met kleine vertraging)
+        console.log('Bomen plaatsen:', TREE_POSITIONS.length);
         TREE_POSITIONS.forEach((treeConfig, index) => {
             createTree(treeConfig, index * 500);
         });
 
         // Start met 6 random riet plukjes (na de bomen)
         const initialPositions = shuffleArray(REED_POSITIONS).slice(0, 6);
+        console.log('Riet plaatsen op posities:', initialPositions);
         
         initialPositions.forEach((pos, index) => {
             const type = REED_TYPES[rand(0, REED_TYPES.length - 1)];
@@ -233,6 +238,7 @@
     }
 
     function startReedCycle() {
+        console.log('startReedCycle aangeroepen, biotoopActive:', state.biotoopActive);
         if (!state.biotoopActive) return;
 
         // Fase 1: Initiële riet
@@ -326,6 +332,7 @@
     // ===== BIOTOOP LIFECYCLE =====
 
     function startBiotoop() {
+        console.log('startBiotoop aangeroepen');
         state.biotoopActive = true;
 
         // Rietkraag cyclus starten
@@ -368,8 +375,35 @@
     }
 
     function setup() {
+        console.log('Bergse Pad biotoop setup gestart');
+        
         flyingEl = document.getElementById('headerAnimalsFlying');
+        console.log('flyingEl gevonden:', !!flyingEl);
+        
+        // Gebruik headerReeds als die bestaat, anders headerGarden
         reedsEl = document.getElementById('headerReeds');
+        console.log('headerReeds gevonden:', !!reedsEl);
+        
+        if (!reedsEl) {
+            reedsEl = document.getElementById('headerGarden');
+            console.log('headerGarden als fallback:', !!reedsEl);
+        }
+        
+        // Als er nog steeds geen container is, maak er een aan
+        if (!reedsEl) {
+            const nav = document.querySelector('nav');
+            console.log('nav gevonden:', !!nav);
+            if (nav) {
+                reedsEl = document.createElement('div');
+                reedsEl.id = 'headerReeds';
+                reedsEl.className = 'header-reeds';
+                nav.parentNode.insertBefore(reedsEl, nav.nextSibling);
+                console.log('headerReeds aangemaakt');
+            }
+        }
+        
+        console.log('reedsEl final:', reedsEl);
+        
         setTimeout(startBiotoop, CONFIG.timing.startDelay);
     }
 
