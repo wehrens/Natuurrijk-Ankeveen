@@ -81,9 +81,10 @@
 .garden-flower.size-md { height: 50px; }
 .garden-flower.size-lg { height: 65px; }
 
-/* Gelelis (gele bloemen) lager positioneren */
+/* Gelelis (gele bloemen) - onderkant afknippen zodat wortelkluit niet zichtbaar is */
 .garden-flower.lower {
-    bottom: -5px;
+    bottom: 0px;
+    clip-path: inset(0 0 15% 0);
 }
 
 .garden-flower.blooming {

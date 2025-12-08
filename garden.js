@@ -153,18 +153,23 @@
         pond.className = 'garden-pond poel1';
         pondEl.appendChild(pond);
 
-        // Na 20 seconden: wissel naar Poel3 en blijf daar
+        // Na 20 seconden: wissel naar Poel3 - eerst uitfaden, dan infaden
         biotoopTimers.pondCycle = setTimeout(() => {
             const currentPond = document.getElementById('currentPond');
             if (currentPond) {
-                currentPond.style.transition = 'opacity 1s ease-in-out';
+                // Fade out poel 1
+                currentPond.style.transition = 'opacity 1.5s ease-in-out';
                 currentPond.style.opacity = '0';
                 
+                // Wacht tot fade out klaar is, wissel dan naar poel 3 en fade in
                 setTimeout(() => {
                     currentPond.src = 'images/Poel3.png';
                     currentPond.className = 'garden-pond poel3';
-                    currentPond.style.opacity = '1';
-                }, 1000);
+                    // Kleine pauze voor src load
+                    setTimeout(() => {
+                        currentPond.style.opacity = '1';
+                    }, 100);
+                }, 1500);
             }
         }, 20000);
         pondEl.appendChild(pond);
