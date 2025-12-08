@@ -27,12 +27,11 @@
     let state = { biotoopActive: false };
     let cycleCount = 0; // Telt cycli voor wisselende survivors
 
-    // Wandelaars - facesRight: true = loopt naar rechts, false = loopt naar links
-    // Ze lopen in hun ORIGINELE richting, geen spiegeling
+    // Wandelaars - facesRight bepaalt looprichting, GEEN spiegeling
     const WALKERS = [
         { src: 'images/Walkinggirl.gif', facesRight: true },    // Oranje shirt, loopt naar rechts
-        { src: 'images/Walkinggirl2.gif', facesRight: true, mirror: true },  // Rugzak, moet gespiegeld naar rechts
-        { src: 'images/WalkingGuy.gif', facesRight: true, mirror: true },    // Baard, moet gespiegeld naar rechts
+        { src: 'images/Walkinggirl2.gif', facesRight: false },  // Rugzak, loopt naar links
+        { src: 'images/WalkingGuy.gif', facesRight: false },    // Baard, loopt naar links
         { src: 'images/WalkingGuy2.gif', facesRight: true }     // Blauwe trui, loopt naar rechts
     ];
 
@@ -332,11 +331,12 @@
         const walker = pick(WALKERS);
         const img = document.createElement('img');
         img.src = walker.src;
-        img.className = 'walking-person walk-right';
         
-        // Spiegel als nodig (WalkingGuy en Walkinggirl2)
-        if (walker.mirror) {
-            img.style.transform = 'scaleX(-1)';
+        // Looprichting op basis van originele afbeelding, GEEN spiegeling
+        if (walker.facesRight) {
+            img.className = 'walking-person walk-right';
+        } else {
+            img.className = 'walking-person walk-left';
         }
         
         gardenEl.appendChild(img);
