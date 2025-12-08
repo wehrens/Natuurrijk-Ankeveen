@@ -27,13 +27,10 @@
     let state = { biotoopActive: false };
     let cycleCount = 0; // Telt cycli voor wisselende survivors
 
-    // Wandelaars - allemaal lopen van links naar rechts
-    // mirror: true = afbeelding spiegelen omdat de voetanimatie anders is
+    // Wandelaars - alleen de twee die goed werken
     const WALKERS = [
-        { src: 'images/Walkinggirl.gif', mirror: false },   // Oranje shirt, kijkt al naar rechts
-        { src: 'images/Walkinggirl2.gif', mirror: true },   // Rugzak, voeten gaan verkeerd, moet gespiegeld
-        { src: 'images/WalkingGuy.gif', mirror: true },     // Baard, voeten gaan verkeerd, moet gespiegeld
-        { src: 'images/WalkingGuy2.gif', mirror: false }    // Blauwe trui, kijkt al naar rechts
+        { src: 'images/Walkinggirl.gif' },   // Oranje shirt
+        { src: 'images/WalkingGuy2.gif' }    // Blauwe trui
     ];
 
     // Riet en lisdodde types
@@ -333,11 +330,6 @@
         const img = document.createElement('img');
         img.src = walker.src;
         img.className = 'walking-person walk-right';
-        
-        // Spiegel als nodig zodat voetanimatie klopt met looprichting
-        if (walker.mirror) {
-            img.style.transform = 'scaleX(-1)';
-        }
         
         gardenEl.appendChild(img);
         
