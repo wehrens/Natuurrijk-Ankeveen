@@ -1,6 +1,7 @@
 /**
  * Natuurrijk Ankeveen - Biotoop Educatie
  * Speels en leerzaam: egel, vlinders, lieveheersbeestjes, rups
+ * Met opruim-intro: afval wordt opgeruimd voordat de natuur begint
  */
 (function() {
     'use strict';
@@ -17,7 +18,11 @@
             caterpillarInterval: 35000,
             ladybugFirst: 15000,
             ladybugInterval: 25000,
-            biotoopReset: 480000
+            biotoopReset: 480000,
+            // Opruim-intro timing
+            trashBagAppear: 2000,      // Na 2 sec verschijnt de zak
+            trashDisappearInterval: 2000, // Om de 2 sec verdwijnt een item
+            bagDisappearDelay: 5000    // Na 5 sec verdwijnt de zak
         }
     };
 
@@ -117,6 +122,103 @@
         setTimeout(() => { if (img.parentNode) img.remove(); }, 8000);
     }
 
+    // ============================================
+    // OPRUIM-INTRO: Afval wordt opgeruimd
+    // ============================================
+    
+    function createTrashItems() {
+        if (!groundEl) return [];
+        
+        const trashItems = [];
+        
+        // Red Bull 1 - rechtop
+        const redbull1 = document.createElement('img');
+        redbull1.src = 'images/Redbull.png';
+        redbull1.className = 'trash-item trash-redbull';
+        redbull1.style.left = '25%';
+        redbull1.style.transform = 'rotate(0deg)';
+        groundEl.appendChild(redbull1);
+        trashItems.push(redbull1);
+        
+        // Red Bull 2 - 90 graden gekanteld
+        const redbull2 = document.createElement('img');
+        redbull2.src = 'images/Redbull.png';
+        redbull2.className = 'trash-item trash-redbull trash-tilted';
+        redbull2.style.left = '45%';
+        groundEl.appendChild(redbull2);
+        trashItems.push(redbull2);
+        
+        // Pringles - 90 graden gekanteld
+        const pringles = document.createElement('img');
+        pringles.src = 'images/Pringles.png';
+        pringles.className = 'trash-item trash-pringles trash-tilted';
+        pringles.style.left = '65%';
+        groundEl.appendChild(pringles);
+        trashItems.push(pringles);
+        
+        // Fade in alle items
+        requestAnimationFrame(() => {
+            trashItems.forEach(item => item.classList.add('visible'));
+        });
+        
+        return trashItems;
+    }
+    
+    function createTrashBag() {
+        if (!groundEl) return null;
+        
+        const bag = document.createElement('img');
+        bag.src = 'images/Garbage.png';
+        bag.className = 'trash-bag';
+        bag.style.left = '50%';
+        groundEl.appendChild(bag);
+        
+        // Fade in de zak
+        requestAnimationFrame(() => {
+            bag.classList.add('visible');
+        });
+        
+        return bag;
+    }
+    
+    function runCleanupIntro(callback) {
+        // Stap 1: Plaats het afval
+        const trashItems = createTrashItems();
+        
+        // Stap 2: Na 2 seconden verschijnt de vuilniszak
+        setTimeout(() => {
+            const bag = createTrashBag();
+            
+            // Stap 3: Om de 2 seconden verdwijnt een item
+            let itemIndex = 0;
+            const removeInterval = setInterval(() => {
+                if (itemIndex < trashItems.length) {
+                    const item = trashItems[itemIndex];
+                    item.classList.add('collected');
+                    setTimeout(() => {
+                        if (item.parentNode) item.remove();
+                    }, 500);
+                    itemIndex++;
+                } else {
+                    clearInterval(removeInterval);
+                    
+                    // Stap 4: Na 5 seconden verdwijnt ook de zak
+                    setTimeout(() => {
+                        if (bag) {
+                            bag.classList.add('collected');
+                            setTimeout(() => {
+                                if (bag.parentNode) bag.remove();
+                                // Start de normale biotoop
+                                if (callback) callback();
+                            }, 500);
+                        }
+                    }, CONFIG.timing.bagDisappearDelay);
+                }
+            }, CONFIG.timing.trashDisappearInterval);
+            
+        }, CONFIG.timing.trashBagAppear);
+    }
+
     function startBiotoop() {
         // Bloemen
         for (let i = 0; i < 4; i++) {
@@ -161,7 +263,8 @@
         // Reset
         biotoopTimers.reset = setTimeout(() => {
             clearBiotoop();
-            startBiotoop();
+            // Bij reset ook eerst de opruim-intro
+            runCleanupIntro(startBiotoop);
         }, CONFIG.timing.biotoopReset);
     }
 
@@ -178,7 +281,11 @@
         gardenEl = document.getElementById('headerGarden');
         groundEl = document.getElementById('headerAnimalsGround');
         flyingEl = document.getElementById('headerAnimalsFlying');
-        setTimeout(startBiotoop, CONFIG.timing.startDelay);
+        
+        // Start met de opruim-intro, daarna de biotoop
+        setTimeout(() => {
+            runCleanupIntro(startBiotoop);
+        }, CONFIG.timing.startDelay);
     }
 
     if (document.readyState === 'loading') {
