@@ -156,28 +156,27 @@
     animation: fadeInPond 3s ease-out forwards;
 }
 
-/* Poel 1 - getekend, kleiner, alleen water */
+/* Poel 1 - getekend, originele grootte */
 .garden-pond.poel1 {
-    height: 50px;
-    left: 50%;
-    top: 10px;
-    transform: translateX(-50%);
+    height: 28px;
+    left: 72%;
+    top: 12px;
 }
 
-/* Poel 2 - met lelies en lavendel, groot met oeverplanten */
+/* Poel 2 - met lelies en lavendel */
 .garden-pond.poel2 {
-    height: 120px;
-    left: 50%;
-    top: -45px;
-    transform: translateX(-50%);
+    height: 85px;
+    left: 72%;
+    top: -25px;
+    transform: translateX(-15%);
 }
 
-/* Poel 3 - realistisch met spiegeling, groot met oeverplanten */
+/* Poel 3 - realistisch met spiegeling */
 .garden-pond.poel3 {
-    height: 110px;
-    left: 50%;
-    top: -40px;
-    transform: translateX(-50%);
+    height: 75px;
+    left: 72%;
+    top: -18px;
+    transform: translateX(-15%);
 }
 
 @keyframes fadeInPond {
