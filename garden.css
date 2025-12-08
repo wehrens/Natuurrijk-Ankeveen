@@ -181,9 +181,9 @@
 
 /* Poel 3 - realistisch met spiegeling */
 .garden-pond.poel3 {
-    height: 75px;
+    height: 115px;
     left: 76%;
-    top: -18px;
+    top: -35px;
     transform: translateX(-50%);
 }
 

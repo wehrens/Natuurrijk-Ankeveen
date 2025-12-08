@@ -10,8 +10,6 @@
             startDelay: 1500,
             swallowFirst: 2000,        // Snel beginnen!
             swallowInterval: 6000,     // Vaker
-            butterflyFirst: 12000,
-            butterflyInterval: 18000,
             biotoopReset: 480000
         }
     };
@@ -72,24 +70,6 @@
         }
     }
 
-    function spawnButterfly() {
-        if (!flyingEl) return;
-
-        const img = document.createElement('img');
-        const isBlue = Math.random() > 0.5;
-        img.src = isBlue ? 'images/Vlinder2.gif' : 'images/Vlinder.gif';
-        
-        const goingRight = Math.random() > 0.5;
-        if (isBlue) {
-            img.className = 'flying-butterfly ' + (goingRight ? 'flutter-right-smooth' : 'flutter-left-smooth');
-        } else {
-            img.className = 'flying-butterfly ' + (goingRight ? 'flutter-right' : 'flutter-left');
-        }
-
-        flyingEl.appendChild(img);
-        setTimeout(() => { if (img.parentNode) img.remove(); }, 30000);
-    }
-
     function startBiotoop() {
         // Eerste zwaluwen direct
         setTimeout(spawnSwallow, 1500);
@@ -108,14 +88,6 @@
                 }
             }, CONFIG.timing.swallowInterval);
         }, CONFIG.timing.swallowFirst);
-
-        // Af en toe een vlinder (waar ze op jagen)
-        biotoopTimers.butterfly = setTimeout(() => {
-            spawnButterfly();
-            biotoopTimers.butterflyInterval = setInterval(() => {
-                if (Math.random() > 0.5) spawnButterfly();
-            }, CONFIG.timing.butterflyInterval);
-        }, CONFIG.timing.butterflyFirst);
 
         // Reset
         biotoopTimers.reset = setTimeout(() => {
