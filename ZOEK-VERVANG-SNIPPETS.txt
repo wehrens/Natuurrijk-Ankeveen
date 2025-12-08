@@ -1,0 +1,70 @@
+============================================================
+ZOEK EN VERVANG SNIPPETS VOOR ALLE PAGINA'S
+============================================================
+
+Gebruik deze snippets in je code editor (VS Code, Sublime, etc.)
+met "Find and Replace" (Ctrl+H of Cmd+H)
+
+============================================================
+1. FOOTER CREDIT - Zoek (met regex):
+============================================================
+Webdesign: Ron Wehrens – <a href="[^"]*"[^>]*>.*?</a>
+
+Vervang met:
+Webdesign: Ron Wehrens – <a data-email-full="ron" href="#">laden...</a>
+
+
+============================================================
+2. CONTACT MODAL EMAIL LINK - Zoek:
+============================================================
+<a href="/cdn-cgi/l/email-protection
+
+Vervang met:
+<a data-email="info" href="#
+
+
+============================================================
+3. CONTACT MODAL EMAIL TEKST - Zoek:
+============================================================
+<span><span class="__cf_email__"
+
+Vervang met:
+<span data-email-text="info">laden...</span><!--
+
+
+En voeg --> toe aan het einde van die regel om de oude span te "commenten"
+
+OF verwijder handmatig de hele oude span:
+<span class="__cf_email__" data-cfemail="...">[email&#160;protected]</span></span>
+
+
+============================================================
+4. VOEG SCRIPT TOE - Zoek:
+============================================================
+<script src="garden
+
+Vervang met:
+<script src="email-protection.js"></script>
+    <script src="garden
+
+
+============================================================
+5. VERWIJDER CLOUDFLARE SCRIPT - Zoek en verwijder:
+============================================================
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+
+(Verwijder deze hele regel)
+
+
+============================================================
+BESTANDEN DIE JE MOET UPDATEN:
+============================================================
+- index.html ✅ (al gedaan)
+- bergsepad.html ✅ (al gedaan)
+- aanplanten.html
+- educatie.html  
+- oevers.html
+- zeisbrigade.html
+- zwaluwen.html
+
+============================================================
