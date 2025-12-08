@@ -333,13 +333,13 @@
 
         const img = document.createElement('img');
         img.src = 'images/Otter.gif';
-        img.className = 'swimming-otter';
+        img.className = 'swimming-otter otter-to-pond';
 
         groundEl.appendChild(img);
 
         setTimeout(() => {
             if (img.parentNode) img.remove();
-        }, 21000);
+        }, 13000);
     }
 
     function startOtterCycle() {
