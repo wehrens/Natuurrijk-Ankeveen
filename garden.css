@@ -684,6 +684,56 @@
     100% { transform: translateY(-120px) rotate(-45deg); opacity: 0; }
 }
 
+/* ===== DANSENDE VLINDERS BIJ VIJVER ===== */
+.pond-butterfly {
+    position: absolute;
+    height: 28px;
+    width: auto;
+    z-index: 60;
+    opacity: 0;
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.2));
+}
+
+.pond-butterfly.mirrored {
+    transform: scaleX(-1);
+}
+
+.pond-butterfly.flying-right {
+    transform: scaleX(1);
+}
+
+.pond-butterfly.flying-left {
+    transform: scaleX(-1);
+}
+
+.pond-butterfly.mirrored.flying-right {
+    transform: scaleX(-1);
+}
+
+.pond-butterfly.mirrored.flying-left {
+    transform: scaleX(1);
+}
+
+/* ===== LADYBUG BIJ VIJVER ===== */
+.pond-ladybug {
+    position: absolute;
+    bottom: 10px;
+    height: 18px;
+    width: auto;
+    z-index: 55;
+    animation: pondLadybugFly 8s ease-in-out forwards;
+}
+
+@keyframes pondLadybugFly {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    15% { transform: translateY(-8px) rotate(-8deg); }
+    30% { transform: translateY(-25px) rotate(-5deg); opacity: 1; }
+    50% { transform: translateY(-45px) rotate(-15deg); }
+    70% { transform: translateY(-35px) rotate(-10deg); opacity: 0.8; }
+    85% { transform: translateY(-60px) rotate(-20deg); opacity: 0.5; }
+    100% { transform: translateY(-90px) rotate(-30deg); opacity: 0; }
+}
+
 /* ===== IJSVOGEL ===== */
 /* GIF kijkt naar LINKS */
 /* Komt van rechts, bidt boven vijver, duikt, vliegt gespiegeld terug naar rechts */

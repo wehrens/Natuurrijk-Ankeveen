@@ -1,6 +1,7 @@
 /**
  * Natuurrijk Ankeveen - Biotoop Oevers
  * Waterrijke biotoop: vijver, lisdoddes, roerdomp, ijsvogel, otter
+ * Plus: dansende vlinders en ladybugs bij het water
  */
 (function() {
     'use strict';
@@ -12,8 +13,11 @@
             pondAppears: 3000,           // Vijver komt snel
             lisdoddesStart: 5000,        // Lisdoddes kort na vijver
             roerdompAppears: 15000,      // Roerdomp na 15s
-            kingfisherFirst: 25000,      // Eerste ijsvogel na 25s
-            kingfisherInterval: 35000,   // Ijsvogel elke 35s (vaker!)
+            butterfliesStart: 20000,     // Vlinders na 20s
+            ladybugFirst: 25000,         // Ladybug na 25s
+            ladybugInterval: 20000,      // Ladybug elke 20s
+            kingfisherFirst: 30000,      // Eerste ijsvogel na 30s
+            kingfisherInterval: 35000,   // Ijsvogel elke 35s
             otterFirst: 45000,           // Otter na 45s
             otterInterval: 60000,        // Otter elke 60s
             biotoopReset: 480000,        // 8 minuten reset
@@ -24,7 +28,8 @@
     // ===== STATE =====
     let state = {
         pondVisible: false,
-        roerdompVisible: false
+        roerdompVisible: false,
+        biotoopActive: false
     };
 
     let biotoopTimers = {
@@ -32,6 +37,9 @@
         pondTransition: null,
         lisdoddes: null,
         roerdomp: null,
+        butterflies: null,
+        ladybug: null,
+        ladybugInterval: null,
         kingfisher: null,
         kingfisherInterval: null,
         otter: null,
@@ -179,6 +187,146 @@
         }, CONFIG.timing.kingfisherInterval);
     }
 
+    // ===== DANSENDE VLINDERS BIJ VIJVER =====
+    const POND_BUTTERFLIES = [
+        { src: 'images/Vlinder.gif', mirrored: false },   // Oranje
+        { src: 'images/Vlinder.gif', mirrored: true },    // Oranje gespiegeld
+        { src: 'images/Vlinder2.gif', mirrored: false },  // Blauw
+        { src: 'images/Vlinder2.gif', mirrored: true }    // Blauw gespiegeld
+    ];
+
+    function createDancingButterfly(config, index) {
+        if (!flyingEl || !state.biotoopActive) return;
+
+        const butterfly = document.createElement('img');
+        butterfly.src = config.src;
+        butterfly.className = 'pond-butterfly pond-butterfly-' + index;
+        if (config.mirrored) {
+            butterfly.classList.add('mirrored');
+        }
+        flyingEl.appendChild(butterfly);
+
+        // Start de dans-cyclus
+        animateButterfly(butterfly, index);
+    }
+
+    function animateButterfly(butterfly, index) {
+        if (!state.biotoopActive || !butterfly.parentNode) return;
+
+        // Gebied rond de vijver (55% - 95%)
+        const minX = 55;
+        const maxX = 92;
+        const minY = 10;
+        const maxY = 60;
+
+        // Startpositie (gespreid over het gebied)
+        const startX = minX + (index * 10) + rand(-5, 5);
+        const startY = minY + rand(0, 20);
+
+        let currentX = startX;
+        let currentY = startY;
+        let goingRight = index % 2 === 0;
+
+        function doFlight() {
+            if (!state.biotoopActive || !butterfly.parentNode) return;
+
+            // Bepaal nieuwe bestemming (dwarrelig)
+            const deltaX = rand(8, 20) * (goingRight ? 1 : -1);
+            const deltaY = rand(-15, 15);
+            
+            let newX = currentX + deltaX;
+            let newY = currentY + deltaY;
+
+            // Houd binnen gebied
+            if (newX < minX) { newX = minX + rand(5, 15); goingRight = true; }
+            if (newX > maxX) { newX = maxX - rand(5, 15); goingRight = false; }
+            if (newY < minY) newY = minY + rand(5, 10);
+            if (newY > maxY) newY = maxY - rand(5, 10);
+
+            // Vliegduur
+            const flightDuration = rand(2000, 4000);
+
+            // Spiegel de vlinder als richting verandert
+            if (goingRight) {
+                butterfly.classList.remove('flying-left');
+                butterfly.classList.add('flying-right');
+            } else {
+                butterfly.classList.remove('flying-right');
+                butterfly.classList.add('flying-left');
+            }
+
+            // Animate naar nieuwe positie
+            butterfly.style.transition = `left ${flightDuration}ms ease-in-out, top ${flightDuration}ms ease-in-out`;
+            butterfly.style.left = newX + '%';
+            butterfly.style.top = newY + 'px';
+
+            currentX = newX;
+            currentY = newY;
+
+            // Na vlucht: soms stoppen, dan weer verder
+            setTimeout(() => {
+                if (!state.biotoopActive || !butterfly.parentNode) return;
+
+                // 40% kans om even te stoppen
+                const pauseDuration = Math.random() > 0.6 ? rand(1000, 3000) : rand(200, 500);
+                
+                // Wissel soms van richting
+                if (Math.random() > 0.7) {
+                    goingRight = !goingRight;
+                }
+
+                setTimeout(doFlight, pauseDuration);
+            }, flightDuration);
+        }
+
+        // Zet startpositie
+        butterfly.style.left = startX + '%';
+        butterfly.style.top = startY + 'px';
+        butterfly.style.opacity = '0';
+
+        // Fade in en start vlucht
+        setTimeout(() => {
+            butterfly.style.transition = 'opacity 1s ease';
+            butterfly.style.opacity = '1';
+            setTimeout(doFlight, 1000 + (index * 500));
+        }, index * 800);
+    }
+
+    function startPondButterflies() {
+        if (!flyingEl || !state.biotoopActive) return;
+
+        // Spawn 4 vlinders met vertraging
+        POND_BUTTERFLIES.forEach((config, index) => {
+            setTimeout(() => {
+                createDancingButterfly(config, index);
+            }, index * 1000);
+        });
+    }
+
+    // ===== LADYBUG BIJ VIJVER =====
+    function spawnPondLadybug() {
+        if (!flyingEl || !state.biotoopActive) return;
+
+        const img = document.createElement('img');
+        img.src = 'images/Ladybug.gif';
+        img.className = 'pond-ladybug';
+        // Spawn in de buurt van vijver
+        img.style.left = (60 + rand(0, 25)) + '%';
+
+        flyingEl.appendChild(img);
+        setTimeout(() => { if (img.parentNode) img.remove(); }, 8000);
+    }
+
+    function startLadybugCycle() {
+        spawnPondLadybug();
+
+        biotoopTimers.ladybugInterval = setInterval(() => {
+            if (state.biotoopActive && Math.random() > 0.4) {
+                spawnPondLadybug();
+            }
+        }, CONFIG.timing.ladybugInterval);
+    }
+
     // ===== OTTER =====
     function spawnOtter() {
         if (!groundEl) return;
@@ -206,6 +354,8 @@
 
     // ===== CLEANUP =====
     function clearBiotoop() {
+        state.biotoopActive = false;
+        
         Object.values(biotoopTimers).forEach(timer => {
             if (timer) {
                 clearTimeout(timer);
@@ -226,6 +376,7 @@
     // ===== BIOTOOP START =====
     function startBiotoop() {
         clearBiotoop();
+        state.biotoopActive = true;
 
         // Fase 1: Vijver (snel!)
         biotoopTimers.pond = setTimeout(showPond, CONFIG.timing.pondAppears);
@@ -236,10 +387,16 @@
         // Fase 3: Roerdomp
         biotoopTimers.roerdomp = setTimeout(showRoerdomp, CONFIG.timing.roerdompAppears);
 
-        // Fase 4: IJsvogel cyclus
+        // Fase 4: Dansende vlinders bij vijver
+        biotoopTimers.butterflies = setTimeout(startPondButterflies, CONFIG.timing.butterfliesStart);
+
+        // Fase 5: Ladybugs
+        biotoopTimers.ladybug = setTimeout(startLadybugCycle, CONFIG.timing.ladybugFirst);
+
+        // Fase 6: IJsvogel cyclus
         biotoopTimers.kingfisher = setTimeout(startKingfisherCycle, CONFIG.timing.kingfisherFirst);
 
-        // Fase 5: Otter cyclus
+        // Fase 7: Otter cyclus
         biotoopTimers.otter = setTimeout(startOtterCycle, CONFIG.timing.otterFirst);
 
         // Reset na 8 minuten
@@ -270,6 +427,8 @@
 
         // Start de biotoop (zonder clear bij eerste keer)
         setTimeout(() => {
+            state.biotoopActive = true;
+            
             // Fase 1: Vijver (snel!)
             biotoopTimers.pond = setTimeout(showPond, CONFIG.timing.pondAppears);
 
@@ -279,10 +438,16 @@
             // Fase 3: Roerdomp
             biotoopTimers.roerdomp = setTimeout(showRoerdomp, CONFIG.timing.roerdompAppears);
 
-            // Fase 4: IJsvogel cyclus
+            // Fase 4: Dansende vlinders bij vijver
+            biotoopTimers.butterflies = setTimeout(startPondButterflies, CONFIG.timing.butterfliesStart);
+
+            // Fase 5: Ladybugs
+            biotoopTimers.ladybug = setTimeout(startLadybugCycle, CONFIG.timing.ladybugFirst);
+
+            // Fase 6: IJsvogel cyclus
             biotoopTimers.kingfisher = setTimeout(startKingfisherCycle, CONFIG.timing.kingfisherFirst);
 
-            // Fase 5: Otter cyclus
+            // Fase 7: Otter cyclus
             biotoopTimers.otter = setTimeout(startOtterCycle, CONFIG.timing.otterFirst);
 
             // Reset na 8 minuten
