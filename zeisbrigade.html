@@ -194,7 +194,7 @@
         <p>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van <a href="https://bruisendankeveen.nl" target="_blank">Stichting Bruisend Ankeveen</a></p>
         <p><a href="index.html">Terug naar hoofdpagina</a></p>
         <div class="footer-credit">
-            Webdesign: Ron Wehrens – <a href="mailto:r.wehrens@phasuma.com">r.wehrens@phasuma.com</a>
+            Webdesign: Ron Wehrens – <a data-email-full="ron" href="#">laden...</a>
         </div>
     </footer>
 
@@ -209,9 +209,9 @@
             <h3>📬 Neem contact op</h3>
             <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
             <div class="contact-options">
-                <a href="/cdn-cgi/l/email-protection#cba5aabfbebeb9b9a2a1a0aaa5a0aebdaeaea58bbbb9a4bfa4a5a6aaa2a7e5a8a4a6" class="contact-option">
+                <a data-email="info" href="#" class="contact-option">
                     <div class="contact-option-icon email"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
-                    <div class="contact-option-text"><strong>E-mail</strong><span><span class="__cf_email__" data-cfemail="5f313e2b2a2a2d2d3635343e31343a293a3a311f2f2d302b3031323e3633713c3032">[email&#160;protected]</span></span></div>
+                    <div class="contact-option-text"><strong>E-mail</strong><span data-email-text="info">laden...</span></div>
                 </a>
                 <a href="https://wa.me/31646293590" target="_blank" class="contact-option">
                     <div class="contact-option-icon whatsapp"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></div>
@@ -230,12 +230,15 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         function openContactModal() { document.getElementById('contactModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeContactModal(event) { if (event && event.target.closest('.contact-modal-content')) return; document.getElementById('contactModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
-        function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('active'); document.body.style..overflow = 'hidden'; }
         function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); document.body.style.overflow = 'auto'; }
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeLightbox(); closeContactModal(); } });
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() { document.querySelector('.nav-links').classList.toggle('mobile-open'); });
     </script>
-    <script src="garden-zeisbrigade.js?v=65"></script>
+    <script src="email-protection.js"></script>
+    <script src="garden-zeisbrigade.js"></script>
 </body>
 </html>
