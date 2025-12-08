@@ -284,12 +284,12 @@
 /* ===== ZEIS ===== */
 .ground-scythe {
     position: absolute;
-    height: 55px;
+    height: 70px;
     width: auto;
-    left: 15%;
-    bottom: 5px;
-    transform: rotate(85deg);
-    transform-origin: bottom right;
+    left: 25%;
+    bottom: -5px;
+    transform: rotate(-75deg);
+    transform-origin: center center;
     opacity: 0;
     transition: opacity 1s ease;
     filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
@@ -302,8 +302,8 @@
 
 @media (max-width: 768px) {
     .ground-scythe {
-        height: 40px;
-        left: 10%;
+        height: 50px;
+        left: 20%;
     }
 }
 
