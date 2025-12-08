@@ -1097,16 +1097,16 @@
     position: fixed;
     left: 0;
     right: 0;
-    top: 0;
-    height: var(--header-total);
+    top: var(--nav-height, 70px);
+    height: 120px;
     pointer-events: none;
     overflow: visible;
-    z-index: 1005; /* ACHTER het gras (gras is 1010) */
+    z-index: 1008; /* Tussen gras (1010) en achtergrond */
 }
 
 .reed-clump {
     position: absolute;
-    bottom: 5px;
+    bottom: -5px;
     display: flex;
     align-items: flex-end;
     opacity: 0;
@@ -1132,7 +1132,7 @@
 /* Bomen */
 .garden-tree {
     position: absolute;
-    bottom: 5px;
+    bottom: -5px;
     width: auto;
     opacity: 0;
     transition: opacity 1.5s ease;
