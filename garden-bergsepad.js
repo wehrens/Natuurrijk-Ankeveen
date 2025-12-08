@@ -1,6 +1,6 @@
 /**
  * Natuurrijk Ankeveen - Biotoop Bergse Pad
- * Wandeling door het landschap: ganzen, zeearend, rietkraag snoeien
+ * Wandeling door het landschap: ganzen, zeearend, rietkraag snoeien, wandelaars
  */
 (function() {
     'use strict';
@@ -15,15 +15,25 @@
             reedGrowthDuration: 15000,  // 15 sec groeiperiode
             reedCuttingStart: 18000,    // Na 18s begint snoeien
             reedCycleReset: 35000,      // Nog sneller! Cyclus herhaalt na 35s
+            walkerFirst: 6000,          // Eerste wandelaar na 6s
+            walkerInterval: 25000,      // Om de 25s een wandelaar
             biotoopReset: 480000
         }
     };
 
     let biotoopTimers = {};
-    let flyingEl, reedsEl;
+    let flyingEl, reedsEl, gardenEl;
     let reedElements = [];
     let state = { biotoopActive: false };
     let cycleCount = 0; // Telt cycli voor wisselende survivors
+
+    // Wandelaars - facesRight geeft aan welke kant de originele afbeelding opkijkt
+    const WALKERS = [
+        { src: 'images/Walkinggirl.gif', facesRight: true },
+        { src: 'images/Walkinggirl2.gif', facesRight: false },
+        { src: 'images/WalkingGuy.gif', facesRight: true },
+        { src: 'images/WalkingGuy2.gif', facesRight: false }
+    ];
 
     // Riet en lisdodde types
     const REED_TYPES = [
@@ -311,6 +321,31 @@
         setTimeout(() => { if (img.parentNode) img.remove(); }, 20000);
     }
 
+    // ===== WANDELAARS =====
+    
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    
+    function spawnWalker() {
+        if (!gardenEl) return;
+        
+        const walker = pick(WALKERS);
+        const img = document.createElement('img');
+        img.src = walker.src;
+        img.className = 'walking-person';
+        
+        // Alle wandelaars lopen naar rechts, dus spiegel als nodig
+        if (!walker.facesRight) {
+            img.style.transform = 'scaleX(-1)';
+        }
+        
+        gardenEl.appendChild(img);
+        
+        // Verwijder na de animatie (18s + marge)
+        setTimeout(() => { 
+            if (img.parentNode) img.remove(); 
+        }, 20000);
+    }
+
     // ===== BIOTOOP LIFECYCLE =====
 
     function startBiotoop() {
@@ -331,6 +366,14 @@
         // Zeearend
         biotoopTimers.eagle = setTimeout(spawnEagle, CONFIG.timing.eagleAppears);
 
+        // Wandelaars
+        biotoopTimers.walker = setTimeout(() => {
+            spawnWalker();
+            biotoopTimers.walkerInterval = setInterval(() => {
+                if (Math.random() > 0.3) spawnWalker(); // 70% kans
+            }, CONFIG.timing.walkerInterval);
+        }, CONFIG.timing.walkerFirst);
+
         // Reset
         biotoopTimers.reset = setTimeout(() => {
             clearBiotoop();
@@ -345,6 +388,11 @@
         const flyEl = document.getElementById('headerAnimalsFlying');
         if (flyEl) flyEl.innerHTML = '';
         
+        // Verwijder wandelaars
+        if (gardenEl) {
+            gardenEl.querySelectorAll('.walking-person').forEach(w => w.remove());
+        }
+        
         clearReeds();
     }
 
@@ -353,6 +401,9 @@
         
         flyingEl = document.getElementById('headerAnimalsFlying');
         console.log('flyingEl gevonden:', !!flyingEl);
+        
+        gardenEl = document.getElementById('headerGarden');
+        console.log('gardenEl gevonden:', !!gardenEl);
         
         // Gebruik headerReeds als die bestaat, anders headerGarden
         reedsEl = document.getElementById('headerReeds');

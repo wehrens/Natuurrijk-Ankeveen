@@ -1107,6 +1107,29 @@
     opacity: 1;
 }
 
+/* ===== HUISZWALUWNESTJES ===== */
+.swallow-nest {
+    position: absolute;
+    top: 0;
+    width: auto;
+    transform: translateX(-50%);
+    z-index: 60;
+    filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.3));
+    animation: nestAppear 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes nestAppear {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
 /* Zwaluwen die om de til cirkelen */
 .flying-swallow.til-circle {
     transform-origin: center center;
@@ -1187,6 +1210,9 @@
     .zwaluwtil {
         height: 60px !important;
     }
+    .swallow-nest {
+        height: 30px !important;
+    }
 }
 
 /* ===== RESPONSIVE ===== */
@@ -1210,6 +1236,7 @@
     opacity: 0;
     transition: opacity 1.2s ease;
     transform: translateX(-50%);
+    z-index: 120; /* Vogels vliegen erachter */
 }
 
 .reed-clump.visible {
@@ -1236,6 +1263,7 @@
     transition: opacity 1.5s ease;
     transform: translateX(-50%);
     filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+    z-index: 130; /* Vogels vliegen erachter, bomen voor riet */
 }
 
 .garden-tree.visible {
@@ -1248,6 +1276,33 @@
     transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
+/* ===== WANDELAARS ===== */
+.walking-person {
+    position: absolute;
+    bottom: -5px; /* Voeten in het gras */
+    height: 90px;
+    z-index: 140; /* Voor bomen en riet */
+    animation: walkAcross 18s linear forwards;
+    filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.2));
+}
+
+@keyframes walkAcross {
+    0% {
+        left: -100px;
+        opacity: 0;
+    }
+    5% {
+        opacity: 1;
+    }
+    95% {
+        opacity: 1;
+    }
+    100% {
+        left: 110%;
+        opacity: 0;
+    }
+}
+
 /* Responsive rietkraag */
 @media (max-width: 767px) {
     .reed-clump .reed-plant {
@@ -1255,6 +1310,10 @@
     }
     .garden-tree {
         height: 100px !important;
+    }
+    .walking-person {
+        height: 55px !important;
+        bottom: -3px;
     }
 }
 
@@ -1264,6 +1323,9 @@
     }
     .garden-tree {
         height: 120px !important;
+    }
+    .walking-person {
+        height: 70px !important;
     }
 }
 
