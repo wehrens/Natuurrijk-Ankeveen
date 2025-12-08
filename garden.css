@@ -62,7 +62,7 @@
     height: var(--header-total);
     pointer-events: none;
     overflow: visible;
-    z-index: 1025;
+    z-index: 1035; /* BOVEN header-reeds (1030) zodat wandelaars VOOR riet lopen */
 }
 
 /* ===== BLOEMEN ===== */
@@ -1281,7 +1281,7 @@
     position: absolute;
     bottom: -5px; /* Voeten in het gras */
     height: 60px;
-    z-index: 140; /* Voor bomen en riet */
+    z-index: 200; /* VOOR alle planten en bomen */
     filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.2));
 }
 
@@ -1314,8 +1314,7 @@
 
 @keyframes walkLeft {
     0% {
-        right: -80px;
-        left: auto;
+        left: calc(100% + 80px);
         opacity: 0;
     }
     5% {
@@ -1325,8 +1324,7 @@
         opacity: 1;
     }
     100% {
-        right: 110%;
-        left: auto;
+        left: -150px;
         opacity: 0;
     }
 }

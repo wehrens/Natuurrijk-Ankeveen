@@ -27,12 +27,13 @@
     let state = { biotoopActive: false };
     let cycleCount = 0; // Telt cycli voor wisselende survivors
 
-    // Wandelaars - facesRight bepaalt looprichting, GEEN spiegeling
+    // Wandelaars - allemaal lopen van links naar rechts
+    // mirror: true = afbeelding spiegelen omdat de voetanimatie anders is
     const WALKERS = [
-        { src: 'images/Walkinggirl.gif', facesRight: true },    // Oranje shirt, loopt naar rechts
-        { src: 'images/Walkinggirl2.gif', facesRight: false },  // Rugzak, loopt naar links
-        { src: 'images/WalkingGuy.gif', facesRight: false },    // Baard, loopt naar links
-        { src: 'images/WalkingGuy2.gif', facesRight: true }     // Blauwe trui, loopt naar rechts
+        { src: 'images/Walkinggirl.gif', mirror: false },   // Oranje shirt, kijkt al naar rechts
+        { src: 'images/Walkinggirl2.gif', mirror: true },   // Rugzak, voeten gaan verkeerd, moet gespiegeld
+        { src: 'images/WalkingGuy.gif', mirror: true },     // Baard, voeten gaan verkeerd, moet gespiegeld
+        { src: 'images/WalkingGuy2.gif', mirror: false }    // Blauwe trui, kijkt al naar rechts
     ];
 
     // Riet en lisdodde types
@@ -331,17 +332,16 @@
         const walker = pick(WALKERS);
         const img = document.createElement('img');
         img.src = walker.src;
+        img.className = 'walking-person walk-right';
         
-        // Looprichting op basis van originele afbeelding, GEEN spiegeling
-        if (walker.facesRight) {
-            img.className = 'walking-person walk-right';
-        } else {
-            img.className = 'walking-person walk-left';
+        // Spiegel als nodig zodat voetanimatie klopt met looprichting
+        if (walker.mirror) {
+            img.style.transform = 'scaleX(-1)';
         }
         
         gardenEl.appendChild(img);
         
-        // Verwijder na de animatie (20s + marge)
+        // Verwijder na de animatie
         setTimeout(() => { 
             if (img.parentNode) img.remove(); 
         }, 22000);
