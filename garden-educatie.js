@@ -189,20 +189,25 @@
         setTimeout(() => {
             const bag = createTrashBag();
             
-            // Stap 3: Om de 2 seconden verdwijnt een item
+            // Stap 3: Om de 2 seconden schuift een item naar de zak en verdwijnt
             let itemIndex = 0;
             const removeInterval = setInterval(() => {
                 if (itemIndex < trashItems.length) {
                     const item = trashItems[itemIndex];
-                    item.classList.add('collected');
+                    // Eerst schuiven naar de zak
+                    item.classList.add('sliding');
+                    // Na 0.8s (slide animatie) verdwijnen
                     setTimeout(() => {
-                        if (item.parentNode) item.remove();
-                    }, 500);
+                        item.classList.add('collected');
+                        setTimeout(() => {
+                            if (item.parentNode) item.remove();
+                        }, 500);
+                    }, 800);
                     itemIndex++;
                 } else {
                     clearInterval(removeInterval);
                     
-                    // Stap 4: Na 5 seconden verdwijnt ook de zak
+                    // Stap 4: Na 3 seconden verdwijnt ook de zak
                     setTimeout(() => {
                         if (bag) {
                             bag.classList.add('collected');
@@ -212,7 +217,7 @@
                                 if (callback) callback();
                             }, 500);
                         }
-                    }, CONFIG.timing.bagDisappearDelay);
+                    }, 3000);
                 }
             }, CONFIG.timing.trashDisappearInterval);
             
