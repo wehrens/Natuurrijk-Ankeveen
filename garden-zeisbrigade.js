@@ -107,12 +107,20 @@
 
     let currentScythe = null;
     let scytheMirrored = false;
+    
+    // Wisselende posities voor maaisel hoopjes
+    const MAAISEL_POSITIONS = [20, 35, 50, 65, 80];
+    let maaiselPositionIndex = 0;
 
     function startMaaiselZeisCyclus() {
         if (!groundEl || !state.biotoopActive) return;
 
         function runCycle() {
             if (!state.biotoopActive) return;
+            
+            // Kies positie voor dit hoopje
+            const maaiselLeft = MAAISEL_POSITIONS[maaiselPositionIndex];
+            maaiselPositionIndex = (maaiselPositionIndex + 1) % MAAISEL_POSITIONS.length;
 
             // Stap 1: Zeis verschijnt
             currentScythe = document.createElement('img');
@@ -128,6 +136,7 @@
                 const maaisel2 = document.createElement('img');
                 maaisel2.src = 'images/Maaisel2.png';
                 maaisel2.className = 'ground-maaisel maaisel-2';
+                maaisel2.style.left = maaiselLeft + '%';
                 groundEl.appendChild(maaisel2);
                 requestAnimationFrame(() => maaisel2.classList.add('visible'));
 
@@ -138,6 +147,7 @@
                     const maaisel1 = document.createElement('img');
                     maaisel1.src = 'images/Maaisel.png';
                     maaisel1.className = 'ground-maaisel maaisel-1';
+                    maaisel1.style.left = maaiselLeft + '%';
                     groundEl.appendChild(maaisel1);
                     requestAnimationFrame(() => maaisel1.classList.add('visible'));
 
@@ -181,6 +191,7 @@
     function startBiotoop() {
         state.biotoopActive = true;
         scytheMirrored = false;
+        maaiselPositionIndex = 0;
         
         // Start de zeis en maaisel cyclus
         startMaaiselZeisCyclus();
