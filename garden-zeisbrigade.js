@@ -105,7 +105,22 @@
         setTimeout(() => { if (img.parentNode) img.remove(); }, 8000);
     }
 
+    function placeScythe() {
+        if (!groundEl) return;
+
+        const img = document.createElement('img');
+        img.src = 'images/Zeis.png';
+        img.className = 'ground-scythe';
+        groundEl.appendChild(img);
+        
+        // Fade in
+        requestAnimationFrame(() => img.classList.add('visible'));
+    }
+
     function startBiotoop() {
+        // Zeis ligt al in het gras
+        placeScythe();
+        
         // Snel veel bloemen opbouwen voor hooiland effect
         for (let i = 0; i < 8; i++) {
             setTimeout(addFlower, i * 600);

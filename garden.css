@@ -281,6 +281,32 @@
     z-index: 1025; /* BOVEN nav (1020) - egel loopt VOOR de nav */
 }
 
+/* ===== ZEIS ===== */
+.ground-scythe {
+    position: absolute;
+    height: 55px;
+    width: auto;
+    left: 15%;
+    bottom: 5px;
+    transform: rotate(85deg);
+    transform-origin: bottom right;
+    opacity: 0;
+    transition: opacity 1s ease;
+    filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
+    z-index: 5;
+}
+
+.ground-scythe.visible {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .ground-scythe {
+        height: 40px;
+        left: 10%;
+    }
+}
+
 /* ===== VLIEGENDE DIEREN CONTAINER ===== */
 .header-animals-flying {
     position: fixed;
