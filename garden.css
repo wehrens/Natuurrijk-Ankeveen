@@ -395,7 +395,7 @@
     height: calc(var(--nav-height) + 30px);
     pointer-events: none;
     overflow: visible;
-    z-index: 1015; /* ONDER header-garden (1025) zodat vogels achter planten vliegen */
+    z-index: 1022; /* Boven nav (1020), onder header-garden (1025) */
 }
 
 /* ===== EGEL ===== */

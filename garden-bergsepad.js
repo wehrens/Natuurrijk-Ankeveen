@@ -31,8 +31,8 @@
     // Ze lopen in hun ORIGINELE richting, geen spiegeling
     const WALKERS = [
         { src: 'images/Walkinggirl.gif', facesRight: true },    // Oranje shirt, loopt naar rechts
-        { src: 'images/Walkinggirl2.gif', facesRight: false },  // Rugzak, loopt naar links
-        { src: 'images/WalkingGuy.gif', facesRight: false },    // Baard, loopt naar links
+        { src: 'images/Walkinggirl2.gif', facesRight: true, mirror: true },  // Rugzak, moet gespiegeld naar rechts
+        { src: 'images/WalkingGuy.gif', facesRight: true, mirror: true },    // Baard, moet gespiegeld naar rechts
         { src: 'images/WalkingGuy2.gif', facesRight: true }     // Blauwe trui, loopt naar rechts
     ];
 
@@ -332,14 +332,11 @@
         const walker = pick(WALKERS);
         const img = document.createElement('img');
         img.src = walker.src;
+        img.className = 'walking-person walk-right';
         
-        // Geen spiegeling! Gebruik originele richting
-        // facesRight = true: loopt van links naar rechts
-        // facesRight = false: loopt van rechts naar links
-        if (walker.facesRight) {
-            img.className = 'walking-person walk-right';
-        } else {
-            img.className = 'walking-person walk-left';
+        // Spiegel als nodig (WalkingGuy en Walkinggirl2)
+        if (walker.mirror) {
+            img.style.transform = 'scaleX(-1)';
         }
         
         gardenEl.appendChild(img);
