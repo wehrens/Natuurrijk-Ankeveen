@@ -304,7 +304,7 @@
 }
 
 .ground-scythe.mirrored {
-    transform: rotate(75deg) scaleY(-1);
+    transform: scaleX(-1) rotate(-75deg);
 }
 
 @media (max-width: 768px) {
