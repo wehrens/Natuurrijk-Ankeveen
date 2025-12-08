@@ -105,72 +105,85 @@
         setTimeout(() => { if (img.parentNode) img.remove(); }, 8000);
     }
 
-    function placeScythe() {
-        if (!groundEl) return;
+    let currentScythe = null;
+    let scytheMirrored = false;
 
-        const img = document.createElement('img');
-        img.src = 'images/Zeis.png';
-        img.className = 'ground-scythe';
-        groundEl.appendChild(img);
-        
-        // Fade in
-        requestAnimationFrame(() => img.classList.add('visible'));
-    }
+    function startMaaiselZeisCyclus() {
+        if (!groundEl || !state.biotoopActive) return;
 
-    function placeMaaisel() {
-        if (!groundEl) return;
-
-        function runMaaiselCycle() {
+        function runCycle() {
             if (!state.biotoopActive) return;
-            
-            // Stap 1: Maaisel2 verschijnt
-            const maaisel2 = document.createElement('img');
-            maaisel2.src = 'images/Maaisel2.png';
-            maaisel2.className = 'ground-maaisel maaisel-2';
-            groundEl.appendChild(maaisel2);
-            requestAnimationFrame(() => maaisel2.classList.add('visible'));
 
-            // Stap 2: Na 10 sec, Maaisel verschijnt
+            // Stap 1: Zeis verschijnt (afwisselend gespiegeld)
+            currentScythe = document.createElement('img');
+            currentScythe.src = 'images/Zeis.png';
+            currentScythe.className = 'ground-scythe' + (scytheMirrored ? ' mirrored' : '');
+            groundEl.appendChild(currentScythe);
+            requestAnimationFrame(() => currentScythe.classList.add('visible'));
+
+            // Stap 2: Na 2 sec, Maaisel2 verschijnt
             setTimeout(() => {
                 if (!state.biotoopActive) return;
-                const maaisel1 = document.createElement('img');
-                maaisel1.src = 'images/Maaisel.png';
-                maaisel1.className = 'ground-maaisel maaisel-1';
-                groundEl.appendChild(maaisel1);
-                requestAnimationFrame(() => maaisel1.classList.add('visible'));
+                
+                const maaisel2 = document.createElement('img');
+                maaisel2.src = 'images/Maaisel2.png';
+                maaisel2.className = 'ground-maaisel maaisel-2';
+                groundEl.appendChild(maaisel2);
+                requestAnimationFrame(() => maaisel2.classList.add('visible'));
 
-                // Stap 3: Na 8 sec, Maaisel2 verdwijnt
+                // Stap 3: Na 10 sec, Maaisel verschijnt
                 setTimeout(() => {
                     if (!state.biotoopActive) return;
-                    maaisel2.classList.add('removed');
-                    setTimeout(() => { if (maaisel2.parentNode) maaisel2.remove(); }, 1000);
+                    
+                    const maaisel1 = document.createElement('img');
+                    maaisel1.src = 'images/Maaisel.png';
+                    maaisel1.className = 'ground-maaisel maaisel-1';
+                    groundEl.appendChild(maaisel1);
+                    requestAnimationFrame(() => maaisel1.classList.add('visible'));
 
-                    // Stap 4: Na 8 sec, Maaisel verdwijnt
+                    // Stap 4: Na 8 sec, Maaisel2 vervaagt
                     setTimeout(() => {
                         if (!state.biotoopActive) return;
-                        maaisel1.classList.add('removed');
-                        setTimeout(() => { if (maaisel1.parentNode) maaisel1.remove(); }, 1000);
+                        maaisel2.classList.add('removed');
+                        setTimeout(() => { if (maaisel2.parentNode) maaisel2.remove(); }, 1500);
 
-                        // Stap 5: Na 10 sec, herhaal de cyclus
-                        setTimeout(runMaaiselCycle, 10000);
+                        // Stap 5: Na 8 sec, Maaisel vervaagt
+                        setTimeout(() => {
+                            if (!state.biotoopActive) return;
+                            maaisel1.classList.add('removed');
+                            setTimeout(() => { if (maaisel1.parentNode) maaisel1.remove(); }, 1500);
 
+                            // Stap 6: Na 3 sec, Zeis verdwijnt
+                            setTimeout(() => {
+                                if (!state.biotoopActive || !currentScythe) return;
+                                currentScythe.classList.add('removed');
+                                setTimeout(() => { 
+                                    if (currentScythe && currentScythe.parentNode) currentScythe.remove(); 
+                                    
+                                    // Wissel spiegeling voor volgende cyclus
+                                    scytheMirrored = !scytheMirrored;
+                                    
+                                    // Stap 7: Na 3 sec, start nieuwe cyclus
+                                    setTimeout(runCycle, 3000);
+                                }, 1500);
+                            }, 3000);
+
+                        }, 8000);
                     }, 8000);
-                }, 8000);
-            }, 10000);
+                }, 10000);
+            }, 2000);
         }
 
         // Start de eerste cyclus
-        runMaaiselCycle();
+        runCycle();
     }
 
     function startBiotoop() {
         state.biotoopActive = true;
+        scytheMirrored = false;
         
-        // Zeis ligt al in het gras
-        placeScythe();
-        
-        // Maaisel hoopjes
-        placeMaaisel();
+        // Start de zeis en maaisel cyclus
+        startMaaiselZeisCyclus();
         
         // Snel veel bloemen opbouwen voor hooiland effect
         for (let i = 0; i < 8; i++) {
@@ -206,6 +219,7 @@
 
     function clearBiotoop() {
         state.biotoopActive = false;
+        currentScythe = null;
         Object.values(biotoopTimers).forEach(t => { clearTimeout(t); clearInterval(t); });
         ['headerGarden', 'headerAnimalsGround', 'headerAnimalsFlying'].forEach(id => {
             const el = document.getElementById(id);
