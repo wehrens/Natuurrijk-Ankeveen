@@ -1123,30 +1123,30 @@
 /* Met de klok mee om de til */
 @keyframes swallowCircleCW {
     0%   { 
-        transform: translate(-120px, -30px) scaleX(1); 
+        transform: translate(-80px, -20px) scaleX(1); 
         opacity: 0;
     }
     10%  { 
-        transform: translate(-100px, -20px) scaleX(1); 
+        transform: translate(-60px, -15px) scaleX(1); 
         opacity: 1;
     }
     25%  { 
-        transform: translate(-40px, -60px) scaleX(1); 
+        transform: translate(-25px, -45px) scaleX(1); 
     }
     40%  { 
-        transform: translate(30px, -50px) scaleX(-1); 
+        transform: translate(20px, -35px) scaleX(-1); 
     }
     55%  { 
-        transform: translate(60px, -10px) scaleX(-1); 
+        transform: translate(40px, -5px) scaleX(-1); 
     }
     70%  { 
-        transform: translate(20px, 20px) scaleX(-1); 
+        transform: translate(15px, 15px) scaleX(-1); 
     }
     85%  { 
-        transform: translate(-50px, 0px) scaleX(1); 
+        transform: translate(-35px, 0px) scaleX(1); 
     }
     100% { 
-        transform: translate(-150px, -20px) scaleX(1); 
+        transform: translate(-100px, -15px) scaleX(1); 
         opacity: 0;
     }
 }
@@ -1154,30 +1154,30 @@
 /* Tegen de klok in om de til */
 @keyframes swallowCircleCCW {
     0%   { 
-        transform: translate(120px, -30px) scaleX(-1); 
+        transform: translate(80px, -20px) scaleX(-1); 
         opacity: 0;
     }
     10%  { 
-        transform: translate(100px, -20px) scaleX(-1); 
+        transform: translate(60px, -15px) scaleX(-1); 
         opacity: 1;
     }
     25%  { 
-        transform: translate(40px, -60px) scaleX(-1); 
+        transform: translate(25px, -45px) scaleX(-1); 
     }
     40%  { 
-        transform: translate(-30px, -50px) scaleX(1); 
+        transform: translate(-20px, -35px) scaleX(1); 
     }
     55%  { 
-        transform: translate(-60px, -10px) scaleX(1); 
+        transform: translate(-40px, -5px) scaleX(1); 
     }
     70%  { 
-        transform: translate(-20px, 20px) scaleX(1); 
+        transform: translate(-15px, 15px) scaleX(1); 
     }
     85%  { 
-        transform: translate(50px, 0px) scaleX(-1); 
+        transform: translate(35px, 0px) scaleX(-1); 
     }
     100% { 
-        transform: translate(150px, -20px) scaleX(-1); 
+        transform: translate(100px, -15px) scaleX(-1); 
         opacity: 0;
     }
 }
@@ -1185,7 +1185,7 @@
 /* Responsive zwaluwtil */
 @media (max-width: 767px) {
     .zwaluwtil {
-        height: 90px !important;
+        height: 60px !important;
     }
 }
 

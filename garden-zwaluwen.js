@@ -17,7 +17,7 @@
         },
         til: {
             position: 78,  // % van links
-            height: 130    // px hoogte
+            height: 85     // px hoogte (kleiner zodat til zichtbaar is)
         }
     };
 
