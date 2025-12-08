@@ -117,9 +117,42 @@
         requestAnimationFrame(() => img.classList.add('visible'));
     }
 
+    function placeMaaisel() {
+        if (!groundEl) return;
+
+        // Eerste hoopje maaisel (links)
+        const maaisel1 = document.createElement('img');
+        maaisel1.src = 'images/Maaisel.png';
+        maaisel1.className = 'ground-maaisel maaisel-1';
+        groundEl.appendChild(maaisel1);
+        requestAnimationFrame(() => maaisel1.classList.add('visible'));
+
+        // Tweede hoopje maaisel (rechts)
+        const maaisel2 = document.createElement('img');
+        maaisel2.src = 'images/Maaisel2.png';
+        maaisel2.className = 'ground-maaisel maaisel-2';
+        groundEl.appendChild(maaisel2);
+        requestAnimationFrame(() => maaisel2.classList.add('visible'));
+
+        // Na 20 seconden verdwijnt eerste hoopje (afgevoerd)
+        setTimeout(() => {
+            maaisel1.classList.add('removed');
+            setTimeout(() => { if (maaisel1.parentNode) maaisel1.remove(); }, 1000);
+        }, 20000);
+
+        // Na 25 seconden verdwijnt tweede hoopje
+        setTimeout(() => {
+            maaisel2.classList.add('removed');
+            setTimeout(() => { if (maaisel2.parentNode) maaisel2.remove(); }, 1000);
+        }, 25000);
+    }
+
     function startBiotoop() {
         // Zeis ligt al in het gras
         placeScythe();
+        
+        // Maaisel hoopjes
+        placeMaaisel();
         
         // Snel veel bloemen opbouwen voor hooiland effect
         for (let i = 0; i < 8; i++) {

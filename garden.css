@@ -308,6 +308,50 @@
     }
 }
 
+/* ===== MAAISEL ===== */
+.ground-maaisel {
+    position: absolute;
+    height: 35px;
+    width: auto;
+    top: -18px;
+    opacity: 0;
+    transition: opacity 1s ease;
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.2));
+    z-index: 4;
+}
+
+.ground-maaisel.visible {
+    opacity: 1;
+}
+
+.ground-maaisel.removed {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.ground-maaisel.maaisel-1 {
+    left: 55%;
+}
+
+.ground-maaisel.maaisel-2 {
+    left: 75%;
+    height: 30px;
+}
+
+@media (max-width: 768px) {
+    .ground-maaisel {
+        height: 25px;
+        top: -12px;
+    }
+    .ground-maaisel.maaisel-1 {
+        left: 50%;
+    }
+    .ground-maaisel.maaisel-2 {
+        left: 70%;
+        height: 22px;
+    }
+}
+
 /* ===== VLIEGENDE DIEREN CONTAINER ===== */
 .header-animals-flying {
     position: fixed;
