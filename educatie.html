@@ -91,74 +91,6 @@
         .footer-credit a:hover {
             text-decoration: underline;
         }
-        
-        /* Opruim-intro: Trash items styling */
-        .trash-item {
-            position: absolute;
-            bottom: 0;
-            height: 45px;
-            opacity: 0;
-            transition: opacity 0.5s ease, transform 0.8s ease, left 0.8s ease;
-            transform-origin: bottom center;
-            z-index: 50;
-            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
-        }
-        .trash-item.trash-redbull {
-            height: 55px;
-        }
-        .trash-item.trash-pringles {
-            height: 70px;
-        }
-        .trash-item.trash-tilted {
-            transform: rotate(90deg) translateY(50%);
-            bottom: 20px;
-        }
-        .trash-item.visible {
-            opacity: 1;
-        }
-        .trash-item.sliding {
-            left: 48% !important;
-        }
-        .trash-item.collected {
-            opacity: 0;
-            transform: scale(0.3) translateY(-50px);
-        }
-        .trash-item.trash-tilted.collected {
-            transform: rotate(90deg) scale(0.3) translateY(-50px);
-        }
-        
-        .trash-bag {
-            position: absolute;
-            bottom: 0;
-            height: 70px;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.6s ease, transform 0.6s ease;
-            z-index: 55;
-            filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.3));
-        }
-        .trash-bag.visible {
-            opacity: 1;
-        }
-        .trash-bag.collected {
-            opacity: 0;
-            transform: translateX(-50%) scale(0.5) translateY(-30px);
-        }
-        
-        @media (max-width: 768px) {
-            .trash-item {
-                height: 35px;
-            }
-            .trash-item.trash-redbull {
-                height: 40px;
-            }
-            .trash-item.trash-pringles {
-                height: 50px;
-            }
-            .trash-bag {
-                height: 50px;
-            }
-        }
     </style>
 <script>if("scrollRestoration" in history){history.scrollRestoration="manual";}window.scrollTo(0,0);</script></head>
 <body>
@@ -244,26 +176,26 @@
         <p>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van <a href="https://bruisendankeveen.nl" target="_blank">Stichting Bruisend Ankeveen</a></p>
         <p><a href="index.html">Terug naar hoofdpagina</a></p>
         <div class="footer-credit">
-            Webdesign: Ron Wehrens – <a href="/cdn-cgi/l/email-protection#43316d34262b31262d3003332b2230362e226d202c2e"><span class="__cf_email__" data-cfemail="73015d04161b01161d0033031b1200061e125d101c1e">[email&#160;protected]</span></a>
+            Webdesign: Ron Wehrens – <a data-email-full="ron" href="#">laden...</a>
         </div>
     </footer>
 
     <div class="contact-modal" id="contactModal" onclick="closeContactModal(event)">
-        <div class="contact-modal-content" onclick="event.stopPropagation()">
+                <div class="contact-modal-content" onclick="event.stopPropagation()">
             <span class="contact-modal-close" onclick="closeContactModal()">&times;</span>
             <h3>📬 Neem contact op</h3>
             <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
             <div class="contact-options">
-                <a href="/cdn-cgi/l/email-protection#94faf5e0e1e1e6e6fdfefff5fafff1e2f1f1fad4e4e6fbe0fbfaf9f5fdf8baf7fbf9" class="contact-option">
+                <a data-email="info" href="#" class="contact-option">
                     <div class="contact-option-icon email"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
-                    <div class="contact-option-text"><strong>E-mail</strong><span><span class="__cf_email__" data-cfemail="8fe1eefbfafafdfde6e5e4eee1e4eaf9eaeae1cffffde0fbe0e1e2eee6e3a1ece0e2">[email&#160;protected]</span></span></div>
+                    <div class="contact-option-text"><strong>E-mail</strong><span data-email-text="info">laden...</span></div>
                 </a>
                 <a href="https://wa.me/31646293590" target="_blank" class="contact-option">
                     <div class="contact-option-icon whatsapp"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></div>
                     <div class="contact-option-text"><strong>WhatsApp</strong><span>Stuur ons een berichtje</span></div>
                 </a>
                 <a href="https://signal.me/#p/+31646293590" target="_blank" class="contact-option">
-                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.4c5.302 0 9.6 4.298 9.6 9.6s-4.298 9.6-9.6 9.6S2.4 17.302 2.4 12 6.698 2.4 12 2.4z"/></svg></div>
+                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
                     <div class="contact-option-text"><strong>Signal</strong><span>Veilig en privé chatten</span></div>
                 </a>
                 <a href="tel:+31646293590" class="contact-option">
@@ -275,7 +207,7 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         function openContactModal() {
             document.getElementById('contactModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -283,9 +215,12 @@
         function closeContactModal(event) {
             if (event && event.target.closest('.contact-modal-content')) return;
             document.getElementById('contactModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
+            document.bo.overflow = 'hidden'; }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); document.body.style.overflow = 'auto'; }
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeLightbox(); closeContactModal(); } });
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() { document.querySelector('.nav-links').classList.toggle('mobile-open'); });
     </script>
+    <script src="email-protection.js"></script>
     <script src="garden-educatie.js"></script>
 </body>
 </html>
