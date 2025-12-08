@@ -152,31 +152,16 @@
         pond.className = 'garden-pond poel1';
         pondEl.appendChild(pond);
 
-        // Start pond cycle: 1 → 2 → 3 → 2 → 3 → 2 → 3 ...
-        let pondIndex = 0;
-        const pondSequence = [
-            { src: 'images/Poel1.png', cls: 'poel1' },
-            { src: 'images/Poel2.png', cls: 'poel2' },
-            { src: 'images/Poel3.png', cls: 'poel3' }
-        ];
-        
-        biotoopTimers.pondCycle = setInterval(() => {
-            // Na poel 1, wissel tussen 2 en 3
-            if (pondIndex === 0) {
-                pondIndex = 1; // Ga naar poel 2
-            } else {
-                pondIndex = pondIndex === 1 ? 2 : 1; // Wissel tussen 2 en 3
-            }
-            
+        // Na 20 seconden: wissel naar Poel3 en blijf daar
+        biotoopTimers.pondCycle = setTimeout(() => {
             const currentPond = document.getElementById('currentPond');
             if (currentPond) {
-                // Fade out
                 currentPond.style.transition = 'opacity 1s ease-in-out';
                 currentPond.style.opacity = '0';
                 
                 setTimeout(() => {
-                    currentPond.src = pondSequence[pondIndex].src;
-                    currentPond.className = 'garden-pond ' + pondSequence[pondIndex].cls;
+                    currentPond.src = 'images/Poel3.png';
+                    currentPond.className = 'garden-pond poel3';
                     currentPond.style.opacity = '1';
                 }, 1000);
             }
