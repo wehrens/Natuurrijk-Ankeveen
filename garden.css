@@ -395,7 +395,7 @@
     height: calc(var(--nav-height) + 30px);
     pointer-events: none;
     overflow: visible;
-    z-index: 1030;
+    z-index: 1015; /* ONDER header-garden (1025) zodat vogels achter planten vliegen */
 }
 
 /* ===== EGEL ===== */
@@ -1280,15 +1280,24 @@
 .walking-person {
     position: absolute;
     bottom: -5px; /* Voeten in het gras */
-    height: 90px;
+    height: 60px;
     z-index: 140; /* Voor bomen en riet */
-    animation: walkAcross 18s linear forwards;
     filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.2));
 }
 
-@keyframes walkAcross {
+/* Loopt van links naar rechts */
+.walking-person.walk-right {
+    animation: walkRight 20s linear forwards;
+}
+
+/* Loopt van rechts naar links */
+.walking-person.walk-left {
+    animation: walkLeft 20s linear forwards;
+}
+
+@keyframes walkRight {
     0% {
-        left: -100px;
+        left: -80px;
         opacity: 0;
     }
     5% {
@@ -1303,6 +1312,25 @@
     }
 }
 
+@keyframes walkLeft {
+    0% {
+        right: -80px;
+        left: auto;
+        opacity: 0;
+    }
+    5% {
+        opacity: 1;
+    }
+    95% {
+        opacity: 1;
+    }
+    100% {
+        right: 110%;
+        left: auto;
+        opacity: 0;
+    }
+}
+
 /* Responsive rietkraag */
 @media (max-width: 767px) {
     .reed-clump .reed-plant {
@@ -1312,7 +1340,7 @@
         height: 100px !important;
     }
     .walking-person {
-        height: 55px !important;
+        height: 40px !important;
         bottom: -3px;
     }
 }
@@ -1325,7 +1353,7 @@
         height: 120px !important;
     }
     .walking-person {
-        height: 70px !important;
+        height: 50px !important;
     }
 }
 

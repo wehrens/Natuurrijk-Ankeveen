@@ -15,8 +15,8 @@
             reedGrowthDuration: 15000,  // 15 sec groeiperiode
             reedCuttingStart: 18000,    // Na 18s begint snoeien
             reedCycleReset: 35000,      // Nog sneller! Cyclus herhaalt na 35s
-            walkerFirst: 6000,          // Eerste wandelaar na 6s
-            walkerInterval: 25000,      // Om de 25s een wandelaar
+            walkerFirst: 3000,          // Eerste wandelaar na 3s
+            walkerInterval: 15000,      // Om de 15s een wandelaar
             biotoopReset: 480000
         }
     };
@@ -27,12 +27,13 @@
     let state = { biotoopActive: false };
     let cycleCount = 0; // Telt cycli voor wisselende survivors
 
-    // Wandelaars - facesRight geeft aan welke kant de originele afbeelding opkijkt
+    // Wandelaars - facesRight: true = loopt naar rechts, false = loopt naar links
+    // Ze lopen in hun ORIGINELE richting, geen spiegeling
     const WALKERS = [
-        { src: 'images/Walkinggirl.gif', facesRight: true },
-        { src: 'images/Walkinggirl2.gif', facesRight: false },
-        { src: 'images/WalkingGuy.gif', facesRight: true },
-        { src: 'images/WalkingGuy2.gif', facesRight: false }
+        { src: 'images/Walkinggirl.gif', facesRight: true },    // Oranje shirt, loopt naar rechts
+        { src: 'images/Walkinggirl2.gif', facesRight: false },  // Rugzak, loopt naar links
+        { src: 'images/WalkingGuy.gif', facesRight: false },    // Baard, loopt naar links
+        { src: 'images/WalkingGuy2.gif', facesRight: true }     // Blauwe trui, loopt naar rechts
     ];
 
     // Riet en lisdodde types
@@ -331,19 +332,22 @@
         const walker = pick(WALKERS);
         const img = document.createElement('img');
         img.src = walker.src;
-        img.className = 'walking-person';
         
-        // Alle wandelaars lopen naar rechts, dus spiegel als nodig
-        if (!walker.facesRight) {
-            img.style.transform = 'scaleX(-1)';
+        // Geen spiegeling! Gebruik originele richting
+        // facesRight = true: loopt van links naar rechts
+        // facesRight = false: loopt van rechts naar links
+        if (walker.facesRight) {
+            img.className = 'walking-person walk-right';
+        } else {
+            img.className = 'walking-person walk-left';
         }
         
         gardenEl.appendChild(img);
         
-        // Verwijder na de animatie (18s + marge)
+        // Verwijder na de animatie (20s + marge)
         setTimeout(() => { 
             if (img.parentNode) img.remove(); 
-        }, 20000);
+        }, 22000);
     }
 
     // ===== BIOTOOP LIFECYCLE =====
