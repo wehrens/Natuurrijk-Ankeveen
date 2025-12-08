@@ -259,64 +259,37 @@
     }
 
     function setup() {
-        // Maak containers aan
+        // Vind bestaande containers (al in HTML)
         const nav = document.querySelector('nav');
         if (!nav) return;
 
-        // Header background (achtergrond)
-        let bgEl = document.getElementById('headerBackground');
-        if (!bgEl) {
-            bgEl = document.createElement('div');
-            bgEl.id = 'headerBackground';
-            bgEl.className = 'header-background';
-            document.body.insertBefore(bgEl, document.body.firstChild);
-        }
-
-        // Gras container - gebruik bestaande (al in HTML)
-        let grassEl = document.getElementById('headerGrass');
-        if (!grassEl) {
-            grassEl = document.createElement('div');
-            grassEl.id = 'headerGrass';
-            grassEl.className = 'header-grass';
-            // Voeg gras images toe
-            for (let i = 0; i < 10; i++) {
-                const grassImg = document.createElement('img');
-                grassImg.src = 'images/Gras-cropped.png';
-                grassImg.className = 'garden-grass';
-                grassEl.appendChild(grassImg);
-            }
-            document.body.insertBefore(grassEl, nav.nextSibling);
-        }
-
-        // Garden container (bloemen, lisdoddes, roerdomp)
+        // Gebruik bestaande elementen
         gardenEl = document.getElementById('headerGarden');
-        if (!gardenEl) {
-            gardenEl = document.createElement('div');
-            gardenEl.id = 'headerGarden';
-            gardenEl.className = 'header-garden';
-            document.body.insertBefore(gardenEl, grassEl.nextSibling);
-        }
-
-        // Ground animals container (otter)
         groundEl = document.getElementById('headerAnimalsGround');
-        if (!groundEl) {
-            groundEl = document.createElement('div');
-            groundEl.id = 'headerAnimalsGround';
-            groundEl.className = 'header-animals-ground';
-            document.body.insertBefore(groundEl, gardenEl.nextSibling);
-        }
-
-        // Flying animals container (ijsvogel)
         flyingEl = document.getElementById('headerAnimalsFlying');
-        if (!flyingEl) {
-            flyingEl = document.createElement('div');
-            flyingEl.id = 'headerAnimalsFlying';
-            flyingEl.className = 'header-animals-flying';
-            document.body.insertBefore(flyingEl, groundEl.nextSibling);
-        }
 
-        // Start de biotoop
-        setTimeout(startBiotoop, CONFIG.timing.startDelay);
+        // Start de biotoop (zonder clear bij eerste keer)
+        setTimeout(() => {
+            // Fase 1: Vijver (snel!)
+            biotoopTimers.pond = setTimeout(showPond, CONFIG.timing.pondAppears);
+
+            // Fase 2: Lisdoddes
+            biotoopTimers.lisdoddes = setTimeout(showLisdoddes, CONFIG.timing.lisdoddesStart);
+
+            // Fase 3: Roerdomp
+            biotoopTimers.roerdomp = setTimeout(showRoerdomp, CONFIG.timing.roerdompAppears);
+
+            // Fase 4: IJsvogel cyclus
+            biotoopTimers.kingfisher = setTimeout(startKingfisherCycle, CONFIG.timing.kingfisherFirst);
+
+            // Fase 5: Otter cyclus
+            biotoopTimers.otter = setTimeout(startOtterCycle, CONFIG.timing.otterFirst);
+
+            // Reset na 8 minuten
+            biotoopTimers.reset = setTimeout(() => {
+                startBiotoop();
+            }, CONFIG.timing.biotoopReset);
+        }, CONFIG.timing.startDelay);
     }
 
     // Start!
