@@ -8,11 +8,11 @@
     const CONFIG = {
         timing: {
             startDelay: 1500,
-            flowerInterval: 3000,
-            butterflyFirst: 8000,
-            butterflyInterval: 12000,
-            ladybugFirst: 20000,
-            ladybugInterval: 25000,
+            flowerInterval: 2500,
+            butterflyFirst: 6000,
+            butterflyInterval: 10000,
+            ladybugFirst: 15000,
+            ladybugInterval: 20000,
             biotoopReset: 480000
         }
     };
@@ -21,28 +21,40 @@
     let biotoopTimers = {};
     let gardenEl, groundEl, flyingEl;
 
+    // ALLE bloemen voor hooiland effect
     const FLOWERS = [
+        { src: 'images/Klaproos.png', size: 'size-xs' },
         { src: 'images/Klaproos.png', size: 'size-sm' },
         { src: 'images/Klaproos.png', size: 'size-md' },
+        { src: 'images/Klaprozen2.png', size: 'size-xs' },
         { src: 'images/Klaprozen2.png', size: 'size-sm' },
         { src: 'images/Klaprozen2.png', size: 'size-md' },
         { src: 'images/Klaprozen.png', size: 'size-xs' },
+        { src: 'images/Klaprozen.png', size: 'size-sm' },
+        { src: 'images/Ridderspoor.png', size: 'size-sm' },
         { src: 'images/Ridderspoor.png', size: 'size-md' },
         { src: 'images/Ridderspoor.png', size: 'size-lg' },
+        { src: 'images/Ridderspoor2.png', size: 'size-xs' },
         { src: 'images/Ridderspoor2.png', size: 'size-sm' },
         { src: 'images/Ridderspoor2.png', size: 'size-md' },
+        { src: 'images/Digitalis.png', size: 'size-sm' },
         { src: 'images/Digitalis.png', size: 'size-md' },
         { src: 'images/Digitalis.png', size: 'size-lg' },
+        { src: 'images/Veldoeket.png', size: 'size-sm' },
         { src: 'images/Veldoeket.png', size: 'size-md' },
         { src: 'images/Veldoeket.png', size: 'size-lg' },
+        { src: 'images/Gelelis.png', size: 'size-sm', extraClass: 'lower' },
+        { src: 'images/Gelelis.png', size: 'size-md', extraClass: 'lower' },
+        { src: 'images/Lisdodde2.png', size: 'size-sm' },
     ];
 
-    const FLOWER_POSITIONS = [5, 12, 20, 28, 38, 48, 58, 68, 78, 88, 94];
+    // Meer posities voor vol hooiland
+    const FLOWER_POSITIONS = [3, 8, 14, 20, 27, 34, 42, 50, 58, 66, 74, 82, 89, 95];
 
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
     function addFlower() {
-        if (!gardenEl || state.flowers.length >= 12) return;
+        if (!gardenEl || state.flowers.length >= 16) return;
 
         const usedPositions = state.flowers.map(f => f.pos);
         const free = FLOWER_POSITIONS.filter(p => !usedPositions.includes(p));
@@ -54,7 +66,7 @@
 
         const img = document.createElement('img');
         img.src = data.src;
-        img.className = `garden-flower ${data.size}${mirrored ? ' mirrored' : ''}`;
+        img.className = `garden-flower ${data.size}${mirrored ? ' mirrored' : ''}${data.extraClass ? ' ' + data.extraClass : ''}`;
         img.style.left = pos + '%';
 
         gardenEl.appendChild(img);
@@ -71,7 +83,7 @@
         img.className = 'flying-butterfly ' + (Math.random() > 0.5 ? 'flight-path-1' : 'flight-path-2');
 
         flyingEl.appendChild(img);
-        setTimeout(() => { if (img.parentNode) img.remove(); }, 20000);
+        setTimeout(() => { if (img.parentNode) img.remove(); }, 15000);
     }
 
     function spawnLadybug() {
@@ -86,20 +98,20 @@
     }
 
     function startBiotoop() {
-        // Bloemen opbouwen
-        for (let i = 0; i < 6; i++) {
-            setTimeout(addFlower, i * 800);
+        // Snel veel bloemen opbouwen voor hooiland effect
+        for (let i = 0; i < 8; i++) {
+            setTimeout(addFlower, i * 600);
         }
 
         biotoopTimers.flowers = setInterval(() => {
-            if (state.flowers.length < 12) addFlower();
+            if (state.flowers.length < 16) addFlower();
         }, CONFIG.timing.flowerInterval);
 
-        // Vlinders
+        // Vlinders - vaker en sneller
         biotoopTimers.butterfly = setTimeout(() => {
             spawnButterfly();
             biotoopTimers.butterflyInterval = setInterval(() => {
-                if (Math.random() > 0.3) spawnButterfly();
+                if (Math.random() > 0.25) spawnButterfly();
             }, CONFIG.timing.butterflyInterval);
         }, CONFIG.timing.butterflyFirst);
 

@@ -8,11 +8,11 @@
     const CONFIG = {
         timing: {
             startDelay: 1500,
-            geeseFirst: 15000,
-            geeseInterval: 45000,
-            eagleAppears: 90000,      // Zeearend na 1.5 minuut
-            swallowFirst: 20000,
-            swallowInterval: 30000,
+            geeseFirst: 5000,          // Sneller! Na 5 seconden
+            geeseInterval: 35000,
+            eagleAppears: 90000,
+            swallowFirst: 15000,
+            swallowInterval: 25000,
             biotoopReset: 480000
         }
     };
@@ -20,22 +20,36 @@
     let biotoopTimers = {};
     let flyingEl;
 
+    function spawnSingleGoose(delay) {
+        setTimeout(() => {
+            if (!flyingEl) return;
+            const img = document.createElement('img');
+            img.src = 'images/Goose.gif';
+            img.className = 'flying-goose';
+            // Kleine variatie in timing via animation-delay
+            img.style.animationDuration = (9 + Math.random() * 2) + 's';
+            flyingEl.appendChild(img);
+            setTimeout(() => { if (img.parentNode) img.remove(); }, 15000);
+        }, delay);
+    }
+
     function spawnGeese() {
         if (!flyingEl) return;
 
-        const img = document.createElement('img');
-        
-        // 50/50 kans op enkele gans of groep
-        if (Math.random() > 0.5) {
-            img.src = 'images/Goose.gif';
-            img.className = 'flying-goose';
-        } else {
+        // 40% kans op groep ganzen, 60% kans op 3 losse ganzen
+        if (Math.random() > 0.6) {
+            // Groep ganzen
+            const img = document.createElement('img');
             img.src = 'images/Geese.gif';
             img.className = 'flying-geese';
+            flyingEl.appendChild(img);
+            setTimeout(() => { if (img.parentNode) img.remove(); }, 15000);
+        } else {
+            // 3 losse ganzen met verschillende timing
+            spawnSingleGoose(0);
+            spawnSingleGoose(600 + Math.random() * 400);
+            spawnSingleGoose(1400 + Math.random() * 600);
         }
-
-        flyingEl.appendChild(img);
-        setTimeout(() => { if (img.parentNode) img.remove(); }, 15000);
     }
 
     function spawnEagle() {
@@ -62,11 +76,11 @@
     }
 
     function startBiotoop() {
-        // Ganzen - regelmatig overvliegend
+        // Ganzen - snel beginnen!
         biotoopTimers.geese = setTimeout(() => {
             spawnGeese();
             biotoopTimers.geeseInterval = setInterval(() => {
-                if (Math.random() > 0.35) spawnGeese();
+                if (Math.random() > 0.25) spawnGeese();
             }, CONFIG.timing.geeseInterval);
         }, CONFIG.timing.geeseFirst);
 
@@ -77,7 +91,7 @@
         biotoopTimers.swallow = setTimeout(() => {
             spawnSwallow();
             biotoopTimers.swallowInterval = setInterval(() => {
-                if (Math.random() > 0.5) spawnSwallow();
+                if (Math.random() > 0.4) spawnSwallow();
             }, CONFIG.timing.swallowInterval);
         }, CONFIG.timing.swallowFirst);
 

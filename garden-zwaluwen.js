@@ -8,10 +8,10 @@
     const CONFIG = {
         timing: {
             startDelay: 1500,
-            swallowFirst: 3000,
-            swallowInterval: 8000,
-            butterflyFirst: 15000,
-            butterflyInterval: 20000,
+            swallowFirst: 2000,        // Snel beginnen!
+            swallowInterval: 6000,     // Vaker
+            butterflyFirst: 12000,
+            butterflyInterval: 18000,
             biotoopReset: 480000
         }
     };
@@ -33,9 +33,9 @@
         const img = document.createElement('img');
         img.src = pick(SWALLOWS);
         
-        // Variatie in vliegpatronen
-        const patterns = ['swallow-path-1', 'swallow-path-2', 'swallow-path-3'];
-        img.className = 'flying-swallow ' + pick(patterns);
+        // Gebruik werkende swallow-path classes
+        const pathNum = 1 + Math.floor(Math.random() * 3);
+        img.className = 'flying-swallow swallow-path-' + pathNum;
 
         flyingEl.appendChild(img);
         setTimeout(() => { if (img.parentNode) img.remove(); }, 12000);
@@ -45,7 +45,7 @@
         // Groepje van 2-4 zwaluwen kort na elkaar
         const count = 2 + Math.floor(Math.random() * 3);
         for (let i = 0; i < count; i++) {
-            setTimeout(spawnSwallow, i * 400);
+            setTimeout(spawnSwallow, i * 300);
         }
     }
 
@@ -57,19 +57,20 @@
         img.className = 'flying-butterfly ' + (Math.random() > 0.5 ? 'flight-path-1' : 'flight-path-2');
 
         flyingEl.appendChild(img);
-        setTimeout(() => { if (img.parentNode) img.remove(); }, 20000);
+        setTimeout(() => { if (img.parentNode) img.remove(); }, 15000);
     }
 
     function startBiotoop() {
-        // Eerste zwaluwen snel
-        setTimeout(spawnSwallow, 2000);
-        setTimeout(spawnSwallow, 3500);
+        // Eerste zwaluwen direct
+        setTimeout(spawnSwallow, 1500);
+        setTimeout(spawnSwallow, 2500);
+        setTimeout(spawnSwallow, 4000);
 
         // Zwaluwen cyclus - soms solo, soms groepjes
         biotoopTimers.swallow = setTimeout(() => {
             biotoopTimers.swallowInterval = setInterval(() => {
-                if (Math.random() > 0.3) { // 70% kans
-                    if (Math.random() > 0.5) {
+                if (Math.random() > 0.2) { // 80% kans
+                    if (Math.random() > 0.6) {
                         spawnSwallowGroup();
                     } else {
                         spawnSwallow();
@@ -82,7 +83,7 @@
         biotoopTimers.butterfly = setTimeout(() => {
             spawnButterfly();
             biotoopTimers.butterflyInterval = setInterval(() => {
-                if (Math.random() > 0.6) spawnButterfly();
+                if (Math.random() > 0.5) spawnButterfly();
             }, CONFIG.timing.butterflyInterval);
         }, CONFIG.timing.butterflyFirst);
 
