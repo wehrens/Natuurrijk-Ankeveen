@@ -35,6 +35,7 @@
     let biotoopTimers = {
         flowers: null,
         pond: null,
+        pondCycle: null,
         roerdomp: null,
         otter: null,
         otterInterval: null,
@@ -147,7 +148,28 @@
 
         const pond = document.createElement('img');
         pond.src = 'images/Poel1.png';
+        pond.id = 'currentPond';
         pond.className = 'garden-pond';
+        pondEl.appendChild(pond);
+
+        // Start pond cycle - wissel elke 20 seconden
+        let pondIndex = 1;
+        const ponds = ['images/Poel1.png', 'images/Poel2.png', 'images/Poel3.png'];
+        
+        biotoopTimers.pondCycle = setInterval(() => {
+            pondIndex = (pondIndex + 1) % 3;
+            const currentPond = document.getElementById('currentPond');
+            if (currentPond) {
+                // Fade out
+                currentPond.style.transition = 'opacity 1s ease-in-out';
+                currentPond.style.opacity = '0';
+                
+                setTimeout(() => {
+                    currentPond.src = ponds[pondIndex];
+                    currentPond.style.opacity = '1';
+                }, 1000);
+            }
+        }, 20000);
         pondEl.appendChild(pond);
 
         // Lisdodde links van vijver (in garden container, over het gras)
