@@ -83,7 +83,7 @@
         setTimeout(() => {
             const left = document.createElement('img');
             left.src = 'images/Lisdodde.png';
-            left.className = 'garden-lisdodde size-lg';
+            left.className = 'garden-lisdodde size-md';
             left.style.left = '65%';
             gardenEl.appendChild(left);
             requestAnimationFrame(() => left.classList.add('blooming'));
@@ -93,7 +93,7 @@
         setTimeout(() => {
             const mid1 = document.createElement('img');
             mid1.src = 'images/Lisdodde2.png';
-            mid1.className = 'garden-lisdodde size-md';
+            mid1.className = 'garden-lisdodde size-sm';
             mid1.style.left = '72%';
             gardenEl.appendChild(mid1);
             requestAnimationFrame(() => mid1.classList.add('blooming'));
@@ -113,7 +113,7 @@
         setTimeout(() => {
             const right = document.createElement('img');
             right.src = 'images/Lisdodde3.png';
-            right.className = 'garden-lisdodde size-lg mirrored';
+            right.className = 'garden-lisdodde size-md mirrored';
             right.style.left = '86%';
             gardenEl.appendChild(right);
             requestAnimationFrame(() => right.classList.add('blooming'));
@@ -213,7 +213,8 @@
             }
         });
 
-        ['headerGarden', 'headerGrass', 'headerPond', 'headerAnimalsGround', 'headerAnimalsFlying'].forEach(id => {
+        // Clear alles behalve gras (dat blijft altijd staan)
+        ['headerGarden', 'headerPond', 'headerAnimalsGround', 'headerAnimalsFlying'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerHTML = '';
         });
@@ -271,16 +272,19 @@
             document.body.insertBefore(bgEl, document.body.firstChild);
         }
 
-        // Gras container
+        // Gras container - gebruik bestaande (al in HTML)
         let grassEl = document.getElementById('headerGrass');
         if (!grassEl) {
             grassEl = document.createElement('div');
             grassEl.id = 'headerGrass';
             grassEl.className = 'header-grass';
-            const grassImg = document.createElement('img');
-            grassImg.src = 'images/Gras-cropped.png';
-            grassImg.className = 'grass-image';
-            grassEl.appendChild(grassImg);
+            // Voeg gras images toe
+            for (let i = 0; i < 10; i++) {
+                const grassImg = document.createElement('img');
+                grassImg.src = 'images/Gras-cropped.png';
+                grassImg.className = 'garden-grass';
+                grassEl.appendChild(grassImg);
+            }
             document.body.insertBefore(grassEl, nav.nextSibling);
         }
 
