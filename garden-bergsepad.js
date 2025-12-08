@@ -67,12 +67,37 @@
         if (!flyingEl) return;
 
         const img = document.createElement('img');
-        const swallows = ['images/Swallowflight.png', 'images/Swallowflight2.png', 'images/Swallowflight3.png'];
-        img.src = swallows[Math.floor(Math.random() * swallows.length)];
-        img.className = 'flying-swallow swallow-path-' + (1 + Math.floor(Math.random() * 3));
-
+        
+        const swallowOptions = [
+            { src: 'images/Swallowflight.png', facesRight: true },
+            { src: 'images/Swallowflight2.png', facesRight: false },
+            { src: 'images/Swallowflight3.png', facesRight: false }
+        ];
+        const chosen = swallowOptions[Math.floor(Math.random() * swallowOptions.length)];
+        img.src = chosen.src;
+        
+        const fliesRight = Math.random() > 0.5;
+        const fliesUp = Math.random() < 0.3;
+        const needsMirror = chosen.facesRight !== fliesRight;
+        
+        let className = 'flying-swallow ';
+        if (fliesUp) {
+            if (fliesRight) {
+                className += needsMirror ? 'fly-right-up-mirrored' : 'fly-right-up-normal';
+            } else {
+                className += needsMirror ? 'fly-left-up-mirrored' : 'fly-left-up-normal';
+            }
+        } else {
+            if (fliesRight) {
+                className += needsMirror ? 'fly-right-mirrored' : 'fly-right-normal';
+            } else {
+                className += needsMirror ? 'fly-left-mirrored' : 'fly-left-normal';
+            }
+        }
+        
+        img.className = className;
         flyingEl.appendChild(img);
-        setTimeout(() => { if (img.parentNode) img.remove(); }, 12000);
+        setTimeout(() => { if (img.parentNode) img.remove(); }, 8000);
     }
 
     function startBiotoop() {

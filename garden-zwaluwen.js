@@ -31,14 +31,37 @@
         if (!flyingEl) return;
 
         const img = document.createElement('img');
-        img.src = pick(SWALLOWS);
         
-        // Gebruik werkende swallow-path classes
-        const pathNum = 1 + Math.floor(Math.random() * 3);
-        img.className = 'flying-swallow swallow-path-' + pathNum;
-
+        const swallowOptions = [
+            { src: 'images/Swallowflight.png', facesRight: true },
+            { src: 'images/Swallowflight2.png', facesRight: false },
+            { src: 'images/Swallowflight3.png', facesRight: false }
+        ];
+        const chosen = swallowOptions[Math.floor(Math.random() * swallowOptions.length)];
+        img.src = chosen.src;
+        
+        const fliesRight = Math.random() > 0.5;
+        const fliesUp = Math.random() < 0.3;
+        const needsMirror = chosen.facesRight !== fliesRight;
+        
+        let className = 'flying-swallow ';
+        if (fliesUp) {
+            if (fliesRight) {
+                className += needsMirror ? 'fly-right-up-mirrored' : 'fly-right-up-normal';
+            } else {
+                className += needsMirror ? 'fly-left-up-mirrored' : 'fly-left-up-normal';
+            }
+        } else {
+            if (fliesRight) {
+                className += needsMirror ? 'fly-right-mirrored' : 'fly-right-normal';
+            } else {
+                className += needsMirror ? 'fly-left-mirrored' : 'fly-left-normal';
+            }
+        }
+        
+        img.className = className;
         flyingEl.appendChild(img);
-        setTimeout(() => { if (img.parentNode) img.remove(); }, 12000);
+        setTimeout(() => { if (img.parentNode) img.remove(); }, 8000);
     }
 
     function spawnSwallowGroup() {
@@ -53,11 +76,18 @@
         if (!flyingEl) return;
 
         const img = document.createElement('img');
-        img.src = Math.random() > 0.5 ? 'images/Vlinder.gif' : 'images/Vlinder2.gif';
-        img.className = 'flying-butterfly ' + (Math.random() > 0.5 ? 'flight-path-1' : 'flight-path-2');
+        const isBlue = Math.random() > 0.5;
+        img.src = isBlue ? 'images/Vlinder2.gif' : 'images/Vlinder.gif';
+        
+        const goingRight = Math.random() > 0.5;
+        if (isBlue) {
+            img.className = 'flying-butterfly ' + (goingRight ? 'flutter-right-smooth' : 'flutter-left-smooth');
+        } else {
+            img.className = 'flying-butterfly ' + (goingRight ? 'flutter-right' : 'flutter-left');
+        }
 
         flyingEl.appendChild(img);
-        setTimeout(() => { if (img.parentNode) img.remove(); }, 15000);
+        setTimeout(() => { if (img.parentNode) img.remove(); }, 30000);
     }
 
     function startBiotoop() {

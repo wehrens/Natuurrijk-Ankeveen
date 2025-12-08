@@ -69,22 +69,30 @@
         if (!flyingEl) return;
 
         const img = document.createElement('img');
-        img.src = Math.random() > 0.5 ? 'images/Vlinder.gif' : 'images/Vlinder2.gif';
-        img.className = 'flying-butterfly ' + (Math.random() > 0.5 ? 'flight-path-1' : 'flight-path-2');
+        const isBlue = Math.random() > 0.5;
+        img.src = isBlue ? 'images/Vlinder2.gif' : 'images/Vlinder.gif';
+        
+        const goingRight = Math.random() > 0.5;
+        if (isBlue) {
+            img.className = 'flying-butterfly ' + (goingRight ? 'flutter-right-smooth' : 'flutter-left-smooth');
+        } else {
+            img.className = 'flying-butterfly ' + (goingRight ? 'flutter-right' : 'flutter-left');
+        }
 
         flyingEl.appendChild(img);
-        setTimeout(() => { if (img.parentNode) img.remove(); }, 20000);
+        setTimeout(() => { if (img.parentNode) img.remove(); }, 30000);
     }
 
     function spawnLadybug() {
-        if (!groundEl) return;
+        if (!flyingEl) return;
 
         const img = document.createElement('img');
         img.src = 'images/Ladybug.gif';
-        img.className = 'crawling-ladybug';
+        img.className = 'flying-ladybug';
+        img.style.left = (20 + Math.random() * 60) + '%';
 
-        groundEl.appendChild(img);
-        setTimeout(() => { if (img.parentNode) img.remove(); }, 15000);
+        flyingEl.appendChild(img);
+        setTimeout(() => { if (img.parentNode) img.remove(); }, 8000);
     }
 
     function startBiotoop() {
