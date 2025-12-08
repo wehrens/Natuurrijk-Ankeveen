@@ -1092,6 +1092,83 @@
 }
 
 /* ===== RESPONSIVE ===== */
+/* ===== RIETKRAAG BERGSE PAD ===== */
+.header-reeds {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: var(--header-total);
+    pointer-events: none;
+    overflow: visible;
+    z-index: 1005; /* ACHTER het gras (gras is 1010) */
+}
+
+.reed-clump {
+    position: absolute;
+    bottom: 5px;
+    display: flex;
+    align-items: flex-end;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    transform: translateX(-50%);
+}
+
+.reed-clump.visible {
+    opacity: 1;
+}
+
+.reed-clump.cutting {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reed-plant {
+    width: auto;
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.15));
+}
+
+/* Bomen */
+.garden-tree {
+    position: absolute;
+    bottom: 5px;
+    width: auto;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    transform: translateX(-50%);
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+}
+
+.garden-tree.visible {
+    opacity: 1;
+}
+
+.garden-tree.cutting {
+    opacity: 0;
+    transform: translateX(-50%) translateY(15px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* Responsive rietkraag */
+@media (max-width: 767px) {
+    .reed-clump .reed-plant {
+        height: 50px !important;
+    }
+    .garden-tree {
+        height: 100px !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .reed-clump .reed-plant {
+        height: 65px !important;
+    }
+    .garden-tree {
+        height: 120px !important;
+    }
+}
+
 @media (max-width: 767px) {
     :root {
         --nav-height: 60px;
