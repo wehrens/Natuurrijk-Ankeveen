@@ -1091,6 +1091,104 @@
     100% { left: 10%;    top: -50px; transform: scaleX(-1); }
 }
 
+/* ===== ZWALUWTIL ===== */
+.zwaluwtil {
+    position: absolute;
+    bottom: 3px;
+    width: auto;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    transform: translateX(-50%);
+    z-index: 50;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+}
+
+.zwaluwtil.visible {
+    opacity: 1;
+}
+
+/* Zwaluwen die om de til cirkelen */
+.flying-swallow.til-circle {
+    transform-origin: center center;
+}
+
+.flying-swallow.til-circle.circle-cw {
+    animation: swallowCircleCW 5s ease-in-out forwards;
+}
+
+.flying-swallow.til-circle.circle-ccw {
+    animation: swallowCircleCCW 5s ease-in-out forwards;
+}
+
+/* Met de klok mee om de til */
+@keyframes swallowCircleCW {
+    0%   { 
+        transform: translate(-120px, -30px) scaleX(1); 
+        opacity: 0;
+    }
+    10%  { 
+        transform: translate(-100px, -20px) scaleX(1); 
+        opacity: 1;
+    }
+    25%  { 
+        transform: translate(-40px, -60px) scaleX(1); 
+    }
+    40%  { 
+        transform: translate(30px, -50px) scaleX(-1); 
+    }
+    55%  { 
+        transform: translate(60px, -10px) scaleX(-1); 
+    }
+    70%  { 
+        transform: translate(20px, 20px) scaleX(-1); 
+    }
+    85%  { 
+        transform: translate(-50px, 0px) scaleX(1); 
+    }
+    100% { 
+        transform: translate(-150px, -20px) scaleX(1); 
+        opacity: 0;
+    }
+}
+
+/* Tegen de klok in om de til */
+@keyframes swallowCircleCCW {
+    0%   { 
+        transform: translate(120px, -30px) scaleX(-1); 
+        opacity: 0;
+    }
+    10%  { 
+        transform: translate(100px, -20px) scaleX(-1); 
+        opacity: 1;
+    }
+    25%  { 
+        transform: translate(40px, -60px) scaleX(-1); 
+    }
+    40%  { 
+        transform: translate(-30px, -50px) scaleX(1); 
+    }
+    55%  { 
+        transform: translate(-60px, -10px) scaleX(1); 
+    }
+    70%  { 
+        transform: translate(-20px, 20px) scaleX(1); 
+    }
+    85%  { 
+        transform: translate(50px, 0px) scaleX(-1); 
+    }
+    100% { 
+        transform: translate(150px, -20px) scaleX(-1); 
+        opacity: 0;
+    }
+}
+
+/* Responsive zwaluwtil */
+@media (max-width: 767px) {
+    .zwaluwtil {
+        height: 90px !important;
+    }
+}
+
 /* ===== RESPONSIVE ===== */
 /* ===== RIETKRAAG BERGSE PAD ===== */
 .header-reeds {
