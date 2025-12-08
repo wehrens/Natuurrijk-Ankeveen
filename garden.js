@@ -58,8 +58,9 @@
         { src: 'images/Klaproos.png', size: 'size-md' },
         { src: 'images/Klaprozen2.png', size: 'size-sm' },
         { src: 'images/Klaprozen2.png', size: 'size-md' },
+        // Klaprozen.png kleiner (was size-sm/md)
+        { src: 'images/Klaprozen.png', size: 'size-xs' },
         { src: 'images/Klaprozen.png', size: 'size-sm' },
-        { src: 'images/Klaprozen.png', size: 'size-md' },
         // Vingerhoedskruid (Digitalis) variaties
         { src: 'images/Digitalis.png', size: 'size-md' },
         { src: 'images/Digitalis.png', size: 'size-lg' },
@@ -68,9 +69,9 @@
         { src: 'images/Ridderspoor.png', size: 'size-lg' },
         { src: 'images/Ridderspoor2.png', size: 'size-sm' },
         { src: 'images/Ridderspoor2.png', size: 'size-md' },
-        // Andere bloemen
-        { src: 'images/Gelelis.png', size: 'size-sm' },
-        { src: 'images/Gelelis.png', size: 'size-md' },
+        // Gelelis - lager gepositioneerd via extra class
+        { src: 'images/Gelelis.png', size: 'size-sm', extraClass: 'lower' },
+        { src: 'images/Gelelis.png', size: 'size-md', extraClass: 'lower' },
         { src: 'images/Veldoeket.png', size: 'size-md' },
         { src: 'images/Veldoeket.png', size: 'size-lg' },
         { src: 'images/Lisdodde2.png', size: 'size-sm' },
@@ -108,7 +109,7 @@
 
         const img = document.createElement('img');
         img.src = data.src;
-        img.className = `garden-flower ${data.size}${mirrored ? ' mirrored' : ''}`;
+        img.className = `garden-flower ${data.size}${mirrored ? ' mirrored' : ''}${data.extraClass ? ' ' + data.extraClass : ''}`;
         img.style.left = pos + '%';
         
         gardenEl.appendChild(img);
@@ -684,7 +685,7 @@
             const data = FLOWERS[i % FLOWERS.length];
             const img = document.createElement('img');
             img.src = data.src;
-            img.className = `garden-flower ${data.size}${i % 2 ? ' mirrored' : ''}`;
+            img.className = `garden-flower ${data.size}${i % 2 ? ' mirrored' : ''}${data.extraClass ? ' ' + data.extraClass : ''}`;
             img.style.left = pos + '%';
             img.style.opacity = '1';
             img.style.transform = i % 2 ? 'scaleX(-1)' : 'none';

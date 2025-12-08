@@ -81,6 +81,11 @@
 .garden-flower.size-md { height: 50px; }
 .garden-flower.size-lg { height: 65px; }
 
+/* Gelelis (gele bloemen) lager positioneren */
+.garden-flower.lower {
+    bottom: -5px;
+}
+
 .garden-flower.blooming {
     animation: bloomFlower 2.5s ease-out forwards;
 }
