@@ -7,7 +7,7 @@
     
     // Email adressen in stukjes (Cloudflare herkent dit niet)
     const EMAILS = {
-        info: ['info', 'natuurrijkankeveen', 'nl'],
+        info: ['natuurrijkankeveen', 'protonmail', 'com'],
         ron: ['r.wehrens', 'phasuma', 'com']
     };
     
