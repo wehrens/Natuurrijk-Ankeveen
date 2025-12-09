@@ -18,10 +18,10 @@
             ladybugInterval: 20000,      // Ladybug elke 20s
             kingfisherFirst: 30000,      // Eerste ijsvogel na 30s
             kingfisherInterval: 35000,   // Ijsvogel elke 35s
-            otterFirst: 45000,           // Otter na 45s
-            otterInterval: 60000,        // Otter elke 60s
-            slobeendFirst: 20000,        // Slobeend na 20s
-            slobeendInterval: 50000,     // Slobeend elke 50s
+            otterFirst: 20000,           // Otter na 20s (slobeend volgt)
+            otterInterval: 45000,        // Otter elke 45s
+            slobeendFirst: 20000,        // (niet meer gebruikt, slobeend volgt otter)
+            slobeendInterval: 50000,     // (niet meer gebruikt)
             biotoopReset: 480000,        // 8 minuten reset
             roerdompFlipInterval: 20000, // Roerdomp kijkt vaker om
         }
@@ -341,6 +341,11 @@
 
         groundEl.appendChild(img);
 
+        // Na 12s verdwijnt otter in vijver, dan komt slobeend tevoorschijn
+        setTimeout(() => {
+            spawnSlobeend();
+        }, 13000);
+
         setTimeout(() => {
             if (img.parentNode) img.remove();
         }, 13000);
@@ -435,11 +440,8 @@
         // Fase 6: IJsvogel cyclus
         biotoopTimers.kingfisher = setTimeout(startKingfisherCycle, CONFIG.timing.kingfisherFirst);
 
-        // Fase 7: Otter cyclus
+        // Fase 7: Otter cyclus (slobeend volgt automatisch na elke otter)
         biotoopTimers.otter = setTimeout(startOtterCycle, CONFIG.timing.otterFirst);
-
-        // Fase 8: Slobeend cyclus
-        biotoopTimers.slobeend = setTimeout(startSlobeendCycle, CONFIG.timing.slobeendFirst);
 
         // Reset na 8 minuten
         biotoopTimers.reset = setTimeout(() => {
