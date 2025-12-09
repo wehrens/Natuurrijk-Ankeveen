@@ -1279,7 +1279,7 @@
 /* ===== MARIA BEELDJE ===== */
 .maria-statue {
     position: absolute;
-    bottom: 0;
+    bottom: 8px; /* Iets omhoog zodat er gras onder zichtbaar is */
     width: auto;
     transform: translateX(-50%);
     z-index: 115; /* VOOR Lisdodde (110), ACHTER riet (120), VOOR wandelaars (100) */
@@ -1311,6 +1311,7 @@
     }
     .maria-statue {
         height: 35px !important;
+        bottom: 5px !important;
     }
 }
 
@@ -1326,6 +1327,7 @@
     }
     .maria-statue {
         height: 45px !important;
+        bottom: 6px !important;
     }
 }
 

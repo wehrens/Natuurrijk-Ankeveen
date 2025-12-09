@@ -16,7 +16,7 @@
             reedCuttingStart: 18000,    // Na 18s begint snoeien
             reedCycleReset: 35000,      // Nog sneller! Cyclus herhaalt na 35s
             walkerFirst: 3000,          // Eerste wandelaar na 3s
-            walkerInterval: 15000,      // Om de 15s een wandelaar
+            walkerInterval: 25000,      // Om de 25s een wandelaar
             biotoopReset: 480000
         }
     };
@@ -347,30 +347,22 @@
 
     // ===== WANDELAARS =====
     
-    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-    
-    // Freeze een GIF door canvas snapshot
-    function freezeGif(img) {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.naturalWidth || img.width;
-        canvas.height = img.naturalHeight || img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        img.dataset.originalSrc = img.src;
-        img.src = canvas.toDataURL();
-    }
-    
-    // Unfreeze - herstel originele GIF
-    function unfreezeGif(img) {
-        if (img.dataset.originalSrc) {
-            img.src = img.dataset.originalSrc;
-        }
-    }
+    let currentWalkerIndex = -1; // Houdt bij welke wandelaar loopt
+    let walkerActive = false;    // Is er een wandelaar actief?
     
     function spawnWalker() {
-        if (!gardenEl) return;
+        if (!gardenEl || walkerActive) return; // Geen nieuwe als er al een loopt
         
-        const walker = pick(WALKERS);
+        // Kies andere wandelaar dan vorige keer
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * WALKERS.length);
+        } while (newIndex === currentWalkerIndex && WALKERS.length > 1);
+        
+        currentWalkerIndex = newIndex;
+        walkerActive = true;
+        
+        const walker = WALKERS[newIndex];
         const img = document.createElement('img');
         img.src = walker.src;
         img.className = 'walking-person';
@@ -379,29 +371,19 @@
         
         gardenEl.appendChild(img);
         
-        // Fade in
+        // Fade in en loop
         setTimeout(() => { img.style.opacity = '1'; }, 50);
+        img.style.transition = 'left 20s linear, opacity 0.5s';
+        setTimeout(() => { img.style.left = '110%'; }, 100);
         
-        // Start lopen naar stoppunt (68% - vóór Maria op 80%)
-        img.style.transition = 'left 14s linear, opacity 0.5s';
-        setTimeout(() => { img.style.left = '68%'; }, 100);
+        // Fade out
+        setTimeout(() => { img.style.opacity = '0'; }, 19000);
         
-        // Stop bij 68%, freeze de GIF
-        setTimeout(() => {
-            img.style.transition = 'none';
-            freezeGif(img);
-        }, 14100);
-        
-        // Na 2.5s pauze, unfreeze en loop verder (achter Maria langs)
-        setTimeout(() => {
-            unfreezeGif(img);
-            img.style.transition = 'left 9s linear, opacity 0.5s';
-            img.style.left = '110%';
-        }, 16600);
-        
-        // Fade out en verwijder
-        setTimeout(() => { img.style.opacity = '0'; }, 24500);
-        setTimeout(() => { if (img.parentNode) img.remove(); }, 26000);
+        // Verwijder en markeer als niet-actief
+        setTimeout(() => { 
+            if (img.parentNode) img.remove();
+            walkerActive = false;
+        }, 21000);
     }
 
     // ===== BIOTOOP LIFECYCLE =====
