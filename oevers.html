@@ -25,9 +25,10 @@
         .nav-links a { text-decoration: none; color: var(--text-medium); font-weight: 500; }
         .nav-cta { background: var(--green-medium); color: white !important; padding: 0.6rem 1.2rem; border-radius: 25px; }
         .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
-        .page-header { padding: var(--header-total, 85px) 2rem 4rem 2rem; background: linear-gradient(135deg, #d4e8f2 0%, #e8f4f8 100%); text-align: center; position: relative; }
-        .page-header h1 { font-size: 3rem; color: var(--green-dark); margin-bottom: 1rem; position: relative; z-index: 10; }
-        .page-header p { font-size: 1.25rem; color: var(--text-medium); max-width: 600px; margin: 0 auto; position: relative; z-index: 10; }
+        .page-header { padding: var(--header-total, 85px) 2rem 4rem 2rem; text-align: center; position: relative; }
+        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #d4e8f2 0%, #e8f4f8 100%); z-index: 1; }
+        .page-header h1 { font-size: 3rem; color: var(--green-dark); margin-bottom: 1rem; position: relative; z-index: 20; }
+        .page-header p { font-size: 1.25rem; color: var(--text-medium); max-width: 600px; margin: 0 auto; position: relative; z-index: 20; }
         .content-section { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
         .content-section h2 { font-size: 2rem; color: var(--green-dark); margin-bottom: 1.5rem; }
         .content-section p { color: var(--text-medium); margin-bottom: 1.5rem; font-size: 1.1rem; }
