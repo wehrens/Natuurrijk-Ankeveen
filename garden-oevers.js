@@ -81,7 +81,7 @@
         const pond = document.createElement('img');
         pond.src = 'images/Poel3.png';
         pond.id = 'currentPond';
-        pond.className = 'garden-pond poel3';
+        pond.className = 'garden-pond poel3 fade-in';
         pondEl.appendChild(pond);
 
         state.pondVisible = true;

@@ -160,7 +160,7 @@
     width: auto;
     opacity: 0;
     transform-origin: top center;
-    animation: fadeInPond 3s ease-out forwards;
+    transition: opacity 2s ease-out;
 }
 
 /* Poel 1 - getekend, originele grootte */
@@ -169,6 +169,7 @@
     left: 76%;
     top: 12px;
     transform: translateX(-50%);
+    animation: fadeInPond 2s ease-out forwards;
 }
 
 /* Poel 2 - met lelies en lavendel */
@@ -185,6 +186,11 @@
     left: 76%;
     top: -35px;
     transform: translateX(-50%);
+}
+
+/* Fade in animatie voor eerste verschijnen */
+.garden-pond.fade-in {
+    animation: fadeInPond 2s ease-out forwards;
 }
 
 @keyframes fadeInPond {
@@ -300,7 +306,7 @@
     top: calc(var(--nav-height) + 25px);
     height: 40px;
     width: auto;
-    z-index: 900; /* Boven de pagina content */
+    z-index: 0; /* ACHTER pagina content */
     pointer-events: none;
 }
 

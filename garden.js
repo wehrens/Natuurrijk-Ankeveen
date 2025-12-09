@@ -153,26 +153,35 @@
         pond.className = 'garden-pond poel1';
         pondEl.appendChild(pond);
 
-        // Na 20 seconden: wissel naar Poel3 - eerst uitfaden, dan infaden
+        state.pondVisible = true;
+
+        // Na 20 seconden: wissel naar Poel3 met crossfade
         biotoopTimers.pondCycle = setTimeout(() => {
             const currentPond = document.getElementById('currentPond');
-            if (currentPond) {
-                // Fade out poel 1
-                currentPond.style.transition = 'opacity 1.5s ease-in-out';
-                currentPond.style.opacity = '0';
+            if (currentPond && pondEl) {
+                // Maak nieuwe vijver voor crossfade
+                const newPond = document.createElement('img');
+                newPond.src = 'images/Poel3.png';
+                newPond.className = 'garden-pond poel3';
+                newPond.style.opacity = '0';
+                newPond.style.transition = 'opacity 2s ease-in-out';
+                newPond.id = 'newPond';
+                pondEl.appendChild(newPond);
                 
-                // Wacht tot fade out klaar is, wissel dan naar poel 3 en fade in
+                // Start crossfade
+                currentPond.style.transition = 'opacity 2s ease-in-out';
                 setTimeout(() => {
-                    currentPond.src = 'images/Poel3.png';
-                    currentPond.className = 'garden-pond poel3';
-                    // Kleine pauze voor src load
-                    setTimeout(() => {
-                        currentPond.style.opacity = '1';
-                    }, 100);
-                }, 1500);
+                    currentPond.style.opacity = '0';
+                    newPond.style.opacity = '1';
+                }, 50);
+                
+                // Verwijder oude vijver na transitie
+                setTimeout(() => {
+                    if (currentPond.parentNode) currentPond.remove();
+                    newPond.id = 'currentPond';
+                }, 2100);
             }
         }, 20000);
-        pondEl.appendChild(pond);
 
         // Lisdodde links van vijver (in garden container, over het gras)
         setTimeout(() => {
