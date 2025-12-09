@@ -420,6 +420,12 @@
 
     function startBiotoop() {
         console.log('startBiotoop aangeroepen');
+        
+        // Eerst opruimen als er nog iets actief is
+        if (state.biotoopActive) {
+            clearBiotoop();
+        }
+        
         state.biotoopActive = true;
 
         // Rietkraag cyclus starten
@@ -427,20 +433,24 @@
 
         // Ganzen
         biotoopTimers.geese = setTimeout(() => {
+            if (!state.biotoopActive) return;
             spawnGeese();
             biotoopTimers.geeseInterval = setInterval(() => {
-                if (Math.random() > 0.25) spawnGeese();
+                if (state.biotoopActive && Math.random() > 0.25) spawnGeese();
             }, CONFIG.timing.geeseInterval);
         }, CONFIG.timing.geeseFirst);
 
         // Zeearend
-        biotoopTimers.eagle = setTimeout(spawnEagle, CONFIG.timing.eagleAppears);
+        biotoopTimers.eagle = setTimeout(() => {
+            if (state.biotoopActive) spawnEagle();
+        }, CONFIG.timing.eagleAppears);
 
         // Wandelaars
         biotoopTimers.walker = setTimeout(() => {
+            if (!state.biotoopActive) return;
             spawnWalker();
             biotoopTimers.walkerInterval = setInterval(() => {
-                if (Math.random() > 0.3) spawnWalker(); // 70% kans
+                if (state.biotoopActive && Math.random() > 0.3) spawnWalker();
             }, CONFIG.timing.walkerInterval);
         }, CONFIG.timing.walkerFirst);
 
@@ -454,6 +464,7 @@
     function clearBiotoop() {
         state.biotoopActive = false;
         Object.values(biotoopTimers).forEach(t => { clearTimeout(t); clearInterval(t); });
+        biotoopTimers = {};
         
         const flyEl = document.getElementById('headerAnimalsFlying');
         if (flyEl) flyEl.innerHTML = '';
@@ -463,7 +474,17 @@
             gardenEl.querySelectorAll('.walking-person').forEach(w => w.remove());
         }
         
-        clearReeds();
+        // Verwijder ALLE bomen en riet uit headerReeds
+        const reedsContainer = document.getElementById('headerReeds');
+        if (reedsContainer) {
+            reedsContainer.querySelectorAll('.garden-tree, .reed-clump').forEach(el => el.remove());
+        }
+        
+        // Reset arrays
+        reedElements = [];
+        treeElements = [];
+        
+        console.log('Biotoop cleared');
     }
 
     function setup() {
