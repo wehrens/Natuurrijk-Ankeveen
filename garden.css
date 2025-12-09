@@ -1276,18 +1276,33 @@
     transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
+/* ===== MARIA BEELDJE ===== */
+.maria-statue {
+    position: absolute;
+    bottom: 0;
+    width: auto;
+    transform: translateX(-50%);
+    z-index: 100; /* Onder wandelaars (200), boven vogels */
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+
 /* ===== WANDELAARS ===== */
 .walking-person {
     position: absolute;
     bottom: -5px; /* Voeten in het gras */
     height: 60px;
-    z-index: 200; /* VOOR alle planten en bomen */
+    z-index: 200; /* VOOR alle planten, bomen en Maria */
     filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.2));
 }
 
 /* Loopt van links naar rechts */
 .walking-person.walk-right {
     animation: walkRight 20s linear forwards;
+}
+
+/* Loopt van links naar rechts MET PAUZE bij Maria (80%) */
+.walking-person.walk-right-with-pause {
+    animation: walkRightWithPause 26s linear forwards;
 }
 
 /* Loopt van rechts naar links */
@@ -1304,6 +1319,36 @@
         opacity: 1;
     }
     95% {
+        opacity: 1;
+    }
+    100% {
+        left: 110%;
+        opacity: 0;
+    }
+}
+
+/* Animatie met pauze bij 75% (net voor Maria op 80%) */
+@keyframes walkRightWithPause {
+    0% {
+        left: -80px;
+        opacity: 0;
+    }
+    4% {
+        opacity: 1;
+    }
+    /* Lopen tot net voor Maria */
+    58% {
+        left: 72%;
+    }
+    /* Pauze - kijken naar Maria */
+    62% {
+        left: 72%;
+    }
+    66% {
+        left: 72%;
+    }
+    /* Verder lopen */
+    96% {
         opacity: 1;
     }
     100% {
@@ -1341,6 +1386,9 @@
         height: 40px !important;
         bottom: -3px;
     }
+    .maria-statue {
+        height: 35px !important;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
@@ -1352,6 +1400,9 @@
     }
     .walking-person {
         height: 50px !important;
+    }
+    .maria-statue {
+        height: 45px !important;
     }
 }
 

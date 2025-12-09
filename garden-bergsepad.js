@@ -27,6 +27,13 @@
     let state = { biotoopActive: false };
     let cycleCount = 0; // Telt cycli voor wisselende survivors
 
+    // Maria beeldje configuratie
+    const MARIA = {
+        src: 'images/Maria.png',
+        position: 80,  // 4/5 van het pad = 80%
+        height: 55     // Ongeveer halve meter schaal
+    };
+
     // Wandelaars - alleen de twee die goed werken
     const WALKERS = [
         { src: 'images/Walkinggirl.gif' },   // Oranje shirt
@@ -319,6 +326,20 @@
         setTimeout(() => { if (img.parentNode) img.remove(); }, 20000);
     }
 
+    // ===== MARIA BEELDJE =====
+    
+    function placeMaria() {
+        if (!gardenEl) return;
+        
+        const maria = document.createElement('img');
+        maria.src = MARIA.src;
+        maria.className = 'maria-statue';
+        maria.style.left = MARIA.position + '%';
+        maria.style.height = MARIA.height + 'px';
+        
+        gardenEl.appendChild(maria);
+    }
+
     // ===== WANDELAARS =====
     
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -329,14 +350,14 @@
         const walker = pick(WALKERS);
         const img = document.createElement('img');
         img.src = walker.src;
-        img.className = 'walking-person walk-right';
+        img.className = 'walking-person walk-right-with-pause';
         
         gardenEl.appendChild(img);
         
-        // Verwijder na de animatie
+        // Verwijder na de animatie (langer door pauze)
         setTimeout(() => { 
             if (img.parentNode) img.remove(); 
-        }, 22000);
+        }, 28000);
     }
 
     // ===== BIOTOOP LIFECYCLE =====
@@ -421,6 +442,9 @@
         }
         
         console.log('reedsEl final:', reedsEl);
+        
+        // Plaats Maria beeldje direct - nog voor de biotoop start
+        placeMaria();
         
         setTimeout(startBiotoop, CONFIG.timing.startDelay);
     }
