@@ -306,7 +306,7 @@
     top: calc(var(--nav-height) + 25px);
     height: 40px;
     width: auto;
-    z-index: 0; /* ACHTER pagina content */
+    z-index: 5; /* Boven page-header achtergrond, onder tekst */
     pointer-events: none;
 }
 
