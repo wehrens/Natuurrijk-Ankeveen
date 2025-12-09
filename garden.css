@@ -1286,6 +1286,16 @@
     filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
 }
 
+/* ===== BANKJE ===== */
+.bankje {
+    position: absolute;
+    bottom: 5px;
+    width: auto;
+    transform: translateX(-50%);
+    z-index: 115; /* Zelfde layer als Maria */
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+
 /* ===== WANDELAARS ===== */
 .walking-person {
     position: absolute;
@@ -1313,6 +1323,10 @@
         height: 35px !important;
         bottom: 5px !important;
     }
+    .bankje {
+        height: 25px !important;
+        bottom: 3px !important;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
@@ -1328,6 +1342,10 @@
     .maria-statue {
         height: 45px !important;
         bottom: 6px !important;
+    }
+    .bankje {
+        height: 32px !important;
+        bottom: 4px !important;
     }
 }
 

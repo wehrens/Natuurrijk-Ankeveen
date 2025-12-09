@@ -34,6 +34,13 @@
         height: 55     // Ongeveer halve meter schaal
     };
 
+    // Bankje configuratie
+    const BANKJE = {
+        src: 'images/Bankje.png',
+        position: 65,  // Links van Maria
+        height: 40     // Passend bij wandelaars
+    };
+
     // Riet en lisdodde types
     const REED_TYPES = [
         { src: 'images/Rietkraag.png', height: 85, overlap: true, bottomOffset: 0 },
@@ -339,6 +346,20 @@
         gardenEl.appendChild(maria);
     }
 
+    // ===== BANKJE =====
+    
+    function placeBankje() {
+        if (!gardenEl) return;
+        
+        const bankje = document.createElement('img');
+        bankje.src = BANKJE.src;
+        bankje.className = 'bankje';
+        bankje.style.left = BANKJE.position + '%';
+        bankje.style.height = BANKJE.height + 'px';
+        
+        gardenEl.appendChild(bankje);
+    }
+
     // ===== WANDELAARS =====
     
     // Vaste volgorde: vrouw rechts, man rechts, vrouw links, man links
@@ -478,8 +499,9 @@
         
         console.log('reedsEl final:', reedsEl);
         
-        // Plaats Maria beeldje direct - nog voor de biotoop start
+        // Plaats Maria beeldje en bankje direct - nog voor de biotoop start
         placeMaria();
+        placeBankje();
         
         setTimeout(startBiotoop, CONFIG.timing.startDelay);
     }
