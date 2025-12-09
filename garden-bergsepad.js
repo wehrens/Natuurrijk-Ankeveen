@@ -102,6 +102,11 @@
             tree.style.left = treeConfig.pos + '%';
             tree.style.height = TREE_TYPES[treeConfig.type].height + 'px';
             tree.dataset.position = treeConfig.pos;
+            
+            // Lisdodde krijgt lagere z-index zodat Maria ervoor staat
+            if (tree.src.includes('Lisdodde')) {
+                tree.style.zIndex = '110';
+            }
 
             console.log('Boom toegevoegd:', tree.src, 'op', treeConfig.pos + '%');
             reedsEl.appendChild(tree);
@@ -344,20 +349,59 @@
     
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
     
+    // Freeze een GIF door canvas snapshot
+    function freezeGif(img) {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth || img.width;
+        canvas.height = img.naturalHeight || img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        img.dataset.originalSrc = img.src;
+        img.src = canvas.toDataURL();
+    }
+    
+    // Unfreeze - herstel originele GIF
+    function unfreezeGif(img) {
+        if (img.dataset.originalSrc) {
+            img.src = img.dataset.originalSrc;
+        }
+    }
+    
     function spawnWalker() {
         if (!gardenEl) return;
         
         const walker = pick(WALKERS);
         const img = document.createElement('img');
         img.src = walker.src;
-        img.className = 'walking-person walk-right-with-pause';
+        img.className = 'walking-person';
+        img.style.left = '-80px';
+        img.style.opacity = '0';
         
         gardenEl.appendChild(img);
         
-        // Verwijder na de animatie (langer door pauze)
-        setTimeout(() => { 
-            if (img.parentNode) img.remove(); 
-        }, 28000);
+        // Fade in
+        setTimeout(() => { img.style.opacity = '1'; }, 50);
+        
+        // Start lopen naar stoppunt (68% - vóór Maria op 80%)
+        img.style.transition = 'left 14s linear, opacity 0.5s';
+        setTimeout(() => { img.style.left = '68%'; }, 100);
+        
+        // Stop bij 68%, freeze de GIF
+        setTimeout(() => {
+            img.style.transition = 'none';
+            freezeGif(img);
+        }, 14100);
+        
+        // Na 2.5s pauze, unfreeze en loop verder (achter Maria langs)
+        setTimeout(() => {
+            unfreezeGif(img);
+            img.style.transition = 'left 9s linear, opacity 0.5s';
+            img.style.left = '110%';
+        }, 16600);
+        
+        // Fade out en verwijder
+        setTimeout(() => { img.style.opacity = '0'; }, 24500);
+        setTimeout(() => { if (img.parentNode) img.remove(); }, 26000);
     }
 
     // ===== BIOTOOP LIFECYCLE =====
