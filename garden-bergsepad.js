@@ -34,12 +34,6 @@
         height: 55     // Ongeveer halve meter schaal
     };
 
-    // Wandelaars - alleen de twee die goed werken
-    const WALKERS = [
-        { src: 'images/Walkinggirl.gif' },   // Oranje shirt
-        { src: 'images/WalkingGuy2.gif' }    // Blauwe trui
-    ];
-
     // Riet en lisdodde types
     const REED_TYPES = [
         { src: 'images/Rietkraag.png', height: 85, overlap: true, bottomOffset: 0 },
@@ -347,34 +341,49 @@
 
     // ===== WANDELAARS =====
     
-    let currentWalkerIndex = -1; // Houdt bij welke wandelaar loopt
-    let walkerActive = false;    // Is er een wandelaar actief?
+    // Vaste volgorde: vrouw rechts, man rechts, vrouw links, man links
+    const WALKER_SEQUENCE = [
+        { src: 'images/Walkinggirl.gif', direction: 'right', mirror: false },
+        { src: 'images/WalkingGuy2.gif', direction: 'right', mirror: false },
+        { src: 'images/Walkinggirl.gif', direction: 'left', mirror: true },
+        { src: 'images/WalkingGuy2.gif', direction: 'left', mirror: true }
+    ];
+    
+    let walkerSequenceIndex = 0;
+    let walkerActive = false;
     
     function spawnWalker() {
-        if (!gardenEl || walkerActive) return; // Geen nieuwe als er al een loopt
+        if (!gardenEl || walkerActive) return;
         
-        // Kies andere wandelaar dan vorige keer
-        let newIndex;
-        do {
-            newIndex = Math.floor(Math.random() * WALKERS.length);
-        } while (newIndex === currentWalkerIndex && WALKERS.length > 1);
-        
-        currentWalkerIndex = newIndex;
         walkerActive = true;
         
-        const walker = WALKERS[newIndex];
+        const walker = WALKER_SEQUENCE[walkerSequenceIndex];
+        walkerSequenceIndex = (walkerSequenceIndex + 1) % WALKER_SEQUENCE.length;
+        
         const img = document.createElement('img');
         img.src = walker.src;
         img.className = 'walking-person';
-        img.style.left = '-80px';
         img.style.opacity = '0';
         
-        gardenEl.appendChild(img);
+        // Spiegel indien nodig (voor links lopend)
+        if (walker.mirror) {
+            img.style.transform = 'scaleX(-1)';
+        }
         
-        // Fade in en loop
-        setTimeout(() => { img.style.opacity = '1'; }, 50);
-        img.style.transition = 'left 20s linear, opacity 0.5s';
-        setTimeout(() => { img.style.left = '110%'; }, 100);
+        // Start positie en richting
+        if (walker.direction === 'right') {
+            img.style.left = '-80px';
+            img.style.transition = 'left 20s linear, opacity 0.5s';
+            gardenEl.appendChild(img);
+            setTimeout(() => { img.style.opacity = '1'; }, 50);
+            setTimeout(() => { img.style.left = '110%'; }, 100);
+        } else {
+            img.style.left = 'calc(100% + 80px)';
+            img.style.transition = 'left 20s linear, opacity 0.5s';
+            gardenEl.appendChild(img);
+            setTimeout(() => { img.style.opacity = '1'; }, 50);
+            setTimeout(() => { img.style.left = '-100px'; }, 100);
+        }
         
         // Fade out
         setTimeout(() => { img.style.opacity = '0'; }, 19000);
