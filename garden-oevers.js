@@ -16,8 +16,8 @@
             butterfliesStart: 20000,     // Vlinders na 20s
             ladybugFirst: 25000,         // Ladybug na 25s
             ladybugInterval: 20000,      // Ladybug elke 20s
-            kingfisherFirst: 30000,      // Eerste ijsvogel na 30s
-            kingfisherInterval: 35000,   // Ijsvogel elke 35s
+            kingfisherFirst: 50000,      // Eerste ijsvogel na 50s (na otter+eend)
+            kingfisherInterval: 40000,   // Ijsvogel elke 40s
             otterFirst: 20000,           // Otter na 20s (slobeend volgt)
             otterInterval: 45000,        // Otter elke 45s
             slobeendFirst: 20000,        // (niet meer gebruikt, slobeend volgt otter)
@@ -168,13 +168,12 @@
 
     // ===== IJSVOGEL =====
     function spawnKingfisher() {
-        if (!flyingEl) return;
-
+        // IJsvogel direct in body voor hogere z-index (voor roerdomp)
         const img = document.createElement('img');
         img.src = 'images/Kingfisher.gif';
         img.className = 'flying-kingfisher';
 
-        flyingEl.appendChild(img);
+        document.body.appendChild(img);
 
         setTimeout(() => {
             if (img.parentNode) img.remove();

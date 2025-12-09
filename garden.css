@@ -773,7 +773,7 @@
 /* ===== DANSENDE VLINDERS BIJ VIJVER ===== */
 .pond-butterfly {
     position: absolute;
-    height: 28px;
+    height: 18px; /* Kleiner gemaakt */
     width: auto;
     z-index: 60;
     opacity: 0;
@@ -824,55 +824,56 @@
 /* GIF kijkt naar LINKS */
 /* Komt van rechts, bidt boven vijver, duikt, vliegt gespiegeld terug naar rechts */
 .flying-kingfisher {
-    position: absolute;
+    position: fixed;
     height: 45px;
     width: auto;
-    z-index: 6;
+    z-index: 1040; /* Boven garden (1035) zodat ie voor roerdomp vliegt */
     animation: kingfisherDive 5s ease-in-out forwards;
+    pointer-events: none;
 }
 
 @keyframes kingfisherDive {
     /* Komt van rechtsboven - NIET gespiegeld (kijkt naar links = vooruit) */
     0% { 
         left: calc(100% + 50px); 
-        top: -50px; 
+        top: 0px; 
         transform: scaleX(1) rotate(-20deg); 
         opacity: 1;
     }
     /* Arriveert boven vijver */
     25% { 
         left: 72%; 
-        top: 15px; 
+        top: 55px; 
         transform: scaleX(1) rotate(0deg); 
     }
     /* Bidt (hangt stil) */
     40% { 
         left: 72%; 
-        top: 18px; 
+        top: 58px; 
         transform: scaleX(1) rotate(5deg); 
     }
     /* Duikt! */
     50% { 
         left: 72%; 
-        top: 45px; 
+        top: 85px; 
         transform: scaleX(1) rotate(70deg); 
     }
     /* Plons */
     55% { 
         left: 72%; 
-        top: 50px; 
+        top: 90px; 
         transform: scaleX(1) rotate(45deg); 
     }
     /* Komt omhoog - NU GESPIEGELD (kijkt naar rechts = vooruit terug) */
     65% { 
         left: 72%; 
-        top: 35px; 
+        top: 75px; 
         transform: scaleX(-1) rotate(20deg); 
     }
     /* Vliegt terug naar rechtsboven */
     100% { 
         left: calc(100% + 50px); 
-        top: -50px; 
+        top: 0px; 
         transform: scaleX(-1) rotate(-20deg); 
         opacity: 1;
     }
@@ -883,18 +884,18 @@
     @keyframes kingfisherDive {
         0% { 
             left: calc(100% + 50px); 
-            top: -50px; 
+            top: 0px; 
             transform: scaleX(1) rotate(-20deg); 
             opacity: 1;
         }
         25% { 
             left: 72%; 
-            top: 20px; 
+            top: 60px; 
             transform: scaleX(1) rotate(0deg); 
         }
         40% { 
             left: 72%; 
-            top: 25px; 
+            top: 65px; 
             transform: scaleX(1) rotate(5deg); 
         }
         50% { 
