@@ -294,6 +294,61 @@
     }
 }
 
+/* ===== SLOBEEND ===== */
+.swimming-slobeend {
+    position: fixed;
+    top: calc(var(--nav-height) + 25px);
+    height: 40px;
+    width: auto;
+    z-index: 900; /* Boven de pagina content */
+    pointer-events: none;
+}
+
+/* Van vijver naar links */
+.swimming-slobeend.slobeend-to-left {
+    animation: slobeendToLeft 40s linear forwards;
+}
+
+/* Van links terug naar vijver (gespiegeld) */
+.swimming-slobeend.slobeend-to-right {
+    transform: scaleX(-1);
+    animation: slobeendToRight 40s linear forwards;
+}
+
+@keyframes slobeendToLeft {
+    0% {
+        left: 72%;
+        opacity: 0;
+    }
+    5% {
+        opacity: 1;
+    }
+    95% {
+        opacity: 1;
+    }
+    100% {
+        left: -100px;
+        opacity: 0;
+    }
+}
+
+@keyframes slobeendToRight {
+    0% {
+        left: -100px;
+        opacity: 0;
+    }
+    5% {
+        opacity: 1;
+    }
+    95% {
+        opacity: 1;
+    }
+    100% {
+        left: 72%;
+        opacity: 0;
+    }
+}
+
 /* ===== GROND DIEREN CONTAINER ===== */
 .header-animals-ground {
     position: fixed;
@@ -1365,6 +1420,7 @@
     .flying-swallow { height: 20px; }
     .garden-roerdomp { height: 40px; }
     .swimming-otter { height: 25px; top: -15px; }
+    .swimming-slobeend { height: 30px; top: calc(var(--nav-height) + 15px); }
     .garden-lisdodde.size-sm { height: 30px; }
     .garden-lisdodde.size-md { height: 40px; }
     .garden-lisdodde.size-lg { height: 50px; }

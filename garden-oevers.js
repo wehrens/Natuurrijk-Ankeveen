@@ -20,6 +20,8 @@
             kingfisherInterval: 35000,   // Ijsvogel elke 35s
             otterFirst: 45000,           // Otter na 45s
             otterInterval: 60000,        // Otter elke 60s
+            slobeendFirst: 20000,        // Slobeend na 20s
+            slobeendInterval: 50000,     // Slobeend elke 50s
             biotoopReset: 480000,        // 8 minuten reset
             roerdompFlipInterval: 20000, // Roerdomp kijkt vaker om
         }
@@ -44,6 +46,8 @@
         kingfisherInterval: null,
         otter: null,
         otterInterval: null,
+        slobeend: null,
+        slobeendInterval: null,
         reset: null,
         roerdompFlip: null
     };
@@ -352,6 +356,41 @@
         }, CONFIG.timing.otterInterval);
     }
 
+    // ===== SLOBEEND =====
+    let slobeendDirection = 'left'; // Start richting
+    
+    function spawnSlobeend() {
+        // Slobeend drijft door de hele pagina, niet beperkt tot header
+        const img = document.createElement('img');
+        img.src = 'images/Slobeend.png';
+        img.className = 'swimming-slobeend';
+        
+        if (slobeendDirection === 'left') {
+            // Van vijver naar links
+            img.classList.add('slobeend-to-left');
+            slobeendDirection = 'right'; // Volgende keer terug
+        } else {
+            // Van links terug naar vijver (gespiegeld)
+            img.classList.add('slobeend-to-right');
+            slobeendDirection = 'left';
+        }
+        
+        document.body.appendChild(img);
+        
+        // Verwijder na animatie (40s)
+        setTimeout(() => {
+            if (img.parentNode) img.remove();
+        }, 42000);
+    }
+    
+    function startSlobeendCycle() {
+        spawnSlobeend();
+        
+        biotoopTimers.slobeendInterval = setInterval(() => {
+            spawnSlobeend();
+        }, CONFIG.timing.slobeendInterval);
+    }
+
     // ===== CLEANUP =====
     function clearBiotoop() {
         state.biotoopActive = false;
@@ -398,6 +437,9 @@
 
         // Fase 7: Otter cyclus
         biotoopTimers.otter = setTimeout(startOtterCycle, CONFIG.timing.otterFirst);
+
+        // Fase 8: Slobeend cyclus
+        biotoopTimers.slobeend = setTimeout(startSlobeendCycle, CONFIG.timing.slobeendFirst);
 
         // Reset na 8 minuten
         biotoopTimers.reset = setTimeout(() => {
