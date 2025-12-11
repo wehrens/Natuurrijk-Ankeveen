@@ -127,18 +127,16 @@
             clump.style.left = position + '%';
             clump.dataset.position = position;
             
-            // Bepaal of dit "laag riet" is (onder de header)
-            const isLowReed = type.bottomOffset !== undefined && type.bottomOffset < 0;
+            // Bereken effectieve bottom positie (basis is 3px)
+            const effectiveBottom = 3 + (type.bottomOffset || 0);
             
-            // Pas bottom offset toe indien aanwezig
+            // Pas bottom offset toe indien nodig
             if (type.bottomOffset !== undefined && type.bottomOffset !== 0) {
-                clump.style.bottom = (3 + type.bottomOffset) + 'px';
+                clump.style.bottom = effectiveBottom + 'px';
             }
             
-            // Laag riet krijgt hogere z-index zodat wandelaars erachter lopen
-            if (isLowReed) {
-                clump.style.zIndex = '200'; // Hoger dan wandelaars (118)
-            }
+            // Bepaal of onderkant ONDER de grasrand ligt (effectieve bottom < 0)
+            const isLowReed = effectiveBottom < 0;
 
             // Voor rietkraag: maak 3 overlappende images voor volume
             const numImages = type.overlap ? 3 : 1;
@@ -158,11 +156,13 @@
                 clump.appendChild(img);
             }
 
-            // Laag riet toevoegen aan gardenEl (hogere z-index container)
-            // Normaal riet toevoegen aan reedsEl
+            // Laag riet (onder grasrand): in gardenEl met hoge z-index → wandelaar ACHTER
+            // Normaal riet (in header): in reedsEl → wandelaar VOOR (want gardenEl > reedsEl)
             if (isLowReed && gardenEl) {
+                clump.style.zIndex = '200'; // Hoger dan wandelaars (118)
                 gardenEl.appendChild(clump);
             } else {
+                clump.style.zIndex = '100'; // Lager dan wandelaars (118)
                 reedsEl.appendChild(clump);
             }
             reedElements.push({ element: clump, position: position });
