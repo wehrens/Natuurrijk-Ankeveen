@@ -396,13 +396,13 @@
             angry.className = 'slobeend-angry';
             container.appendChild(angry);
             
-            // Angry bubble verdwijnt na 4 seconden
+            // Angry bubble verdwijnt na 8 seconden (2x zo lang)
             setTimeout(() => {
                 angry.classList.add('fade-out');
                 setTimeout(() => {
                     if (angry.parentNode) angry.remove();
                 }, 500);
-            }, 4000);
+            }, 8000);
         }
         
         document.body.appendChild(container);
