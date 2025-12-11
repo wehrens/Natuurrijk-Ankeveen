@@ -202,11 +202,11 @@
 .garden-roerdomp {
     position: absolute;
     bottom: -5px;
-    left: 86%; /* Achter de rechter lisdodde */
+    left: 79%; /* Achter de grote Lisdodde.png (midden-rechts) */
     height: 55px;
     width: auto;
     opacity: 0;
-    z-index: -1; /* Achter de vijver en lisdodde */
+    z-index: -2; /* Achter de lisdodde */
     transition: transform 0.6s ease-in-out, opacity 0.4s ease;
 }
 
