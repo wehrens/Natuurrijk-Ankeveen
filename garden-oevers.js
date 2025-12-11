@@ -153,33 +153,39 @@
         roerdomp.id = 'biotoop-roerdomp';
         gardenEl.appendChild(roerdomp);
 
+        // Start visible animatie
         requestAnimationFrame(() => {
             roerdomp.classList.add('visible');
         });
 
         state.roerdompVisible = true;
         state.roerdompFacingRight = false;
-
-        // Roerdomp kijkt regelmatig andere kant op
-        biotoopTimers.roerdompFlip = setInterval(() => {
-            flipRoerdomp();
-        }, CONFIG.timing.roerdompFlipInterval);
     }
     
-    // Roerdomp draait zich om (schrikt)
+    // Roerdomp duikt weg en komt gespiegeld terug
     function flipRoerdomp() {
         const roerdomp = document.getElementById('biotoop-roerdomp');
         if (!roerdomp) return;
         
-        // Eerst schudden (nek beweging)
-        roerdomp.classList.add('shaking');
+        // Stap 1: Duik weg
+        roerdomp.classList.remove('visible', 'rising');
+        roerdomp.classList.add('diving');
         
-        // Na het schudden (1s) pas omdraaien
+        // Stap 2: Na 0.5s, kom terug gespiegeld
         setTimeout(() => {
-            roerdomp.classList.remove('shaking');
+            roerdomp.classList.remove('diving');
+            
+            // Toggle richting
             state.roerdompFacingRight = !state.roerdompFacingRight;
-            roerdomp.style.transform = state.roerdompFacingRight ? 'scaleX(-1)' : 'scaleX(1)';
-        }, 1000);
+            
+            // Voeg juiste class toe
+            if (state.roerdompFacingRight) {
+                roerdomp.classList.add('rising');
+                roerdomp.classList.remove('flipped');
+            } else {
+                roerdomp.classList.add('rising', 'flipped');
+            }
+        }, 500);
     }
 
     // ===== IJSVOGEL =====
@@ -452,6 +458,25 @@
                 clearInterval(timer);
             }
         });
+        
+        // Reset timers object
+        biotoopTimers = {
+            pond: null,
+            pondTransition: null,
+            lisdoddes: null,
+            roerdomp: null,
+            butterflies: null,
+            ladybug: null,
+            ladybugInterval: null,
+            kingfisher: null,
+            kingfisherInterval: null,
+            otter: null,
+            otterInterval: null,
+            slobeend: null,
+            slobeendInterval: null,
+            reset: null,
+            roerdompFlip: null
+        };
 
         // Clear alles behalve gras (dat blijft altijd staan)
         ['headerGarden', 'headerPond', 'headerAnimalsGround', 'headerAnimalsFlying'].forEach(id => {
