@@ -340,10 +340,10 @@
 
         groundEl.appendChild(img);
 
-        // Na 11s (als otter net in vijver duikt) komt slobeend snel tevoorschijn - verstoord!
+        // Na 10s (als otter in vijver duikt) komt slobeend SNEL tevoorschijn - verstoord!
         setTimeout(() => {
-            spawnSlobeend(true); // true = verstoord door otter, toon angry bubble
-        }, 11000);
+            spawnSlobeend(true); // true = angry, verstoord door otter
+        }, 10000);
 
         setTimeout(() => {
             if (img.parentNode) img.remove();
@@ -377,10 +377,7 @@
             slobeendDirection = 'left';
         }
         
-        // Bepaal richting
-        const goingLeft = (slobeendDirection === 'left');
-        
-        if (goingLeft) {
+        if (slobeendDirection === 'left') {
             // Van vijver naar links
             container.classList.add('slobeend-to-left');
             slobeendDirection = 'right'; // Volgende keer terug
@@ -440,6 +437,9 @@
             const el = document.getElementById(id);
             if (el) el.innerHTML = '';
         });
+        
+        // Verwijder ook slobeend containers uit body
+        document.querySelectorAll('.slobeend-container').forEach(el => el.remove());
 
         state.pondVisible = false;
         state.roerdompVisible = false;

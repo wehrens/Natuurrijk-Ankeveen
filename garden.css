@@ -201,7 +201,7 @@
 /* ===== ROERDOMP ===== */
 .garden-roerdomp {
     position: absolute;
-    bottom: 8px;
+    bottom: -5px; /* Lager, bij het water */
     left: 72%; /* Tussen de twee lisdoddes */
     height: 55px;
     width: auto;
@@ -315,16 +315,22 @@
 
 .slobeend-angry {
     position: absolute;
-    top: -35px;
-    left: 10px;
-    height: 35px;
+    top: -30px;
+    left: 15px;
+    height: 30px;
     width: auto;
     opacity: 1;
     transition: opacity 0.5s ease;
+    animation: angryBounce 0.3s ease-in-out 3;
 }
 
 .slobeend-angry.fade-out {
     opacity: 0;
+}
+
+@keyframes angryBounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(5deg); }
 }
 
 /* Van vijver naar links */
@@ -853,48 +859,55 @@
 }
 
 @keyframes kingfisherDive {
-    /* Komt van rechtsboven - NIET gespiegeld (kijkt naar links = vooruit) */
+    /* Komt van rechtsboven */
     0% { 
         left: calc(100% + 50px); 
-        top: 0px; 
-        transform: scaleX(1) rotate(-20deg); 
+        top: -20px; 
+        transform: scaleX(1) rotate(-25deg); 
         opacity: 1;
     }
-    /* Arriveert boven vijver */
-    25% { 
+    /* Glijdt naar vijver toe */
+    20% { 
+        left: 75%; 
+        top: 40px; 
+        transform: scaleX(1) rotate(-10deg); 
+    }
+    /* Bidt boven vijver (hangt stil, trilt lichtjes) */
+    35% { 
         left: 72%; 
-        top: 55px; 
+        top: 50px; 
         transform: scaleX(1) rotate(0deg); 
     }
-    /* Bidt (hangt stil) */
     40% { 
         left: 72%; 
-        top: 58px; 
-        transform: scaleX(1) rotate(5deg); 
+        top: 52px; 
+        transform: scaleX(1) rotate(2deg); 
     }
-    /* Duikt! */
+    /* DUIKT! Snelle beweging naar beneden */
     50% { 
-        left: 72%; 
-        top: 85px; 
-        transform: scaleX(1) rotate(70deg); 
+        left: 71%; 
+        top: 95px; 
+        transform: scaleX(1) rotate(75deg); 
     }
-    /* Plons */
+    /* Plons - diep in het water */
     55% { 
-        left: 72%; 
-        top: 90px; 
-        transform: scaleX(1) rotate(45deg); 
+        left: 71%; 
+        top: 105px; 
+        transform: scaleX(1) rotate(60deg); 
+        opacity: 0.7;
     }
-    /* Komt omhoog - NU GESPIEGELD (kijkt naar rechts = vooruit terug) */
+    /* Komt omhoog met vis - GESPIEGELD */
     65% { 
         left: 72%; 
-        top: 75px; 
-        transform: scaleX(-1) rotate(20deg); 
+        top: 70px; 
+        transform: scaleX(-1) rotate(25deg); 
+        opacity: 1;
     }
     /* Vliegt terug naar rechtsboven */
     100% { 
         left: calc(100% + 50px); 
-        top: 0px; 
-        transform: scaleX(-1) rotate(-20deg); 
+        top: -20px; 
+        transform: scaleX(-1) rotate(-25deg); 
         opacity: 1;
     }
 }
@@ -902,41 +915,55 @@
 /* Laptop/desktop: ijsvogel duikt dieper */
 @media (min-width: 768px) {
     @keyframes kingfisherDive {
+        /* Komt van rechtsboven */
         0% { 
             left: calc(100% + 50px); 
-            top: 0px; 
-            transform: scaleX(1) rotate(-20deg); 
+            top: -30px; 
+            transform: scaleX(1) rotate(-25deg); 
             opacity: 1;
         }
-        25% { 
+        /* Glijdt naar vijver toe */
+        20% { 
+            left: 75%; 
+            top: 45px; 
+            transform: scaleX(1) rotate(-10deg); 
+        }
+        /* Bidt boven vijver */
+        35% { 
             left: 72%; 
-            top: 60px; 
+            top: 55px; 
             transform: scaleX(1) rotate(0deg); 
         }
         40% { 
             left: 72%; 
-            top: 65px; 
-            transform: scaleX(1) rotate(5deg); 
+            top: 58px; 
+            transform: scaleX(1) rotate(2deg); 
         }
+        /* DUIKT! */
         50% { 
-            left: 72%; 
-            top: 60px; 
-            transform: scaleX(1) rotate(70deg); 
+            left: 71%; 
+            top: 110px; 
+            transform: scaleX(1) rotate(80deg); 
         }
+        /* Plons - diep */
         55% { 
-            left: 72%; 
-            top: 68px; 
-            transform: scaleX(1) rotate(45deg); 
+            left: 71%; 
+            top: 125px; 
+            transform: scaleX(1) rotate(65deg); 
+            opacity: 0.6;
         }
+        /* Komt omhoog met vis */
         65% { 
             left: 72%; 
-            top: 45px; 
-            transform: scaleX(-1) rotate(20deg); 
+            top: 75px; 
+            transform: scaleX(-1) rotate(25deg); 
+            opacity: 1;
         }
+        /* Vliegt weg */
         100% { 
             left: calc(100% + 50px); 
-            top: -50px; 
-            transform: scaleX(-1) rotate(-20deg); 
+            top: -30px; 
+            transform: scaleX(-1) rotate(-25deg); 
             opacity: 1;
         }
     }
@@ -1449,7 +1476,7 @@
     .swimming-otter { height: 25px; top: -15px; }
     .slobeend-container { top: calc(var(--nav-height) + 15px); }
     .swimming-slobeend { height: 30px; }
-    .slobeend-angry { height: 25px; top: -25px; }
+    .slobeend-angry { height: 22px; top: -22px; left: 10px; }
     .garden-lisdodde.size-sm { height: 30px; }
     .garden-lisdodde.size-md { height: 40px; }
     .garden-lisdodde.size-lg { height: 50px; }
