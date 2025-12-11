@@ -127,9 +127,17 @@
             clump.style.left = position + '%';
             clump.dataset.position = position;
             
+            // Bepaal of dit "laag riet" is (onder de header)
+            const isLowReed = type.bottomOffset !== undefined && type.bottomOffset < 0;
+            
             // Pas bottom offset toe indien aanwezig
             if (type.bottomOffset !== undefined && type.bottomOffset !== 0) {
                 clump.style.bottom = (3 + type.bottomOffset) + 'px';
+            }
+            
+            // Laag riet krijgt hogere z-index zodat wandelaars erachter lopen
+            if (isLowReed) {
+                clump.style.zIndex = '200'; // Hoger dan wandelaars (118)
             }
 
             // Voor rietkraag: maak 3 overlappende images voor volume
@@ -150,7 +158,13 @@
                 clump.appendChild(img);
             }
 
-            reedsEl.appendChild(clump);
+            // Laag riet toevoegen aan gardenEl (hogere z-index container)
+            // Normaal riet toevoegen aan reedsEl
+            if (isLowReed && gardenEl) {
+                gardenEl.appendChild(clump);
+            } else {
+                reedsEl.appendChild(clump);
+            }
             reedElements.push({ element: clump, position: position });
 
             // Fade in
@@ -469,9 +483,9 @@
         const flyEl = document.getElementById('headerAnimalsFlying');
         if (flyEl) flyEl.innerHTML = '';
         
-        // Verwijder wandelaars
+        // Verwijder wandelaars en laag riet uit headerGarden
         if (gardenEl) {
-            gardenEl.querySelectorAll('.walking-person').forEach(w => w.remove());
+            gardenEl.querySelectorAll('.walking-person, .reed-clump').forEach(w => w.remove());
         }
         
         // Verwijder ALLE bomen en riet uit headerReeds

@@ -62,7 +62,7 @@
     height: var(--header-total);
     pointer-events: none;
     overflow: visible;
-    z-index: 1035; /* ONDER header-reeds (1040) zodat wandelaars ACHTER riet lopen */
+    z-index: 1035; /* BOVEN header-reeds - wandelaars + laag riet (z-index 200) */
 }
 
 /* ===== BLOEMEN ===== */
@@ -1287,7 +1287,7 @@
     height: var(--header-total);
     pointer-events: none;
     overflow: visible;
-    z-index: 1040; /* BOVEN header-garden (1035) zodat wandelaars ACHTER riet lopen */
+    z-index: 1030; /* ONDER header-garden (1035) - wandelaars lopen VOOR dit riet */
 }
 
 .reed-clump {
