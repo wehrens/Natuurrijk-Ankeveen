@@ -171,16 +171,15 @@
         const roerdomp = document.getElementById('biotoop-roerdomp');
         if (!roerdomp) return;
         
-        state.roerdompFacingRight = !state.roerdompFacingRight;
-        
-        // Voeg shake class toe voor schudeffect
+        // Eerst schudden (nek beweging)
         roerdomp.classList.add('shaking');
-        roerdomp.style.transform = state.roerdompFacingRight ? 'scaleX(-1)' : 'scaleX(1)';
         
-        // Verwijder shake na animatie
+        // Na het schudden (1s) pas omdraaien
         setTimeout(() => {
             roerdomp.classList.remove('shaking');
-        }, 500);
+            state.roerdompFacingRight = !state.roerdompFacingRight;
+            roerdomp.style.transform = state.roerdompFacingRight ? 'scaleX(-1)' : 'scaleX(1)';
+        }, 1000);
     }
 
     // ===== IJSVOGEL =====
@@ -414,7 +413,7 @@
         // Angry bubble als verstoord door otter
         if (isAngry) {
             const angry = document.createElement('img');
-            angry.src = 'images/Angry';
+            angry.src = 'images/Angry.png';
             angry.className = 'slobeend-angry';
             container.appendChild(angry);
             
