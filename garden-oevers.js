@@ -371,20 +371,29 @@
         setTimeout(() => {
             flipRoerdomp();
         }, 11000);
+        
+        // IJsvogel komt als eend bijna aan eind van zwemtocht is (~35s na slobeend start)
+        setTimeout(() => {
+            spawnKingfisher();
+        }, 45000); // 10s (slobeend start) + 35s = 45s
 
         setTimeout(() => {
             if (img.parentNode) img.remove();
         }, 13000);
+        
+        // Plan volgende otter: enkele seconden nadat eend uit beeld is
+        // Eend start 10s na otter, duurt 40s, dus uit beeld na 50s
+        // Volgende otter na 55s
+        biotoopTimers.otterInterval = setTimeout(() => {
+            if (state.biotoopActive) {
+                spawnOtter();
+            }
+        }, 55000);
     }
 
     function startOtterCycle() {
         spawnOtter();
-
-        biotoopTimers.otterInterval = setInterval(() => {
-            if (Math.random() > 0.4) { // 60% kans (vaker!)
-                spawnOtter();
-            }
-        }, CONFIG.timing.otterInterval);
+        // Geen interval meer nodig, spawnOtter plant zelf de volgende
     }
 
     // ===== SLOBEEND =====
@@ -512,10 +521,7 @@
         // Fase 5: Ladybugs
         biotoopTimers.ladybug = setTimeout(startLadybugCycle, CONFIG.timing.ladybugFirst);
 
-        // Fase 6: IJsvogel cyclus
-        biotoopTimers.kingfisher = setTimeout(startKingfisherCycle, CONFIG.timing.kingfisherFirst);
-
-        // Fase 7: Otter cyclus (slobeend volgt automatisch na elke otter)
+        // Fase 6: Otter cyclus (slobeend + ijsvogel volgen automatisch)
         biotoopTimers.otter = setTimeout(startOtterCycle, CONFIG.timing.otterFirst);
 
         // Reset na 8 minuten
@@ -563,10 +569,7 @@
             // Fase 5: Ladybugs
             biotoopTimers.ladybug = setTimeout(startLadybugCycle, CONFIG.timing.ladybugFirst);
 
-            // Fase 6: IJsvogel cyclus
-            biotoopTimers.kingfisher = setTimeout(startKingfisherCycle, CONFIG.timing.kingfisherFirst);
-
-            // Fase 7: Otter cyclus
+            // Fase 6: Otter cyclus (slobeend + ijsvogel volgen automatisch)
             biotoopTimers.otter = setTimeout(startOtterCycle, CONFIG.timing.otterFirst);
 
             // Reset na 8 minuten
