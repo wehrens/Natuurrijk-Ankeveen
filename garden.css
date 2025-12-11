@@ -62,7 +62,7 @@
     height: var(--header-total);
     pointer-events: none;
     overflow: visible;
-    z-index: 1035; /* BOVEN header-reeds - wandelaars + laag riet (z-index 200) */
+    z-index: 1035; /* BOVEN header-reeds (1030) zodat wandelaars VOOR riet lopen */
 }
 
 /* ===== BLOEMEN ===== */
@@ -301,24 +301,44 @@
 }
 
 /* ===== SLOBEEND ===== */
-.swimming-slobeend {
+.slobeend-container {
     position: fixed;
     top: calc(var(--nav-height) + 25px);
-    height: 40px;
-    width: auto;
     z-index: 5; /* Boven page-header achtergrond, onder tekst */
     pointer-events: none;
 }
 
+.swimming-slobeend {
+    height: 40px;
+    width: auto;
+}
+
+.slobeend-angry {
+    position: absolute;
+    top: -35px;
+    left: 10px;
+    height: 35px;
+    width: auto;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.slobeend-angry.fade-out {
+    opacity: 0;
+}
+
 /* Van vijver naar links */
-.swimming-slobeend.slobeend-to-left {
+.slobeend-container.slobeend-to-left {
     animation: slobeendToLeft 40s linear forwards;
 }
 
 /* Van links terug naar vijver (gespiegeld) */
-.swimming-slobeend.slobeend-to-right {
-    transform: scaleX(-1);
+.slobeend-container.slobeend-to-right {
     animation: slobeendToRight 40s linear forwards;
+}
+
+.slobeend-container.slobeend-to-right .swimming-slobeend {
+    transform: scaleX(-1);
 }
 
 @keyframes slobeendToLeft {
@@ -1287,7 +1307,7 @@
     height: var(--header-total);
     pointer-events: none;
     overflow: visible;
-    z-index: 1030; /* ONDER header-garden (1035) - wandelaars lopen VOOR dit riet */
+    z-index: 1030;
 }
 
 .reed-clump {
@@ -1427,7 +1447,9 @@
     .flying-swallow { height: 20px; }
     .garden-roerdomp { height: 40px; }
     .swimming-otter { height: 25px; top: -15px; }
-    .swimming-slobeend { height: 30px; top: calc(var(--nav-height) + 15px); }
+    .slobeend-container { top: calc(var(--nav-height) + 15px); }
+    .swimming-slobeend { height: 30px; }
+    .slobeend-angry { height: 25px; top: -25px; }
     .garden-lisdodde.size-sm { height: 30px; }
     .garden-lisdodde.size-md { height: 40px; }
     .garden-lisdodde.size-lg { height: 50px; }

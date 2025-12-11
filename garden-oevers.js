@@ -340,10 +340,10 @@
 
         groundEl.appendChild(img);
 
-        // Na 12s verdwijnt otter in vijver, dan komt slobeend tevoorschijn
+        // Na 11s (als otter net in vijver duikt) komt slobeend snel tevoorschijn - verstoord!
         setTimeout(() => {
-            spawnSlobeend();
-        }, 13000);
+            spawnSlobeend(true); // true = verstoord door otter, toon angry bubble
+        }, 11000);
 
         setTimeout(() => {
             if (img.parentNode) img.remove();
@@ -363,27 +363,56 @@
     // ===== SLOBEEND =====
     let slobeendDirection = 'left'; // Start richting
     
-    function spawnSlobeend() {
+    function spawnSlobeend(isAngry = false) {
         // Slobeend drijft door de hele pagina, niet beperkt tot header
+        const container = document.createElement('div');
+        container.className = 'slobeend-container';
+        
         const img = document.createElement('img');
         img.src = 'images/Slobeend.png';
         img.className = 'swimming-slobeend';
         
-        if (slobeendDirection === 'left') {
-            // Van vijver naar links
-            img.classList.add('slobeend-to-left');
-            slobeendDirection = 'right'; // Volgende keer terug
-        } else {
-            // Van links terug naar vijver (gespiegeld)
-            img.classList.add('slobeend-to-right');
+        // Als verstoord door otter, altijd wegvluchten van vijver (naar links)
+        if (isAngry) {
             slobeendDirection = 'left';
         }
         
-        document.body.appendChild(img);
+        // Bepaal richting
+        const goingLeft = (slobeendDirection === 'left');
+        
+        if (goingLeft) {
+            // Van vijver naar links
+            container.classList.add('slobeend-to-left');
+            slobeendDirection = 'right'; // Volgende keer terug
+        } else {
+            // Van links terug naar vijver (gespiegeld)
+            container.classList.add('slobeend-to-right');
+            slobeendDirection = 'left';
+        }
+        
+        container.appendChild(img);
+        
+        // Angry bubble als verstoord door otter
+        if (isAngry) {
+            const angry = document.createElement('img');
+            angry.src = 'images/Angry.png';
+            angry.className = 'slobeend-angry';
+            container.appendChild(angry);
+            
+            // Angry bubble verdwijnt na 4 seconden
+            setTimeout(() => {
+                angry.classList.add('fade-out');
+                setTimeout(() => {
+                    if (angry.parentNode) angry.remove();
+                }, 500);
+            }, 4000);
+        }
+        
+        document.body.appendChild(container);
         
         // Verwijder na animatie (40s)
         setTimeout(() => {
-            if (img.parentNode) img.remove();
+            if (container.parentNode) container.remove();
         }, 42000);
     }
     
