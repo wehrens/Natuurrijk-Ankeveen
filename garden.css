@@ -221,6 +221,19 @@
     transform: scaleX(-1);
 }
 
+/* Roerdomp schudt als ie schrikt */
+.garden-roerdomp.shaking {
+    animation: roerdompShake 0.5s ease-in-out;
+}
+
+@keyframes roerdompShake {
+    0%, 100% { margin-left: 0; }
+    20% { margin-left: -3px; }
+    40% { margin-left: 3px; }
+    60% { margin-left: -2px; }
+    80% { margin-left: 2px; }
+}
+
 .garden-roerdomp.mirrored.moving {
     animation: roerdompRiseMirrored 3s ease-out forwards, roerdompTwitchMirrored 15s ease-in-out 4s infinite;
 }

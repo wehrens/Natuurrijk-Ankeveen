@@ -31,6 +31,7 @@
     let state = {
         pondVisible: false,
         roerdompVisible: false,
+        roerdompFacingRight: false,
         biotoopActive: false
     };
 
@@ -157,13 +158,29 @@
         });
 
         state.roerdompVisible = true;
+        state.roerdompFacingRight = false;
 
         // Roerdomp kijkt regelmatig andere kant op
-        let facingRight = false;
         biotoopTimers.roerdompFlip = setInterval(() => {
-            facingRight = !facingRight;
-            roerdomp.style.transform = facingRight ? 'scaleX(-1)' : 'scaleX(1)';
+            flipRoerdomp();
         }, CONFIG.timing.roerdompFlipInterval);
+    }
+    
+    // Roerdomp draait zich om (schrikt)
+    function flipRoerdomp() {
+        const roerdomp = document.getElementById('biotoop-roerdomp');
+        if (!roerdomp) return;
+        
+        state.roerdompFacingRight = !state.roerdompFacingRight;
+        
+        // Voeg shake class toe voor schudeffect
+        roerdomp.classList.add('shaking');
+        roerdomp.style.transform = state.roerdompFacingRight ? 'scaleX(-1)' : 'scaleX(1)';
+        
+        // Verwijder shake na animatie
+        setTimeout(() => {
+            roerdomp.classList.remove('shaking');
+        }, 500);
     }
 
     // ===== IJSVOGEL =====
@@ -344,6 +361,11 @@
         setTimeout(() => {
             spawnSlobeend(true); // true = angry, verstoord door otter
         }, 10000);
+        
+        // Roerdomp schrikt als otter in water plonst (na ~11s)
+        setTimeout(() => {
+            flipRoerdomp();
+        }, 11000);
 
         setTimeout(() => {
             if (img.parentNode) img.remove();
@@ -392,7 +414,7 @@
         // Angry bubble als verstoord door otter
         if (isAngry) {
             const angry = document.createElement('img');
-            angry.src = 'images/Angry.png';
+            angry.src = 'images/Angry';
             angry.className = 'slobeend-angry';
             container.appendChild(angry);
             
@@ -443,6 +465,7 @@
 
         state.pondVisible = false;
         state.roerdompVisible = false;
+        state.roerdompFacingRight = false;
     }
 
     // ===== BIOTOOP START =====
