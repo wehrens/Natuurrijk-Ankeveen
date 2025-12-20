@@ -426,21 +426,21 @@
         removeAnimal(img, 8000);
     }
 
-// Ijsvogel - komt van rechts, bidt, duikt, vliegt gespiegeld terug naar rechts
-function spawnKingfisher() {
-    const img = document.createElement('img');
-    img.src = 'images/Kingfisher.gif';
-    img.className = 'flying-kingfisher';
-    
-    // Direct aan body toevoegen voor hoogste z-index
-    document.body.appendChild(img);
-    
-    // Verwijder na animatie (5s + marge)
-    setTimeout(() => {
-        if (img.parentNode) img.remove();
-    }, 6000);
-}
-Het verschil: document.body.appendChild(img) in plaats van flyingEl.appendChild(img).Claude is AI and can make mistakes. Please double-check responses.
+    // Ijsvogel - komt van rechts, bidt, duikt, vliegt gespiegeld terug naar rechts
+    function spawnKingfisher() {
+        const img = document.createElement('img');
+        img.src = 'images/Kingfisher.gif';
+        img.className = 'flying-kingfisher';
+        
+        // Direct aan body toevoegen voor hoogste z-index (VOOR alles)
+        document.body.appendChild(img);
+        
+        // Verwijder na animatie (5s + marge)
+        setTimeout(() => {
+            if (img.parentNode) img.remove();
+        }, 6000);
+    }
+
     // Zeearend - vliegt heel hoog in de verte, slechts 1x
     function spawnEagle() {
         if (!flyingEl) return;
@@ -603,6 +603,9 @@ Het verschil: document.body.appendChild(img) in plaats van flyingEl.appendChild(
         // Verwijder vijver container inhoud
         const pondEl = document.getElementById('headerPond');
         if (pondEl) pondEl.innerHTML = '';
+        
+        // Verwijder ijsvogels die aan body hangen
+        document.querySelectorAll('.flying-kingfisher').forEach(el => el.remove());
 
         // Reset state
         state = {
