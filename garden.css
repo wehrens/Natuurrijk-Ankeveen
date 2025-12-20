@@ -871,7 +871,7 @@
     position: fixed;
     height: 45px;
     width: auto;
-    z-index: 1040; /* Boven garden (1035) zodat ie voor roerdomp vliegt */
+    z-index: 2000; /* Boven ALLES */
     animation: kingfisherDive 5s ease-in-out forwards;
     pointer-events: none;
 }
