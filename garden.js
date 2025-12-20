@@ -426,22 +426,21 @@
         removeAnimal(img, 8000);
     }
 
-    // Ijsvogel - komt van rechts, bidt, duikt, vliegt gespiegeld terug naar rechts
-    function spawnKingfisher() {
-        if (!flyingEl) return;
-        
-        const img = document.createElement('img');
-        img.src = 'images/Kingfisher.gif';
-        img.className = 'flying-kingfisher';
-        
-        flyingEl.appendChild(img);
-        
-        // Verwijder na animatie (5s + marge)
-        setTimeout(() => {
-            if (img.parentNode) img.remove();
-        }, 6000);
-    }
-
+// Ijsvogel - komt van rechts, bidt, duikt, vliegt gespiegeld terug naar rechts
+function spawnKingfisher() {
+    const img = document.createElement('img');
+    img.src = 'images/Kingfisher.gif';
+    img.className = 'flying-kingfisher';
+    
+    // Direct aan body toevoegen voor hoogste z-index
+    document.body.appendChild(img);
+    
+    // Verwijder na animatie (5s + marge)
+    setTimeout(() => {
+        if (img.parentNode) img.remove();
+    }, 6000);
+}
+Het verschil: document.body.appendChild(img) in plaats van flyingEl.appendChild(img).Claude is AI and can make mistakes. Please double-check responses.
     // Zeearend - vliegt heel hoog in de verte, slechts 1x
     function spawnEagle() {
         if (!flyingEl) return;
