@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natuurrijk Ankeveen - Samen bouwen aan biodiversiteit</title>
+    <meta name="description" content="Werkgroep Natuurrijk Ankeveen zet zich in voor meer biodiversiteit in Ankeveen. Van zeismaaien tot zwaluwbescherming – doe mee!">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="garden.css?v=81">
+    <style>
+        :root {
+            --green-dark: #2d4a3e;
+            --green-medium: #4a7c59;
+            --green-light: #7fb069;
+            --green-pale: #d4e6c3;
+            --cream: #f8f6f0;
+            --cream-dark: #e8e4d9;
+            --brown: #8b6914;
+            --brown-light: #c4a35a;
+            --text-dark: #1a2e22;
+            --text-medium: #3d5a4a;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: auto;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background-color: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Zorg dat alle content ONDER de header-background blijft */
+        section {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height, 70px);
+            background: #f8f6f0;
+            backdrop-filter: blur(10px);
+            z-index: 1020;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--green-dark);
+        }
+
+        .logo-text {
+            font-family: 'Fraunces', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-medium);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--green-medium);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--green-light);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: var(--green-medium);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            transition: background 0.3s ease, transform 0.3s ease !important;
+        }
+
+        .nav-cta:hover {
+            background: var(--green-dark);
+            transform: translateY(-2px);
+        }
+
+        .nav-cta::after {
+            display: none !important;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--green-dark);
+            z-index: 100;
+            position: relative;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            display: flex;
+            align-items: center;
+            padding: var(--header-total, 85px) 2rem 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--green-pale) 0%, transparent 70%);
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            color: var(--green-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-content h1 span {
+            color: var(--green-medium);
+            position: relative;
+        }
+
+        .hero-content h1 span::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: var(--brown-light);
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--text-medium);
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--green-medium);
+            color: white;
+            box-shadow: 0 4px 15px rgba(74, 124, 89, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--green-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 124, 89, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--green-dark);
+            border: 2px solid var(--green-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--green-dark);
+            color: white;
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .hero-image-main {
+            width: 100%;
+            height: 450px;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(45, 74, 62, 0.3);
+        }
+
+        .hero-image-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .hero-image-main img.active {
+            opacity: 1;
+        }
+
+        .hero-badge {
+            position: absolute;
+            bottom: -20px;
+            left: -20px;
+            background: var(--brown);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(139, 105, 20, 0.3);
+        }
+
+        .hero-badge span {
+            display: block;
+            font-size: 1.8rem;
+            font-family: 'Fraunces', serif;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--green-dark);
+            padding: 3rem 2rem;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            color: white;
+        }
+
+        .stat-number {
+            font-family: 'Fraunces', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--green-light);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        /* Section Styles */
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--green-dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-medium);
+            font-size: 1.1rem;
+        }
+
+        /* Activities Section */
+        .activities {
+            padding: 6rem 2rem;
+            background: var(--white);
+        }
+
+        .activities-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .activity-card {
+            background: var(--cream);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(45, 74, 62, 0.15);
+        }
+
+        .activity-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .activity-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .activity-card:hover .activity-image img {
+            transform: scale(1.05);
+        }
+
+        .activity-content {
+            padding: 1.5rem;
+        }
+
+        .activity-content h3 {
+            font-size: 1.4rem;
+            color: var(--green-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .activity-content p {
+            color: var(--text-medium);
+            font-size: 0.95rem;
+        }
+
+        .activity-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--green-medium);
+            font-weight: 600;
+            margin-top: 1rem;
+            text-decoration: none;
+            transition: gap 0.3s ease;
+        }
+
+        .activity-link:hover {
+            gap: 0.75rem;
+        }
+
+        .activity-partners {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .activity-partners img {
+            height: 28px;
+            width: auto;
+            object-fit: contain;
+            opacity: 0.85;
+            transition: opacity 0.3s;
+        }
+
+        .activity-partners img:hover {
+            opacity: 1;
+        }
+
+        /* Results Section */
+        .results {
+            padding: 6rem 2rem;
+            background: var(--green-pale);
+        }
+
+        .results-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .results-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .results-text p {
+            color: var(--text-medium);
+            margin-bottom: 1rem;
+        }
+
+        .results-text .highlight {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--green-dark);
+        }
+
+        .results-images {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .results-image {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(45, 74, 62, 0.1);
+        }
+
+        .results-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--green-pale) 100%);
+        }
+
+        .cta-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(45, 74, 62, 0.1);
+        }
+
+        .cta-card h3 {
+            font-size: 1.8rem;
+            color: var(--green-dark);
+            margin-bottom: 1rem;
+        }
+
+        .cta-card p {
+            color: var(--text-medium);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--green-pale);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* News Section */
+        .news {
+            padding: 6rem 2rem;
+            background: var(--white);
+        }
+
+        .news-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .news-featured {
+            border-radius: 25px;
+            overflow: hidden;
+            position: relative;
+            min-height: 400px;
+        }
+
+        .news-featured img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .news-featured-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(45, 74, 62, 0.95));
+            padding: 3rem 2rem 2rem;
+            color: white;
+        }
+
+        .news-tag {
+            background: var(--brown);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .news-featured h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .news-featured p {
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .news-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .news-small {
+            background: var(--cream);
+            padding: 1.5rem;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .news-small:hover {
+            transform: translateX(5px);
+        }
+
+        .news-small h4 {
+            font-size: 1.1rem;
+            color: var(--green-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .news-small p {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+
+        .news-date {
+            font-size: 0.85rem;
+            color: var(--brown);
+            font-weight: 600;
+        }
+
+        /* Gallery Section */
+        .gallery {
+            padding: 6rem 2rem;
+            background: var(--cream);
+        }
+
+        .gallery-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 250px);
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(45, 74, 62, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item.large {
+            grid-column: span 2;
+        }
+
+        .gallery-item.tall {
+            grid-row: span 2;
+        }
+
+        /* Team Section */
+        .team {
+            padding: 6rem 2rem;
+            background: var(--white);
+        }
+
+        .team-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .team-member {
+            text-align: center;
+            overflow: visible;
+            position: relative;
+        }
+
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--green-light), var(--green-medium));
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 10px 30px rgba(74, 124, 89, 0.2);
+            overflow: hidden;
+        }
+
+        .team-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .team-avatar img:hover {
+            transform: scale(1.05);
+        }
+
+        .team-member h4 {
+            font-size: 1.1rem;
+            color: var(--green-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            position: relative;
+        }
+
+        .team-member h4 .zeis-icon {
+            height: 55px;
+            width: auto;
+            position: absolute;
+            right: -15px;
+            top: -40px;
+        }
+
+        .team-member p {
+            font-size: 0.85rem;
+            color: var(--text-medium);
+        }
+
+        /* Extra Volunteers Section */
+        .volunteers-extra {
+            max-width: 1100px;
+            margin: 3rem auto 0;
+            text-align: center;
+        }
+
+        .volunteers-extra h3 {
+            font-size: 1.5rem;
+            color: var(--green-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .volunteers-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .volunteer-item {
+            text-align: center;
+            width: 90px;
+            overflow: visible;
+            position: relative;
+        }
+
+        .volunteer-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--green-pale), var(--green-light));
+            border-radius: 50%;
+            margin: 0 auto 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--green-dark);
+            box-shadow: 0 5px 15px rgba(74, 124, 89, 0.15);
+            overflow: hidden;
+        }
+
+        .volunteer-avatar.gold {
+            border: 6px ridge #d4af37;
+            box-shadow: 0 0 0 3px #b8960c, 0 5px 20px rgba(212, 175, 55, 0.6);
+        }
+
+        .volunteer-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .volunteer-avatar img:hover {
+            transform: scale(1.1);
+        }
+
+        .volunteer-item h4 {
+            font-size: 0.9rem;
+            color: var(--green-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            position: relative;
+        }
+
+        .volunteer-item h4 .zeis-icon {
+            height: 35px;
+            width: auto;
+            position: absolute;
+            right: -5px;
+            top: -25px;
+        }
+
+        /* Large Logo */
+        .large-logo {
+            max-width: 200px;
+            margin-bottom: 1.5rem;
+        }
+
+        .large-logo img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15);
+        }
+
+        .footer-logo {
+            max-width: 150px;
+            margin-top: 1.5rem;
+        }
+
+        .footer-logo img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        /* Sponsors Section */
+        .sponsors {
+            padding: 5rem 2rem;
+            background: var(--cream);
+            border-top: 1px solid var(--cream-dark);
+        }
+
+        .sponsors-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .sponsors-intro {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .sponsors-intro h2 {
+            font-size: 2rem;
+            color: var(--green-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .sponsors-intro p {
+            color: var(--text-medium);
+        }
+
+        .sponsors-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .sponsor-item {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+            width: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .sponsor-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(45, 74, 62, 0.1);
+        }
+
+        .sponsor-item img {
+            max-width: 100%;
+            max-height: 100px;
+            object-fit: contain;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--green-dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .footer-brand p {
+            opacity: 0.8;
+            margin: 1rem 0;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--green-light);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .footer-column a:hover {
+            opacity: 1;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            position: relative;
+        }
+
+        .footer-egel {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            animation: egelFooterWalk 20s linear infinite;
+        }
+
+        .footer-egel img {
+            width: 50px;
+            height: auto;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+            transform: scaleX(-1);
+        }
+
+        .footer-egel:hover img {
+            opacity: 1;
+        }
+
+        @keyframes egelFooterWalk {
+            0% { left: -60px; }
+            100% { left: calc(100% + 60px); }
+        }
+
+        .footer-credit {
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0.5;
+            padding: 1rem 0;
+        }
+
+        .footer-credit a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .footer-credit a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-content, .hero-visual {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .hero-visual {
+            animation-delay: 0.2s;
+        }
+
+        /* Responsive */
+        /* ===== NATUURWEETJES SPOTLIGHT ===== */
+        .weetje-section {
+            padding: 6rem 2rem;
+            background: var(--white);
+        }
+        .weetje-card {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--green-pale) 0%, var(--cream) 100%);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(45,74,62,0.1);
+        }
+        .weetje-header {
+            background: var(--green-dark);
+            padding: 0.9rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .weetje-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: white;
+        }
+        .weetje-badge-icon {
+            width: 34px; height: 34px;
+            background: var(--green-medium);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem;
+        }
+        .weetje-badge span {
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+        .weetje-month-label {
+            color: var(--green-light);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .weetje-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 320px;
+        }
+        .weetje-image {
+            position: relative;
+            overflow: hidden;
+        }
+        .weetje-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .weetje-image:hover img {
+            transform: scale(1.05);
+        }
+        .weetje-content {
+            padding: 2rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .weetje-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.45rem;
+            color: var(--green-dark);
+            margin-bottom: 0.8rem;
+            line-height: 1.3;
+        }
+        .weetje-text {
+            color: var(--text-medium);
+            line-height: 1.75;
+            font-size: 0.95rem;
+        }
+        .weetje-text .weetje-more {
+            display: none;
+        }
+        .weetje-text.expanded .weetje-more {
+            display: inline;
+        }
+        .weetje-toggle {
+            display: inline-block;
+            margin-top: 0.75rem;
+            color: var(--green-medium);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border: none;
+            background: none;
+            font-family: 'Source Sans 3', sans-serif;
+            padding: 0;
+            transition: color 0.2s;
+        }
+        .weetje-toggle:hover { color: var(--brown); }
+        .weetje-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: rgba(45,74,62,0.03);
+            border-top: 1px solid rgba(45,74,62,0.08);
+        }
+        .weetje-nav-dot {
+            width: 9px; height: 9px;
+            border-radius: 50%;
+            background: rgba(45,74,62,0.15);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            padding: 0;
+        }
+        .weetje-nav-dot.active {
+            background: var(--green-medium);
+            width: 24px;
+            border-radius: 5px;
+        }
+        .weetje-nav-arrow {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: 2px solid rgba(45,74,62,0.2);
+            background: transparent;
+            color: var(--green-medium);
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s;
+            margin: 0 0.4rem;
+            padding: 0;
+        }
+        .weetje-nav-arrow:hover {
+            background: var(--green-medium);
+            color: white;
+            border-color: var(--green-medium);
+        }
+
+        @media (max-width: 1024px) {
+            .hero-container { grid-template-columns: 1fr; text-align: center; }
+            .hero-content p { margin-left: auto; margin-right: auto; }
+            .hero-buttons { justify-content: center; }
+            .hero-visual { max-width: 500px; margin: 0 auto; }
+            .hero-image-main { height: 350px; }
+            .large-logo { margin-left: auto; margin-right: auto; }
+            .activities-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-container { grid-template-columns: repeat(2, 1fr); }
+            .team-grid { grid-template-columns: repeat(3, 1fr); }
+            .footer-container { grid-template-columns: repeat(2, 1fr); }
+            .results-content { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
+            .gallery-item.tall { grid-row: span 1; }
+            .sponsors-grid { grid-template-columns: repeat(3, 1fr); }
+            .weetje-body { min-height: 280px; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); gap: 0.5rem; }
+            .nav-links.mobile-open { display: flex; }
+            .mobile-menu-btn { display: block; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .activities-grid { grid-template-columns: 1fr; }
+            .news-grid { grid-template-columns: 1fr; }
+            .team-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-container { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .gallery-item.large { grid-column: span 1; }
+            .hero-image-main { height: 300px; }
+            .sponsors-grid { grid-template-columns: repeat(2, 1fr); }
+            .results-images { grid-template-columns: 1fr; }
+            .weetje-body { grid-template-columns: 1fr; }
+            .weetje-image { height: 220px; }
+            .weetje-content { padding: 1.5rem; }
+            .volunteers-grid { gap: 1rem; }
+            .volunteer-avatar { width: 60px; height: 60px; font-size: 1.2rem; }
+            .hero-badge { bottom: -10px; left: 10px; }
+        }
+
+        /* Portrait mode - ensure hero is visible */
+        @media (orientation: portrait) {
+            .hero-visual {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+            .hero-image-main {
+                min-height: 250px;
+                height: auto;
+                aspect-ratio: 4/3;
+            }
+            .hero-image-main img {
+                object-fit: cover;
+            }
+        }
+
+        @media (max-width: 480px) and (orientation: portrait) {
+            .hero-image-main {
+                height: 220px;
+                min-height: 200px;
+            }
+            .hero-badge {
+                bottom: -8px;
+                left: 8px;
+                padding: 0.7rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            padding: 2rem;
+        }
+
+        .lightbox.active { display: flex; }
+
+        .lightbox-content {
+            display: flex;
+            gap: 2rem;
+            max-width: 95vw;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+            position: relative;
+            z-index: 5;
+        }
+
+        .lightbox-content img {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-content img.gold-border {
+            border: 10px ridge #d4af37;
+            box-shadow: 0 0 0 5px #b8960c, 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-text {
+            color: white;
+            max-width: 400px;
+        }
+
+        .lightbox-text h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--green-light);
+        }
+
+        .lightbox-text .role {
+            font-size: 1rem;
+            opacity: 0.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .lightbox-text .quote {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+            background: none;
+            border: none;
+            padding: 0;
+            z-index: 10;
+        }
+
+        .lightbox-close:hover { opacity: 1; }
+
+        .lightbox-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+        }
+
+        @media (max-width: 768px) {
+            .lightbox-content { flex-direction: column; text-align: center; }
+            .lightbox-content img { max-width: 80vw; max-height: 40vh; }
+            .lightbox-text { max-width: 90vw; }
+        }
+
+        /* Contact Modal */
+        .contact-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .contact-modal.active { display: flex; }
+
+        .contact-modal-content {
+            background: white;
+            border-radius: 25px;
+            padding: 2.5rem;
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .contact-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.8rem;
+            color: var(--text-medium);
+            cursor: pointer;
+            transition: color 0.3s;
+            line-height: 1;
+        }
+
+        .contact-modal-close:hover { color: var(--green-dark); }
+
+        .contact-modal h3 {
+            font-size: 1.8rem;
+            color: var(--green-dark);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .contact-modal-subtitle {
+            text-align: center;
+            color: var(--text-medium);
+            margin-bottom: 2rem;
+        }
+
+        .contact-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: var(--cream);
+            border-radius: 15px;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .contact-option:hover {
+            border-color: var(--green-medium);
+            transform: translateX(5px);
+            background: var(--green-pale);
+        }
+
+        .contact-option-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .contact-option-icon.email { background: #EA4335; color: white; }
+        .contact-option-icon.whatsapp { background: #25D366; color: white; }
+        .contact-option-icon.signal { background: #3A76F0; color: white; }
+        .contact-option-icon.phone { background: var(--green-medium); color: white; }
+
+        .contact-option-text { flex: 1; }
+        .contact-option-text strong { display: block; font-size: 1.1rem; color: var(--green-dark); }
+        .contact-option-text span { font-size: 0.9rem; color: var(--text-medium); }
+
+        .contact-modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--cream-dark);
+            text-align: center;
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .contact-modal-footer strong { color: var(--green-dark); }
+    </style>
+    <script>
+        // Scroll fix - ook voor iPhone/Safari
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+        document.addEventListener('DOMContentLoaded', function() {
+            window.scrollTo(0, 0);
+        });
+        window.addEventListener('load', function() {
+            setTimeout(function() { window.scrollTo(0, 0); }, 0);
+        });
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Natuurrijk Ankeveen</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#over-ons">Over ons</a></li>
+                <li><a href="#activiteiten">Wat we doen</a></li>
+                <li><a href="#resultaten">Resultaten</a></li>
+                <li><a href="#natuurweetjes">Weetjes</a></li>
+                <li><a href="#nieuws">Nieuws</a></li>
+                <li><a href="javascript:void(0)" onclick="openContactModal()">Contact</a></li>
+                <li><a href="javascript:void(0)" onclick="openContactModal()" class="nav-cta">Doe mee!</a></li>
+            </ul>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <!-- BIOTOOP CONTAINERS -->
+    <div class="header-background"></div>
+    <div class="header-animals-ground" id="headerAnimalsGround"></div>
+    <div class="header-garden" id="headerGarden"></div>
+    <div class="header-grass" id="headerGrass">
+        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
+        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
+        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
+        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
+        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
+        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
+        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
+        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
+        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
+        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
+    </div>
+    <div class="header-pond" id="headerPond"></div>
+    <div class="header-animals-flying" id="headerAnimalsFlying"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="large-logo">
+                    <img src="images/logo.jpg" alt="Natuurrijk Ankeveen logo">
+                </div>
+                <h1>Samen bouwen aan een <span>natuurrijker</span> Ankeveen</h1>
+                <p>Wij zijn een enthousiaste werkgroep van vrijwilligers die zich inzet voor meer biodiversiteit in en om Ankeveen – een langgerekt dorp van nog geen 2.000 inwoners, verscholen tussen de weiden en plassen op de grens van Utrecht en Noord-Holland, vlakbij Hilversum en Weesp. Van zeismaaien tot zwaluwbescherming – elke actie telt!</p>
+                <div class="hero-buttons">
+                    <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Word vrijwilliger →</a>
+                    <a href="#activiteiten" class="btn btn-secondary">Ontdek ons werk</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-image-main" id="heroSlideshow">
+                    <img src="images/groepsfoto-zeisbrigade.jpg" alt="De Zeisbrigade van Natuurrijk Ankeveen" class="active">
+                    <img src="images/Huiszwaluwteam.jpg" alt="Het huiszwaluwteam met kunstnesten">
+                    <img src="images/RuigeHoek.jpg" alt="Vrijwilligers zeisen bij de Ruige Hoek">
+                    <img src="images/Oeveraanleg.jpg" alt="Aanleg natuurvriendelijke oever">
+                    <img src="images/zwaluwtil-speeltuin.jpg" alt="De huiszwaluwtil bij de speeltuin">
+                    <img src="images/hooiopper.jpg" alt="Hooiopper na het zeisen">
+                    <img src="images/oever-planten.jpg" alt="Vrijwilligers planten oeverplanten">
+                    <img src="images/Lokin2025.jpg" alt="Educatie op de Joseph Lokinschool">
+                    <img src="images/Kruiwagen.jpg" alt="Vrijwilliger met kruiwagen vol maaisel">
+                </div>
+                <div class="hero-badge">
+                    <span>40+</span>
+                    vrijwilligers
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="stats-bar">
+        <div class="stats-container">
+            <div class="stat-item"><div class="stat-number">40+</div><div class="stat-label">Vrijwilligers</div></div>
+            <div class="stat-item"><div class="stat-number">70</div><div class="stat-label">Zwaluwnesten in 2025</div></div>
+            <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">Natuurvriendelijke oevers</div></div>
+            <div class="stat-item"><div class="stat-number">5</div><div class="stat-label">Jaar ervaring</div></div>
+        </div>
+    </section>
+
+    <!-- Activities Section -->
+    <section class="activities" id="activiteiten">
+        <div class="section-header">
+            <h2>Wat we doen</h2>
+            <p>Met praktische, kleinschalige projecten maken we samen een groot verschil voor de natuur in Ankeveen</p>
+        </div>
+        <div class="activities-grid">
+            <div class="activity-card" onclick="window.location='zeisbrigade.html'">
+                <div class="activity-image"><img src="images/Zeismaai.jpg" alt="Vrijwilligers maaien met de zeis"></div>
+                <div class="activity-content">
+                    <h3>Zeisbrigade 🦋🐛</h3>
+                    <p>In goed overleg met de gemeente onderhouden we bermen, veldjes en De Ruige Hoek met de zeis. We planten inheemse struiken en voeren het maaisel af zodat de bodem verschraalt en wilde bloemen de kans krijgen.</p>
+                    <span class="activity-link">Meer info →</span>
+                </div>
+            </div>
+            <div class="activity-card" onclick="window.location='oevers.html'">
+                <div class="activity-image"><img src="images/IjsbaanJul2024.jpg" alt="Bloeiende natuurvriendelijke oever bij de ijsbaan"></div>
+                <div class="activity-content">
+                    <h3>Natuurvriendelijke oevers 🐸</h3>
+                    <p>Bij de IJsclub, Bergse Pad en Buhrmanlaan legden we al natuurvriendelijke oevers aan met inheemse planten. Daarna onderhouden we ze door woekerende soorten uit te dunnen.</p>
+                    <span class="activity-link">Meer info →</span>
+                </div>
+            </div>
+            <div class="activity-card" onclick="window.location='bergsepad.html'">
+                <div class="activity-image"><img src="images/BergsePad.jpg" alt="Vrijwilligers snoeien langs het Bergse Pad"></div>
+                <div class="activity-content">
+                    <h3>Onderhoud Bergse Pad 🦡🦉</h3>
+                    <p>Nieuw in 2025! In samenwerking met Waternet en Natuurmonumenten onderhouden we het hele Bergse Pad van de Gele brug tot de Goog brug.</p>
+                    <div class="activity-partners">
+                        <img src="images/Waternet.png" alt="Waternet">
+                        <img src="images/Natuurmonumenten.png" alt="Natuurmonumenten">
+                        <img src="images/wijdemeren.png" alt="Gemeente Wijdemeren">
+                    </div>
+                    <span class="activity-link">Meer info →</span>
+                </div>
+            </div>
+            <div class="activity-card" onclick="window.location='zwaluwen.html'">
+                <div class="activity-image"><img src="images/Huiszwaluwteam.jpg" alt="Het huiszwaluwteam met kunstnesten"></div>
+                <div class="activity-content">
+                    <h3>Huiszwaluw­bescherming 🐦</h3>
+                    <p>Van 6 naar 25 succesvolle nesten in één jaar! Met kunstnesten en een zwaluwtil helpen we deze sympathieke trekvogeltjes.</p>
+                    <span class="activity-link">Meer info →</span>
+                </div>
+            </div>
+            <div class="activity-card" onclick="window.location='aanplanten.html'">
+                <div class="activity-image"><img src="images/oever-planten.jpg" alt="Vrijwilligers planten oeverplanten"></div>
+                <div class="activity-content">
+                    <h3>Aanplanten 🪻🐝</h3>
+                    <p>We werken uitsluitend met inheemse planten, struiken en bomen die biologisch gekweekt zijn bij gerenommeerde kwekers.</p>
+                    <span class="activity-link">Meer info →</span>
+                </div>
+            </div>
+            <div class="activity-card" onclick="window.location='educatie.html'">
+                <div class="activity-image"><img src="images/Huiszwaluwschool.jpg" alt="Kinderen met kunstnesten op de Joseph Lokin school"></div>
+                <div class="activity-content">
+                    <h3>Educatie 🐦🐞</h3>
+                    <p>We organiseren regelmatig activiteiten met de Joseph Lokin school: vogelhuisjes en insectenhotels maken, helpen met planten, en uitleg over biodiversiteit.</p>
+                    <span class="activity-link">Meer info →</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results" id="resultaten">
+        <div class="results-container">
+            <div class="section-header">
+                <h2>Ons succes: de huiszwaluwen</h2>
+                <p>Een spectaculaire comeback dankzij onze inspanningen</p>
+            </div>
+            <div class="results-content">
+                <div class="results-text">
+                    <p>In 2024 waren er nog maar <strong>6 huiszwaluwnesten</strong> in de Ooievaarsbuurt. Na het plaatsen van 54 kunstnesten en een zwaluwtil steeg dit in 2025 naar <strong>25 nesten</strong>!</p>
+                    <p>Hoewel de zwaluwen hun eigen nestjes bouwden (vaak vlak naast onze kunstnesten), gaven de kunstnesten hen het gevoel dat dit een veilige en populaire plek is om te broeden.</p>
+                    <p class="highlight">In heel Ankeveen telden we in 2025 zo'n 70 succesvolle broedgevallen!</p>
+                </div>
+                <div class="results-images">
+                    <div class="results-image"><img src="images/Huiszwaluwen_grafiek_2022_-_2025.jpg" alt="Grafiek" onclick="openLightbox('images/Huiszwaluwen_grafiek_2022_-_2025.jpg')" style="cursor: pointer; object-fit: contain; background: white;"></div>
+                    <div class="results-image"><img src="images/Huiszwaluwnestkastje.png" alt="Huiszwaluwkunstnest"></div>
+                    <div class="results-image"><img src="images/IMG_5525.jpg" alt="Vrijwilligers bij de zwaluwtil"></div>
+                    <div class="results-image"><img src="images/zwaluwtil-speeltuin.jpg" alt="De huiszwaluwtil"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="meedoen">
+        <div style="max-width: 700px; margin: 0 auto;">
+            <div class="cta-card" style="text-align: left;">
+                <div class="cta-icon">🙋</div>
+                <h3>Doe mee als vrijwilliger</h3>
+                <p>Sluit je aan bij de zeisbrigade! Je kunt bij ons het zeisen leren, we hebben leenzeisen beschikbaar en er is altijd behoefte aan mensen die helpen het maaisel bij elkaar te harken en op de kar te werpen.</p>
+                <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Aanmelden</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Natuurweetjes Spotlight -->
+    <section class="weetje-section" id="natuurweetjes">
+        <div class="section-header">
+            <h2>Natuurweetjes</h2>
+            <p>Elke week een nieuw weetje over de natuur in en rond Ankeveen</p>
+        </div>
+        <div class="weetje-card">
+            <div class="weetje-header">
+                <div class="weetje-badge">
+                    <div class="weetje-badge-icon">🌿</div>
+                    <span>Weetje van de Week</span>
+                </div>
+                <div class="weetje-month-label" id="weetjeMonth"></div>
+            </div>
+            <div class="weetje-body">
+                <div class="weetje-image">
+                    <img id="weetjeImg" src="" alt="">
+                </div>
+                <div class="weetje-content">
+                    <h3 class="weetje-title" id="weetjeTitle"></h3>
+                    <div class="weetje-text" id="weetjeText"></div>
+                    <button class="weetje-toggle" id="weetjeToggle" onclick="toggleWeetje()">Lees verder →</button>
+                </div>
+            </div>
+            <div class="weetje-nav" id="weetjeNav"></div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section class="news" id="nieuws">
+        <div class="news-container">
+            <div class="section-header">
+                <h2>Nieuws & Resultaten</h2>
+                <p>De laatste updates over onze projecten en successen</p>
+            </div>
+            <div class="news-grid">
+                <div class="news-featured">
+                    <img src="images/toekomstversnellers.jpg" alt="Winnaar Toekomstversnellers 2024">
+                    <div class="news-featured-overlay">
+                        <span class="news-tag">🏆 Jippie!</span>
+                        <h3>Winnaar Toekomstversnellers 2024!</h3>
+                        <p>Ons project 'Bloemrijke en natuurrijke oevers in Ankeveen' won de provinciale prijs van Noord-Holland: €5.000 voor nog meer biodiversiteit!</p>
+                    </div>
+                </div>
+                <div class="news-sidebar">
+                    <div class="news-small"><span class="news-date">Zomer 2025</span><h4>70 zwaluwnesten geteld!</h4><p>Recordaantal broedgevallen in Ankeveen dankzij kunstnesten en zwaluwtil.</p></div>
+                    <div class="news-small"><span class="news-date">September 2026</span><h4>Zeiscursus – datum volgt!</h4><p>Wil je leren zeisen? Houd deze plek in de gaten voor de exacte datum.</p></div>
+                    <div class="news-small"><span class="news-date">April 2025</span><h4>Zwaluwtil geplaatst</h4><p>Gefinancierd door de Vogelwerkgroep 't Gooi.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery">
+        <div class="section-header">
+            <h2>Beelden uit het veld</h2>
+            <p>Een impressie van onze activiteiten door de jaren heen</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item large"><img src="images/zeiscursus-smid.jpg" alt="De smid leert zeisen slijpen"></div>
+            <div class="gallery-item"><img src="images/hooiopper.jpg" alt="Traditionele hooiopper"></div>
+            <div class="gallery-item"><img src="images/zwaluwtil-plaatsen.jpg" alt="Plaatsen van de zwaluwtil"></div>
+            <div class="gallery-item tall"><img src="images/oever-graven.jpg" alt="Graafwerk voor natuurlijke oever"></div>
+            <div class="gallery-item"><img src="images/tractor-zeisdag.jpg" alt="Zeisdag met tractor"></div>
+            <div class="gallery-item"><img src="images/buurtbijeenkomst.jpg" alt="Uitleg aan buurtbewoners"></div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team" id="over-ons">
+        <div class="section-header">
+            <h2>Het kernteam</h2>
+            <p>Vijf gedreven Ankeveners vormen het hart van de werkgroep</p>
+            <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;"><em>Klik op een foto om te vergroten</em></p>
+        </div>
+        <div style="max-width: 600px; margin: 0 auto 3rem; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(45, 74, 62, 0.15); cursor: pointer;">
+            <img src="images/NatuurwerkgroepAnkeveen.png" alt="Het kernteam" style="width: 100%; display: block;" onclick="openLightbox('images/NatuurwerkgroepAnkeveen.png')">
+        </div>
+        <div class="team-grid">
+            <div class="team-member"><div class="team-avatar"><img src="images/Arda.jpg" alt="Arda van der Lee" onclick="openLightbox('images/Arda.jpg')"></div><h4>Arda van der Lee <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4><p>Biologe</p></div>
+            <div class="team-member"><div class="team-avatar"><img src="images/Martin.jpg" alt="Martin Ockhuijsen" onclick="openLightbox('images/Martin.jpg')"></div><h4>Martin Ockhuijsen <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4><p>Vrijwillig boswachter</p></div>
+            <div class="team-member"><div class="team-avatar"><img src="images/Wijnand.jpg" alt="Wijnand Smit" onclick="openLightbox('images/Wijnand.jpg')"></div><h4>Wijnand Smit <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4><p>Ecologisch hovenier</p></div>
+            <div class="team-member"><div class="team-avatar"><img src="images/Ron.jpg" alt="Ron Wehrens" onclick="openLightbox('images/Ron.jpg')"></div><h4>Ron Wehrens <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4><p>Apotheker</p></div>
+            <div class="team-member"><div class="team-avatar"><img src="images/Hans.jpg" alt="Hans Hazes" onclick="openLightbox('images/Hans.jpg')"></div><h4>Hans Hazes <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4><p>Ondernemer</p></div>
+        </div>
+
+        <!-- Extra Vrijwilligers -->
+        <div class="volunteers-extra">
+            <h3>🌿 Vrijwilligers team</h3>
+            <p style="text-align: center; color: #888; font-size: 0.85rem; margin-bottom: 0.5rem;"><em>Klik op een foto om te vergroten</em></p>
+            <p style="text-align: center; color: #666; margin-bottom: 1.5rem;">
+                <span style="display: inline-block; width: 16px; height: 16px; border: 3px ridge #d4af37; border-radius: 50%; vertical-align: middle; margin-right: 6px;"></span>
+                <em>Gouden rand = vrijwilligers die in 2025 vrijwel altijd paraat stonden</em>
+                <span style="margin: 0 10px;">|</span>
+                <img src="images/Zeis.png" alt="Zeis" style="height: 30px; vertical-align: middle; margin-right: 4px;">
+                <em>Zeiscursus gevolgd</em>
+            </p>
+            <div class="volunteers-grid">
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Alex.jpg" alt="Alex" onclick="openLightbox(this.src, true)"></div><h4>Alex</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Andries.png" alt="Andries" onclick="openLightbox(this.src, false)"></div><h4>Andries</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Coos.jpg" alt="Coos" onclick="openLightbox(this.src, true)"></div><h4>Coos</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Cor.jpg" alt="Cor" onclick="openLightbox(this.src, true)"></div><h4>Cor <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🐸</div><h4>Daan <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌸</div><h4>Dagmar <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌻</div><h4>Desiree</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦆</div><h4>Diana <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Ed.jpg" alt="Ed" onclick="openLightbox(this.src, false)"></div><h4>Ed <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Els.jpg" alt="Els" onclick="openLightbox(this.src, true)"></div><h4>Els <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Eric.jpg" alt="Eric" onclick="openLightbox(this.src, false)"></div><h4>Eric <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦎</div><h4>Erik <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌺</div><h4>Femke <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Fen.jpg" alt="Fen" onclick="openLightbox(this.src, true)"></div><h4>Fen <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌼</div><h4>Francette <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Ge.jpg" alt="Gé" onclick="openLightbox(this.src, false)"></div><h4>Gé <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Gerrit.jpg" alt="Gerrit" onclick="openLightbox(this.src, true)"></div><h4>Gerrit <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Harry.jpg" alt="Harry" onclick="openLightbox(this.src, true)"></div><h4>Harry <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Hester.png" alt="Hester" onclick="openLightbox(this.src, false)"></div><h4>Hester</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦔</div><h4>Henk <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Ingmar.jpg" alt="Ingmar" onclick="openLightbox(this.src, false)"></div><h4>Ingmar <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Jaap.jpg" alt="Jaap" onclick="openLightbox(this.src, false)"></div><h4>Jaap <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌾</div><h4>Jan <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦊</div><h4>Jan Willem</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦢</div><h4>Jantien <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌷</div><h4>Joop <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Karin.jpg" alt="Karin" onclick="openLightbox(this.src, false)"></div><h4>Karin <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🍀</div><h4>Karin</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌿</div><h4>Loes <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌲</div><h4>Marjolein</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Marijke.jpg" alt="Marijke" onclick="openLightbox(this.src, false)"></div><h4>Marijke</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/MartinZ.jpg" alt="Martin Z" onclick="openLightbox(this.src, false)"></div><h4>Martin Z</h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Nynke.jpg" alt="Nynke" onclick="openLightbox(this.src, true)"></div><h4>Nynke <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Patrick.png" alt="Patrick" onclick="openLightbox(this.src, false)"></div><h4>Patrick <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Peter.jpg" alt="Peter" onclick="openLightbox(this.src, true)"></div><h4>Peter <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌱</div><h4>Peter d G <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar gold"><img src="images/Rene.jpg" alt="Rene" onclick="openLightbox(this.src, true)"></div><h4>Rene <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🦇</div><h4>Rob <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🐟</div><h4>Stephan <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar">🌴</div><h4>Tatakh <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Tilly.jpg" alt="Tilly" onclick="openLightbox(this.src, false)"></div><h4>Tilly <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Willem.jpg" alt="Willem" onclick="openLightbox(this.src, false)"></div><h4>Willem <img src="images/Zeis.png" alt="Zeis" class="zeis-icon"></h4></div>
+                <div class="volunteer-item"><div class="volunteer-avatar"><img src="images/Wilma.jpg" alt="Wilma" onclick="openLightbox(this.src, false)"></div><h4>Wilma</h4></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sponsors Section -->
+    <section class="sponsors" id="partners">
+        <div class="sponsors-container">
+            <div class="sponsors-intro">
+                <h2>Onze partners & sponsors</h2>
+                <p>Met dank aan deze organisaties die ons werk mogelijk maken</p>
+            </div>
+            <div class="sponsors-grid">
+                <div class="sponsor-item"><img src="images/Landschap_NH.jpg" alt="Landschap Noord-Holland"></div>
+                <div class="sponsor-item"><img src="images/VWG.jpg" alt="Vogelwerkgroep Gooi en Omstreken"></div>
+                <div class="sponsor-item"><img src="images/wijdemeren.png" alt="Gemeente Wijdemeren"></div>
+                <div class="sponsor-item"><img src="images/Natuurmonumenten.png" alt="Natuurmonumenten"></div>
+                <div class="sponsor-item"><img src="images/Waternet.png" alt="Waternet"></div>
+                <div class="sponsor-item"><img src="images/Lokin.svg" alt="Joseph Lokin School"></div>
+                <div class="sponsor-item"><img src="images/Ankeveenseijsclub.png" alt="Ankeveense IJsclub"></div>
+                <div class="sponsor-item"><img src="images/Appelboom.png" alt="De Appelboom"></div>
+                <div class="sponsor-item"><img src="images/BruisendAnkeveen.GIF" alt="Bruisend Ankeveen"></div>
+                <div class="sponsor-item"><img src="images/Kostelijk.svg" alt="Zorgkwekerij Kostelijk"></div>
+                <div class="sponsor-item"><img src="images/Smittuinen.png" alt="Wijnand Smit Tuinen"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="index.html" class="logo" style="color: white;"><span class="logo-text">Natuurrijk Ankeveen</span></a>
+                <p>Samen bouwen aan biodiversiteit in Ankeveen. Onze werkgroep opereert onder Stichting Bruisend Ankeveen.</p>
+                <div class="footer-logo"><img src="images/logo.jpg" alt="Natuurrijk Ankeveen logo"></div>
+            </div>
+            <div class="footer-column">
+                <h4>Navigatie</h4>
+                <ul><li><a href="#over-ons">Over ons</a></li><li><a href="#activiteiten">Wat we doen</a></li><li><a href="#resultaten">Resultaten</a></li><li><a href="#nieuws">Nieuws</a></li></ul>
+            </div>
+            <div class="footer-column">
+                <h4>Meedoen</h4>
+                <ul><li><a href="javascript:void(0)" onclick="openContactModal()">Word vrijwilliger</a></li><li><a href="javascript:void(0)" onclick="openContactModal()">Zeiscursus (sept. 2026)</a></li></ul>
+            </div>
+            <div class="footer-column">
+                <h4>Contact</h4>
+                <ul>
+                    <li>Ron Wehrens</li>
+                    <li><a href="tel:0646293590">06-46293590</a></li>
+                    <li><a data-email-full="info" href="#" style="word-break: break-all;">laden...</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2025 Werkgroep Natuurrijk Ankeveen · Onderdeel van Stichting Bruisend Ankeveen · IBAN: NL97 INGB 0006 3150 11</span>
+            <div class="footer-egel"><img src="images/egel.png" alt="Egel"></div>
+        </div>
+        <div class="footer-credit">
+            Webdesign: Ron Wehrens – <a data-email-full="ron" href="#">laden...</a>
+        </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button type="button" class="lightbox-close" onclick="closeLightbox(); return false;">&times;</button>
+        <div class="lightbox-content" onclick="event.stopPropagation();">
+            <img id="lightbox-img" src="" alt="">
+            <div class="lightbox-text" id="lightbox-text">
+                <h3 id="lightbox-name"></h3>
+                <div class="role" id="lightbox-role"></div>
+                <div class="quote" id="lightbox-quote"></div>
+            </div>
+        </div>
+        <div class="lightbox-backdrop" onclick="closeLightbox(); return false;"></div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div class="contact-modal" id="contactModal" onclick="closeContactModal(event)">
+        <div class="contact-modal-content" onclick="event.stopPropagation()">
+            <span class="contact-modal-close" onclick="closeContactModal()">&times;</span>
+            <h3>📬 Neem contact op</h3>
+            <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
+            <div class="contact-options">
+                <a data-email="info" href="#" class="contact-option">
+                    <div class="contact-option-icon email"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+                    <div class="contact-option-text"><strong>E-mail</strong><span data-email-text="info">laden...</span></div>
+                </a>
+                <a href="https://wa.me/31646293590" target="_blank" class="contact-option">
+                    <div class="contact-option-icon whatsapp"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></div>
+                    <div class="contact-option-text"><strong>WhatsApp</strong><span>Stuur ons een berichtje</span></div>
+                </a>
+                <a href="https://signal.me/#p/+31646293590" target="_blank" class="contact-option">
+                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+                    <div class="contact-option-text"><strong>Signal</strong><span>Veilig en privé chatten</span></div>
+                </a>
+                <a href="tel:+31646293590" class="contact-option">
+                    <div class="contact-option-icon phone"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
+                    <div class="contact-option-text"><strong>Bellen</strong><span>06-46293590</span></div>
+                </a>
+            </div>
+            <div class="contact-modal-footer">Contactpersoon: <strong>Ron Wehrens</strong></div>
+        </div>
+    </div>
+
+    <script>
+        const teamData = {
+            'images/Arda.jpg': { name: 'Arda van der Lee', role: 'Biologe', quote: 'Als biologe zie ik dagelijks hoe waardevol biodiversiteit is. Het is prachtig om te zien hoe snel de natuur zich herstelt als je haar de ruimte geeft.' },
+            'images/Martin.jpg': { name: 'Martin Ockhuijsen', role: 'Vrijwillig boswachter', quote: 'Als vrijwillig boswachter ken ik elk hoekje van de Ankeveense natuur. Het geeft enorme voldoening om te zien hoe onze projecten de biodiversiteit versterken.' },
+            'images/Wijnand.jpg': { name: 'Wijnand Smit', role: 'Ecologisch hovenier', quote: 'Als ecologisch hovenier weet ik welke inheemse planten hier thuishoren. Het mooiste is om te zien hoe een kale oever verandert in een bloeiende biotoop.' },
+            'images/Ron.jpg': { name: 'Ron Wehrens', role: 'Apotheker', quote: 'Ik ben bezorgd over de opwarming van de aarde en het verlies van biodiversiteit. Maar in plaats van bij de pakken neer te zitten zet ik me in voor de natuur in m\'n directe omgeving.' },
+            'images/Hans.jpg': { name: 'Hans Hazes', role: 'Ondernemer', quote: 'Als ondernemer weet ik hoe belangrijk het is om te investeren in de toekomst. En wat is er belangrijker dan investeren in onze natuur?' },
+            'images/NatuurwerkgroepAnkeveen.png': { name: 'Het kernteam', role: 'v.l.n.r.: Wijnand, Arda, Hans, Ron, Martin', quote: 'Samen zetten we ons in voor een natuurrijker Ankeveen. Van zeisen tot zwaluwen – we pakken het samen aan!' }
+        };
+
+        function openLightbox(src, isGold = false) {
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = src;
+            if (isGold) { lightboxImg.classList.add('gold-border'); } else { lightboxImg.classList.remove('gold-border'); }
+            const data = teamData[src];
+            const textDiv = document.getElementById('lightbox-text');
+            if (data) {
+                document.getElementById('lightbox-name').textContent = data.name;
+                document.getElementById('lightbox-role').textContent = data.role;
+                document.getElementById('lightbox-quote').textContent = data.quote;
+                textDiv.style.display = 'block';
+            } else { textDiv.style.display = 'none'; }
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox(event) {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openContactModal() {
+            document.getElementById('contactModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeContactModal(event) {
+            if (event && event.target.closest('.contact-modal-content')) return;
+            document.getElementById('contactModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') { closeLightbox(); closeContactModal(); }
+        });
+
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('mobile-open');
+        });
+
+        // Hero slideshow
+        const heroImages = document.querySelectorAll('.hero-image-main img');
+        let currentHero = 0;
+        function rotateHeroImages() {
+            heroImages[currentHero].classList.remove('active');
+            currentHero = (currentHero + 1) % heroImages.length;
+            heroImages[currentHero].classList.add('active');
+        }
+        if (heroImages.length > 1) { setInterval(rotateHeroImages, 4000); }
+
+        // ===== NATUURWEETJES =====
+        const weetjesData = [
+            { month:"Februari", title:"Roffelen en hameren", img:"images/weetjes/1.jpg",
+              short:"Je kunt ze nu alweer horen: de eerste roffels van de grote bonte specht. De oplettende luisteraar kon de eerste spechtenroffels al in december horen. Maar in januari en februari gaan de vogels helemaal los.",
+              full:" De grote bonte specht is de echte drummer van het bos; hoor je geroffel, dan is de kans groot dat het een grote bonte is. Zowel mannetje als vrouwtje roffelen op de takken om territorium en paarband te versterken. Voor hun roffel kiezen ze goed resonerende takken uit, zodat het geluid op flinke afstand te horen is." },
+            { month:"Februari", title:"Vogel met zilverwitte manen", img:"images/weetjes/2.jpg",
+              short:"De aalscholver lijkt een zwarte vogel. Maar als je goed kijkt is het verenpak eigenlijk grotendeels diep bronsgroen. Elk veertje van de bovenvleugels heeft een subtiel zwart randje.",
+              full:" Nu al hebben de aalscholvers hun broedkleed en kleuren ze op hun mooist. De veren op wangen en dijen zijn nu wit en kruin en nek hebben zilverwitte sierveren, die een soort kuifje vormen. De kale huid van de keel kleurt geel. Dit prachtkleed verdwijnt in de loop van het broedseizoen." },
+            { month:"Februari", title:"Blaffen en gillen", img:"images/weetjes/3.jpg",
+              short:"Nu, tijdens de paartijd, gaan mannetjesvossen op zoek naar loopse vrouwtjes. Ook overdag. Daardoor is nu de kans extra groot om een vos te spotten.",
+              full:" Van december tot februari kan je de vrouwtjesvossen 's nachts luid horen gillen. De mannetjes houden het bij een kort, drievoudig geblaf: waf-waf-waf. Wanneer de vossenman een geschikt vrouwtje gespot heeft, volgt hij haar als haar schaduw. Na een geslaagde paring worden eind maart/begin april 4 of 5 welpen geboren." },
+            { month:"Februari", title:"Heeft een mol een visnet?", img:"images/weetjes/4.jpg",
+              short:"In de winter leeft de mol alleen in zijn eigen gangenstelsel. Aan het begin van de winter trekt hij zich terug in diepere lagen van de aarde die nog vorstvrij zijn.",
+              full:" Het gangenstelsel heeft de functie van een groot visnet. Wormen en andere insecten vallen er toevallig in en blijven hier rondkruipen. De mol doet meerdere keren per dag een ronde door zijn gangen. De eetbare insecten worden direct opgepeuzeld, de wormen die hij overhoudt, bijt hij de beide kopeinden af en neemt ze mee om ze in zijn voorraadkamer te bewaren." },
+            { month:"Februari", title:"De vliegende deur", img:"images/weetjes/23.jpg",
+              short:"Kijk op een heldere dag eens omhoog boven de Ankeveense Plassen. Met een beetje geluk zie je een enorme roofvogel langzaam boven het water cirkelen: de zeearend.",
+              full:" Met een vleugelspanwijdte van 2 tot 2,5 meter is het de grootste roofvogel van Noord-Europa. Zijn bijnaam? \u2018De vliegende deur\u2019. Je begrijpt waarom als je er eentje overvliegt. In 2006 broedde het eerste paar weer in Nederland. Inmiddels zijn er zo\u2019n 30 broedparen, en steeds vaker duikt deze imposante vogel op boven onze plassen. Vanuit het IJmeer en Naardermeer verkent hij het Ankeveense plassengebied op zoek naar vis, watervogels en aas. Volwassen zeearenden herken je aan hun opvallend witte staart en grote gele snavel." },
+            { month:"Maart", title:"Warme bloemen", img:"images/weetjes/5.jpg",
+              short:"Het sneeuwklokje vangt met zijn hangende \u2018belletje\u2019 warmte op die in de vroege voorjaarszon terugkaatst van de nog kale grond.",
+              full:" Het verschil tussen de lucht binnenin de bloem en de buitenlucht kan makkelijk een aantal graden schelen. Veel bloemen kregen in de loop van de evolutie een vorm en kleur waarmee ze hun meeldraden, stamper en vruchtbeginsel lekker warm kunnen houden. Krokussen staan als omgekeerde bellen op hun steel \u2014 in de zon worden ze van binnen warmer dan de buitenlucht." },
+            { month:"Maart", title:"Warmbloedige hommels", img:"images/weetjes/6.jpg",
+              short:"Zodra de zon schijnt, komt de hommelkoningin tevoorschijn uit haar winterverblijf. Ze moet snel voedsel vinden, want vliegen kost enorm veel energie.",
+              full:" Een hommel slaat tot wel 12.000 keer per minuut met haar vleugels. Hommels kunnen al vliegen bij ongeveer 5 graden doordat ze zichzelf opwarmen met hun vliegspieren. Deze \u2018warmbloedigheid\u2019 kost veel energie, waardoor ze voortdurend nectar en stuifmeel nodig hebben. Zie je een hommel uitgeput op de grond zitten? Geef haar dan snel een beetje suikerwater." },
+            { month:"Maart", title:"Zwart met witte stippen", img:"images/weetjes/7.jpg",
+              short:"Nu de temperatuur wat hoger is, zie en hoor je de spreeuw. In de top van een boom of op een dak zitten ze luidkeels te zingen.",
+              full:" Het verenkleed is bezaaid met witte stipjes \u2014 de witte uiteinden van de zwarte veren. In de loop van het jaar slijten deze puntjes, waardoor het broedkleed glanzend groenachtig violet is. Luister ook naar zijn zang: het zijn grote imitators en vooral in de stad imiteren ze soms sirenes, autoalarmen en piepende remmen." },
+            { month:"Maart", title:"Zonaanbidder", img:"images/weetjes/8.jpg",
+              short:"Ineens verschijnen overal felgele bloemetjes. Op de nog kale grond vallen de stralende bloempjes van het speenkruid goed op.",
+              full:" Al bij een graad of 10 en als de zon schijnt, zet het speenkruid zijn bloem ver open. De zonnestralen worden in dit \u2018schaaltje\u2019 naar meeldraden en vruchtbeginsel gereflecteerd. Verdwijnt de zon, dan sluit de bloem weer snel. Het speenkruid compenseert gebrek aan bestuiving door piepkleine broedbolletjes in de bladoksels te vormen." },
+            { month:"Maart", title:"Megasupermarkt", img:"images/weetjes/9.jpg",
+              short:"In maart verschijnen de eerste wilgenkatjes aan boswilgen. Ze dragen een zilverwitte bontjas: het vachtje van kleine schutbladen.",
+              full:" Na de winter is een bloeiende wilg een megasupermarkt. Hommelkoninginnen halen hun energie uit de suikerrijke nectar en eiwit voor de eerste eieren uit het stuifmeel. Ook vroege vlinders zoals de citroenvlinder steken graag hun lange roltong diep in de bloemetjes om nectar te slurpen." },
+            { month:"April", title:"Klein en groot hoefblad", img:"images/weetjes/10.jpg",
+              short:"Het kleine hoefblad siert al weken met haar lichtgele bloemetjes bermen en taluds. De wetenschappelijke naam verwijst naar de geneeskunde.",
+              full:" Tussilago farfara: tussis = hoest, ago = verdrijven. De knotsvormige bloemen van het groot hoefblad komen nu pas boven de grond. Wanneer de forse bladeren helemaal zijn uitgespreid, dringt er nauwelijks meer licht tot de bodem door \u2014 een prima plek voor slakken, wormen en daardoor interessant voor merels en lijsters." },
+            { month:"April", title:"Kwaken en paren", img:"images/weetjes/11.jpg",
+              short:"Met de stijgende temperatuur komen de amfibie\u00ebn in actie. Kikkers en padden trekken naar het water om zich voort te planten.",
+              full:" De bruine kikker is \u00e9\u00e9n van de vroegst actieve kikkers. De mannetjes klemmen zich vast op de rug van een vrouwtje, net zolang tot ze de eitjes legt. De eitjes drijven als een grote plak kikkerdril vlak onder het wateroppervlak. Soms treedt \u2018drilpiraterij\u2019 op: mannetjes zonder vrouwtje proberen onbevruchte eitjes alsnog te bevruchten." },
+            { month:"April", title:"Wakkere slangen", img:"images/weetjes/12.jpg",
+              short:"In het voorjaar ontwaakt de ringslang uit de winterslaap zodra de temperaturen stijgen en de zon schijnt.",
+              full:" Ze overwinteren onder takkenbossen en braamstruiken in oude konijnenholen. Na vijf maanden onder de grond is het zonnige weer aanleiding om boven te komen. In Ankeveen zijn legakkers, wandel- en fietspaden met rietkragen een geschikt habitat. Het is paartijd voor de kikkers, dus echt moeilijk zal het niet zijn om een maaltje te vinden." },
+            { month:"April", title:"Oranje boven", img:"images/weetjes/13.jpg",
+              short:"Het oranjetipje is heel toepasselijk rond Koningsdag te vinden. Gemakkelijk te herkennen aan de oranje vlek op de bovenvleugel.",
+              full:" Alleen de mannetjes hebben die prachtige oranje vlek. De vrouwtjes zijn voor het afzetten van eieren afhankelijk van kruisbloemigen zoals de pinksterbloem en look-zonder-look. Zoek een veldje met pinksterbloemen, ga rustig zitten kijken \u2014 je geduld wordt vast beloond." },
+            { month:"April", title:"De kreeftenkraker", img:"images/weetjes/22.jpg",
+              short:"In de sloten en plassen van Ankeveen leeft een ongewenste gast: de rode Amerikaanse rivierkreeft. Inmiddels zitten er honderdduizenden van deze kreeften in ons plassengebied.",
+              full:" Ze vreten waterplanten weg, woelen in de bodem waardoor het water troebel wordt en eten de eitjes en larven van kikkers op. D\u00e1\u00e1rom horen we hier bijna geen kikkers meer. Maar de natuur slaat terug. Onze ooievaars \u2014 Ankeveen telt zo\u2019n tien bewoonde nesten \u2014 hebben ontdekt dat deze indringers prima te eten zijn. De kreeft maakt het ze ook wel erg makkelijk: in plaats van weg te vluchten gaat hij dreigend stilstaan met zijn scharen in de lucht. Als ooievaar ben je daar natuurlijk helemaal niet van onder de indruk. Hap, slik, weg." },
+            { month:"Mei", title:"Blauw betekent succes bij de vrouwen", img:"images/weetjes/14.jpg",
+              short:"De ene pimpelmees is de andere niet. De kruinveertjes van pimpelmannetjes reflecteren veel UV-licht en dat kunnen de vrouwtjes prima zien.",
+              full:" Hoe hoger de reflectie, hoe aantrekkelijker de pimpelman. Dus hoe meer blauwe veertjes in je petje, hoe beter je scoort bij de vrouwen. Hoe feller het petje, hoe fitter als vader. En waarschijnlijk helpt het ook om andere mannetjes op afstand te houden." },
+            { month:"Mei", title:"Piepende eieren", img:"images/weetjes/15.jpg",
+              short:"Kuikens van allerlei vogels maken al geluiden v\u00f3\u00f3r de geboorte. Vanuit het ei onderhoudt het kuiken contact met zijn ouders, broertjes en zusjes.",
+              full:" Door middel van geluid geeft het kuiken aan dat het afkoelt, waarop de ouder weer op de eieren gaat zitten. Bij nestvlieders is het van belang dat de eieren tegelijk uitkomen. De kuikens communiceren door klikgeluiden met elkaar en weten zo hun geboorte te \u2018synchroniseren\u2019." },
+            { month:"Mei", title:"Inbrekers zoeken nectar", img:"images/weetjes/16.jpg",
+              short:"In bermen en langs sloten bloeit nu de smeerwortel met hangende, paarse, klokvormige bloemen. Zeer in trek bij hommels.",
+              full:" De tong van sommige hommelsoorten is niet lang genoeg om bij de nectar te komen. Maar geen nood, dan boort de hommel gewoon onderin de bloem een gat om de nectar te \u2018stelen\u2019. Smeerwortel staat ook bekend om helende eigenschappen bij wondgenezing. Je kunt van de wortels je eigen zalf maken." },
+            { month:"Mei", title:"Metselaars", img:"images/weetjes/17.jpg",
+              short:"Niet alleen de mens kan metselen \u2014 allerlei dieren verstaan ook die kunst. Neem de huiszwaluw.",
+              full:" Het mannetje draagt kleine balletjes modder aan, waarmee het vrouwtje laagje voor laagje het nest metselt. Ook boomklevers \u2018metselen\u2019 met modder om de opening van hun broedholte te verkleinen. Metselbijen \u2018metselen\u2019 hun nestcellen van klei. En de papaverbij heeft de bijzondere gewoonte om haar nest te bekleden met bloemblaadjes van klaprozen." },
+            { month:"Mei", title:"Wat is een flierefluiter?", img:"images/weetjes/18.jpg",
+              short:"\u2018Sambucus\u2019 is afgeleid van het Grieks \u2018sambuke\u2019, dat fluit betekent. Van oudsher maakte men fluitjes uit jonge vlier-twijgen.",
+              full:" Dat vindt je terug in het woord \u2018Flierefluiter\u2019: iemand die \u2018tijd genoeg\u2019 heeft om zich te amuseren met een vlierfluitje. De gewone vlier bloeit de komende weken met grote trossen schermbloemen. De vlier is ook de favoriete gastheer van het judasoor, een paddenstoel die er als echte oren uitziet. Van de bloesem kun je heerlijke limonadesiroop maken." },
+            { month:"Juni", title:"Mei- of junikever?", img:"images/weetjes/19.jpg",
+              short:"Sommige dieren zijn vernoemd naar de tijd waarin ze opvallend aanwezig zijn. Zo ook de meikever en de junikever, die erg op elkaar lijken.",
+              full:" Het verschil? De maand waarin ze vliegen. Het leven van een meikever begint als \u2018engerling\u2019 onder de grond \u2014 deze larven leven drie \u00e0 vier jaar ondergronds. Pas als het in mei warmer wordt, komt de kever naar boven om te paren. Langer dan een paar weken vliegen ze niet, dan sterven ze. Het is eigenlijk de kortste fase van hun leven." },
+            { month:"Juni", title:"Broedparasiet", img:"images/weetjes/20.jpg",
+              short:"Iedereen kent de roep van de koekoek. De vrouwtjes gaan \u2018gespecialiseerd\u2019 te werk bij het kiezen van gastouders voor hun jong.",
+              full:" Zij kiezen als gastouders die soort waar ze zelf ook uit het ei zijn gekropen. Het vrouwtje bootst het kleurenpatroon van de eieren na. De jonge koekoek werkt de eigen jongen van de gastouders zonder pardon over de rand van het nest. Met zijn enorme roodoranje bek is het koekoeksjong een superprikkel \u2014 de gastouders kunnen niet stoppen om deze snavel vol te proppen." },
+            { month:"Juni", title:"Schapenscheerdersweken", img:"images/weetjes/21.jpg",
+              short:"De koele periode die regelmatig voorkomt in juni wordt de \u2018schaapscheerdersweken\u2019 genoemd. In deze periode is het vaak bewolkt en relatief koud.",
+              full:" Schaapscheerders maakten vroeger van het grijze weer gebruik om hun schapen te scheren, zodat de kale huid niet blootgesteld werd aan de felle juni-zon. Meestal draait de wind na de eerste zomerse dagen van zuid naar noordwest. Boven de nog relatief koude Noordzee ligt dan een grijs wolkendek dat met de stroming naar West-Europa toe komt." }
+        ];
+
+        // Bepaal welk weetje we tonen op basis van weeknummer
+        function getWeekNumber(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        let currentWeetje = 0;
+        let weetjeExpanded = false;
+
+        // Bepaal startweetje: week 5 (begin feb) = index 0, etc.
+        (function() {
+            var wk = getWeekNumber(new Date());
+            // Februari begint ~week 5, we tonen weetjes van week 5 t/m week 26
+            var idx = wk - 5;
+            if (idx >= 0 && idx < weetjesData.length) { currentWeetje = idx; }
+            else if (idx < 0) { currentWeetje = 0; }
+            else { currentWeetje = weetjesData.length - 1; }
+        })();
+
+        function renderWeetje() {
+            var w = weetjesData[currentWeetje];
+            document.getElementById('weetjeImg').src = w.img;
+            document.getElementById('weetjeImg').alt = w.title;
+            document.getElementById('weetjeTitle').textContent = w.title;
+            document.getElementById('weetjeMonth').textContent = w.month;
+            document.getElementById('weetjeText').innerHTML = w.short + '<span class="weetje-more">' + w.full + '</span>';
+            document.getElementById('weetjeText').classList.toggle('expanded', weetjeExpanded);
+            document.getElementById('weetjeToggle').textContent = weetjeExpanded ? '← Minder' : 'Lees verder →';
+            var dots = document.querySelectorAll('.weetje-nav-dot');
+            dots.forEach(function(d, i) { d.classList.toggle('active', i === currentWeetje); });
+        }
+
+        function toggleWeetje() {
+            weetjeExpanded = !weetjeExpanded;
+            renderWeetje();
+        }
+
+        function goToWeetje(i) {
+            currentWeetje = i;
+            weetjeExpanded = false;
+            renderWeetje();
+        }
+
+        function weetjeNav(dir) {
+            currentWeetje = (currentWeetje + dir + weetjesData.length) % weetjesData.length;
+            weetjeExpanded = false;
+            renderWeetje();
+        }
+
+        // Bouw navigatie
+        (function() {
+            var nav = document.getElementById('weetjeNav');
+            if (!nav) return;
+            var leftBtn = document.createElement('button');
+            leftBtn.className = 'weetje-nav-arrow';
+            leftBtn.innerHTML = '&#8249;';
+            leftBtn.onclick = function() { weetjeNav(-1); };
+            leftBtn.setAttribute('aria-label', 'Vorig weetje');
+            nav.appendChild(leftBtn);
+            for (var i = 0; i < weetjesData.length; i++) {
+                var dot = document.createElement('button');
+                dot.className = 'weetje-nav-dot';
+                dot.setAttribute('aria-label', 'Weetje ' + (i + 1));
+                dot.onclick = (function(idx) { return function() { goToWeetje(idx); }; })(i);
+                nav.appendChild(dot);
+            }
+            var rightBtn = document.createElement('button');
+            rightBtn.className = 'weetje-nav-arrow';
+            rightBtn.innerHTML = '&#8250;';
+            rightBtn.onclick = function() { weetjeNav(1); };
+            rightBtn.setAttribute('aria-label', 'Volgend weetje');
+            nav.appendChild(rightBtn);
+            renderWeetje();
+        })();
+    </script>
+
+    <!-- EXTERNE GARDEN - LAADT ALLE ANIMATIES EN BIOTOOP -->
+    <script src="email-protection.js"></script>
+    <script src="garden.js?v=2"></script>
+    
+    <!-- GoatCounter analytics -->
+    <script data-goatcounter="https://natuurrijkankeveen.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
