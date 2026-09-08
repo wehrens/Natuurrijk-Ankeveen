@@ -1,0 +1,60 @@
+/* ===========================================
+   NATUURRIJK ANKEVEEN – biotoop.css
+   De levende header. Alle beweging komt uit biotoop.js
+   (Web Animations API, alleen transform/opacity).
+   =========================================== */
+
+:root {
+    --bio-height: calc(var(--header-total) + 45px); /* ruimte onder het gras voor dieren */
+}
+
+/* Alle lagen delen één coördinatenstelsel: y = 0 is de bovenkant van de pagina,
+   de graslijn (onderkant gras) ligt op y = var(--header-total). */
+.bio-background, .bio-pond, .bio-grass, .bio-ground, .bio-garden, .bio-sky, .bio-front {
+    position: fixed; top: 0; left: 0; right: 0;
+    pointer-events: none;
+}
+
+.bio-background { height: var(--header-total); background: var(--cream); z-index: 1000; }
+.bio-pond       { height: var(--bio-height); z-index: 1005; overflow: hidden; }
+.bio-grass      { height: var(--header-total); z-index: 1010; }
+.bio-sky        { height: var(--bio-height); z-index: 1022; overflow: hidden; }
+.bio-ground     { height: var(--bio-height); z-index: 1025; overflow: hidden; }
+.bio-garden     { height: var(--bio-height); z-index: 1035; overflow: hidden; }
+.bio-front      { height: var(--bio-height); z-index: 1040; overflow: hidden; }
+
+/* Gras: één afbeelding, herhaald */
+.bio-grass::after {
+    content: '';
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: var(--grass-height);
+    background: url('images/Gras-cropped.webp') repeat-x left bottom / auto var(--grass-height);
+}
+
+/* Basis voor alle sprites: absoluut, gepositioneerd via transform */
+.bio-sprite {
+    position: absolute; top: 0; left: 0;
+    width: auto;
+    will-change: transform, opacity;
+    transform-origin: bottom center;
+    backface-visibility: hidden;
+}
+.bio-sprite.center { transform-origin: center center; }
+
+/* Wrapper voor dieren die zelf nog een eigen bewegingetje hebben (bob/flutter) */
+.bio-wrap { position: absolute; top: 0; left: 0; will-change: transform; }
+.bio-wrap > img { display: block; width: auto; }
+
+/* Bloemen wiegen zachtjes: JS zet duur en vertraging per bloem */
+.bio-flower.sway { animation: bioSway var(--sway-dur, 5s) ease-in-out var(--sway-delay, 0s) infinite alternate; }
+@keyframes bioSway {
+    from { transform: var(--pos) rotate(-2deg); }
+    to   { transform: var(--pos) rotate(2.5deg); }
+}
+
+/* Roerdomp: twee beelden over elkaar, JS wisselt de zichtbare */
+.bio-roerdomp img { transition: opacity .6s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+    .bio-flower.sway { animation: none; transform: var(--pos); }
+}
