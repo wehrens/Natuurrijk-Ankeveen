@@ -61,5 +61,10 @@ body.scene-oevers { --bio-sky: #dcebf3; }
     .bio-flower.sway { animation: none; transform: var(--pos); }
 }
 
-/* Sloot: lichtblauwe strook onder het gras, waar eend en otter zwemmen (oevers) */
-body.scene-oevers .page-header { background: linear-gradient(180deg, #d4e8f2 0%, #e8f4f8 55px, var(--cream) 140px); }
+/* Sloot: vaste lichtblauwe strook onder het gras, waar eend en otter zwemmen (oevers) */
+body.scene-oevers .bio-pond::before {
+    content: ''; position: absolute; left: 0; right: 0;
+    top: var(--header-total); height: 42px;
+    background: linear-gradient(180deg, rgba(200, 226, 240, .95) 0%, rgba(212, 232, 242, .8) 60%, rgba(232, 244, 248, 0) 100%);
+}
+body.scene-oevers .page-header { background: linear-gradient(180deg, #e0eef6 0%, var(--cream) 120px); }

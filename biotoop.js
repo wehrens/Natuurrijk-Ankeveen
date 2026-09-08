@@ -167,14 +167,14 @@
         if (pond.el) return;
         const h = 30;
         const img = sprite(L.bioPond, 'Poel1.webp', h, 'center');
-        const x = px(pond.x) - 45, y = GROUND - 4;
+        const x = px(pond.x) - 45, y = GROUND + 1;
         img.style.transform = `translate(${x}px, ${y}px)`;
         pond.el = img;
         animate(img, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 2500, easing: 'ease-out' });
         // Na een tijdje wordt de poel rijker (Poel3: lelies en oevergroen)
         later(() => {
             const big = sprite(L.bioPond, 'Poel3.webp', 40, 'center');
-            big.style.transform = `translate(${px(pond.x) - 60}px, ${GROUND - 6}px)`;
+            big.style.transform = `translate(${px(pond.x) - 60}px, ${GROUND - 1}px)`;
             animate(big, [{ opacity: 0 }, { opacity: 1 }], { duration: 2500 });
             animate(img, [{ opacity: 1 }, { opacity: 0 }], { duration: 2500 }).finished.then(() => remove(img)).catch(() => {});
             pond.el = big;
@@ -323,8 +323,8 @@
             await animate(img, [{ transform: `translate(${hx}px, ${hy}px)` }, { transform: `translate(${hx + 2}px, ${hy - 3}px)` }],
                 { duration: 700, direction: 'alternate', iterations: 3, easing: 'ease-in-out' }).finished;
             await animate(img, [{ transform: `translate(${hx}px, ${hy}px) rotate(0deg)` },
-                { transform: `translate(${hx - 6}px, ${GROUND + 2}px) rotate(-55deg) scale(.85)`, offset: .45 },
-                { transform: `translate(${hx - 6}px, ${GROUND + 2}px) rotate(-55deg) scale(.85)`, opacity: .9, offset: .6 },
+                { transform: `translate(${hx - 6}px, ${GROUND + 8}px) rotate(-55deg) scale(.85)`, offset: .45 },
+                { transform: `translate(${hx - 6}px, ${GROUND + 8}px) rotate(-55deg) scale(.85)`, opacity: .9, offset: .6 },
                 { transform: `translate(${hx + 10}px, ${hy}px) rotate(0deg)` }], { duration: 1300, easing: 'ease-in-out' }).finished;
             await animate(img, pathFrames(sampleCurve({ x: hx + 10, y: hy }, { x: hx + 60, y: hy - 30 }, { x: width - 60, y: 40 }, { x: width + 60, y: 0 }, 30), { flip: -1, tilt: 20, fadeOut: .1 }),
                 { duration: 2400, easing: 'cubic-bezier(.4,0,.7,1)' }).finished;
@@ -365,11 +365,11 @@
 
 
     // ---------- REKWISIETEN EN SCÈNE-SPECIFIEKE DIEREN ----------
-    function prop(layer, src, h, pct, { flip = 1, lift = 0, cls = '' } = {}) {
+    function prop(layer, src, h, pct, { flip = 1, lift = 0, cls = '', instant = false } = {}) {
         const img = sprite(layer, src, h, cls);
         const pos = `translate(${px(pct)}px, ${GROUND - 2 + lift - h}px) scaleX(${flip})`;
         img.style.transform = pos; img.style.setProperty('--pos', pos);
-        animate(img, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1500 });
+        animate(img, [{ opacity: 0 }, { opacity: 1 }], { duration: (REDUCE || instant) ? 1 : 1500 });
         return img;
     }
 
@@ -411,7 +411,7 @@
     }
     function angryDuck() {
         const h = 30, { w, img } = wrap(L.bioFront, 'Slobeend.webp', h);
-        const y = GROUND + 4, x0 = px(pond.x), x1 = -120, dur = 32000;
+        const y = GROUND + 8, x0 = px(pond.x), x1 = -120, dur = 32000;
         const f = x => `translate(${x.toFixed(0)}px, ${y}px)`;
         animate(w, [{ transform: f(x0), opacity: 0 }, { transform: f(x0 - 30), opacity: 1, offset: .05 },
             { transform: f(x0 + (x1 - x0) * .95), opacity: 1, offset: .95 }, { transform: f(x1), opacity: 0 }], { duration: dur, easing: 'linear' });
@@ -428,7 +428,7 @@
     }
     function calmDuck(done) {
         const h = 30, { w, img } = wrap(L.bioFront, 'Slobeend.webp', h);
-        const y = GROUND + 4, x0 = -120, x1 = px(pond.x), dur = 36000;
+        const y = GROUND + 8, x0 = -120, x1 = px(pond.x), dur = 36000;
         const f = x => `translate(${x.toFixed(0)}px, ${y}px) scaleX(-1)`;
         animate(w, [{ transform: f(x0), opacity: 0 }, { transform: f(x0 + 30), opacity: 1, offset: .05 },
             { transform: f(x1 - 40), opacity: 1, offset: .95 }, { transform: f(x1), opacity: 0 }], { duration: dur, easing: 'linear' });
@@ -601,7 +601,7 @@
             geeseAt: 5000, eagleAt: 90000,
             setup: () => {
                 (NARROW() ? [[10, 'Rietkraag.webp', 40, 1]] : [[33, 'Rietkraag.webp', 46, 1], [76, 'Rietkraag.webp', 42, -1]]).forEach(([p, s, h, f], i) => later(() => prop(L.bioPond, s, h, p, { flip: f }), 500 + i * 800));
-                later(() => prop(L.bioGround, 'Bankje.webp', NARROW() ? 28 : 34, NARROW() ? 66 : 64), 1500); later(() => prop(L.bioGarden, 'Maria.webp', NARROW() ? 40 : 46, NARROW() ? 79 : 84), 2000);
+                prop(L.bioGround, 'Bankje.webp', NARROW() ? 28 : 34, NARROW() ? 66 : 64, { instant: true }); prop(L.bioGarden, 'Maria.webp', NARROW() ? 40 : 46, NARROW() ? 79 : 84, { instant: true });
                 later(treeCycle, 3000);
             }
         }),
