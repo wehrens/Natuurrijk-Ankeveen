@@ -221,7 +221,7 @@ footer { background: var(--green-dark); color: rgba(255, 255, 255, .85); padding
 .footer-grid a, .footer-grid button { color: rgba(255, 255, 255, .85); text-decoration: none; background: none; border: 0; padding: 0; font: inherit; }
 .footer-grid a:hover, .footer-grid button:hover { color: var(--white); text-decoration: underline; }
 .footer-bottom { max-width: var(--max); margin: 2.5rem auto 0; padding-top: 1.2rem; border-top: 1px solid rgba(255, 255, 255, .15); font-size: .85rem; display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
-.footer-bottom img { height: 34px; opacity: .8; }
+.footer-bottom img { height: 34px; width: auto; opacity: .8; }
 .footer-credit { font-size: .82rem; opacity: .7; }
 
 /* ===== LIGHTBOX ===== */
