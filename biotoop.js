@@ -594,40 +594,49 @@
     // ---------- EGELSNELWEG (egels): schutting, egel loopt vast, poortje, en door ----------
     const fence = { el: null, x: 0, w: 72, gap: false };
     function placeFence() {
-        const pct = NARROW() ? 70 : 36, h = 56, w = Math.round(h * 680 / 585);
-        fence.w = w;
-        const box = document.createElement('div');
-        box.className = 'bio-wrap';
-        box.style.transform = `translate(${px(pct)}px, ${GROUND - 2 - h}px)`;
-        // Echte schutting (foto), met een tweede versie waar het onderstuk van twee planken is weggezaagd
-        box.innerHTML = `<img class="full" src="${IMG}schutting.webp" alt="" style="height:${h}px;width:auto;display:block">
-            <img class="cut" src="${IMG}schutting-poortje.webp" alt="" style="height:${h}px;width:auto;display:block;position:absolute;top:0;left:0;opacity:0">
-            <svg class="arch" width="${w}" height="${h}" viewBox="0 0 680 585" style="position:absolute;top:0;left:0;opacity:0">
-                <path d="M382 585 V520 a73 73 0 0 1 146 0 V585 h-22 V520 a51 51 0 0 0 -102 0 V585 z" fill="#2f7d4f"/>
-            </svg>`;
-        L.bioGround.appendChild(box);
-        fence.el = box; fence.x = px(pct); fence.gap = false;
-        animate(box, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1200 });
+        const pct = NARROW() ? 66 : 36, h = 83, s = h / 585;
+        const wl = Math.round(375 * s), wr = Math.round(305 * s);
+        fence.w = wl + wr;
+        const mk = (side, x, w) => {
+            const box = document.createElement('div');
+            box.className = 'bio-wrap';
+            box.style.transform = `translate(${x}px, ${GROUND - 2 - h}px)`;
+            box.innerHTML = `<img class="full" src="${IMG}schutting-${side}.webp" alt="" style="height:${h}px;width:${w}px;display:block">
+                <img class="cut" src="${IMG}schutting-poortje-${side}.webp" alt="" style="height:${h}px;width:${w}px;display:block;position:absolute;top:0;left:0;opacity:0">`;
+            return box;
+        };
+        // Twee helften: de egel loopt vóór de linkerhelft en, na het poortje, achter de rechterhelft
+        const left = mk('links', px(pct), wl), right = mk('rechts', px(pct) + wl, wr);
+        right.insertAdjacentHTML('beforeend', `<svg class="arch" width="${fence.w}" height="${h}" viewBox="0 0 680 585" style="position:absolute;top:0;left:-${wl}px;opacity:0">
+            <path d="M382 585 V520 a73 73 0 0 1 146 0 V585 h-22 V520 a51 51 0 0 0 -102 0 V585 z" fill="#2f7d4f"/></svg>`);
+        L.bioGround.appendChild(left); L.bioGround.appendChild(right);
+        fence.el = left; fence.right = right; fence.x = px(pct); fence.gap = false;
+        [left, right].forEach(b => animate(b, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1200 }));
     }
     function openGate() {
         if (!fence.el || fence.gap) return;
         fence.gap = true;
-        animate(fence.el.querySelector('.cut'), [{ opacity: 0 }, { opacity: 1 }], { duration: 1500 });
-        animate(fence.el.querySelector('.full'), [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 });
-        later(() => animate(fence.el.querySelector('.arch'), [{ opacity: 0 }, { opacity: 1 }], { duration: 1500 }), 1800);
+        [fence.el, fence.right].forEach(b => {
+            animate(b.querySelector('.cut'), [{ opacity: 0 }, { opacity: 1 }], { duration: 1500 });
+            animate(b.querySelector('.full'), [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 });
+        });
+        later(() => animate(fence.right.querySelector('.arch'), [{ opacity: 0 }, { opacity: 1 }], { duration: 1500 }), 1800);
     }
     function closeGate() {
         if (!fence.el) return;
         fence.gap = false;
-        animate(fence.el.querySelector('.arch'), [{ opacity: 1 }, { opacity: 0 }], { duration: 800 });
-        animate(fence.el.querySelector('.cut'), [{ opacity: 1 }, { opacity: 0 }], { duration: 800 });
-        animate(fence.el.querySelector('.full'), [{ opacity: 0 }, { opacity: 1 }], { duration: 800 });
+        animate(fence.right.querySelector('.arch'), [{ opacity: 1 }, { opacity: 0 }], { duration: 800 });
+        [fence.el, fence.right].forEach(b => {
+            animate(b.querySelector('.cut'), [{ opacity: 1 }, { opacity: 0 }], { duration: 800 });
+            animate(b.querySelector('.full'), [{ opacity: 0 }, { opacity: 1 }], { duration: 800 });
+        });
     }
     // Het verhaal: egel komt van links, botst, druipt af, poortje, en gaat erdoor
     function hedgehogStory(done) {
         if (!fence.el) return done();
         const h = 30, hw = 40;
         const { w, img } = wrap(L.bioGround, 'egel.webp', h);
+        L.bioGround.insertBefore(w, fence.right);      // vóór de linkerhelft, achter de rechterhelft
         const y = GROUND - h + 3, stopX = fence.x - hw + 2;
         const f = (x, flip) => `translate(${x.toFixed(0)}px, ${y}px) scaleX(${flip})`;
         const bob = animate(img, [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-1.5px) rotate(1.5deg)' }],
@@ -650,8 +659,6 @@
             const x1 = W() + 20;
             animate(w, [{ transform: f(stopX - 70, 1) }, { transform: f(stopX - 70, -1), offset: .03 }, { transform: f(x1, -1) }],
                 { duration: 4000 + (x1 - stopX + 70) * 40, easing: 'linear' });
-            // zodra hij in het poortje zit, verdwijnt hij achter de schutting
-            later(() => { if (fence.el && w.parentNode) L.bioGround.insertBefore(w, fence.el); }, 3000 + Math.round(fence.w * .3 * 40));
         }, walkIn + 11000);
         later(() => { remove(w); done(); }, walkIn + 11000 + 4000 + (W() + 90 - stopX) * 40 + 200);
     }
@@ -754,7 +761,7 @@
         timers.forEach(t => { clearTimeout(t); clearInterval(t); }); timers = [];
         running.forEach(a => { try { a.cancel(); } catch (e) {} }); running.clear();
         ['bioPond', 'bioGround', 'bioGarden', 'bioSky', 'bioFront'].forEach(k => { if (L[k]) L[k].innerHTML = ''; });
-        flowers.length = 0; pond.el = null; pond.roerdomp = null; pond.reeds = []; active = 0; til = null; nests.length = 0; fence.el = null;
+        flowers.length = 0; pond.el = null; pond.roerdomp = null; pond.reeds = []; active = 0; til = null; nests.length = 0; fence.el = null; fence.right = null;
     }
 
     // Pauzeren als het tabblad niet zichtbaar is
