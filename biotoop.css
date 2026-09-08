@@ -58,3 +58,6 @@
 @media (prefers-reduced-motion: reduce) {
     .bio-flower.sway { animation: none; transform: var(--pos); }
 }
+
+/* Sloot: lichtblauwe strook onder het gras, waar eend en otter zwemmen (oevers) */
+body.bio-water .page-header { background: linear-gradient(180deg, #d4e8f2 0%, #e8f4f8 55px, var(--cream) 140px); }

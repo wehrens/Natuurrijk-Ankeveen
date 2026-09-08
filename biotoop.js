@@ -209,11 +209,9 @@
         animate(box, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 3000 });
         if (REDUCE) return;
         let flipped = false;
-        pond.flipTimer = every(() => {
-            if (!chance(.7)) return;
-            flipped = !flipped;
-            a.style.opacity = flipped ? 0 : 1; b.style.opacity = flipped ? 1 : 0;
-        }, 22000);
+        const flip = () => { flipped = !flipped; a.style.opacity = flipped ? 0 : 1; b.style.opacity = flipped ? 1 : 0; };
+        box.addEventListener('flip', flip);
+        pond.flipTimer = every(() => { if (chance(.7)) flip(); }, 22000);
     }
 
     // ---------- DIEREN ----------
@@ -389,6 +387,56 @@
         later(() => { remove(w); done(); }, dur + 50);
     }
 
+    // De sloot-scène (oevers): otter komt aan, plonst in de poel, slobeend zwemt boos weg,
+    // roerdomp schrikt, ijsvogel komt kijken. Daarna zwemt de eend rustig terug.
+    function otterSplash(done) {
+        if (!pond.el) return done();
+        const h = 26, { w, img } = wrap(L.bioFront, 'Otter.webp', h);
+        const y = GROUND - h + 6, tx = px(pond.x) - 30;
+        const f = x => `translate(${x.toFixed(0)}px, ${y}px) scaleX(-1)`;
+        const dur = 11000;
+        animate(w, [
+            { transform: f(-80), opacity: 0, offset: 0 }, { transform: f(-20), opacity: 1, offset: .06 },
+            { transform: f(tx), opacity: 1, offset: .78 },
+            { transform: `translate(${tx + 25}px, ${y - 14}px) scaleX(-1) rotate(-25deg)`, opacity: 1, offset: .86 },
+            { transform: `translate(${tx + 50}px, ${y + 24}px) scaleX(-1) rotate(40deg)`, opacity: 0, offset: 1 }
+        ], { duration: dur, easing: 'linear' });
+        animate(img, [{ transform: 'translateY(0)' }, { transform: 'translateY(-2px)' }],
+            { duration: 900, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        later(() => remove(w), dur + 50);
+        later(() => angryDuck(), dur - 1500);              // eend schrikt op
+        later(() => { if (pond.roerdomp) pond.roerdomp.dispatchEvent(new Event('flip')); }, dur - 800);
+        later(() => withActive(kingfisher), dur + 20000);
+        later(done, dur + 100);
+    }
+    function angryDuck() {
+        const h = 30, { w, img } = wrap(L.bioFront, 'Slobeend.webp', h);
+        const y = GROUND + 4, x0 = px(pond.x), x1 = -120, dur = 32000;
+        const f = x => `translate(${x.toFixed(0)}px, ${y}px)`;
+        animate(w, [{ transform: f(x0), opacity: 0 }, { transform: f(x0 - 30), opacity: 1, offset: .05 },
+            { transform: f(x0 + (x1 - x0) * .95), opacity: 1, offset: .95 }, { transform: f(x1), opacity: 0 }], { duration: dur, easing: 'linear' });
+        animate(img, [{ transform: 'translateY(0) rotate(-2deg)' }, { transform: 'translateY(-2px) rotate(2deg)' }],
+            { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        const angry = document.createElement('img');
+        angry.src = IMG + 'Angry.webp'; angry.alt = ''; angry.style.cssText = 'position:absolute;height:22px;width:auto;top:-22px;left:18px;';
+        w.appendChild(angry);
+        animate(angry, [{ transform: 'translateY(0) rotate(0)' }, { transform: 'translateY(-5px) rotate(6deg)' }],
+            { duration: 300, direction: 'alternate', iterations: 26, easing: 'ease-in-out' });
+        later(() => animate(angry, [{ opacity: 1 }, { opacity: 0 }], { duration: 600 }).finished.then(() => remove(angry)).catch(() => {}), 8000);
+        later(() => remove(w), dur + 50);
+        later(() => withActive(calmDuck), dur + 8000);       // en na een poosje komt ze rustig terug
+    }
+    function calmDuck(done) {
+        const h = 30, { w, img } = wrap(L.bioFront, 'Slobeend.webp', h);
+        const y = GROUND + 4, x0 = -120, x1 = px(pond.x), dur = 36000;
+        const f = x => `translate(${x.toFixed(0)}px, ${y}px) scaleX(-1)`;
+        animate(w, [{ transform: f(x0), opacity: 0 }, { transform: f(x0 + 30), opacity: 1, offset: .05 },
+            { transform: f(x1 - 40), opacity: 1, offset: .95 }, { transform: f(x1), opacity: 0 }], { duration: dur, easing: 'linear' });
+        animate(img, [{ transform: 'translateY(0) rotate(-1deg)' }, { transform: 'translateY(-1.5px) rotate(1deg)' }],
+            { duration: 1100, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        later(() => { remove(w); done(); }, dur + 50);
+    }
+
     // Slobeend zwemt over de poel (oevers)
     function duck(done) {
         if (!pond.el) return done();
@@ -487,7 +535,7 @@
     // ---------- CHOREOGRAFIE ----------
     const F = SPRITES.flowers;
     const byName = (...names) => F.filter(f => names.some(n => f.src.startsWith(n)));
-    const BASE = { flowersMax: 10, flowerEvery: 9000, eventEvery: 9000, pondAt: null, roerdompAt: null, kingfisherAt: null, otterAt: null, duckAt: null, geeseAt: null, eagleAt: null, setup: null, intro: null, extra: [] };
+    const BASE = { sky: '#e8f1f6', water: false, flowersMax: 10, flowerEvery: 9000, eventEvery: 9000, pondAt: null, roerdompAt: null, kingfisherAt: null, otterAt: null, duckAt: null, geeseAt: null, eagleAt: null, setup: null, intro: null, extra: [] };
     const SCENES = {
         home: Object.assign({}, BASE, {
             animals: [[butterfly, 3], [hedgehog, 2], [caterpillar, 1], [ladybug, 2], [swallow, 4], [swallowGroup, 2]],
@@ -500,10 +548,11 @@
             setup: () => later(zeisCycle, 4000)
         }),
         oevers: Object.assign({}, BASE, {               // waterkant: poel meteen, ijsvogel, otter, slobeend
-            sky: '#e4eff5',
+            sky: '#dcebf3', water: true,
             flowersMax: 7, flowers: byName('Gelelis', 'Lisdodde2', 'Veldoeket', 'Klaproos.'),
-            pondAt: 1500, roerdompAt: 40000, kingfisherAt: 20000, otterAt: 60000, duckAt: 12000, geeseAt: 90000,
-            animals: [[butterfly, 3], [swallow, 3], [ladybug, 1]]
+            pondAt: 1500, roerdompAt: 12000, geeseAt: 90000,
+            animals: [[butterfly, 3], [swallow, 3], [ladybug, 1]],
+            setup: () => { later(() => { withActive(otterSplash); every(() => withActive(otterSplash), 110000); }, 18000); }
         }),
         bergsepad: Object.assign({}, BASE, {            // wandelpad: riet, bomen die gesnoeid worden, wandelaars, ganzen
             flowersMax: 5, flowerEvery: 12000, flowers: byName('Lisdodde2', 'Klaproos.', 'Veldoeket'),
@@ -543,9 +592,10 @@
 
     function start() {
         const scene = currentScene = SCENES[SCENE] || SCENES.home;
-        if (scene.sky) {   // andere lucht: ook de navigatiebalk kleurt mee
+        if (scene.sky) {   // lucht: ook de navigatiebalk kleurt mee
             document.querySelectorAll('.bio-background, nav.site-nav').forEach(el => { el.style.background = scene.sky; });
         }
+        document.body.classList.toggle('bio-water', !!scene.water);   // sloot onder het gras
         if (REDUCE) {          // stilstaand tafereel
             for (let i = 0; i < Math.min(7, scene.flowersMax); i++) addFlower();
             if (scene.pondAt !== null) { showPond(); later(showRoerdomp, 50); }
