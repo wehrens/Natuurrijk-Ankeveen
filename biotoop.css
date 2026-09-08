@@ -15,7 +15,9 @@
     pointer-events: none;
 }
 
-.bio-background { height: var(--header-total); background: var(--cream); z-index: 1000; }
+.bio-background { height: var(--header-total); background: var(--bio-sky, #e8f1f6); z-index: 1000; }
+nav.site-nav { background: var(--bio-sky, #e8f1f6); }
+body.scene-oevers { --bio-sky: #dcebf3; }
 .bio-pond       { height: var(--bio-height); z-index: 1005; overflow: hidden; }
 .bio-grass      { height: var(--header-total); z-index: 1010; }
 .bio-sky        { height: var(--bio-height); z-index: 1022; overflow: hidden; }
@@ -60,4 +62,4 @@
 }
 
 /* Sloot: lichtblauwe strook onder het gras, waar eend en otter zwemmen (oevers) */
-body.bio-water .page-header { background: linear-gradient(180deg, #d4e8f2 0%, #e8f4f8 55px, var(--cream) 140px); }
+body.scene-oevers .page-header { background: linear-gradient(180deg, #d4e8f2 0%, #e8f4f8 55px, var(--cream) 140px); }

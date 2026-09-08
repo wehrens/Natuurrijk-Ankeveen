@@ -167,14 +167,14 @@
         if (pond.el) return;
         const h = 30;
         const img = sprite(L.bioPond, 'Poel1.webp', h, 'center');
-        const x = px(pond.x) - 45, y = GROUND - 22;
+        const x = px(pond.x) - 45, y = GROUND - 4;
         img.style.transform = `translate(${x}px, ${y}px)`;
         pond.el = img;
         animate(img, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 2500, easing: 'ease-out' });
         // Na een tijdje wordt de poel rijker (Poel3: lelies en oevergroen)
         later(() => {
             const big = sprite(L.bioPond, 'Poel3.webp', 40, 'center');
-            big.style.transform = `translate(${px(pond.x) - 60}px, ${GROUND - 30}px)`;
+            big.style.transform = `translate(${px(pond.x) - 60}px, ${GROUND - 6}px)`;
             animate(big, [{ opacity: 0 }, { opacity: 1 }], { duration: 2500 });
             animate(img, [{ opacity: 1 }, { opacity: 0 }], { duration: 2500 }).finished.then(() => remove(img)).catch(() => {});
             pond.el = big;
@@ -323,8 +323,8 @@
             await animate(img, [{ transform: `translate(${hx}px, ${hy}px)` }, { transform: `translate(${hx + 2}px, ${hy - 3}px)` }],
                 { duration: 700, direction: 'alternate', iterations: 3, easing: 'ease-in-out' }).finished;
             await animate(img, [{ transform: `translate(${hx}px, ${hy}px) rotate(0deg)` },
-                { transform: `translate(${hx - 6}px, ${GROUND - 20}px) rotate(-55deg) scale(.85)`, offset: .45 },
-                { transform: `translate(${hx - 6}px, ${GROUND - 20}px) rotate(-55deg) scale(.85)`, opacity: .9, offset: .6 },
+                { transform: `translate(${hx - 6}px, ${GROUND + 2}px) rotate(-55deg) scale(.85)`, offset: .45 },
+                { transform: `translate(${hx - 6}px, ${GROUND + 2}px) rotate(-55deg) scale(.85)`, opacity: .9, offset: .6 },
                 { transform: `translate(${hx + 10}px, ${hy}px) rotate(0deg)` }], { duration: 1300, easing: 'ease-in-out' }).finished;
             await animate(img, pathFrames(sampleCurve({ x: hx + 10, y: hy }, { x: hx + 60, y: hy - 30 }, { x: width - 60, y: 40 }, { x: width + 60, y: 0 }, 30), { flip: -1, tilt: 20, fadeOut: .1 }),
                 { duration: 2400, easing: 'cubic-bezier(.4,0,.7,1)' }).finished;
@@ -343,7 +343,7 @@
         animate(w, [
             { transform: f(width + 40), opacity: 0, offset: 0 }, { transform: f(width - 10), opacity: 1, offset: .06 },
             { transform: f(tx), opacity: 1, offset: .5 }, { transform: f(tx), opacity: 1, offset: .68 },
-            { transform: f(tx - 120), opacity: 1, offset: .9 }, { transform: `translate(${tx - 150}px, ${y + 22}px)`, opacity: 0, offset: 1 }
+            { transform: f(tx - 120), opacity: 1, offset: .9 }, { transform: `translate(${tx - 150}px, ${y + 30}px)`, opacity: 0, offset: 1 }
         ], { duration: dur, easing: 'linear' });
         animate(img, [{ transform: 'translateY(0)' }, { transform: 'translateY(-2px)' }],
             { duration: 900, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
@@ -399,7 +399,7 @@
             { transform: f(-80), opacity: 0, offset: 0 }, { transform: f(-20), opacity: 1, offset: .06 },
             { transform: f(tx), opacity: 1, offset: .78 },
             { transform: `translate(${tx + 25}px, ${y - 14}px) scaleX(-1) rotate(-25deg)`, opacity: 1, offset: .86 },
-            { transform: `translate(${tx + 50}px, ${y + 24}px) scaleX(-1) rotate(40deg)`, opacity: 0, offset: 1 }
+            { transform: `translate(${tx + 50}px, ${y + 34}px) scaleX(-1) rotate(40deg)`, opacity: 0, offset: 1 }
         ], { duration: dur, easing: 'linear' });
         animate(img, [{ transform: 'translateY(0)' }, { transform: 'translateY(-2px)' }],
             { duration: 900, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
@@ -600,8 +600,8 @@
             animals: [[walker, 4], [swallow, 3], [butterfly, 1]],
             geeseAt: 5000, eagleAt: 90000,
             setup: () => {
-                [[33, 'Rietkraag.webp', 46, 1], [76, 'Rietkraag.webp', 42, -1]].forEach(([p, s, h, f], i) => later(() => prop(L.bioPond, s, h, p, { flip: f }), 500 + i * 800));
-                if (!NARROW()) { later(() => prop(L.bioGround, 'Bankje.webp', 34, 64), 1500); later(() => prop(L.bioGarden, 'Maria.webp', 46, 84), 2000); }
+                (NARROW() ? [[10, 'Rietkraag.webp', 40, 1]] : [[33, 'Rietkraag.webp', 46, 1], [76, 'Rietkraag.webp', 42, -1]]).forEach(([p, s, h, f], i) => later(() => prop(L.bioPond, s, h, p, { flip: f }), 500 + i * 800));
+                later(() => prop(L.bioGround, 'Bankje.webp', NARROW() ? 28 : 34, NARROW() ? 66 : 64), 1500); later(() => prop(L.bioGarden, 'Maria.webp', NARROW() ? 40 : 46, NARROW() ? 79 : 84), 2000);
                 later(treeCycle, 3000);
             }
         }),
@@ -632,10 +632,6 @@
 
     function start() {
         const scene = currentScene = SCENES[SCENE] || SCENES.home;
-        if (scene.sky) {   // lucht: ook de navigatiebalk kleurt mee
-            document.querySelectorAll('.bio-background, nav.site-nav').forEach(el => { el.style.background = scene.sky; });
-        }
-        document.body.classList.toggle('bio-water', !!scene.water);   // sloot onder het gras
         if (REDUCE) {          // stilstaand tafereel
             for (let i = 0; i < Math.min(7, scene.flowersMax); i++) addFlower();
             if (scene.pondAt !== null) { showPond(); later(showRoerdomp, 50); }
