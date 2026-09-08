@@ -3,291 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Educatie - Natuurrijk Ankeveen</title>
-    <meta name="description" content="Natuurrijk Ankeveen geeft natuureducatie op de Joseph Lokin school. Kinderen maken vogelhuisjes en leren over biodiversiteit.">
+    <title>Educatie – Natuurrijk Ankeveen</title>
+    <meta name="description" content="Kinderen van de Joseph Lokinschool enthousiast maken voor de natuur om de hoek.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="fonts/fonts.css">
-    <link rel="stylesheet" href="garden.css?v=65">
-    <style>
-        :root { --green-dark: #2d4a3e; --green-medium: #4a7c59; --green-light: #7fb069; --green-pale: #d4e6c3; --cream: #f8f6f0; --cream-dark: #e8e4d9; --brown: #8b6914; --text-dark: #1a2e22; --text-medium: #3d5a4a; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Source Sans 3', sans-serif; background-color: var(--cream); color: var(--text-dark); line-height: 1.6; } section { position: relative; z-index: 1; }
-        h1, h2, h3, h4 { font-family: 'Fraunces', serif; font-weight: 600; }
-        nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-height, 70px); background: #f8f6f0; backdrop-filter: blur(10px); z-index: 1020; padding: 0 2rem; display: flex; align-items: center; }
-        .nav-container { max-width: 1200px; width: 100%; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--green-dark); }
-        .logo-icon { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; }
-        .logo-icon img { width: 100%; height: 100%; object-fit: contain; }
-        .logo-egel { margin-left: 0.5rem; animation: egelWalk 3s ease-in-out infinite; }
-        @keyframes egelWalk { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
-        .logo-text { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; }
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { text-decoration: none; color: var(--text-medium); font-weight: 500; }
-        .nav-cta { background: var(--green-medium); color: white !important; padding: 0.6rem 1.2rem; border-radius: 25px; }
-        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
-        .page-header { padding: var(--header-total, 85px) 2rem 4rem 2rem; background: linear-gradient(135deg, var(--green-pale) 0%, var(--cream) 100%); text-align: center; }
-        .page-header h1 { font-size: 3rem; color: var(--green-dark); margin-bottom: 1rem; }
-        .page-header p { font-size: 1.25rem; color: var(--text-medium); max-width: 600px; margin: 0 auto; }
-        .content-section { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
-        .content-section h2 { font-size: 2rem; color: var(--green-dark); margin-bottom: 1.5rem; }
-        .content-section p { color: var(--text-medium); margin-bottom: 1.5rem; font-size: 1.1rem; }
-        .content-section ul { margin: 1.5rem 0 1.5rem 1.5rem; color: var(--text-medium); }
-        .content-section li { margin-bottom: 0.75rem; font-size: 1.1rem; }
-        .image-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0; }
-        .image-grid img { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15); }
-        .image-grid.single { grid-template-columns: 1fr; }
-        .image-grid.single img { height: 400px; }
-        .cta-section { padding: 4rem 2rem; background: var(--green-dark); text-align: center; }
-        .cta-section h2 { font-size: 2rem; color: white; margin-bottom: 1rem; }
-        .cta-section p { color: rgba(255,255,255,0.9); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .btn { padding: 1rem 2rem; border-radius: 30px; font-weight: 600; text-decoration: none; cursor: pointer; border: none; }
-        .btn-primary { background: var(--green-light); color: var(--green-dark); }
-        .btn-secondary { background: transparent; color: white; border: 2px solid white; margin-left: 1rem; }
-        footer { background: var(--green-dark); color: white; padding: 3rem 2rem 1.5rem; text-align: center; }
-        footer p { opacity: 0.8; margin-bottom: 1rem; }
-        footer a { color: var(--green-light); text-decoration: none; }
-        .contact-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 2000; justify-content: center; align-items: center; padding: 1rem; }
-        .contact-modal.active { display: flex; }
-        .contact-modal-content { background: white; border-radius: 25px; padding: 2.5rem; max-width: 450px; width: 100%; position: relative; }
-        .contact-modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; color: var(--text-medium); cursor: pointer; }
-        .contact-modal h3 { font-size: 1.8rem; color: var(--green-dark); margin-bottom: 0.5rem; text-align: center; }
-        .contact-modal-subtitle { text-align: center; color: var(--text-medium); margin-bottom: 2rem; }
-        .contact-options { display: flex; flex-direction: column; gap: 1rem; }
-        .contact-option { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; background: var(--cream); border-radius: 15px; text-decoration: none; color: var(--text-dark); transition: all 0.3s ease; border: 2px solid transparent; }
-        .contact-option:hover { border-color: var(--green-medium); transform: translateX(5px); background: var(--green-pale); }
-        .contact-option-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-        .contact-option-icon.email { background: #EA4335; }
-        .contact-option-icon.whatsapp { background: #25D366; }
-        .contact-option-icon.signal { background: #3A76F0; }
-        .contact-option-icon.phone { background: var(--green-medium); }
-        .contact-option-text strong { display: block; font-size: 1.1rem; color: var(--green-dark); }
-        .contact-option-text span { font-size: 0.9rem; color: var(--text-medium); }
-        .contact-modal-footer { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--cream-dark); text-align: center; color: var(--text-medium); }
-        @media (max-width: 768px) { .nav-links { display: none; } .mobile-menu-btn { display: block; } .page-header h1 { font-size: 2.2rem; } .image-grid { grid-template-columns: 1fr; } .btn-secondary { margin-left: 0; margin-top: 1rem; } }
-
-        /* Portrait mode - ensure hero is visible */
-        @media (orientation: portrait) {
-            .hero-visual {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-            .hero-image-main {
-                min-height: 250px;
-                height: auto;
-                aspect-ratio: 4/3;
-            }
-        }
-        .footer-credit {
-            text-align: center;
-            font-size: 0.8rem;
-            opacity: 0.5;
-            padding: 1rem 0;
-        }
-        .footer-credit a {
-            color: inherit;
-            text-decoration: none;
-        }
-        .footer-credit a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Opruim-intro: Trash items styling */
-        .trash-item {
-            position: absolute;
-            bottom: 0;
-            height: 45px;
-            opacity: 0;
-            transition: opacity 0.5s ease, transform 0.8s ease, left 0.8s ease;
-            transform-origin: bottom center;
-            z-index: 50;
-            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
-        }
-        .trash-item.trash-redbull {
-            height: 55px;
-        }
-        .trash-item.trash-pringles {
-            height: 70px;
-        }
-        .trash-item.trash-tilted {
-            transform: rotate(90deg) translateY(50%);
-            bottom: 20px;
-        }
-        .trash-item.visible {
-            opacity: 1;
-        }
-        .trash-item.sliding {
-            left: 48% !important;
-        }
-        .trash-item.collected {
-            opacity: 0;
-            transform: scale(0.3) translateY(-50px);
-        }
-        .trash-item.trash-tilted.collected {
-            transform: rotate(90deg) scale(0.3) translateY(-50px);
-        }
-        
-        .trash-bag {
-            position: absolute;
-            bottom: 0;
-            height: 70px;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.6s ease, transform 0.6s ease;
-            z-index: 55;
-            filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.3));
-        }
-        .trash-bag.visible {
-            opacity: 1;
-        }
-        .trash-bag.collected {
-            opacity: 0;
-            transform: translateX(-50%) scale(0.5) translateY(-30px);
-        }
-        
-        @media (max-width: 768px) {
-            .trash-item {
-                height: 35px;
-            }
-            .trash-item.trash-redbull {
-                height: 40px;
-            }
-            .trash-item.trash-pringles {
-                height: 50px;
-            }
-            .trash-bag {
-                height: 50px;
-            }
-        }
-    </style>
-<script>if("scrollRestoration" in history){history.scrollRestoration="manual";}window.scrollTo(0,0);</script></head>
+    <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="biotoop.css">
+</head>
 <body>
-    <nav>
+
+    <nav class="site-nav" aria-label="Hoofdmenu">
         <div class="nav-container">
-            <a href="index.html" class="logo">
-                <span class="logo-text">Natuurrijk Ankeveen</span>
-            </a>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
+            <a href="index.html" class="logo">Natuurrijk Ankeveen</a>
+            <ul class="nav-links" id="navLinks">
                 <li><a href="index.html#activiteiten">Wat we doen</a></li>
-                <li><a href="index.html#resultaten">Resultaten</a></li>
-                <li><a href="javascript:void(0)" onclick="openContactModal()" class="nav-cta">Doe mee!</a></li>
+                <li><a href="index.html#natuurweetje">Weetje</a></li>
+                <li><a href="index.html#nieuws">Nieuws</a></li>
+                <li><a href="index.html#over-ons">Wie we zijn</a></li>
+                <li><button type="button" data-open-contact>Contact</button></li>
+                <li><button type="button" class="nav-cta" data-open-contact>Doe mee</button></li>
             </ul>
-            <button class="mobile-menu-btn">☰</button>
+            <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">☰</button>
         </div>
     </nav>
 
-    <!-- BIOTOOP CONTAINERS -->
-    <div class="header-background"></div>
-    <div class="header-animals-ground" id="headerAnimalsGround"></div>
-    <div class="header-garden" id="headerGarden"></div>
-    <div class="header-grass" id="headerGrass">
-        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
-        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
-        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
-        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
-        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
-        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
-        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
-        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
-        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
-        <img src="images/Gras-cropped.png" class="garden-grass" alt="">
-    </div>
-    <div class="header-pond" id="headerPond"></div>
-    <div class="header-animals-flying" id="headerAnimalsFlying"></div>
+    <!-- Levende header (biotoop) – wordt gevuld door biotoop.js -->
+    <div class="bio-background" aria-hidden="true"></div>
+    <div class="bio-pond" id="bioPond" aria-hidden="true"></div>
+    <div class="bio-grass" id="bioGrass" aria-hidden="true"></div>
+    <div class="bio-ground" id="bioGround" aria-hidden="true"></div>
+    <div class="bio-garden" id="bioGarden" aria-hidden="true"></div>
+    <div class="bio-sky" id="bioSky" aria-hidden="true"></div>
 
     <section class="page-header">
         <h1>Educatie</h1>
-        <p>Kinderen enthousiast maken voor de natuur</p>
+        <p>Kinderen van de Joseph Lokinschool enthousiast maken voor de natuur om de hoek.</p>
     </section>
 
-    <section class="content-section">
-        <div class="image-grid single">
-            <img src="images/Huiszwaluwschool.jpg" alt="Kinderen met kunstnesten op de Joseph Lokin school">
-        </div>
-
-        <h2>De Joseph Lokin school</h2>
-        <div class="partner-logo" style="margin-bottom: 1.5rem;">
-            <img src="images/Lokin.svg" alt="Joseph Lokin School logo" style="height: 60px; width: auto;">
-        </div>
-        <p>Op de Joseph Lokin school in Ankeveen geven we regelmatig gastlessen over natuur en biodiversiteit. Kinderen leren spelenderwijs over de planten en dieren in hun eigen omgeving – en ze mogen zelf aan de slag!</p>
-
-        <h2>Wat de kinderen doen</h2>
+    <section class="content">
+        <h2>Op school</h2>
+        <p>Op de Joseph Lokinschool geven we regelmatig gastlessen over natuur en biodiversiteit. Kinderen leren spelenderwijs over de planten en dieren in hun eigen omgeving – en ze gaan zelf aan de slag.</p>
         <ul>
-            <li><strong>Vogelhuisjes maken</strong> – Met hun eigen handen timmeren ze een nestkastje</li>
-            <li><strong>Insectenhotels bouwen</strong> – Een thuis voor bijen, oorwormen en lieveheersbeestjes</li>
-            <li><strong>Helpen met planten</strong> – Samen planten we bloemen en struiken op het schoolplein</li>
-            <li><strong>Natuur observeren</strong> – Kijken naar vogels, insecten en planten</li>
+        <li>Vogelhuisjes timmeren</li>
+        <li>Insectenhotels bouwen voor bijen, oorwormen en lieveheersbeestjes</li>
+        <li>Bloemen en struiken planten op het schoolplein</li>
+        <li>Vogels, insecten en planten observeren</li>
         </ul>
-
-        <div class="image-grid single">
-            <img src="images/Lokin2025.jpg" alt="Educatie activiteit op de Joseph Lokin school">
-        </div>
-
-        <h2>Huiszwaluwen op school</h2>
-        <p>Op de Joseph Lokin school hebben we kunstnesten voor huiszwaluwen opgehangen. De kinderen kunnen nu vanuit het klaslokaal de zwaluwen zien vliegen en hun jongen grootbrengen. Ook hebben we nestkastjes voor huismussen geplaatst.</p>
-
-        <p>Zo leren kinderen dat ze zelf iets kunnen doen voor de natuur. En misschien worden ze later wel de natuurbeschermers van de toekomst!</p>
-
-        <h2>Waarom educatie belangrijk is</h2>
-        <p>Kinderen die opgroeien met natuur, worden volwassenen die om de natuur geven. Door ze jong kennis te laten maken met vogels, insecten en planten, kweken we bewustzijn en betrokkenheid. En het mooiste: de kinderen vinden het geweldig!</p>
+        <div class="photo-row"><img src="images/Huiszwaluwschool.webp" width="1000" height="750" alt="Kinderen met kunstnesten op school" loading="lazy" data-lightbox><img src="images/Lokin2025.webp" width="1000" height="902" alt="Educatie op de Joseph Lokinschool" loading="lazy" data-lightbox></div>
+        <h2>Zwaluwen voor het raam</h2>
+        <p>Aan de school hangen kunstnesten voor huiszwaluwen en nestkastjes voor huismussen. De kinderen zien vanuit de klas de zwaluwen af en aan vliegen en hun jongen grootbrengen. Zo ervaren ze dat je zelf iets voor de natuur kunt doen.</p>
+        <h2>Waarom</h2>
+        <p>Kinderen die opgroeien met natuur, worden volwassenen die om de natuur geven. En het mooiste: ze vinden het geweldig.</p>
+        <a href="index.html#activiteiten" class="back-link">← Alle projecten</a>
     </section>
 
-    <section class="cta-section">
+    <section class="cta-band">
         <h2>Educatie op jouw school?</h2>
-        <p>Wil je ook een gastles of project op jouw school? Neem contact met ons op om de mogelijkheden te bespreken.</p>
-        <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-primary">Neem contact op →</a>
-        <a href="index.html" class="btn btn-secondary">← Terug naar home</a>
+        <p>Een gastles of project op jouw school? We bespreken graag de mogelijkheden.</p>
+        <button type="button" class="btn btn-primary" data-open-contact>Neem contact op</button>
     </section>
 
-    <footer>
-        <p>© 2026 Werkgroep Natuurrijk Ankeveen · Onderdeel van <a href="https://bruisendankeveen.nl" target="_blank">Stichting Bruisend Ankeveen</a></p>
-        <p><a href="index.html">Terug naar hoofdpagina</a></p>
-        <div class="footer-credit">
-            Webdesign: Ron Wehrens – <a data-email-full="ron" href="#">laden...</a>
+    <!-- FOOTER -->
+    <footer id="contact">
+        <div class="footer-grid">
+            <div>
+                <a href="index.html" class="logo">Natuurrijk Ankeveen</a>
+                <p>Samen bouwen aan biodiversiteit in Ankeveen. Onze werkgroep valt onder Stichting Bruisend Ankeveen en werkt zonder winstoogmerk.</p>
+            </div>
+            <div>
+                <h4>Op deze site</h4>
+                <ul>
+                    <li><a href="index.html#activiteiten">Wat we doen</a></li>
+                        <li><a href="index.html#nieuws">Nieuws</a></li>
+                    <li><a href="index.html#over-ons">Wie we zijn</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Meedoen</h4>
+                <ul>
+                    <li><button type="button" data-open-contact>Word vrijwilliger</button></li>
+                    <li><button type="button" data-open-contact>Nestkastje aanvragen</button></li>
+                    <li>Zeiscursus 2027: datum volgt</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <ul>
+                    <li>Ron Wehrens</li>
+                    <li><a href="tel:+31646293590">06-46293590</a></li>
+                    <li><a data-email-full="info" href="index.html#">e-mail</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Werkgroep Natuurrijk Ankeveen · Onderdeel van Stichting Bruisend Ankeveen · IBAN NL97 INGB 0006 3150 11<br><span class="footer-credit">Webdesign: Ron Wehrens – <a data-email-full="ron" href="index.html#">e-mail</a> · Deze site gebruikt geen cookies en volgt je niet.</span></span>
+            <img src="images/egel.webp" alt="" width="45" height="34">
         </div>
     </footer>
 
-    <div class="contact-modal" id="contactModal" onclick="closeContactModal(event)">
-        <div class="contact-modal-content" onclick="event.stopPropagation()">
-            <span class="contact-modal-close" onclick="closeContactModal()">&times;</span>
-            <h3>📬 Neem contact op</h3>
-            <p class="contact-modal-subtitle">Kies hoe je ons wilt bereiken</p>
-            <div class="contact-options">
-                <a data-email="info" href="#" class="contact-option">
-                    <div class="contact-option-icon email"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
-                    <div class="contact-option-text"><strong>E-mail</strong><span data-email-text="info">laden...</span></div>
-                </a>
-                <a href="https://wa.me/31646293590" target="_blank" class="contact-option">
-                    <div class="contact-option-icon whatsapp"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></div>
-                    <div class="contact-option-text"><strong>WhatsApp</strong><span>Stuur ons een berichtje</span></div>
-                </a>
-                <a href="https://signal.me/#p/+31646293590" target="_blank" class="contact-option">
-                    <div class="contact-option-icon signal"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.4c5.302 0 9.6 4.298 9.6 9.6s-4.298 9.6-9.6 9.6S2.4 17.302 2.4 12 6.698 2.4 12 2.4z"/></svg></div>
-                    <div class="contact-option-text"><strong>Signal</strong><span>Veilig en privé chatten</span></div>
-                </a>
-                <a href="tel:+31646293590" class="contact-option">
-                    <div class="contact-option-icon phone"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
-                    <div class="contact-option-text"><strong>Bellen</strong><span>06-46293590</span></div>
-                </a>
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto vergroot">
+        <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Sluiten">×</button>
+        <div class="lightbox-content">
+            <img id="lightboxImg" src="" alt="">
+            <div class="lightbox-text" id="lightboxText" hidden>
+                <h3 id="lightboxName"></h3>
+                <div class="role" id="lightboxRole"></div>
+                <div class="quote" id="lightboxQuote"></div>
             </div>
-            <div class="contact-modal-footer">Contactpersoon: <strong>Ron Wehrens</strong></div>
         </div>
     </div>
 
+    <!-- CONTACT -->
+    <div class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+        <div class="modal-box">
+            <button type="button" class="modal-close" id="contactClose" aria-label="Sluiten">×</button>
+            <h3 id="contactTitle">Neem contact op</h3>
+            <p class="sub">Kies hoe je ons wilt bereiken.</p>
+            <div class="contact-options">
+                <a data-email="info" href="#" class="contact-option">
+                    <span class="icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="white" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></span>
+                    <span><strong>E-mail</strong><span data-email-text="info">…</span></span>
+                </a>
+                <a href="https://wa.me/31646293590" target="_blank" rel="noopener" class="contact-option">
+                    <span class="icon whatsapp"><svg viewBox="0 0 24 24" width="22" height="22" fill="white" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></span>
+                    <span><strong>WhatsApp</strong><span>Stuur ons een berichtje</span></span>
+                </a>
+                <a href="https://signal.me/#p/+31646293590" target="_blank" rel="noopener" class="contact-option">
+                    <span class="icon signal"><svg viewBox="0 0 24 24" width="22" height="22" fill="white" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>
+                    <span><strong>Signal</strong><span>Veilig en privé chatten</span></span>
+                </a>
+                <a href="tel:+31646293590" class="contact-option">
+                    <span class="icon phone"><svg viewBox="0 0 24 24" width="22" height="22" fill="white" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></span>
+                    <span><strong>Bellen</strong><span>06-46293590</span></span>
+                </a>
+            </div>
+            <div class="modal-foot">Contactpersoon: <strong>Ron Wehrens</strong></div>
+        </div>
+    </div>
+
+    <script src="site.js"></script>
     <script src="email-protection.js"></script>
-    <script>
-        function openContactModal() {
-            document.getElementById('contactModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeContactModal(event) {
-            if (event && event.target.closest('.contact-modal-content')) return;
-            document.getElementById('contactModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    </script>
-    <script src="garden-educatie.js"></script>
-<script data-goatcounter="https://natuurrijkankeveen.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script src="biotoop.js" data-scene="educatie"></script>
+    <script data-goatcounter="https://natuurrijkankeveen.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

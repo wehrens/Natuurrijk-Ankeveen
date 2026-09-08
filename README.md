@@ -16,6 +16,26 @@ Website voor Werkgroep Natuurrijk Ankeveen - een groep vrijwilligers die zich in
 ## Technisch
 
 Statische website met vanilla HTML, CSS en JavaScript. Gehost op GitHub Pages met Cloudflare.
+Geen cookies, geen externe scripts behalve GoatCounter (cookieloze bezoekersteller); lettertypes lokaal in `fonts/`.
+
+### Bestanden
+
+| Bestand | Doel |
+|---|---|
+| `index.html` | Homepage |
+| `zeisbrigade.html`, `oevers.html`, `bergsepad.html`, `zwaluwen.html`, `aanplanten.html`, `educatie.html`, `ruige-hoek.html` | Projectpagina's |
+| `site.css` | Gedeelde opmaak voor alle pagina's |
+| `site.js` | Gedeeld: mobiel menu, contactvenster, lightbox |
+| `biotoop.css`, `biotoop.js` | De levende header. Scène per pagina via `<script src="biotoop.js" data-scene="...">` |
+| `email-protection.js` | Bouwt e-mailadressen op zodat Cloudflare ze niet verminkt |
+| `images/` | Alle afbeeldingen, geoptimaliseerd als WebP (`images/weetjes/` = natuurweetjes) |
+
+### Teksten aanpassen
+- Zwaluwcijfers: zoek in `index.html` en `zwaluwen.html` naar "De telling van 2026".
+- Nieuws: het blok `<section class="section alt" id="nieuws">` in `index.html`, nieuwste bovenaan.
+- Vrijwilligers: de lijst `volunteers` in het script onderaan `index.html`.
+- Natuurweetjes: de lijst `weetjesData` in hetzelfde script; foto's in `images/weetjes/`.
+- Nieuwe foto's: verklein tot max. 1000 px en sla op als WebP.
 
 De site bevat een geanimeerde "biotoop" header met bloemen, dieren en een vijver die tot leven komt terwijl je de pagina bekijkt.
 

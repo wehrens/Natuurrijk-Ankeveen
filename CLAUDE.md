@@ -9,23 +9,15 @@ Natuurrijk Ankeveen is a static website for a Dutch volunteer working group focu
 ## Architecture
 
 ### Page Structure
-- **index.html** - Main homepage with all sections (hero, activities, results, team, sponsors)
+- **index.html** - Homepage (hero, activities incl. swallow highlight, weetje, news, team, partners)
 - **Activity pages** - Separate detail pages for each project (zeisbrigade.html, zwaluwen.html, oevers.html, bergsepad.html, aanplanten.html, educatie.html, ruige-hoek.html)
 
 ### Animated "Biotoop" Header System
-The site features an animated header with flowers, animals, and a pond. Each page can have its own biotoop theme:
-
-- **garden.css** - Shared styles for all animated elements (flowers, animals, pond, swallows, etc.)
-- **garden.js** - Main biotoop controller for the homepage
-- **garden-{pagename}.js** - Page-specific biotoop scripts with custom choreography
-
-The biotoop uses layered z-index containers:
-- `header-background` (z-1000) - Background layer
-- `header-pond` (z-1005) - Pond behind grass
-- `header-grass` (z-1010) - Grass strip
-- `header-animals-ground` (z-1025) - Walking animals (hedgehogs, caterpillars)
-- `header-garden` (z-1035) - Flowers and plants
-- `header-animals-flying` (z-1022) - Flying animals (swallows, butterflies)
+- **biotoop.css** – fixed layers (background, pond, grass, ground, garden, sky, front) sharing one coordinate system.
+- **biotoop.js** – all motion via the Web Animations API (transform/opacity only). Scenes per page are selected with
+  `<script src="biotoop.js" data-scene="home|zeisbrigade|oevers|bergsepad|zwaluwen|aanplanten|educatie">`.
+  Pauses when the tab is hidden; respects `prefers-reduced-motion` (static scene).
+- Shared page chrome: `site.css` (styles) and `site.js` (menu, contact modal, lightbox).
 
 ### Email Protection
 Cloudflare automatically obfuscates email addresses in HTML. The `email-protection.js` script bypasses this by dynamically building email addresses from parts that Cloudflare cannot detect. Use data attributes:
@@ -38,17 +30,15 @@ Available keys: `info` (natuurrijkankeveen@protonmail.com), `ron` (r.wehrens@pha
 ## Adding a New Page
 
 1. Copy structure from an existing activity page
-2. Include `garden.css` in the head
-3. Include `email-protection.js` and the appropriate garden script before `</body>`
-4. Add biotoop container elements (headerGarden, headerGrass, headerAnimalsGround, headerAnimalsFlying)
+2. Include `fonts/fonts.css`, `site.css` and `biotoop.css` in the head
+3. Include `site.js`, `email-protection.js` and `biotoop.js` (with `data-scene`) before `</body>`
+4. Keep the `bio-*` container divs directly after the nav
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| GARDEN-TEMPLATE.html | Instructions for adding the garden to new pages |
 | EMAIL-PROTECTION-README.md | Dutch documentation for the email protection system |
-| ZOEK-VERVANG-SNIPPETS.txt | Find/replace snippets for common edits |
 
 ## URLs
 

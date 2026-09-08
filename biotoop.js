@@ -124,14 +124,14 @@
     // ---------- BLOEMEN ----------
     const flowers = [];
     // % van links; de zone rond de vijver blijft vrij (desktop: 25–42, mobiel: 66–84)
-    const flowerSlots = () => NARROW() ? [4, 14, 26, 40, 54, 92] : [3, 9, 15, 21, 46, 54, 62, 70, 79, 88, 96];
+    const flowerSlots = () => currentScene.slots ? currentScene.slots : (NARROW() ? [4, 14, 26, 40, 54, 92] : [3, 9, 15, 21, 46, 54, 62, 70, 79, 88, 96]);
     function addFlower() {
-        const max = NARROW() ? 6 : 10;
+        const max = NARROW() ? Math.ceil(currentScene.flowersMax / 2) : currentScene.flowersMax;
         if (flowers.length >= max) return;
         const used = flowers.map(f => f.slot);
         const free = flowerSlots().filter(s => !used.includes(s));
         if (!free.length) return;
-        const slot = pick(free), data = pick(SPRITES.flowers);
+        const slot = pick(free), data = pick(currentScene.flowers || SPRITES.flowers);
         const h = rand(data.h[0], data.h[1]);
         const img = sprite(L.bioGarden, data.src, h, 'bio-flower');
         const x = px(slot) - 20, y = GROUND - 3 + (data.sink || 0) - h;   // top van de bloem
@@ -365,13 +365,174 @@
     const geese = () => highFlyer('Geese.webp', 20, true, 17000, 4, .8);
     const eagle = () => highFlyer('Zeearend.webp', 24, false, 20000, 3, .9);
 
-    // ---------- CHOREOGRAFIE ----------
-    const SCENES = {
-        home: {
-            animals: [[butterfly, 3], [hedgehog, 2], [caterpillar, 1], [ladybug, 2], [swallow, 4], [swallowGroup, 2]],
-            eventEvery: 9000, pondAt: 40000, roerdompAt: 95000, kingfisherAt: 60000, otterAt: 130000, geeseAt: 110000, eagleAt: 180000
+
+    // ---------- REKWISIETEN EN SCÈNE-SPECIFIEKE DIEREN ----------
+    function prop(layer, src, h, pct, { flip = 1, lift = 0, cls = '' } = {}) {
+        const img = sprite(layer, src, h, cls);
+        const pos = `translate(${px(pct)}px, ${GROUND - 2 + lift - h}px) scaleX(${flip})`;
+        img.style.transform = pos; img.style.setProperty('--pos', pos);
+        animate(img, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1500 });
+        return img;
+    }
+
+    // Wandelaars (Bergse Pad)
+    function walker(done) {
+        const girl = chance(.5), h = 52;
+        const { w, img } = wrap(L.bioGround, girl ? 'Walkinggirl.webp' : 'WalkingGuy2.webp', h);
+        const right = chance(.5), width = W();
+        const x0 = right ? -120 : width + 20, x1 = right ? width + 20 : -120, y = GROUND - h + 4;
+        const dur = rand(22000, 30000), flip = right ? 1 : -1;
+        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${flip})`, opacity: 0 },
+            { transform: `translate(${x0 + (x1 - x0) * .06}px, ${y}px) scaleX(${flip})`, opacity: 1, offset: .06 },
+            { transform: `translate(${x0 + (x1 - x0) * .94}px, ${y}px) scaleX(${flip})`, opacity: 1, offset: .94 },
+            { transform: `translate(${x1}px, ${y}px) scaleX(${flip})`, opacity: 0 }], { duration: dur, easing: 'linear' });
+        later(() => { remove(w); done(); }, dur + 50);
+    }
+
+    // Slobeend zwemt over de poel (oevers)
+    function duck(done) {
+        if (!pond.el) return done();
+        const h = 20, { w, img } = wrap(L.bioFront, 'Slobeend.webp', h);
+        const cx = px(pond.x), y = GROUND - h + 2, right = chance(.5);
+        const a = cx - 70, b = cx + 70, x0 = right ? a : b, x1 = right ? b : a, flip = right ? -1 : 1;
+        const dur = 16000;
+        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${flip})`, opacity: 0 },
+            { transform: `translate(${x0 + (x1 - x0) * .15}px, ${y}px) scaleX(${flip})`, opacity: 1, offset: .15 },
+            { transform: `translate(${x0 + (x1 - x0) * .5}px, ${y}px) scaleX(${flip})`, opacity: 1, offset: .55 },
+            { transform: `translate(${x0 + (x1 - x0) * .85}px, ${y}px) scaleX(${flip})`, opacity: 1, offset: .85 },
+            { transform: `translate(${x1}px, ${y}px) scaleX(${flip})`, opacity: 0 }], { duration: dur, easing: 'linear' });
+        animate(img, [{ transform: 'translateY(0) rotate(-1deg)' }, { transform: 'translateY(-1.5px) rotate(1deg)' }],
+            { duration: 1100, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        later(() => { remove(w); done(); }, dur + 50);
+    }
+
+    // Zeis en maaisel (zeisbrigade): zeis verschijnt, vers maaisel, gedroogd maaisel, alles wordt afgevoerd
+    let zeisIndex = 0;
+    function zeisCycle() {
+        const spots = [18, 34, 50, 66, 82];
+        const pct = spots[zeisIndex++ % spots.length];
+        const zeis = prop(L.bioGround, zeisIndex % 2 ? 'Zeis.webp' : 'Zeis2.webp', 44, pct - 4, { flip: zeisIndex % 2 ? 1 : -1 });
+        const steps = [
+            [3000, () => { const m = prop(L.bioGround, 'Maaisel2.webp', 16, pct + 2); zeis._m2 = m; }],
+            [11000, () => { const m = prop(L.bioGround, 'Maaisel.webp', 15, pct + 2); zeis._m1 = m; }],
+            [16000, () => { if (zeis._m2) animate(zeis._m2, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }).finished.then(() => remove(zeis._m2)).catch(() => {}); }],
+            [22000, () => { if (zeis._m1) animate(zeis._m1, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }).finished.then(() => remove(zeis._m1)).catch(() => {}); }],
+            [25000, () => animate(zeis, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }).finished.then(() => remove(zeis)).catch(() => {})],
+            [29000, zeisCycle]
+        ];
+        steps.forEach(([t, fn]) => later(fn, t));
+    }
+
+    // Zwaluwtil en nestjes (zwaluwen)
+    let til = null;
+    function placeTil() {
+        til = prop(L.bioGarden, 'Zwaluwtil.webp', 82, NARROW() ? 72 : 40);
+        [10, 19, 28].forEach((pct, i) => later(() => {
+            const n = sprite(L.bioGarden, 'HouseMartinnest.webp', 26);
+            n.style.transform = `translate(${px(pct)}px, 0px)`;
+            animate(n, [{ opacity: 0 }, { opacity: 1 }], { duration: 1200 });
+        }, 600 + i * 500));
+    }
+    function tilCircle(done) {
+        if (!til) return done();
+        const cx = px(NARROW() ? 72 : 40) + 12, cy = GROUND - 62, rx = 55, ry = 16;
+        const s = pick(SPRITES.swallows), cw = chance(.5), n = 36, pts = [];
+        for (let i = 0; i <= n; i++) {
+            const t = (cw ? 1 : -1) * i / n * Math.PI * 2 * 1.5 - Math.PI;
+            pts.push({ x: cx + rx * Math.cos(t), y: cy + ry * Math.sin(t) });
         }
+        const frames = pts.map((p, i) => {
+            const q = pts[Math.max(0, i - 1)], goingRight = p.x >= q.x;
+            const flip = s.faces === (goingRight ? 1 : -1) ? 1 : -1;
+            const t = i / n;
+            return { transform: `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px) scaleX(${flip * .9}) scaleY(.9)`, opacity: t < .08 ? t / .08 : t > .92 ? (1 - t) / .08 : 1, offset: t };
+        });
+        const img = sprite(L.bioSky, s.src, 24, 'center');
+        animate(img, frames, { duration: 5200, easing: 'linear' });
+        later(() => { remove(img); done(); }, 5300);
+    }
+
+    // Opruim-intro (educatie): afval op het gras, vuilniszak, alles opgeruimd
+    function cleanupIntro(cb) {
+        const items = [['Redbull.webp', 22, 25, 0], ['Redbull.webp', 22, 45, 90], ['Pringles.webp', 20, 65, -90]]
+            .map(([src, h, pct, rot]) => { const p = prop(L.bioGround, src, h, pct); p.style.transform += ` rotate(${rot}deg)`; return p; });
+        later(() => {
+            const bag = prop(L.bioGround, 'Garbage.webp', 30, 50);
+            items.forEach((it, i) => later(() => {
+                const pos = it.style.transform;
+                animate(it, [{ transform: pos, opacity: 1 }, { transform: `translate(${px(50) + 8}px, ${GROUND - 20}px) scale(.3)`, opacity: 0 }],
+                    { duration: 900, easing: 'ease-in' }).finished.then(() => remove(it)).catch(() => {});
+            }, 1500 + i * 1800));
+            later(() => {
+                animate(bag, [{ opacity: 1 }, { opacity: 0 }], { duration: 800 }).finished.then(() => remove(bag)).catch(() => {});
+                later(cb, 900);
+            }, 1500 + items.length * 1800 + 2500);
+        }, 2500);
+    }
+
+    // Bomen die groeien en gesnoeid worden (Bergse Pad)
+    function treeCycle() {
+        const spots = NARROW() ? [30] : [24, 58, 90];
+        spots.forEach((pct, i) => later(() => {
+            const h = 88, src = i % 2 ? 'Tree.webp' : 'Iep.webp';
+            const img = sprite(L.bioGarden, src, h);
+            const base = (s) => `translate(${px(pct)}px, ${GROUND - 2 - h}px) scale(${s})`;
+            animate(img, [{ transform: base(.15), opacity: 0 }, { transform: base(1), opacity: 1 }], { duration: 14000, easing: 'ease-out' });
+            later(() => animate(img, [{ transform: base(1), opacity: 1 }, { transform: base(.5), opacity: .9, offset: .3 }, { transform: base(.5), opacity: 0 }],
+                { duration: 6000, easing: 'ease-in-out' }).finished.then(() => remove(img)).catch(() => {}), 30000);
+        }, i * 4000));
+        later(treeCycle, 45000);
+    }
+
+    // ---------- CHOREOGRAFIE ----------
+    const F = SPRITES.flowers;
+    const byName = (...names) => F.filter(f => names.some(n => f.src.startsWith(n)));
+    const BASE = { flowersMax: 10, flowerEvery: 9000, eventEvery: 9000, pondAt: null, roerdompAt: null, kingfisherAt: null, otterAt: null, duckAt: null, geeseAt: null, eagleAt: null, setup: null, intro: null, extra: [] };
+    const SCENES = {
+        home: Object.assign({}, BASE, {
+            animals: [[butterfly, 3], [hedgehog, 2], [caterpillar, 1], [ladybug, 2], [swallow, 4], [swallowGroup, 2]],
+            pondAt: 40000, roerdompAt: 95000, kingfisherAt: 60000, otterAt: 130000, geeseAt: 110000, eagleAt: 180000
+        }),
+        zeisbrigade: Object.assign({}, BASE, {          // hooiland: veel bloemen, vlinders, en de zeis aan het werk
+            flowersMax: 14, flowerEvery: 3000, eventEvery: 8000,
+            slots: [3, 8, 14, 20, 27, 34, 42, 50, 58, 66, 74, 82, 89, 95],
+            animals: [[butterfly, 4], [ladybug, 3], [caterpillar, 1], [swallow, 2]],
+            setup: () => later(zeisCycle, 4000)
+        }),
+        oevers: Object.assign({}, BASE, {               // waterkant: poel meteen, ijsvogel, otter, slobeend
+            flowersMax: 7, flowers: byName('Gelelis', 'Lisdodde2', 'Veldoeket', 'Klaproos.'),
+            pondAt: 1500, roerdompAt: 40000, kingfisherAt: 20000, otterAt: 60000, duckAt: 12000, geeseAt: 90000,
+            animals: [[butterfly, 3], [swallow, 3], [ladybug, 1]]
+        }),
+        bergsepad: Object.assign({}, BASE, {            // wandelpad: riet, bomen die gesnoeid worden, wandelaars, ganzen
+            flowersMax: 5, flowerEvery: 12000, flowers: byName('Lisdodde2', 'Klaproos.', 'Veldoeket'),
+            slots: [6, 14, 40, 50, 70],
+            animals: [[walker, 4], [swallow, 3], [butterfly, 1]],
+            geeseAt: 5000, eagleAt: 90000,
+            setup: () => {
+                [[33, 'Rietkraag.webp', 46, 1], [76, 'Rietkraag.webp', 42, -1]].forEach(([p, s, h, f], i) => later(() => prop(L.bioPond, s, h, p, { flip: f }), 500 + i * 800));
+                if (!NARROW()) { later(() => prop(L.bioGround, 'Bankje.webp', 34, 64), 1500); later(() => prop(L.bioGarden, 'Maria.webp', 46, 84), 2000); }
+                later(treeCycle, 3000);
+            }
+        }),
+        zwaluwen: Object.assign({}, BASE, {             // lucht: zwaluwtil, nestjes, veel zwaluwen
+            flowersMax: 6, flowerEvery: 8000, slots: [3, 10, 40, 50, 60, 92],
+            animals: [[swallow, 5], [swallowGroup, 3], [tilCircle, 4], [butterfly, 1]],
+            eventEvery: 6000, geeseAt: 120000,
+            setup: () => later(placeTil, 1500)
+        }),
+        aanplanten: Object.assign({}, BASE, {           // groei en bloei: rustig, veel bloemen, weinig dieren
+            flowersMax: 12, flowerEvery: 4500, eventEvery: 14000,
+            slots: [3, 10, 18, 26, 34, 42, 52, 62, 72, 82, 90, 96],
+            animals: [[butterfly, 3], [ladybug, 2]]
+        }),
+        educatie: Object.assign({}, BASE, {             // speels: eerst opruimen, dan egel, rups, vlinders
+            flowersMax: 8, flowerEvery: 5000, eventEvery: 8000,
+            animals: [[hedgehog, 3], [caterpillar, 2], [butterfly, 3], [ladybug, 2]],
+            intro: cleanupIntro
+        })
     };
+    let currentScene = SCENES[SCENE] || SCENES.home;
     function spawnEvent(scene) {
         if (paused || active >= MAX_ACTIVE() || !chance(.75)) return;
         const total = scene.animals.reduce((s, a) => s + a[1], 0);
@@ -380,30 +541,35 @@
     }
 
     function start() {
-        const scene = SCENES[SCENE] || SCENES.home;
+        const scene = currentScene = SCENES[SCENE] || SCENES.home;
         if (REDUCE) {          // stilstaand tafereel
-            for (let i = 0; i < 7; i++) addFlower();
-            showPond(); later(showRoerdomp, 50);
+            for (let i = 0; i < Math.min(7, scene.flowersMax); i++) addFlower();
+            if (scene.pondAt !== null) { showPond(); later(showRoerdomp, 50); }
+            if (scene.setup) scene.setup();
             return;
         }
-        for (let i = 0; i < 4; i++) later(addFlower, 1200 + i * 2200);
-        every(addFlower, 9000);
-        later(() => every(() => { if (chance(.5)) { wiltFlower(); later(addFlower, 4000); } }, 40000), 120000);
-
-        later(() => { spawnEvent(scene); every(() => spawnEvent(scene), scene.eventEvery); }, 4000);
-        later(showPond, scene.pondAt);
-        later(showRoerdomp, scene.roerdompAt);
-        later(() => { withActive(kingfisher); every(() => { if (chance(.55)) withActive(kingfisher); }, 50000); }, scene.kingfisherAt);
-        later(() => { withActive(otter); every(() => { if (chance(.4)) withActive(otter); }, 95000); }, scene.otterAt);
-        later(() => { chance(.5) ? goose() : geese(); every(() => { if (chance(.4)) (chance(.5) ? goose() : geese()); }, 70000); }, scene.geeseAt);
-        later(eagle, scene.eagleAt);
-        later(() => { clear(); start(); }, RESET_AFTER);
+        const go = () => {
+            for (let i = 0; i < 4; i++) later(addFlower, 800 + i * Math.min(2200, scene.flowerEvery));
+            every(addFlower, scene.flowerEvery);
+            later(() => every(() => { if (chance(.5)) { wiltFlower(); later(addFlower, 4000); } }, 40000), 120000);
+            later(() => { spawnEvent(scene); every(() => spawnEvent(scene), scene.eventEvery); }, 3000);
+            if (scene.pondAt !== null) later(showPond, scene.pondAt);
+            if (scene.roerdompAt !== null) later(showRoerdomp, scene.roerdompAt);
+            if (scene.kingfisherAt !== null) later(() => { withActive(kingfisher); every(() => { if (chance(.55)) withActive(kingfisher); }, 50000); }, scene.kingfisherAt);
+            if (scene.otterAt !== null) later(() => { withActive(otter); every(() => { if (chance(.4)) withActive(otter); }, 95000); }, scene.otterAt);
+            if (scene.duckAt !== null) later(() => { withActive(duck); every(() => { if (chance(.5)) withActive(duck); }, 45000); }, scene.duckAt);
+            if (scene.geeseAt !== null) later(() => { chance(.5) ? goose() : geese(); every(() => { if (chance(.4)) (chance(.5) ? goose() : geese()); }, 70000); }, scene.geeseAt);
+            if (scene.eagleAt !== null) later(eagle, scene.eagleAt);
+            if (scene.setup) scene.setup();
+            later(() => { clear(); start(); }, RESET_AFTER);
+        };
+        if (scene.intro) scene.intro(go); else go();
     }
     function clear() {
         timers.forEach(t => { clearTimeout(t); clearInterval(t); }); timers = [];
         running.forEach(a => { try { a.cancel(); } catch (e) {} }); running.clear();
         ['bioPond', 'bioGround', 'bioGarden', 'bioSky', 'bioFront'].forEach(k => { if (L[k]) L[k].innerHTML = ''; });
-        flowers.length = 0; pond.el = null; pond.roerdomp = null; pond.reeds = []; active = 0;
+        flowers.length = 0; pond.el = null; pond.roerdomp = null; pond.reeds = []; active = 0; til = null;
     }
 
     // Pauzeren als het tabblad niet zichtbaar is
