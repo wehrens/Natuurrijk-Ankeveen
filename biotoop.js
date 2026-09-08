@@ -259,6 +259,7 @@
     function hedgehog(done) {
         const h = rand(26, 32);
         const { w, img } = wrap(L.bioGround, 'egel.webp', h);
+        if (fence.el) L.bioGround.insertBefore(w, fence.el);   // achter de schutting langs, zichtbaar door het poortje
         const right = chance(.5), width = W();
         const x0 = right ? -60 : width + 10, x1 = right ? width + 10 : -60, y = GROUND - h + 3;
         const stop = rand(.35, .6), dur = rand(34000, 44000);
@@ -610,7 +611,7 @@
             <rect x="0" y="12" width="${w}" height="4" fill="#8f6d43"/><rect x="0" y="36" width="${w}" height="4" fill="#8f6d43"/>
             <path class="arch" d="M25 50 V38 a11 11 0 0 1 22 0 V50 h-4 V38 a7 7 0 0 0 -14 0 V50 z" fill="#2f7d4f" opacity="0"/>
         </svg>`;
-        L.bioGarden.appendChild(box);
+        L.bioGround.appendChild(box);
         fence.el = box; fence.x = px(pct); fence.gap = false;
         animate(box, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1200 });
     }
@@ -653,6 +654,8 @@
             const x1 = W() + 20;
             animate(w, [{ transform: f(stopX - 70, 1) }, { transform: f(stopX - 70, -1), offset: .03 }, { transform: f(x1, -1) }],
                 { duration: 4000 + (x1 - stopX + 70) * 40, easing: 'linear' });
+            // zodra hij in het poortje zit, verdwijnt hij achter de schutting
+            later(() => { if (fence.el && w.parentNode) L.bioGround.insertBefore(w, fence.el); }, 3300);
         }, walkIn + 11000);
         later(() => { remove(w); done(); }, walkIn + 11000 + 4000 + (W() + 90 - stopX) * 40 + 200);
     }
