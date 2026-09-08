@@ -594,23 +594,17 @@
     // ---------- EGELSNELWEG (egels): schutting, egel loopt vast, poortje, en door ----------
     const fence = { el: null, x: 0, w: 72, gap: false };
     function placeFence() {
-        const pct = NARROW() ? 70 : 36, h = 50, w = fence.w;
+        const pct = NARROW() ? 70 : 36, h = 56, w = Math.round(h * 680 / 585);
+        fence.w = w;
         const box = document.createElement('div');
         box.className = 'bio-wrap';
-        box.style.transform = `translate(${px(pct)}px, ${GROUND - 3 - h}px)`;
-        // Eenvoudige houten schutting; de twee middelste planken hebben een onderstuk dat 'weggezaagd' kan worden
-        let planks = '';
-        for (let i = 0; i < 6; i++) {
-            const x = 2 + i * 12, mid = (i === 2 || i === 3);
-            planks += `<rect x="${x}" y="4" width="10" height="${mid ? 26 : 46}" rx="1.5" fill="#b08a5a"/>`;
-            if (mid) planks += `<rect class="cut" x="${x}" y="30" width="10" height="20" fill="#b08a5a"/>`;
-            planks += `<rect x="${x + 4}" y="2" width="2" height="4" fill="#8f6d43"/>`;
-        }
-        box.innerHTML = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block">
-            ${planks}
-            <rect x="0" y="12" width="${w}" height="4" fill="#8f6d43"/><rect x="0" y="36" width="${w}" height="4" fill="#8f6d43"/>
-            <path class="arch" d="M25 50 V38 a11 11 0 0 1 22 0 V50 h-4 V38 a7 7 0 0 0 -14 0 V50 z" fill="#2f7d4f" opacity="0"/>
-        </svg>`;
+        box.style.transform = `translate(${px(pct)}px, ${GROUND - 2 - h}px)`;
+        // Echte schutting (foto), met een tweede versie waar het onderstuk van twee planken is weggezaagd
+        box.innerHTML = `<img class="full" src="${IMG}schutting.webp" alt="" style="height:${h}px;width:auto;display:block">
+            <img class="cut" src="${IMG}schutting-poortje.webp" alt="" style="height:${h}px;width:auto;display:block;position:absolute;top:0;left:0;opacity:0">
+            <svg class="arch" width="${w}" height="${h}" viewBox="0 0 680 585" style="position:absolute;top:0;left:0;opacity:0">
+                <path d="M382 585 V520 a73 73 0 0 1 146 0 V585 h-22 V520 a51 51 0 0 0 -102 0 V585 z" fill="#2f7d4f"/>
+            </svg>`;
         L.bioGround.appendChild(box);
         fence.el = box; fence.x = px(pct); fence.gap = false;
         animate(box, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1200 });
@@ -618,14 +612,16 @@
     function openGate() {
         if (!fence.el || fence.gap) return;
         fence.gap = true;
-        fence.el.querySelectorAll('.cut').forEach((r, i) => animate(r, [{ opacity: 1 }, { opacity: 0 }], { duration: 1200, delay: i * 500 }));
-        later(() => animate(fence.el.querySelector('.arch'), [{ opacity: 0 }, { opacity: 1 }], { duration: 1500 }), 2000);
+        animate(fence.el.querySelector('.cut'), [{ opacity: 0 }, { opacity: 1 }], { duration: 1500 });
+        animate(fence.el.querySelector('.full'), [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 });
+        later(() => animate(fence.el.querySelector('.arch'), [{ opacity: 0 }, { opacity: 1 }], { duration: 1500 }), 1800);
     }
     function closeGate() {
         if (!fence.el) return;
         fence.gap = false;
         animate(fence.el.querySelector('.arch'), [{ opacity: 1 }, { opacity: 0 }], { duration: 800 });
-        fence.el.querySelectorAll('.cut').forEach(r => animate(r, [{ opacity: 0 }, { opacity: 1 }], { duration: 800 }));
+        animate(fence.el.querySelector('.cut'), [{ opacity: 1 }, { opacity: 0 }], { duration: 800 });
+        animate(fence.el.querySelector('.full'), [{ opacity: 0 }, { opacity: 1 }], { duration: 800 });
     }
     // Het verhaal: egel komt van links, botst, druipt af, poortje, en gaat erdoor
     function hedgehogStory(done) {
@@ -655,7 +651,7 @@
             animate(w, [{ transform: f(stopX - 70, 1) }, { transform: f(stopX - 70, -1), offset: .03 }, { transform: f(x1, -1) }],
                 { duration: 4000 + (x1 - stopX + 70) * 40, easing: 'linear' });
             // zodra hij in het poortje zit, verdwijnt hij achter de schutting
-            later(() => { if (fence.el && w.parentNode) L.bioGround.insertBefore(w, fence.el); }, 3300);
+            later(() => { if (fence.el && w.parentNode) L.bioGround.insertBefore(w, fence.el); }, 3000 + Math.round(fence.w * .3 * 40));
         }, walkIn + 11000);
         later(() => { remove(w); done(); }, walkIn + 11000 + 4000 + (W() + 90 - stopX) * 40 + 200);
     }
