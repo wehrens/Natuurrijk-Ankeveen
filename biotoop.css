@@ -68,3 +68,13 @@ body.scene-oevers .bio-pond::before {
     background: linear-gradient(180deg, rgba(200, 226, 240, .95) 0%, rgba(212, 232, 242, .8) 60%, rgba(232, 244, 248, 0) 100%);
 }
 body.scene-oevers .page-header { background: linear-gradient(180deg, #e0eef6 0%, var(--cream) 120px); }
+
+/* Lang gras dat opgroeit en gemaaid wordt (zeisbrigade) */
+.bio-tallgrass {
+    position: absolute; top: calc(var(--header-total) - var(--grass-height)); height: var(--grass-height);
+    background: url('images/Gras-cropped.webp') repeat-x left bottom / auto var(--grass-height),
+                url('images/Gras-cropped.webp') repeat-x 37px bottom / auto var(--grass-height);
+    transform-origin: bottom center; will-change: transform;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}

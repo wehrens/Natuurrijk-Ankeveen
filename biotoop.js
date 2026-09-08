@@ -451,22 +451,42 @@
         later(() => { remove(w); done(); }, dur + 50);
     }
 
-    // Zeis en maaisel (zeisbrigade): zeis verschijnt, vers maaisel, gedroogd maaisel, alles wordt afgevoerd
-    let zeisIndex = 0;
-    function zeisCycle() {
-        const spots = [18, 34, 50, 66, 82];
-        const pct = spots[zeisIndex++ % spots.length];
-        const zeis = prop(L.bioGround, zeisIndex % 2 ? 'Zeis.webp' : 'Zeis2.webp', 66, pct - 5, { flip: zeisIndex % 2 ? 1 : -1 });
-        const steps = [
-            [3000, () => { const m = prop(L.bioGround, 'Maaisel2.webp', 30, pct + 3); zeis._m2 = m; }],
-            [11000, () => { const m = prop(L.bioGround, 'Maaisel.webp', 28, pct + 3); zeis._m1 = m; }],
-            [16000, () => { if (zeis._m2) animate(zeis._m2, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }).finished.then(() => remove(zeis._m2)).catch(() => {}); }],
-            [22000, () => { if (zeis._m1) animate(zeis._m1, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }).finished.then(() => remove(zeis._m1)).catch(() => {}); }],
-            [25000, () => animate(zeis, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }).finished.then(() => remove(zeis)).catch(() => {})],
-            [29000, zeisCycle]
-        ];
-        steps.forEach(([t, fn]) => later(fn, t));
+    // Sinusmaaien (zeisbrigade): een stuk gras groeit hoog op, de zeis komt en maait het kort.
+    // Steeds een ander stuk, nooit de hele breedte tegelijk. De bloemen blijven staan.
+    const MOW_SPOTS = [4, 18, 31, 44, 57, 70, 83];
+    let mowIndex = 0;
+    function mowCycle() {
+        const pct = MOW_SPOTS[mowIndex % MOW_SPOTS.length];
+        mowIndex += 3;                                 // springt heen en weer over het veld
+        const w = px(NARROW() ? 22 : 12);
+        const tall = document.createElement('div');
+        tall.className = 'bio-tallgrass';
+        tall.style.cssText = `left:${px(pct)}px;width:${w}px;`;
+        L.bioGround.insertBefore(tall, L.bioGround.firstChild);   // achter zeis en maaisel, vóór de navigatiebalk
+        const growFor = rand(18000, 26000);
+        const grow = animate(tall, [{ transform: 'scaleY(1)' }, { transform: `scaleY(${rand(3.4, 4.4).toFixed(2)})` }],
+            { duration: growFor, easing: 'cubic-bezier(.3,.6,.4,1)' });
+        later(() => {
+            // De zeis komt erbij
+            const right = chance(.5);
+            const zeis = prop(L.bioGround, right ? 'Zeis.webp' : 'Zeis2.webp', 66, pct + (right ? -3 : 9), { flip: right ? 1 : -1 });
+            later(() => {
+                // Maaien: het lange gras zakt in
+                const cur = getComputedStyle(tall).transform;
+                grow.cancel(); tall.style.transform = cur;
+                animate(tall, [{ transform: cur }, { transform: 'scaleY(1)' }], { duration: 2600, easing: 'ease-in-out' })
+                    .finished.then(() => remove(tall)).catch(() => {});
+                const m2 = prop(L.bioGround, 'Maaisel2.webp', 30, pct + 3);
+                later(() => animate(zeis, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }).finished.then(() => remove(zeis)).catch(() => {}), 4000);
+                later(() => { const m1 = prop(L.bioGround, 'Maaisel.webp', 28, pct + 3);
+                    animate(m2, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }).finished.then(() => remove(m2)).catch(() => {});
+                    later(() => animate(m1, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }).finished.then(() => remove(m1)).catch(() => {}), 9000);
+                }, 9000);
+            }, 2000);
+        }, growFor);
+        later(mowCycle, growFor + 14000 + rand(0, 6000));
     }
+    function startMowing() { mowCycle(); later(mowCycle, 12000); }
 
     // Zwaluwtil en nestjes (zwaluwen)
     let til = null;
@@ -582,7 +602,7 @@
             flowersMax: 14, flowerEvery: 3000, eventEvery: 8000,
             slots: [3, 8, 14, 20, 27, 34, 42, 50, 58, 66, 74, 82, 89, 95],
             animals: [[butterfly, 4], [ladybug, 3], [caterpillar, 1], [swallow, 2]],
-            setup: () => later(zeisCycle, 4000)
+            setup: () => later(startMowing, 2000)
         }),
         oevers: Object.assign({}, BASE, {               // waterkant: poel meteen, ijsvogel, otter, slobeend
             sky: '#dcebf3', water: true,
