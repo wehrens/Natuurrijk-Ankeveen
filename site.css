@@ -130,7 +130,9 @@ nav.site-nav {
 .activity-card:hover .more { text-decoration: underline; }
 .badge-new { display: inline-block; font-size: .78rem; font-weight: 600; color: var(--brown); background: #f3e9cf; padding: .15rem .6rem; border-radius: 999px; margin-left: .4rem; vertical-align: middle; }
 
-/* ===== ZWALUWEN ===== */
+/* ===== UITGELICHT: ZWALUWEN (binnen Wat we doen) ===== */
+.section-header.uitgelicht { margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--cream-dark); max-width: var(--max); }
+.section-header.uitgelicht h2 { font-size: 1.9rem; }
 .zwaluwen-grid { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 1.1fr 1fr; gap: 3rem; align-items: start; }
 .zwaluwen-text p { margin-bottom: 1rem; color: var(--text-medium); font-size: 1.05rem; }
 .zwaluwen-text .highlight { font-family: 'Fraunces', serif; font-size: 1.35rem; color: var(--green-dark); }
@@ -308,3 +310,6 @@ footer { background: var(--green-dark); color: rgba(255, 255, 255, .85); padding
     *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
     .hero-slides img { transition: none; }
 }
+
+.section.alt .note-box { background: var(--cream); }
+.section.alt .news-item { background: var(--cream); }
