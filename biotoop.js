@@ -475,11 +475,51 @@
     let til = null;
     function placeTil() {
         til = prop(L.bioGarden, 'Zwaluwtil.webp', 82, NARROW() ? 72 : 40);
+        nests.length = 0;
         [10, 19, 28].forEach((pct, i) => later(() => {
             const n = sprite(L.bioGarden, 'HouseMartinnest.webp', 26);
             n.style.transform = `translate(${px(pct)}px, 0px)`;
             animate(n, [{ opacity: 0 }, { opacity: 1 }], { duration: 1200 });
+            nests.push({ x: px(pct) + 13, y: 23 });      // de opening onderin het nestje
         }, 600 + i * 500));
+    }
+    const nests = [];
+
+    // Zwaluw vliegt een nestje in, blijft even en vliegt weer uit
+    function nestVisit(done, delay, nestIndex) {
+        later(() => {
+            if (!nests.length) return done();
+            const nest = nests[nestIndex % nests.length];
+            const s = pick(SPRITES.swallows), width = W();
+            const fromRight = chance(.5);
+            const x0 = fromRight ? width + 60 : -60;
+            const flipIn = s.faces === (fromRight ? -1 : 1) ? 1 : -1;
+            const inPts = sampleCurve({ x: x0, y: 40 }, { x: x0 + (nest.x - x0) * .35, y: GROUND + 5 }, { x: nest.x + (fromRight ? 90 : -90), y: 60 }, { x: nest.x, y: nest.y + 8 }, 34);
+            const img = sprite(L.bioSky, s.src, 26, 'center');
+            // aanvliegen (0–94%), dan kleiner worden en in het nest verdwijnen
+            const inFrames = pathFrames(inPts, { flip: flipIn, tilt: 25 }).map(f => ({ ...f, offset: f.offset * .94 }));
+            inFrames.push({ transform: `translate(${nest.x}px, ${nest.y}px) scale(.35) scaleX(${flipIn})`, opacity: 0, offset: 1 });
+            animate(img, inFrames, { duration: 4200, easing: 'cubic-bezier(.35,0,.6,1)' });
+            const stay = rand(5000, 9000);
+            later(() => {
+                remove(img);
+                const toRight = chance(.5);
+                const x1 = toRight ? width + 60 : -60;
+                const flipOut = s.faces === (toRight ? 1 : -1) ? 1 : -1;
+                const out = sprite(L.bioSky, s.src, 26, 'center');
+                const outPts = sampleCurve({ x: nest.x, y: nest.y + 6 }, { x: nest.x + (toRight ? 40 : -40), y: 70 }, { x: nest.x + (x1 - nest.x) * .5, y: GROUND }, { x: x1, y: 20 }, 34);
+                const outFrames = [{ transform: `translate(${nest.x}px, ${nest.y}px) scale(.35) scaleX(${flipOut})`, opacity: 0, offset: 0 }]
+                    .concat(pathFrames(outPts, { flip: flipOut, tilt: 25 }).map(f => ({ ...f, offset: .06 + f.offset * .94 })));
+                animate(out, outFrames, { duration: 4000, easing: 'cubic-bezier(.4,0,.65,1)' });
+                later(() => { remove(out); done(); }, 4100);
+            }, 4200 + stay);
+        }, delay || 0);
+    }
+    function nestPair(done) {
+        const first = Math.floor(Math.random() * 3);
+        let left = 2;
+        nestVisit(() => { if (--left === 0) done(); }, 0, first);
+        nestVisit(() => { if (--left === 0) done(); }, 1800, first + 1 + Math.floor(Math.random() * 2));
     }
     function tilCircle(done) {
         if (!til) return done();
@@ -567,7 +607,7 @@
         }),
         zwaluwen: Object.assign({}, BASE, {             // lucht: zwaluwtil, nestjes, veel zwaluwen
             flowersMax: 6, flowerEvery: 8000, slots: [3, 10, 40, 50, 60, 92],
-            animals: [[swallow, 5], [swallowGroup, 3], [tilCircle, 4], [butterfly, 1]],
+            animals: [[swallow, 4], [swallowGroup, 2], [tilCircle, 4], [nestPair, 4], [butterfly, 1]],
             eventEvery: 6000, geeseAt: 120000,
             setup: () => later(placeTil, 1500)
         }),
@@ -623,7 +663,7 @@
         timers.forEach(t => { clearTimeout(t); clearInterval(t); }); timers = [];
         running.forEach(a => { try { a.cancel(); } catch (e) {} }); running.clear();
         ['bioPond', 'bioGround', 'bioGarden', 'bioSky', 'bioFront'].forEach(k => { if (L[k]) L[k].innerHTML = ''; });
-        flowers.length = 0; pond.el = null; pond.roerdomp = null; pond.reeds = []; active = 0; til = null;
+        flowers.length = 0; pond.el = null; pond.roerdomp = null; pond.reeds = []; active = 0; til = null; nests.length = 0;
     }
 
     // Pauzeren als het tabblad niet zichtbaar is
