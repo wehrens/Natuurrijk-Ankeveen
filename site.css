@@ -142,7 +142,7 @@ nav.site-nav {
 .note-box .btn { margin-top: .9rem; }
 .zwaluwen-images { display: grid; gap: 1rem; }
 .zwaluwen-images img { width: 100%; border-radius: 14px; box-shadow: var(--shadow); }
-.zwaluwen-images .chart { background: var(--white); padding: .6rem; cursor: zoom-in; }
+.zwaluwen-images .chart { background: var(--white); padding: .6rem; }
 .figcap { font-size: .9rem; color: var(--text-soft); margin-top: .4rem; }
 
 /* ===== NATUURWEETJE ===== */
