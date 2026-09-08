@@ -500,6 +500,7 @@
             setup: () => later(zeisCycle, 4000)
         }),
         oevers: Object.assign({}, BASE, {               // waterkant: poel meteen, ijsvogel, otter, slobeend
+            sky: '#e4eff5',
             flowersMax: 7, flowers: byName('Gelelis', 'Lisdodde2', 'Veldoeket', 'Klaproos.'),
             pondAt: 1500, roerdompAt: 40000, kingfisherAt: 20000, otterAt: 60000, duckAt: 12000, geeseAt: 90000,
             animals: [[butterfly, 3], [swallow, 3], [ladybug, 1]]
@@ -542,6 +543,9 @@
 
     function start() {
         const scene = currentScene = SCENES[SCENE] || SCENES.home;
+        if (scene.sky) {   // andere lucht: ook de navigatiebalk kleurt mee
+            document.querySelectorAll('.bio-background, nav.site-nav').forEach(el => { el.style.background = scene.sky; });
+        }
         if (REDUCE) {          // stilstaand tafereel
             for (let i = 0; i < Math.min(7, scene.flowersMax); i++) addFlower();
             if (scene.pondAt !== null) { showPond(); later(showRoerdomp, 50); }
