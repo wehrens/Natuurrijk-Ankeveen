@@ -633,6 +633,10 @@
             slots: [3, 10, 18, 26, 34, 42, 52, 62, 72, 82, 90, 96],
             animals: [[butterfly, 3], [ladybug, 2]]
         }),
+        egels: Object.assign({}, BASE, {                // egels, egels, egels
+            flowersMax: 8, flowerEvery: 6000, eventEvery: 7000,
+            animals: [[hedgehog, 6], [caterpillar, 1], [butterfly, 2], [ladybug, 1]]
+        }),
         educatie: Object.assign({}, BASE, {             // speels: eerst opruimen, dan egel, rups, vlinders
             flowersMax: 8, flowerEvery: 5000, eventEvery: 8000,
             animals: [[hedgehog, 3], [caterpillar, 2], [butterfly, 3], [ladybug, 2]],

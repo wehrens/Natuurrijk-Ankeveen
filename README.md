@@ -23,7 +23,7 @@ Geen cookies, geen externe scripts behalve GoatCounter (cookieloze bezoekerstell
 | Bestand | Doel |
 |---|---|
 | `index.html` | Homepage |
-| `zeisbrigade.html`, `oevers.html`, `bergsepad.html`, `zwaluwen.html`, `aanplanten.html`, `educatie.html`, `ruige-hoek.html` | Projectpagina's |
+| `zeisbrigade.html`, `oevers.html`, `bergsepad.html`, `zwaluwen.html`, `aanplanten.html`, `educatie.html`, `egels.html`, `ruige-hoek.html` | Projectpagina's |
 | `site.css` | Gedeelde opmaak voor alle pagina's |
 | `site.js` | Gedeeld: mobiel menu, contactvenster, lightbox |
 | `biotoop.css`, `biotoop.js` | De levende header. Scène per pagina via `<script src="biotoop.js" data-scene="...">` |
