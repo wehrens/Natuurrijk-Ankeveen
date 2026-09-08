@@ -459,10 +459,10 @@
     function zeisCycle() {
         const spots = [18, 34, 50, 66, 82];
         const pct = spots[zeisIndex++ % spots.length];
-        const zeis = prop(L.bioGround, zeisIndex % 2 ? 'Zeis.webp' : 'Zeis2.webp', 44, pct - 4, { flip: zeisIndex % 2 ? 1 : -1 });
+        const zeis = prop(L.bioGround, zeisIndex % 2 ? 'Zeis.webp' : 'Zeis2.webp', 66, pct - 5, { flip: zeisIndex % 2 ? 1 : -1 });
         const steps = [
-            [3000, () => { const m = prop(L.bioGround, 'Maaisel2.webp', 16, pct + 2); zeis._m2 = m; }],
-            [11000, () => { const m = prop(L.bioGround, 'Maaisel.webp', 15, pct + 2); zeis._m1 = m; }],
+            [3000, () => { const m = prop(L.bioGround, 'Maaisel2.webp', 30, pct + 3); zeis._m2 = m; }],
+            [11000, () => { const m = prop(L.bioGround, 'Maaisel.webp', 28, pct + 3); zeis._m1 = m; }],
             [16000, () => { if (zeis._m2) animate(zeis._m2, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }).finished.then(() => remove(zeis._m2)).catch(() => {}); }],
             [22000, () => { if (zeis._m1) animate(zeis._m1, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }).finished.then(() => remove(zeis._m1)).catch(() => {}); }],
             [25000, () => animate(zeis, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }).finished.then(() => remove(zeis)).catch(() => {})],
@@ -502,13 +502,13 @@
 
     // Opruim-intro (educatie): afval op het gras, vuilniszak, alles opgeruimd
     function cleanupIntro(cb) {
-        const items = [['Redbull.webp', 22, 25, 0], ['Redbull.webp', 22, 45, 90], ['Pringles.webp', 20, 65, -90]]
+        const items = [['Redbull.webp', 44, 25, 0], ['Redbull.webp', 44, 45, 90], ['Pringles.webp', 40, 65, -90]]
             .map(([src, h, pct, rot]) => { const p = prop(L.bioGround, src, h, pct); p.style.transform += ` rotate(${rot}deg)`; return p; });
         later(() => {
-            const bag = prop(L.bioGround, 'Garbage.webp', 30, 50);
+            const bag = prop(L.bioGround, 'Garbage.webp', 48, 50);
             items.forEach((it, i) => later(() => {
                 const pos = it.style.transform;
-                animate(it, [{ transform: pos, opacity: 1 }, { transform: `translate(${px(50) + 8}px, ${GROUND - 20}px) scale(.3)`, opacity: 0 }],
+                animate(it, [{ transform: pos, opacity: 1 }, { transform: `translate(${px(50) + 14}px, ${GROUND - 30}px) scale(.3)`, opacity: 0 }],
                     { duration: 900, easing: 'ease-in' }).finished.then(() => remove(it)).catch(() => {});
             }, 1500 + i * 1800));
             later(() => {
