@@ -608,7 +608,7 @@
         // Twee helften: de egel loopt vóór de linkerhelft en, na het poortje, achter de rechterhelft
         const left = mk('links', px(pct), wl), right = mk('rechts', px(pct) + wl, wr);
         right.insertAdjacentHTML('beforeend', `<svg class="arch" width="${fence.w}" height="${h}" viewBox="0 0 680 585" style="position:absolute;top:0;left:-${wl}px;opacity:0">
-            <path d="M382 585 V520 a73 73 0 0 1 146 0 V585 h-22 V520 a51 51 0 0 0 -102 0 V585 z" fill="#2f7d4f"/></svg>`);
+            <path d="M317 585 V527 a58 58 0 0 1 116 0 V585 h-18 V527 a40 40 0 0 0 -80 0 V585 z" fill="#2f7d4f"/></svg>`);
         L.bioGround.appendChild(left); L.bioGround.appendChild(right);
         fence.el = left; fence.right = right; fence.x = px(pct); fence.gap = false;
         [left, right].forEach(b => animate(b, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1200 }));
