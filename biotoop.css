@@ -5,7 +5,7 @@
    =========================================== */
 
 :root {
-    --bio-height: calc(var(--header-total) + 45px); /* ruimte onder het gras voor dieren */
+    --bio-height: calc(var(--header-total) + 60px); /* ruimte onder het gras voor dieren */
 }
 
 /* Alle lagen delen één coördinatenstelsel: y = 0 is de bovenkant van de pagina,
