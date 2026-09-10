@@ -321,3 +321,4 @@ footer { background: var(--green-dark); color: rgba(255, 255, 255, .85); padding
 .content figure img[data-lightbox], .photo-row img[data-lightbox] { cursor: zoom-in; }
 .activities-grid > .activity-card:last-child:nth-child(3n+1) { grid-column: 2; }
 @media (max-width: 960px) { .activities-grid > .activity-card:last-child:nth-child(3n+1) { grid-column: auto; } }
+.weetje-body img.illustratie { object-fit: contain; padding: 1.6rem; background: var(--green-pale); }
