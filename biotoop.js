@@ -675,21 +675,25 @@
     const moon = { x: 0, y: 0, r: 0 };
     function bat(done) {
         const w = document.createElement('div'); w.className = 'bio-wrap';
-        const img = document.createElement('img'); img.src = BAT_SVG; img.alt = ''; img.style.height = rand(11, 15) + 'px'; img.style.width = 'auto';
+        const img = document.createElement('img'); img.src = IMG + 'vleermuis-sprite.webp'; img.alt = '';
+        img.style.height = rand(20, 28) + 'px'; img.style.width = 'auto';
         w.appendChild(img); L.bioSky.appendChild(w);
         const right = chance(.5), width = W();
-        const x0 = right ? -40 : width + 40, x1 = right ? width + 40 : -40;
-        // Grillig pad: veel korte, willekeurige uitwijkingen
-        const n = 26, pts = [];
+        const x0 = right ? -60 : width + 60, x1 = right ? width + 60 : -60;
+        // Grillig pad: veel korte, willekeurige uitwijkingen; het beest kijkt in zijn vliegrichting
+        const n = 22, pts = [];
         for (let i = 0; i <= n; i++) {
             const t = i / n;
-            pts.push({ x: x0 + (x1 - x0) * t + rand(-25, 25), y: rand(6, NAV - 8) });
+            pts.push({ x: x0 + (x1 - x0) * t + rand(-30, 30), y: rand(4, NAV - 6) });
         }
         pts[0] = { x: x0, y: rand(10, 40) }; pts[n] = { x: x1, y: rand(10, 40) };
-        if (moon.r && chance(.4)) { const k = Math.round(n / 2); pts[k] = { x: moon.x, y: moon.y }; pts[k + 1] = { x: moon.x + (right ? 30 : -30), y: moon.y + 6 }; }   // even voor de maan langs
-        const dur = rand(5500, 8000);
-        animate(w, pts.map((p, i) => ({ transform: `translate(${p.x.toFixed(0)}px, ${p.y.toFixed(0)}px)`, offset: i / n, easing: 'ease-in-out' })), { duration: dur });
-        animate(img, [{ transform: 'scaleY(1)' }, { transform: 'scaleY(.35)' }], { duration: 110, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        if (moon.r && chance(.45)) { const k = Math.round(n / 2); pts[k] = { x: moon.x - 10, y: moon.y - 4 }; pts[k + 1] = { x: moon.x + (right ? 40 : -40), y: moon.y + 8 }; }
+        const dur = rand(6500, 9500);
+        animate(w, pts.map((p, i) => {
+            const q = pts[Math.max(0, i - 1)], goingRight = i === 0 ? right : p.x >= q.x;
+            const tilt = i === 0 ? 0 : Math.max(-30, Math.min(30, Math.atan2(p.y - q.y, Math.abs(p.x - q.x)) * 57 * .5));
+            return { transform: `translate(${p.x.toFixed(0)}px, ${p.y.toFixed(0)}px) scaleX(${goingRight ? -1 : 1}) rotate(${tilt.toFixed(0)}deg)`, offset: i / n, easing: 'ease-in-out' };
+        }), { duration: dur });
         later(() => { remove(w); done(); }, dur + 50);
     }
     function batPair(done) { let left = 2; bat(() => { if (--left === 0) done(); }); later(() => bat(() => { if (--left === 0) done(); }), 900); }
@@ -782,7 +786,7 @@
         vleermuizen: Object.assign({}, BASE, {          // schemering: vleermuizen fladderen, kast aan de boom
             flowersMax: 5, flowerEvery: 9000, eventEvery: 6000,
             slots: NARROW() ? [6, 30, 50] : [4, 14, 24, 58, 70, 84, 94],
-            animals: [[bat, 5], [batPair, 3], [butterfly, 1]],
+            animals: [[bat, 5], [batPair, 3]],
             setup: placeNight
         }),
         educatie: Object.assign({}, BASE, {             // speels: eerst opruimen, dan egel, rups, vlinders
