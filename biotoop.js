@@ -311,8 +311,10 @@
     }
 
     // IJsvogel: komt aan, bidt boven de poel, duikt, en vertrekt
+    let kingfisherBusy = false, otterBusy = false;
     async function kingfisher(done) {
-        if (!pond.el) return done();
+        if (!pond.el || kingfisherBusy) return done();
+        kingfisherBusy = true;
         const img = sprite(L.bioFront, 'Kingfisher.webp', 34, 'center');
         const width = W(), hx = px(pond.x) - 10, hy = NAV - 40;
         try {
@@ -327,12 +329,13 @@
             await animate(img, pathFrames(sampleCurve({ x: hx + 10, y: hy }, { x: hx + 60, y: hy - 30 }, { x: width - 60, y: 40 }, { x: width + 60, y: 0 }, 30), { flip: -1, tilt: 20, fadeOut: .1 }),
                 { duration: 2400, easing: 'cubic-bezier(.4,0,.7,1)' }).finished;
         } catch (e) { /* geannuleerd bij reset */ }
-        remove(img); done();
+        remove(img); kingfisherBusy = false; done();
     }
 
     // Otter: zwemt naar de poel, kijkt rond, en duikt weg
     function otter(done) {
-        if (!pond.el) return done();
+        if (!pond.el || otterBusy) return done();
+        otterBusy = true;
         const h = 26;
         const { w, img } = wrap(L.bioFront, 'Otter.webp', h);
         const width = W(), y = GROUND - h + 6, tx = px(pond.x) + 20;
@@ -345,7 +348,7 @@
         ], { duration: dur, easing: 'linear' });
         animate(img, [{ transform: 'translateY(0)' }, { transform: 'translateY(-2px)' }],
             { duration: 900, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
-        later(() => { remove(w); done(); }, dur + 50);
+        later(() => { remove(w); otterBusy = false; done(); }, dur + 50);
     }
 
     // Ganzen en zeearend: hoog en ver weg, langzaam
@@ -388,7 +391,8 @@
     // De sloot-scène (oevers): otter komt aan, plonst in de poel, slobeend zwemt boos weg,
     // roerdomp schrikt, ijsvogel komt kijken. Daarna zwemt de eend rustig terug.
     function otterSplash(done) {
-        if (!pond.el) return done();
+        if (!pond.el || otterBusy) return done();
+        otterBusy = true;
         const h = 26, { w, img } = wrap(L.bioFront, 'Otter.webp', h);
         const y = GROUND - h + 6, tx = px(pond.x) - 30;
         const f = x => `translate(${x.toFixed(0)}px, ${y}px) scaleX(-1)`;
@@ -401,7 +405,7 @@
         ], { duration: dur, easing: 'linear' });
         animate(img, [{ transform: 'translateY(0)' }, { transform: 'translateY(-2px)' }],
             { duration: 900, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
-        later(() => remove(w), dur + 50);
+        later(() => { remove(w); otterBusy = false; }, dur + 50);
         later(() => angryDuck(), dur - 1500);              // eend schrikt op
         later(() => { if (pond.roerdomp) pond.roerdomp.dispatchEvent(new Event('flip')); }, dur - 800);
         later(() => withActive(kingfisher), dur + 20000);
@@ -861,7 +865,7 @@
         timers.forEach(t => { clearTimeout(t); clearInterval(t); }); timers = [];
         running.forEach(a => { try { a.cancel(); } catch (e) {} }); running.clear();
         ['bioPond', 'bioGround', 'bioGarden', 'bioSky', 'bioFront'].forEach(k => { if (L[k]) L[k].innerHTML = ''; });
-        flowers.length = 0; pond.el = null; pond.roerdomp = null; pond.reeds = []; active = 0; til = null; nests.length = 0; fence.el = null; fence.right = null; moon.r = 0;
+        kingfisherBusy = false; otterBusy = false; flowers.length = 0; pond.el = null; pond.roerdomp = null; pond.reeds = []; active = 0; til = null; nests.length = 0; fence.el = null; fence.right = null; moon.r = 0;
     }
 
     // Pauzeren als het tabblad niet zichtbaar is
