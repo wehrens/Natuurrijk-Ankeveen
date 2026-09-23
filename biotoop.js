@@ -721,14 +721,21 @@
             animate(s, [{ opacity: 0 }, { opacity: rand(.5, 1), offset: .5 }, { opacity: .15 }],
                 { duration: rand(1800, 4200), delay: rand(0, 3000), iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' });
         }
-        // Boom met vleermuiskast
-        const pct = NARROW() ? 62 : 44, h = NARROW() ? 60 : 84;
-        const tree = sprite(L.bioGround, 'Tree.webp', h);
-        tree.style.transform = `translate(${px(pct)}px, ${GROUND - 2 - h}px)`; tree.style.filter = 'brightness(.55) saturate(.7)';
+        // Grote boom: alleen stam en onderkant van de kruin in beeld, met de kast aan de stam
+        const pct = NARROW() ? 58 : 37, h = NARROW() ? 140 : 240, tw = h * 228 / 292;
+        const tree = sprite(L.bioGround, 'Boom.webp', h);
+        tree.style.transform = `translate(${px(pct)}px, ${GROUND - 2 - h}px)`; tree.style.filter = 'brightness(.5) saturate(.6)';
         animate(tree, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1200 });
+        const bw = 22, bh = 32;
         const box = document.createElement('div'); box.className = 'bio-wrap';
-        box.style.transform = `translate(${px(pct) + h * 600 / 398 * .47}px, ${GROUND - 2 - h * .62}px)`;
-        box.innerHTML = '<svg width="14" height="20" viewBox="0 0 14 20"><rect x="1" y="0" width="12" height="15" rx="1.5" fill="#1a1816"/><rect x="0" y="1" width="14" height="2" fill="#2a2725"/><rect x="2" y="15" width="10" height="4" fill="#b9ab8c"/></svg>';
+        box.style.transform = `translate(${px(pct) + tw * .5 - bw / 2}px, ${GROUND - 2 - 62}px)`;
+        box.innerHTML = `<svg width="${bw}" height="${bh}" viewBox="0 0 22 32">
+            <path d="M11 0 L11 6" stroke="#9a9a9a" stroke-width="1"/>
+            <rect x="1" y="6" width="20" height="21" rx="2" fill="#2a2725"/>
+            <rect x="0" y="7" width="22" height="3" rx="1" fill="#3a3633"/>
+            <path d="M6 16 q5-5 10 0 q-2 2-5 1 q-3 1-5-1z" fill="#3f3b37"/>
+            <rect x="3" y="27" width="16" height="4" fill="#cdbf9e"/>
+            <path d="M5 27v4M8 27v4M11 27v4M14 27v4M17 27v4" stroke="#b5a785" stroke-width=".8"/></svg>`;
         L.bioGround.appendChild(box);
         animate(box, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1200 });
     }
