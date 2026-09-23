@@ -697,12 +697,17 @@
         const right = chance(.5), width = W();
         const x0 = right ? -60 : width + 60, x1 = right ? width + 60 : -60;
         // Grillig maar vloeiend: een handvol steunpunten, daar een kromme doorheen
-        const n = 7, ctrl = [];
-        for (let i = 0; i <= n; i++) ctrl.push({ x: x0 + (x1 - x0) * i / n + rand(-40, 40), y: rand(6, NAV - 8) });
+        // Vloeiend getekend, maar met echt onverwachte zwenkingen: veel steunpunten, grote uitwijkingen,
+        // en af en toe een schijnbeweging terug (de vleermuis hapt naar een insect)
+        const n = 12, ctrl = [];
+        for (let i = 0; i <= n; i++) {
+            const back = i > 1 && i < n - 1 && chance(.25) ? (right ? -1 : 1) * rand(40, 90) : 0;
+            ctrl.push({ x: x0 + (x1 - x0) * i / n + rand(-45, 45) + back, y: rand(4, NAV - 6) });
+        }
         ctrl[0] = { x: x0, y: rand(10, 40) }; ctrl[n] = { x: x1, y: rand(10, 40) };
         if (moon.r && chance(.45)) { const k = Math.round(n / 2); ctrl[k] = { x: moon.x - 6, y: moon.y - 2 }; }
-        const pts = spline(ctrl, 10);
-        const dur = rand(7000, 10000);
+        const pts = spline(ctrl, 8);
+        const dur = rand(7500, 10500);
         let dir = right;
         animate(w, pts.map((p, i) => {
             const q = pts[Math.max(0, i - 1)], dx = p.x - q.x;
