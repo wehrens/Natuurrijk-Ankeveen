@@ -18,7 +18,14 @@
 .bio-background { height: var(--header-total); background: var(--bio-sky, #e8f1f6); z-index: 1000; }
 nav.site-nav { background: var(--bio-sky, #e8f1f6); }
 body.scene-oevers { --bio-sky: #dcebf3; }
-body.scene-vleermuizen { --bio-sky: #d7dde8; }
+/* Nacht (vleermuizen): donkerblauwe lucht, lichte menuteksten, gedimd gras */
+body.scene-vleermuizen { --bio-sky: linear-gradient(180deg, #0f1a33 0%, #1d2d52 70%, #2b3d63 100%); }
+body.scene-vleermuizen nav.site-nav .logo, body.scene-vleermuizen .nav-links a, body.scene-vleermuizen .nav-links button { color: #e6ecf7; }
+body.scene-vleermuizen .nav-links a::after, body.scene-vleermuizen .nav-links button::after { background: #9db0cc; }
+body.scene-vleermuizen .menu-btn { color: #e6ecf7; }
+body.scene-vleermuizen .nav-links.open { background: #1d2d52; border-color: #2b3d63; }
+body.scene-vleermuizen .bio-grass::after { filter: brightness(.6) saturate(.7); }
+body.scene-vleermuizen .bio-flower { filter: brightness(.6) saturate(.7); }
 .bio-pond       { height: var(--bio-height); z-index: 1005; overflow: hidden; }
 .bio-grass      { height: var(--header-total); z-index: 1010; }
 .bio-sky        { height: var(--bio-height); z-index: 1022; overflow: hidden; }

@@ -670,7 +670,9 @@
 
 
     // ---------- VLEERMUIZEN: grillige vlucht in de schemering, en een vleermuiskast aan een boom ----------
-    const BAT_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 28"><path fill="#3b3430" d="M32 8c-2 0-3 2-4 3-3-3-7-5-12-5-6 0-11 3-16 8 4-1 7 0 9 3 2-2 5-2 7 0 1-2 4-2 6 0 1-1 2-3 3-6 1 3 2 5 3 6 2-2 5-2 6 0 2-2 5-2 7 0 2-3 5-4 9-3-5-5-10-8-16-8-5 0-9 2-12 5-1-1-2-3-4-3z"/></svg>');
+    const batSvg = color => 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 28"><path fill="' + color + '" d="M32 8c-2 0-3 2-4 3-3-3-7-5-12-5-6 0-11 3-16 8 4-1 7 0 9 3 2-2 5-2 7 0 1-2 4-2 6 0 1-1 2-3 3-6 1 3 2 5 3 6 2-2 5-2 6 0 2-2 5-2 7 0 2-3 5-4 9-3-5-5-10-8-16-8-5 0-9 2-12 5-1-1-2-3-4-3z"/></svg>');
+    const BAT_SVG = batSvg('#9db0cc');
+    const moon = { x: 0, y: 0, r: 0 };
     function bat(done) {
         const w = document.createElement('div'); w.className = 'bio-wrap';
         const img = document.createElement('img'); img.src = BAT_SVG; img.alt = ''; img.style.height = rand(11, 15) + 'px'; img.style.width = 'auto';
@@ -684,21 +686,45 @@
             pts.push({ x: x0 + (x1 - x0) * t + rand(-25, 25), y: rand(6, NAV - 8) });
         }
         pts[0] = { x: x0, y: rand(10, 40) }; pts[n] = { x: x1, y: rand(10, 40) };
+        if (moon.r && chance(.4)) { const k = Math.round(n / 2); pts[k] = { x: moon.x, y: moon.y }; pts[k + 1] = { x: moon.x + (right ? 30 : -30), y: moon.y + 6 }; }   // even voor de maan langs
         const dur = rand(5500, 8000);
         animate(w, pts.map((p, i) => ({ transform: `translate(${p.x.toFixed(0)}px, ${p.y.toFixed(0)}px)`, offset: i / n, easing: 'ease-in-out' })), { duration: dur });
         animate(img, [{ transform: 'scaleY(1)' }, { transform: 'scaleY(.35)' }], { duration: 110, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         later(() => { remove(w); done(); }, dur + 50);
     }
     function batPair(done) { let left = 2; bat(() => { if (--left === 0) done(); }); later(() => bat(() => { if (--left === 0) done(); }), 900); }
-    function placeBatBox() {
-        const pct = NARROW() ? 74 : 40, h = 84;
+    function placeNight() {
+        // Maan (in de lucht-laag, dus ook over de navigatiebalk heen), tussen logo en menu
+        moon.x = px(NARROW() ? 50 : 31); moon.y = NARROW() ? 12 : 30; moon.r = NARROW() ? 8 : 15;
+        const m = document.createElement('div'); m.className = 'bio-wrap';
+        m.style.transform = `translate(${moon.x - moon.r * 3}px, ${moon.y - moon.r * 3}px)`;
+        const R = moon.r, S = R * 6;
+        m.innerHTML = `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">
+            <defs><radialGradient id="mglow"><stop offset="35%" stop-color="#fff5cc" stop-opacity=".55"/><stop offset="100%" stop-color="#fff5cc" stop-opacity="0"/></radialGradient></defs>
+            <circle cx="${S / 2}" cy="${S / 2}" r="${R * 2.6}" fill="url(#mglow)"/>
+            <circle cx="${S / 2}" cy="${S / 2}" r="${R}" fill="#fbf4d8"/>
+            <circle cx="${S / 2 - R * .3}" cy="${S / 2 - R * .2}" r="${R * .22}" fill="#e3dab8"/>
+            <circle cx="${S / 2 + R * .35}" cy="${S / 2 + R * .3}" r="${R * .16}" fill="#e3dab8"/>
+            <circle cx="${S / 2 + R * .1}" cy="${S / 2 - R * .5}" r="${R * .1}" fill="#e3dab8"/></svg>`;
+        L.bioSky.appendChild(m);
+        animate(m, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 2500 });
+        // Sterren die zachtjes fonkelen
+        const n = NARROW() ? 14 : 30;
+        for (let i = 0; i < n; i++) {
+            const s = document.createElement('div');
+            s.style.cssText = `position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;left:${rand(0, 100)}%;top:${rand(3, 60)}px;opacity:0`;
+            L.bioSky.appendChild(s);
+            animate(s, [{ opacity: 0 }, { opacity: rand(.5, 1), offset: .5 }, { opacity: .15 }],
+                { duration: rand(1800, 4200), delay: rand(0, 3000), iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' });
+        }
+        // Boom met vleermuiskast
+        const pct = NARROW() ? 62 : 44, h = NARROW() ? 60 : 84;
         const tree = sprite(L.bioGround, 'Tree.webp', h);
-        tree.style.transform = `translate(${px(pct)}px, ${GROUND - 2 - h}px)`;
+        tree.style.transform = `translate(${px(pct)}px, ${GROUND - 2 - h}px)`; tree.style.filter = 'brightness(.55) saturate(.7)';
         animate(tree, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1200 });
-        // De kast: klein donker kastje hoog aan de stam, met landingsplaat
         const box = document.createElement('div'); box.className = 'bio-wrap';
         box.style.transform = `translate(${px(pct) + h * 600 / 398 * .47}px, ${GROUND - 2 - h * .62}px)`;
-        box.innerHTML = '<svg width="14" height="20" viewBox="0 0 14 20"><rect x="1" y="0" width="12" height="15" rx="1.5" fill="#2e2b28"/><rect x="0" y="1" width="14" height="2" fill="#3b3734"/><rect x="2" y="15" width="10" height="4" fill="#d9c9a5"/></svg>';
+        box.innerHTML = '<svg width="14" height="20" viewBox="0 0 14 20"><rect x="1" y="0" width="12" height="15" rx="1.5" fill="#1a1816"/><rect x="0" y="1" width="14" height="2" fill="#2a2725"/><rect x="2" y="15" width="10" height="4" fill="#b9ab8c"/></svg>';
         L.bioGround.appendChild(box);
         animate(box, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1200 });
     }
@@ -757,7 +783,7 @@
             flowersMax: 5, flowerEvery: 9000, eventEvery: 6000,
             slots: NARROW() ? [6, 30, 50] : [4, 14, 24, 58, 70, 84, 94],
             animals: [[bat, 5], [batPair, 3], [butterfly, 1]],
-            setup: placeBatBox
+            setup: placeNight
         }),
         educatie: Object.assign({}, BASE, {             // speels: eerst opruimen, dan egel, rups, vlinders
             flowersMax: 8, flowerEvery: 5000, eventEvery: 8000,
@@ -775,6 +801,7 @@
 
     function start() {
         const scene = currentScene = SCENES[SCENE] || SCENES.home;
+        document.body.classList.add('scene-' + SCENE);   // vangnet: de klasse hoort al in de HTML te staan
         if (REDUCE) {          // stilstaand tafereel
             for (let i = 0; i < Math.min(7, scene.flowersMax); i++) addFlower();
             if (scene.pondAt !== null) { showPond(); later(showRoerdomp, 50); }
@@ -802,7 +829,7 @@
         timers.forEach(t => { clearTimeout(t); clearInterval(t); }); timers = [];
         running.forEach(a => { try { a.cancel(); } catch (e) {} }); running.clear();
         ['bioPond', 'bioGround', 'bioGarden', 'bioSky', 'bioFront'].forEach(k => { if (L[k]) L[k].innerHTML = ''; });
-        flowers.length = 0; pond.el = null; pond.roerdomp = null; pond.reeds = []; active = 0; til = null; nests.length = 0; fence.el = null; fence.right = null;
+        flowers.length = 0; pond.el = null; pond.roerdomp = null; pond.reeds = []; active = 0; til = null; nests.length = 0; fence.el = null; fence.right = null; moon.r = 0;
     }
 
     // Pauzeren als het tabblad niet zichtbaar is
