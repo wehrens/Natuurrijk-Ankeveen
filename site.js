@@ -5,6 +5,14 @@
 (function () {
     'use strict';
 
+    // Tellers (Natuurwerkdag, egelhuizen): alleen data-filled aanpassen in de HTML
+    document.querySelectorAll('.agenda-progress').forEach(p => {
+        const filled = +p.dataset.filled, total = +p.dataset.total, left = Math.max(0, total - filled);
+        const fill = s => s.replace('{filled}', filled).replace('{total}', total).replace('{left}', left);
+        p.querySelector('.agenda-bar span').style.width = Math.min(100, filled / total * 100) + '%';
+        p.querySelector('.agenda-count').textContent = fill(left > 0 ? p.dataset.text : p.dataset.textFull);
+    });
+
     // Mobiel menu
     const menuBtn = document.getElementById('menuBtn');
     const navLinks = document.getElementById('navLinks');

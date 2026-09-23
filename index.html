@@ -6,9 +6,9 @@
     <title>Natuurrijk Ankeveen – Samen bouwen aan biodiversiteit</title>
     <meta name="description" content="Werkgroep Natuurrijk Ankeveen zet zich met ruim veertig vrijwilligers in voor meer natuur in en om Ankeveen. Van zeismaaien tot zwaluwbescherming. Doe mee!">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="stylesheet" href="fonts/fonts.css?v=20260923n">
-    <link rel="stylesheet" href="site.css?v=20260923n">
-    <link rel="stylesheet" href="biotoop.css?v=20260923n">
+    <link rel="stylesheet" href="fonts/fonts.css?v=20260924a">
+    <link rel="stylesheet" href="site.css?v=20260924a">
+    <link rel="stylesheet" href="biotoop.css?v=20260924a">
 </head>
 <body class="scene-home">
 
@@ -71,7 +71,7 @@
                     <h2>Natuurwerkdag Ankeveen 2026</h2>
                     <p>Op zaterdag 7 november doen we weer mee aan de landelijke Natuurwerkdag. We maken Ankeveen met elkaar een stukje mooier, en er is voor iedereen wat te doen. We hebben zo’n 25 mensen nodig, dus alle handen zijn welkom.</p>
                     <!-- AANMELDINGEN: pas alleen data-filled aan -->
-                    <div class="agenda-progress" data-filled="11" data-total="25">
+                    <div class="agenda-progress" data-filled="11" data-total="25" data-text="{filled} van de {total} plekken gevuld, nog {left} te gaan" data-text-full="Alle {total} plekken zijn gevuld. Aanmelden kan nog steeds: extra handen zijn welkom.">
                         <div class="agenda-bar"><span></span></div>
                         <div class="agenda-count"></div>
                     </div>
@@ -466,15 +466,6 @@
             vToggle.setAttribute('aria-expanded', open);
         });
 
-        // ---------- Natuurwerkdag: aanmeldteller ----------
-        document.querySelectorAll('.agenda-progress').forEach(p => {
-            const filled = +p.dataset.filled, total = +p.dataset.total, left = Math.max(0, total - filled);
-            p.querySelector('.agenda-bar span').style.width = Math.min(100, filled / total * 100) + '%';
-            p.querySelector('.agenda-count').textContent = left > 0
-                ? `${filled} van de ${total} plekken gevuld, nog ${left} te gaan`
-                : `Alle ${total} plekken zijn gevuld. Aanmelden kan nog steeds: extra handen zijn welkom.`;
-        });
-
         // ---------- Hero slideshow ----------
         const slides = document.querySelectorAll('#heroSlides img');
         let cur = Math.floor(Math.random() * slides.length);   // elke keer een andere openingsfoto
@@ -639,9 +630,9 @@
         renderWeetje();
     })();
     </script>
-    <script src="site.js?v=20260923n"></script>
-    <script src="email-protection.js?v=20260923n"></script>
-    <script src="biotoop.js?v=20260923n" data-scene="home"></script>
+    <script src="site.js?v=20260924a"></script>
+    <script src="email-protection.js?v=20260924a"></script>
+    <script src="biotoop.js?v=20260924a" data-scene="home"></script>
     <script data-goatcounter="https://natuurrijkankeveen.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
