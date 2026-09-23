@@ -352,3 +352,6 @@ button.avatar.gold, .volunteers-grid .avatar.gold { border: 4px solid #e0b524; b
 .agenda-bar { height: 10px; background: var(--green-pale); border-radius: 999px; overflow: hidden; }
 .agenda-bar span { display: block; height: 100%; background: var(--green-medium); border-radius: 999px; transition: width .6s ease; }
 .agenda-count { font-size: .95rem; color: var(--text-medium); margin-top: .4rem; font-weight: 600; }
+.agenda-photo { width: 300px; flex-shrink: 0; border-radius: 14px; box-shadow: var(--shadow); align-self: stretch; object-fit: cover; }
+@media (max-width: 960px) { .agenda-photo { width: 220px; } }
+@media (max-width: 720px) { .agenda-photo { width: 100%; height: 200px; } }
