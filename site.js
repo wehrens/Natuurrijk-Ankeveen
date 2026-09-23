@@ -12,8 +12,9 @@
         menuBtn.addEventListener('click', () => {
             const open = navLinks.classList.toggle('open');
             menuBtn.setAttribute('aria-expanded', open);
+            document.body.classList.toggle('menu-open', open);
         });
-        navLinks.addEventListener('click', e => { if (e.target.closest('a, button')) navLinks.classList.remove('open'); });
+        navLinks.addEventListener('click', e => { if (e.target.closest('a, button')) { navLinks.classList.remove('open'); document.body.classList.remove('menu-open'); } });
     }
 
     // Contactvenster
