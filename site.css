@@ -322,3 +322,25 @@ footer { background: var(--green-dark); color: rgba(255, 255, 255, .85); padding
 .activities-grid > .activity-card:last-child:nth-child(3n+1) { grid-column: 2; }
 @media (max-width: 960px) { .activities-grid > .activity-card:last-child:nth-child(3n+1) { grid-column: auto; } }
 .weetje-body img.illustratie { object-fit: contain; padding: 1.6rem; background: var(--green-pale); }
+
+/* ===== AGENDA (tijdelijk blok voor een komende werkdag) ===== */
+.agenda { padding: 0 1.5rem 3rem; }
+.agenda-card { max-width: var(--max); margin: 0 auto; background: var(--white); border: 2px solid var(--green-light); border-radius: var(--radius); padding: 1.8rem 2rem; box-shadow: var(--shadow); }
+.agenda-head { display: flex; gap: 1.6rem; align-items: flex-start; }
+.agenda-date { flex-shrink: 0; width: 92px; text-align: center; background: var(--green-dark); color: var(--white); border-radius: 14px; padding: .7rem .4rem .8rem; }
+.agenda-day { display: block; font-family: 'Fraunces', serif; font-size: 2.6rem; font-weight: 700; line-height: 1; color: var(--green-light); }
+.agenda-month { display: block; font-size: .95rem; margin-top: .2rem; }
+.agenda-head h2 { font-size: 1.7rem; margin-bottom: .5rem; }
+.agenda-head p { color: var(--text-medium); margin-bottom: .9rem; }
+.agenda-cols { display: grid; grid-template-columns: 1fr 1.4fr; gap: 2rem; margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--cream-dark); }
+.agenda-cols h3 { font-size: 1.15rem; margin-bottom: .5rem; }
+.agenda-cols ul { list-style: none; }
+.agenda-cols li { padding: .3rem 0 .3rem 1.1rem; position: relative; color: var(--text-medium); font-size: .98rem; }
+.agenda-cols li::before { content: ''; position: absolute; left: 0; top: .78rem; width: 6px; height: 6px; border-radius: 50%; background: var(--green-light); }
+.agenda-cols a { font-weight: 600; }
+@media (max-width: 720px) {
+    .agenda-card { padding: 1.3rem 1.2rem; }
+    .agenda-head { flex-direction: column; gap: 1rem; }
+    .agenda-date { width: 80px; }
+    .agenda-cols { grid-template-columns: 1fr; gap: 1.2rem; }
+}
