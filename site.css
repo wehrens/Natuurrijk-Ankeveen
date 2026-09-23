@@ -348,3 +348,7 @@ footer { background: var(--green-dark); color: rgba(255, 255, 255, .85); padding
 }
 button.avatar.gold, .volunteers-grid .avatar.gold { border: 4px solid #e0b524; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #e0b524, 0 6px 16px rgba(224, 181, 36, .45); }
 .team-grid button.avatar { border: 4px solid var(--white); }
+.agenda-progress { margin: .2rem 0 1rem; max-width: 420px; }
+.agenda-bar { height: 10px; background: var(--green-pale); border-radius: 999px; overflow: hidden; }
+.agenda-bar span { display: block; height: 100%; background: var(--green-medium); border-radius: 999px; transition: width .6s ease; }
+.agenda-count { font-size: .95rem; color: var(--text-medium); margin-top: .4rem; font-weight: 600; }
