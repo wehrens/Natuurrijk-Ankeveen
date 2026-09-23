@@ -673,6 +673,22 @@
     const batSvg = color => 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 28"><path fill="' + color + '" d="M32 8c-2 0-3 2-4 3-3-3-7-5-12-5-6 0-11 3-16 8 4-1 7 0 9 3 2-2 5-2 7 0 1-2 4-2 6 0 1-1 2-3 3-6 1 3 2 5 3 6 2-2 5-2 6 0 2-2 5-2 7 0 2-3 5-4 9-3-5-5-10-8-16-8-5 0-9 2-12 5-1-1-2-3-4-3z"/></svg>');
     const BAT_SVG = batSvg('#9db0cc');
     const moon = { x: 0, y: 0, r: 0 };
+    // Vloeiende kromme door een reeks steunpunten (Catmull-Rom)
+    function spline(ctrl, per = 8) {
+        const out = [], p = ctrl;
+        for (let i = 0; i < p.length - 1; i++) {
+            const p0 = p[Math.max(0, i - 1)], p1 = p[i], p2 = p[i + 1], p3 = p[Math.min(p.length - 1, i + 2)];
+            for (let j = 0; j < per; j++) {
+                const t = j / per, t2 = t * t, t3 = t2 * t;
+                out.push({
+                    x: .5 * ((2 * p1.x) + (-p0.x + p2.x) * t + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3),
+                    y: .5 * ((2 * p1.y) + (-p0.y + p2.y) * t + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3)
+                });
+            }
+        }
+        out.push(p[p.length - 1]);
+        return out;
+    }
     function bat(done) {
         const w = document.createElement('div'); w.className = 'bio-wrap';
         const img = document.createElement('img'); img.src = IMG + 'vleermuis-sprite.webp'; img.alt = '';
@@ -680,20 +696,20 @@
         w.appendChild(img); L.bioSky.appendChild(w);
         const right = chance(.5), width = W();
         const x0 = right ? -60 : width + 60, x1 = right ? width + 60 : -60;
-        // Grillig pad: veel korte, willekeurige uitwijkingen; het beest kijkt in zijn vliegrichting
-        const n = 22, pts = [];
-        for (let i = 0; i <= n; i++) {
-            const t = i / n;
-            pts.push({ x: x0 + (x1 - x0) * t + rand(-30, 30), y: rand(4, NAV - 6) });
-        }
-        pts[0] = { x: x0, y: rand(10, 40) }; pts[n] = { x: x1, y: rand(10, 40) };
-        if (moon.r && chance(.45)) { const k = Math.round(n / 2); pts[k] = { x: moon.x - 10, y: moon.y - 4 }; pts[k + 1] = { x: moon.x + (right ? 40 : -40), y: moon.y + 8 }; }
-        const dur = rand(6500, 9500);
+        // Grillig maar vloeiend: een handvol steunpunten, daar een kromme doorheen
+        const n = 7, ctrl = [];
+        for (let i = 0; i <= n; i++) ctrl.push({ x: x0 + (x1 - x0) * i / n + rand(-40, 40), y: rand(6, NAV - 8) });
+        ctrl[0] = { x: x0, y: rand(10, 40) }; ctrl[n] = { x: x1, y: rand(10, 40) };
+        if (moon.r && chance(.45)) { const k = Math.round(n / 2); ctrl[k] = { x: moon.x - 6, y: moon.y - 2 }; }
+        const pts = spline(ctrl, 10);
+        const dur = rand(7000, 10000);
+        let dir = right;
         animate(w, pts.map((p, i) => {
-            const q = pts[Math.max(0, i - 1)], goingRight = i === 0 ? right : p.x >= q.x;
-            const tilt = i === 0 ? 0 : Math.max(-30, Math.min(30, Math.atan2(p.y - q.y, Math.abs(p.x - q.x)) * 57 * .5));
-            return { transform: `translate(${p.x.toFixed(0)}px, ${p.y.toFixed(0)}px) scaleX(${goingRight ? -1 : 1}) rotate(${tilt.toFixed(0)}deg)`, offset: i / n, easing: 'ease-in-out' };
-        }), { duration: dur });
+            const q = pts[Math.max(0, i - 1)], dx = p.x - q.x;
+            if (Math.abs(dx) > 1.5) dir = dx > 0;
+            const tilt = i === 0 ? 0 : Math.max(-25, Math.min(25, Math.atan2(p.y - q.y, Math.abs(dx) + .1) * 57 * .45));
+            return { transform: `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px) scaleX(${dir ? -1 : 1}) rotate(${tilt.toFixed(1)}deg)`, offset: i / (pts.length - 1) };
+        }), { duration: dur, easing: 'linear' });
         later(() => { remove(w); done(); }, dur + 50);
     }
     function batPair(done) { let left = 2; bat(() => { if (--left === 0) done(); }); later(() => bat(() => { if (--left === 0) done(); }), 900); }
