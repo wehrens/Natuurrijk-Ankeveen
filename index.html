@@ -49,7 +49,6 @@
             </div>
             <div class="hero-visual">
                 <div class="hero-slides" id="heroSlides">
-                    <img src="images/groepsfoto-zeisbrigade.webp" width="1280" height="960" alt="De Zeisbrigade van Natuurrijk Ankeveen" class="active">
                     <img src="images/Huiszwaluwteam.webp" width="1280" height="978" alt="Het huiszwaluwteam met kunstnesten" loading="lazy">
                     <img src="images/RuigeHoek.webp" width="1280" height="960" alt="Vrijwilligers zeisen bij de Ruige Hoek" loading="lazy">
                     <img src="images/Oeveraanleg.webp" width="720" height="1280" alt="Aanleg van een natuurvriendelijke oever" loading="lazy">
@@ -57,6 +56,7 @@
                     <img src="images/hooiopper.webp" width="960" height="1280" alt="Hooiopper na het zeisen" loading="lazy">
                     <img src="images/oever-planten.webp" width="960" height="1280" alt="Vrijwilligers planten oeverplanten" loading="lazy">
                     <img src="images/Lokin2025.webp" width="1280" height="1154" alt="Educatie op de Joseph Lokinschool" loading="lazy">
+                    <img src="images/natuurwerkdag-snoeien.webp" width="1000" height="750" alt="Natuurwerkdag: vrijwilligers met gesnoeide takken langs het water" loading="lazy">
                 </div>
             </div>
         </div>
@@ -486,7 +486,8 @@
 
         // ---------- Hero slideshow ----------
         const slides = document.querySelectorAll('#heroSlides img');
-        let cur = 0;
+        let cur = Math.floor(Math.random() * slides.length);   // elke keer een andere openingsfoto
+        slides[cur].loading = 'eager'; slides[cur].classList.add('active');
         if (slides.length > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
             setInterval(() => {
                 slides[cur].classList.remove('active');
