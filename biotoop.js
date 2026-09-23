@@ -722,13 +722,13 @@
                 { duration: rand(1800, 4200), delay: rand(0, 3000), iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' });
         }
         // Grote boom: alleen stam en onderkant van de kruin in beeld, met de kast aan de stam
-        const pct = NARROW() ? 58 : 37, h = NARROW() ? 140 : 240, tw = h * 228 / 292;
+        const pct = NARROW() ? 56 : 36, h = NARROW() ? 170 : 300, tw = h * 228 / 292;
         const tree = sprite(L.bioGround, 'Boom.webp', h);
         tree.style.transform = `translate(${px(pct)}px, ${GROUND - 2 - h}px)`; tree.style.filter = 'brightness(.5) saturate(.6)';
         animate(tree, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1200 });
         const bw = 22, bh = 32;
         const box = document.createElement('div'); box.className = 'bio-wrap';
-        box.style.transform = `translate(${px(pct) + tw * .5 - bw / 2}px, ${GROUND - 2 - 62}px)`;
+        box.style.transform = `translate(${px(pct) + tw * .5 - bw / 2}px, ${GROUND - 2 - 64}px)`;
         box.innerHTML = `<svg width="${bw}" height="${bh}" viewBox="0 0 22 32">
             <path d="M11 0 L11 6" stroke="#9a9a9a" stroke-width="1"/>
             <rect x="1" y="6" width="20" height="21" rx="2" fill="#2a2725"/>
