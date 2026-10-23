@@ -165,17 +165,18 @@
     const pond = { get x() { return NARROW() ? 75 : 33; }, el: null, reeds: [], roerdomp: null, flipTimer: null };
     function showPond() {
         if (pond.el) return;
-        // Twee lagen: het waterkringetje achter, het groene rondje (oever) ervoor, strak tegen het gras
+        // Twee lagen: het waterkringetje achter (iets links en lager), het groene rondje (oever) ervoor.
+        // Eerst verschijnt de begroeiing, daarna loopt het water vol.
         const water = sprite(L.bioPond, 'Poel1.webp', 27, 'center');
-        water.style.transform = `translate(${px(pond.x) - 44}px, ${GROUND + 6}px)`;
-        animate(water, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 2000, easing: 'ease-out' });
+        water.style.transform = `translate(${px(pond.x) - 52}px, ${GROUND + 12}px)`;
+        water.style.opacity = 0;
+        const green = sprite(L.bioPond, 'Poel3.webp', 58, 'center');
+        green.style.transform = `translate(${px(pond.x) - 62}px, ${GROUND - 14}px)`;
+        pond.el = green;
+        animate(green, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 2500, easing: 'ease-out' });
         later(() => {
-            const green = sprite(L.bioPond, 'Poel3.webp', 58, 'center');
-            green.style.transform = `translate(${px(pond.x) - 62}px, ${GROUND - 14}px)`;
-            pond.el = green;
-            animate(green, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 2500, easing: 'ease-out' });
-        }, REDUCE ? 10 : 1200);
-        pond.el = water;
+            animate(water, [{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 2000, easing: 'ease-out', fill: 'forwards' });
+        }, REDUCE ? 10 : 1500);
         // Riet rondom
         [[pond.x - 8, 'Lisdodde.webp', 64, 1, 500], [pond.x - 1.5, 'Lisdodde.webp', 48, -1, 1800], [pond.x + 7, 'Lisdodde3.webp', 50, -1, 2800]]
             .forEach(([pct, src, h, flip, delay]) => later(() => {
