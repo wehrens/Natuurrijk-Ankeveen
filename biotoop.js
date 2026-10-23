@@ -378,7 +378,7 @@
     // Wandelaars (Bergse Pad)
     function walker(done) {
         const girl = chance(.5), h = 52;
-        const { w, img } = wrap(L.bioGround, girl ? 'Walkinggirl.webp' : 'WalkingGuy2.webp', h);
+        const { w, img } = wrap(L.bioFront, girl ? 'Walkinggirl.webp' : 'WalkingGuy2.webp', h);
         const right = chance(.5), width = W();
         const x0 = right ? -120 : width + 20, x1 = right ? width + 20 : -120, y = GROUND - h + 4;
         const dur = rand(22000, 30000), flip = right ? 1 : -1;
