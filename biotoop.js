@@ -659,13 +659,24 @@
                 { duration: 5000, easing: 'linear' });
         }, walkIn + 2200);
         later(() => { bob.pause(); openGate(); }, walkIn + 6800);
-        later(() => {                                   // en erdoor, en verder scharrelen
+        // En erdoor: zodra de egel het poortje gepasseerd is komt hij vóór de rechterhelft,
+        // stopt duidelijk aan de andere kant, kijkt om zich heen, en scharrelt dan verder
+        const x0 = stopX - 70, passX = fence.x + fence.w * 0.64 - 6, restX = fence.x + fence.w + 48, x1 = W() + 20;
+        const t1 = 300 + (restX - x0) * 40;
+        later(() => {
             bob.play();
-            const x1 = W() + 20;
-            animate(w, [{ transform: f(stopX - 70, 1) }, { transform: f(stopX - 70, -1), offset: .03 }, { transform: f(x1, -1) }],
-                { duration: 4000 + (x1 - stopX + 70) * 40, easing: 'linear' });
+            animate(w, [{ transform: f(x0, 1) }, { transform: f(x0, -1), offset: 300 / t1 }, { transform: f(restX, -1) }],
+                { duration: t1, easing: 'linear' });
         }, walkIn + 11000);
-        later(() => { remove(w); done(); }, walkIn + 11000 + 4000 + (W() + 90 - stopX) * 40 + 200);
+        later(() => L.bioGround.appendChild(w), walkIn + 11000 + 300 + (passX - x0) * 40);   // nu vóór de schutting
+        later(() => {                                   // aangekomen: even rondkijken
+            bob.pause();
+            animate(w, [{ transform: f(restX, -1) }, { transform: f(restX, 1), offset: .3 }, { transform: f(restX, 1), offset: .7 }, { transform: f(restX, -1) }],
+                { duration: 2600, easing: 'steps(1, end)' });
+        }, walkIn + 11000 + t1);
+        const t3 = (x1 - restX) * 40;
+        later(() => { bob.play(); animate(w, [{ transform: f(restX, -1) }, { transform: f(x1, -1) }], { duration: t3, easing: 'linear' }); }, walkIn + 11000 + t1 + 2600);
+        later(() => { remove(w); done(); }, walkIn + 11000 + t1 + 2600 + t3 + 200);
     }
     // Na het verhaal: egels scharrelen vrij door het poortje (gewone egel-wandeling)
     function storyCycle() {
