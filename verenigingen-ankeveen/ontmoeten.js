@@ -48,7 +48,7 @@
 
     // Een ontmoeting: een groepje van links en een van rechts lopen naar hetzelfde punt,
     // staan even te kletsen, en gaan dan samen verder of ieder hun eigen kant op
-    let active = 0;
+    let active = 0; const chatting = [];
     function party(fromLeft, meet, color, speed) {
         const n = pick([1, 2, 2, 3]), width = W(), members = [];
         for (let i = 0; i < n; i++) {
@@ -88,8 +88,11 @@
         const all = L.concat(R), arrive = Math.max(...all.map(m => m.dur));
         setTimeout(() => {
             all.forEach(m => m.b.pause());
-            const bb = bubble(meet - 10, GROUND - Math.max(...all.map(m => m.h)) - 16, cl);
+            const top = GROUND - Math.max(...all.map(m => m.h)) - 16;
+            const bb = bubble(meet - 10, top, cl);
+            const chat = { x: meet, top, bb }; chatting.push(chat);
             setTimeout(() => {
+                chatting.splice(chatting.indexOf(chat), 1);
                 animate(bb, [{ opacity: 1 }, { opacity: 0 }], { duration: 400 }).finished.then(() => bb.remove()).catch(() => bb.remove());
                 const together = chance(.45);
                 if (together) { const dir = chance(.5) ? 1 : -1; leave(all.sort((a, b) => dir * (b.x1 - a.x1)), dir, speed); }
@@ -169,6 +172,53 @@
         }, 450);
     }
 
+    // Naturisten (ALB): een rozig groepje slentert ontspannen voorbij met een handdoek over de schouder.
+    // Kletsende groepjes die ze passeren kijken even op (wolkje wordt "!"), een van de naturisten zwaait.
+    function naturist(h) {
+        const w = document.createElement('div'); w.className = 'om-p';
+        const skin = pick(['#F2B5A0', '#E8A58E', '#F6C6B2']);
+        w.innerHTML = `<svg viewBox="0 0 22 40" width="${h * .55}" height="${h}" aria-hidden="true">
+            <circle cx="9" cy="5" r="4.6" fill="${skin}"/>
+            <path d="M3 13 q6 -4 12 0 l1.5 13 h-3 l-1 12 h-3 l-0.5 -11 l-0.5 11 h-3 l-1 -12 h-3 z" fill="${skin}"/>
+            <path d="M12 11 l6 2 l-1 13 l-3 0.5 z" fill="#ffffff" stroke="#9DC3E6" stroke-width=".8"/>
+            <path d="M14 14 h3 M14 17 h3 M14 20 h3" stroke="#9DC3E6" stroke-width=".8"/>
+            <circle cx="9" cy="5" r="4.6" fill="none"/><path d="M5.5 3.5 q3.5 -3 7 0" fill="none" stroke="#5a3a2a" stroke-width="1.2"/></svg>`;
+        return w;
+    }
+    function naturists() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, n = pick([3, 4, 5]);
+        const speed = 26, dur = (width + 160) * speed, members = [];
+        for (let i = 0; i < n; i++) {
+            const h = chance(.2) ? rand(14, 17) : rand(21, 25), w = naturist(h); strip.appendChild(w);
+            const off = i * rand(11, 14), y = GROUND - h;
+            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -60 + off;
+            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+                .finished.then(() => w.remove()).catch(() => w.remove());
+            const b = bob(w, rand(520, 640));
+            members.push({ w, x0, x1, b });
+            if (i === 0) {                                   // de voorste zwaait af en toe
+                const arm = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                arm.setAttribute('d', 'M14 13 l5 -7'); arm.setAttribute('stroke', '#F2B5A0'); arm.setAttribute('stroke-width', '2.4'); arm.setAttribute('stroke-linecap', 'round');
+                arm.style.transformBox = 'fill-box'; arm.style.transformOrigin = '0% 100%';
+                w.firstElementChild.appendChild(arm);
+                animate(arm, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(25deg)' }], { duration: 350, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+            }
+        }
+        const t0 = performance.now(), seen = new Set();
+        const tick = setInterval(() => {
+            const p = (performance.now() - t0) / dur; if (p >= 1) { clearInterval(tick); return; }
+            const x = members[0].x0 + (members[0].x1 - members[0].x0) * p;
+            chatting.forEach(c => {
+                if (seen.has(c) || Math.abs(c.x - x) > 60) return;
+                seen.add(c);
+                c.bb.innerHTML = '<b style="font:700 11px/1 Inter,sans-serif;color:#16233a">!</b>';
+                c.bb.style.borderColor = '#D64541';
+                animate(c.bb, [{ transform: c.bb.style.transform + ' scale(1)' }, { transform: c.bb.style.transform + ' scale(1.35)' }, { transform: c.bb.style.transform + ' scale(1)' }], { duration: 500 });
+            });
+        }, 200);
+    }
+
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
         [[.3, 3], [.68, 2]].forEach(([f, n]) => {
             const c = pick(KLEUR);
@@ -181,4 +231,5 @@
     setInterval(() => { if (chance(.75)) meeting(); }, 7000);
     setTimeout(peloton, 12000); setInterval(() => { if (chance(.5)) peloton(); }, 40000);
     setTimeout(fanfare, 26000); setInterval(() => { if (chance(.5)) fanfare(); }, 55000);
+    setTimeout(naturists, 45000); setInterval(() => { if (chance(.5)) naturists(); }, 75000);
 })();
