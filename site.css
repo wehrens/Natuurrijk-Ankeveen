@@ -207,13 +207,15 @@ button.avatar { border: 0; padding: 0; background: none; cursor: zoom-in; displa
 .volunteers-toggle { margin-top: 1rem; }
 
 /* ===== PARTNERS ===== */
-.dorp { padding: 3.5rem 1.5rem; background: var(--white); border-top: 1px solid var(--cream-dark); }
+.dorp { padding: 3.5rem 1.5rem; background: #f3f6fa; border-top: 1px solid #dfe6ef; --dorp: #1b4f9c; --dorp-dark: #16233a; }
 .dorp-inner { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 1.3fr 1fr; gap: 2.5rem; align-items: center; }
-.dorp h2 { font-size: 1.9rem; margin-bottom: .8rem; }
-.dorp p { color: var(--text-medium); margin-bottom: 1.3rem; max-width: 36rem; }
-.dorp-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center; background: var(--green-dark); color: var(--white); border-radius: 16px; padding: 1.6rem 1rem; }
-.dorp-stats .stat-number { font-size: 2.1rem; }
-.dorp-stats .stat-label { font-size: .85rem; margin-top: .3rem; }
+.dorp h2 { font-size: 1.9rem; margin-bottom: .8rem; color: var(--dorp); }
+.dorp p { color: #3d4a5c; margin-bottom: 1.3rem; max-width: 36rem; }
+.dorp .btn-primary { background: var(--dorp); border-color: var(--dorp); }
+.dorp .btn-primary:hover { background: var(--dorp-dark); border-color: var(--dorp-dark); }
+.dorp-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center; background: var(--dorp); color: var(--white); border-radius: 16px; padding: 1.6rem 1rem; }
+.dorp-stats .stat-number { font-size: 2.1rem; color: #ffffff; }
+.dorp-stats .stat-label { font-size: .85rem; margin-top: .3rem; color: rgba(255,255,255,.9); }
 @media (max-width: 760px) { .dorp-inner { grid-template-columns: 1fr; } }
 .partners { padding: 3.5rem 1.5rem; background: var(--cream); border-top: 1px solid var(--cream-dark); }
 .partners h2 { text-align: center; font-size: 1.25rem; font-weight: 500; color: var(--text-medium); margin-bottom: 1.8rem; }
