@@ -19,17 +19,25 @@
     }
     document.addEventListener('visibilitychange', () => running.forEach(a => document.hidden ? a.pause() : a.play()));
 
-    // Een poppetje: hoofd, romp, benen; h = lengte in px
+    // Een poppetje: hoofd (huid + haar), trui in clubkleur, eigen broek; h = lengte in px
+    const HUID = ['#F2C9B0', '#E3B093', '#C68A5C', '#8D5A3C', '#F6D6C2'];
+    const HAAR = ['#2b2b2b', '#5a3a2a', '#8b5a2b', '#d9b36a', '#b0b0b0', '#c0392b'];
+    const BROEK = ['#2f3e55', '#4a5568', '#6b7b8c', '#3b3b3b', '#7a5c3e', '#1f4e79', '#9aa5b1'];
     function person(color, h) {
         const w = document.createElement('div');
         w.className = 'om-p';
         w.style.height = h + 'px'; w.style.width = h * .45 + 'px';
-        const s = h / 40;
+        const huid = pick(HUID), haar = pick(HAAR), broek = pick(BROEK);
+        const hairStyle = pick([
+            `<path d="M4.4 5 q0 -5.5 4.6 -5.5 q4.6 0 4.6 5.5 q-1.5 -2.5 -4.6 -2.5 q-3.1 0 -4.6 2.5z" fill="${haar}"/>`,        // kort
+            `<path d="M4.4 6 q0 -6.5 4.6 -6.5 q4.6 0 4.6 6.5 l0 6 l-2 0 l0 -4 q-2.6 -1.5 -5.2 0 l0 4 l-2 0 z" fill="${haar}"/>`, // lang
+            `<path d="M4.6 4 q1 -4.6 4.4 -4.6 q3.4 0 4.4 4.6 q-2 -1.6 -4.4 -1.6 q-2.4 0 -4.4 1.6z" fill="${haar}"/>`,         // pet-achtig kort
+            `<path d="M9 0.2 q5 0 4.8 5.6 q-1.8 -2.8 -4.8 -2.8 q-3 0 -4.8 2.8 q-0.2 -5.6 4.8 -5.6z M4 5 l10 0" fill="${haar}"/>` // bob
+        ]);
         w.innerHTML = `<svg viewBox="0 0 18 40" width="${h * .45}" height="${h}" aria-hidden="true">
-            <circle cx="9" cy="5" r="4.6" fill="${color}"/>
-            <path d="M3 13 q6 -4 12 0 l1.5 13 h-3 l-1 12 h-3 l-0.5 -11 l-0.5 11 h-3 l-1 -12 h-3 z" fill="${color}"/>
-            <path class="om-leg" d="M6 26 l-1 12 h3 l0.5 -11z" fill="${color}"/></svg>`;
-        void s;
+            <circle cx="9" cy="5" r="4.6" fill="${huid}"/>${hairStyle}
+            <path d="M3 13 q6 -4 12 0 l1.5 13 h-3 l-0.3 -3 h-8.4 l-0.3 3 h-3 z" fill="${color}"/>
+            <path d="M4.8 23 h8.4 l-1 15 h-3 l-0.2 -11 l-0.2 11 h-3 z" fill="${broek}"/></svg>`;
         return w;
     }
     function bob(el, dur) {
