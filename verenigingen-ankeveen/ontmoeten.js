@@ -99,19 +99,74 @@
         }, arrive + 100);
     }
 
-    // Fietser: snel langs, af en toe
-    function cyclist() {
-        if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), h = 19, color = pick(KLEUR);
+    // Wielrenner: racefiets met draaiende wielen, voorovergebogen renner
+    function racer(color) {
         const w = document.createElement('div'); w.className = 'om-p';
-        w.innerHTML = `<svg viewBox="0 0 48 30" width="30" height="19" aria-hidden="true">
-            <circle cx="10" cy="22" r="7" fill="none" stroke="#5a6a7e" stroke-width="2"/><circle cx="38" cy="22" r="7" fill="none" stroke="#5a6a7e" stroke-width="2"/>
-            <path d="M10 22 L20 10 L34 10 L38 22 M20 10 L24 22 M18 22 h12" fill="none" stroke="#5a6a7e" stroke-width="2"/>
-            <circle cx="27" cy="4" r="3.6" fill="${color}"/><path d="M23 9 q4 -3 8 0 l3 8 l-6 5 l-4 -3 z" fill="${color}"/></svg>`;
-        strip.appendChild(w);
-        const y = GROUND - h + 2, x0 = fromLeft ? -60 : width + 20, x1 = fromLeft ? width + 20 : -60, dur = (width + 80) * 9;
-        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${fromLeft ? 1 : -1})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${fromLeft ? 1 : -1})` }], { duration: dur, easing: 'linear' })
-            .finished.then(() => w.remove()).catch(() => w.remove());
+        w.innerHTML = `<svg viewBox="0 0 60 34" width="38" height="22" aria-hidden="true">
+            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="11" cy="25" r="8" fill="none" stroke="#3d4a5c" stroke-width="1.6"/><path d="M11 17v16M3 25h16M5.3 19.3l11.4 11.4M16.7 19.3L5.3 30.7" stroke="#3d4a5c" stroke-width=".9"/></g>
+            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="47" cy="25" r="8" fill="none" stroke="#3d4a5c" stroke-width="1.6"/><path d="M47 17v16M39 25h16M41.3 19.3l11.4 11.4M52.7 19.3L41.3 30.7" stroke="#3d4a5c" stroke-width=".9"/></g>
+            <path d="M11 25 L24 11 L40 11 L47 25 M24 11 L30 25 M27 25 h7 M40 11 L43 7 h5" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round"/>
+            <circle cx="30" cy="25" r="2.2" fill="#3d4a5c"/>
+            <path d="M25 13 q8 -9 18 -6 l3 4 l-4 3 l-7 -1 l-6 7 l-2 -1 z" fill="${color}"/>
+            <path d="M44 7 l-6 6 M30 17 l-4 6" stroke="${color}" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="47" cy="5" r="3.4" fill="#2b2b2b"/><circle cx="47.6" cy="5.6" r="2.4" fill="${color}"/></svg>`;
+        return w;
+    }
+    // Peloton: vijf renners dicht achter elkaar, snel
+    function peloton() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, y = GROUND - 22 + 1;
+        const dur = (width + 300) * 4.5;
+        for (let i = 0; i < 5; i++) {
+            const w = racer(pick(KLEUR)); strip.appendChild(w);
+            w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: `rotate(${f * 360}deg)` }], { duration: 420, iterations: Infinity, easing: 'linear' }));
+            const off = i * 34 + (i % 2) * 6;
+            const x0 = fromLeft ? -60 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off * .2 : -80 + off * .2;
+            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+                .finished.then(() => w.remove()).catch(() => w.remove());
+        }
+    }
+
+    // Fanfare: een rij muzikanten marcheert in de maat, met muzieknootjes
+    function musician(color, kind, h) {
+        const w = document.createElement('div'); w.className = 'om-p';
+        const inst = kind === 'drum' ? `<circle cx="16" cy="24" r="6" fill="#fff" stroke="${color}" stroke-width="1.5"/><path d="M12 22h8" stroke="${color}" stroke-width="1.2"/>`
+            : kind === 'trumpet' ? `<path d="M11 10 h7 l4 -3 v8 l-4 -3 h-7 z" fill="#C9A227"/>`
+            : `<path d="M11 12 q6 -8 8 -2 l-3 4 z" fill="#C9A227"/>`;
+        w.innerHTML = `<svg viewBox="0 0 24 40" width="${h * .6}" height="${h}" aria-hidden="true">
+            <circle cx="9" cy="5" r="4.6" fill="${color}"/><path d="M5 2 h8 l-1 -3 h-6 z" fill="#16233a"/>
+            <path d="M3 13 q6 -4 12 0 l1.5 13 h-3 l-1 12 h-3 l-0.5 -11 l-0.5 11 h-3 l-1 -12 h-3 z" fill="${color}"/>${inst}</svg>`;
+        return w;
+    }
+    function note(x, y, color) {
+        const n = document.createElement('div'); n.className = 'om-note'; n.style.color = color;
+        n.textContent = pick(['\u266a', '\u266b', '\u2669']);
+        strip.appendChild(n);
+        const dx = rand(-10, 10);
+        animate(n, [{ transform: `translate(${x}px, ${y}px)`, opacity: 0 }, { transform: `translate(${x + dx * .4}px, ${y - 8}px)`, opacity: 1, offset: .25 },
+            { transform: `translate(${x + dx}px, ${y - 26}px)`, opacity: 0 }], { duration: rand(1600, 2400), easing: 'ease-out' })
+            .finished.then(() => n.remove()).catch(() => n.remove());
+    }
+    function fanfare() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, color = '#F39A2B';
+        const n = 6, h = 23, y = GROUND - h, speed = 24, dur = (width + 200) * speed;
+        const kinds = ['trumpet', 'trumpet', 'horn', 'drum', 'trumpet', 'horn'];
+        const members = [];
+        for (let i = 0; i < n; i++) {
+            const w = musician(color, kinds[i], h); strip.appendChild(w);
+            const off = i * 15, x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -60 + off;
+            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+                .finished.then(() => w.remove()).catch(() => w.remove());
+            animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-2px)' }], { duration: 300, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+            members.push({ w, x0, x1 });
+        }
+        const t0 = performance.now();
+        const tick = setInterval(() => {
+            const p = (performance.now() - t0) / dur; if (p >= 1) { clearInterval(tick); return; }
+            const m = pick(members); const x = m.x0 + (m.x1 - m.x0) * p + f * 6;
+            note(x, y - 6, color);
+        }, 450);
     }
 
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
@@ -124,5 +179,6 @@
     }
     meeting(); setTimeout(meeting, 4000);
     setInterval(() => { if (chance(.75)) meeting(); }, 7000);
-    setTimeout(cyclist, 9000); setInterval(() => { if (chance(.5)) cyclist(); }, 24000);
+    setTimeout(peloton, 12000); setInterval(() => { if (chance(.5)) peloton(); }, 40000);
+    setTimeout(fanfare, 26000); setInterval(() => { if (chance(.5)) fanfare(); }, 55000);
 })();
