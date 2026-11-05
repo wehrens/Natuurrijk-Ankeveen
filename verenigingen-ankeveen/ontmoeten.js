@@ -227,6 +227,58 @@
         }, 200);
     }
 
+    // Carnaval: de prins met steek voorop, daarachter de Raad van Elf met pruiken, in polonaise
+    const CARN = ['#D81E1E', '#F2C318', '#1E9E3E'];
+    const PRUIK = ['#FF2BB3', '#7A3BFF', '#1FD2FF', '#39FF6E', '#FF8A00', '#FFE600'];
+    function reveler(i) {
+        const w = document.createElement('div'); w.className = 'om-p';
+        const huid = pick(HUID), shirt = CARN[i % 3], broek = CARN[(i + 1) % 3], pruik = pick(PRUIK);
+        w.innerHTML = `<svg viewBox="0 0 22 40" width="12" height="22" aria-hidden="true">
+            <circle cx="9" cy="6" r="4.6" fill="${huid}"/>
+            <path d="M2.5 7 q0 -8 6.5 -8 q6.5 0 6.5 8 q-1 -2 -2.5 -1 q-1 -3 -4 -3 q-3 0 -4 3 q-1.5 -1 -2.5 1z M2.5 7 q-1 4 1 7 M15.5 7 q1 4 -1 7" fill="${pruik}" stroke="${pruik}" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M3 14 q6 -4 12 0 l1.5 12 h-3 l-0.3 -3 h-8.4 l-0.3 3 h-3 z" fill="${shirt}"/>
+            <path d="M4.8 23 h8.4 l-1 15 h-3 l-0.2 -11 l-0.2 11 h-3 z" fill="${broek}"/>
+            <path d="M14.5 15 l6 -4" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/></svg>`;
+        return w;
+    }
+    function prince() {
+        const w = document.createElement('div'); w.className = 'om-p';
+        const huid = pick(HUID);
+        w.innerHTML = `<svg viewBox="0 0 26 40" width="14" height="22" aria-hidden="true">
+            <path d="M6 10 q0 -4 2 -3 l-1 -5 q6 3 12 0 l-1 5 q2 -1 2 3 z" fill="#111"/>
+            <path d="M17 2 q4 -4 6 -1 q-2 0 -3 3" fill="#fff" stroke="#ddd" stroke-width=".6"/>
+            <circle cx="13" cy="10" r="4.4" fill="${huid}"/>
+            <path d="M6 18 q7 -4 14 0 l3 14 h-3 l-1.5 -9 l-11 0 l-1.5 9 h-3 z" fill="#D81E1E"/>
+            <path d="M7 18 q6 -4 12 0 l1.5 12 h-3 l-0.3 -3 h-8.4 l-0.3 3 h-3 z" fill="#111"/>
+            <path d="M9.5 15 h7 M8.5 20 h9" stroke="#F2C318" stroke-width="1.6"/>
+            <path d="M8.8 27 h8.4 l-1 11 h-3 l-0.2 -8 l-0.2 8 h-3 z" fill="#fff"/>
+            <path d="M20 19 l5 -6" stroke="#F2C318" stroke-width="2" stroke-linecap="round"/><circle cx="25" cy="12" r="1.6" fill="#F2C318"/></svg>`;
+        return w;
+    }
+    function carnaval() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = 22, dur = (width + 260) * speed;
+        for (let i = 0; i < 12; i++) {
+            const w = i === 0 ? prince() : reveler(i - 1); strip.appendChild(w);
+            const off = i * 13 + (i ? 4 : 0), h = 22, y = GROUND - h;
+            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 60 - off : -80 + off;
+            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+                .finished.then(() => w.remove()).catch(() => w.remove());
+            // polonaise: hossen in de maat, om en om naar links en rechts
+            animate(w.firstElementChild, [{ transform: 'translate(-2px, 0) rotate(-6deg)' }, { transform: 'translate(0, -2.5px) rotate(0deg)' }, { transform: 'translate(2px, 0) rotate(6deg)' }],
+                { duration: 520, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: -(i % 2) * 520 });
+        }
+        // confetti boven de stoet
+        const t0 = performance.now();
+        const tick = setInterval(() => {
+            const p = (performance.now() - t0) / dur; if (p >= 1) { clearInterval(tick); return; }
+            const x = (fromLeft ? -40 : width + 20) + f * (width + 100) * p + rand(0, 150) * (fromLeft ? 1 : -1);
+            const c = document.createElement('div'); c.className = 'om-conf'; c.style.background = pick(CARN.concat(PRUIK)); strip.appendChild(c);
+            animate(c, [{ transform: `translate(${x}px, ${GROUND - 34}px) rotate(0deg)`, opacity: 1 }, { transform: `translate(${x + rand(-8, 8)}px, ${GROUND - 4}px) rotate(${rand(180, 540)}deg)`, opacity: .2 }], { duration: rand(1200, 1800), easing: 'ease-in' })
+                .finished.then(() => c.remove()).catch(() => c.remove());
+        }, 160);
+    }
+
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
         [[.3, 3], [.68, 2]].forEach(([f, n]) => {
             const c = pick(KLEUR);
@@ -240,4 +292,5 @@
     setTimeout(peloton, 12000); setInterval(() => { if (chance(.5)) peloton(); }, 40000);
     setTimeout(fanfare, 26000); setInterval(() => { if (chance(.5)) fanfare(); }, 55000);
     setTimeout(naturists, 45000); setInterval(() => { if (chance(.5)) naturists(); }, 75000);
+    setTimeout(carnaval, 70000); setInterval(() => { if (chance(.5)) carnaval(); }, 95000);
 })();
