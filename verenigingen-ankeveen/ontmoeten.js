@@ -162,7 +162,7 @@
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, color = '#D81E1E', noteColor = '#16233a';
         const n = 6, h = 23, y = GROUND - h, speed = 24, dur = (width + 200) * speed;
-        const kinds = ['trumpet', 'trumpet', 'horn', 'drum', 'trumpet', 'horn'];
+        const kinds = ['drum', 'trumpet', 'trumpet', 'horn', 'trumpet', 'horn'];   // trom voorop
         const members = [];
         for (let i = 0; i < n; i++) {
             const w = musician(color, kinds[i], h); strip.appendChild(w);
@@ -193,7 +193,7 @@
             <path d="M5.5 3.5 q3.5 -3 7 0" fill="none" stroke="#5a3a2a" stroke-width="1.2"/>
             <circle cx="7.4" cy="5.4" r=".7" fill="#2b2b2b"/><circle cx="10.6" cy="5.4" r=".7" fill="#2b2b2b"/>
             <circle cx="6.4" cy="16.5" r=".9" fill="#D98B70"/><circle cx="11.6" cy="16.5" r=".9" fill="#D98B70"/>
-            ${male ? '<circle cx="8.2" cy="27.4" r="1.1" fill="#D98B70"/><circle cx="9.9" cy="27.4" r="1.1" fill="#D98B70"/><path d="M9 26.3 v2.8" stroke="#D98B70" stroke-width="1.5" stroke-linecap="round"/>' : ''}</svg>`;
+            ${male ? '<circle cx="8.2" cy="27.4" r="1.1" fill="#D98B70"/><circle cx="9.9" cy="27.4" r="1.1" fill="#D98B70"/><path d="M9 26.3 v4.2" stroke="#D98B70" stroke-width="1.5" stroke-linecap="round"/>' : ''}</svg>`;
         return w;
     }
     function naturists() {
