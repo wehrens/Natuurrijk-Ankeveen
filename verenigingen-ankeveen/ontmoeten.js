@@ -279,6 +279,39 @@
         }, 160);
     }
 
+    // Schaatsers: drie in een treintje, voorovergebogen, een arm op de rug, afzetten en glijden
+    function skater(color) {
+        const w = document.createElement('div'); w.className = 'om-p';
+        const huid = pick(HUID), muts = pick(['#D64541', '#1b4f9c', '#F39A2B', '#2BB39A']), broek = pick(['#2f3e55', '#3b3b3b', '#1f4e79']);
+        w.innerHTML = `<svg viewBox="0 0 40 40" width="24" height="24" aria-hidden="true">
+            <g class="legA" style="transform-box:view-box;transform-origin:15px 23px"><path d="M15 23 l-9 8 l0 4" fill="none" stroke="${broek}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 35.5 h9" stroke="#5a6a7e" stroke-width="1.6"/></g>
+            <g class="legB" style="transform-box:view-box;transform-origin:16px 23px"><path d="M16 23 l2 8 l1 4" fill="none" stroke="${broek}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 35.5 h9" stroke="#5a6a7e" stroke-width="1.6"/></g>
+            <g class="torso" style="transform-box:view-box;transform-origin:14px 24px">
+              <path d="M12 24 l12 -11 q3 -2.5 6 -0.5 l-1.5 3.5 q-2 -1 -3.5 0.5 l-10 10 z" fill="${color}"/>
+              <circle cx="33" cy="9.5" r="4" fill="${huid}"/>
+              <path d="M28.6 9 q4.4 -6 8.8 0 l-0.5 -2.4 q-3.9 -4 -7.8 0z" fill="${muts}"/><circle cx="32.2" cy="4" r="1.3" fill="#fff"/>
+              <path d="M24 15 q-6 2 -9 7" stroke="${huid}" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+            </g></svg>`;
+        return w;
+    }
+    function skaters() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, dur = (width + 200) * 7.5;
+        const colors = [pick(KLEUR), pick(KLEUR), pick(KLEUR)];
+        for (let i = 0; i < 3; i++) {
+            const w = skater(colors[i]); strip.appendChild(w);
+            const off = i * 34, y = GROUND - 24 + 3;
+            const x0 = fromLeft ? -60 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -80 + off;
+            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+                .finished.then(() => w.remove()).catch(() => w.remove());
+            // de slag: benen om en om naar achteren afzetten, romp zakt bij elke afzet iets
+            const T = 1100, d = -i * 180;
+            animate(w.querySelector('.legA'), [{ transform: 'rotate(0deg)' }, { transform: 'rotate(42deg)' }, { transform: 'rotate(0deg)' }], { duration: T, iterations: Infinity, easing: 'ease-in-out', delay: d });
+            animate(w.querySelector('.legB'), [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-42deg)' }, { transform: 'rotate(0deg)' }], { duration: T, iterations: Infinity, easing: 'ease-in-out', delay: d });
+            animate(w.querySelector('.torso'), [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(1.2px) rotate(2deg)' }, { transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(1.2px) rotate(-2deg)' }, { transform: 'translateY(0) rotate(0deg)' }], { duration: T, iterations: Infinity, easing: 'ease-in-out', delay: d });
+        }
+    }
+
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
         [[.3, 3], [.68, 2]].forEach(([f, n]) => {
             const c = pick(KLEUR);
@@ -287,10 +320,12 @@
         });
         return;
     }
+    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters };   // handig om te testen
     meeting(); setTimeout(meeting, 4000);
     setInterval(() => { if (chance(.75)) meeting(); }, 7000);
     setTimeout(peloton, 12000); setInterval(() => { if (chance(.5)) peloton(); }, 40000);
     setTimeout(fanfare, 26000); setInterval(() => { if (chance(.5)) fanfare(); }, 55000);
     setTimeout(naturists, 45000); setInterval(() => { if (chance(.5)) naturists(); }, 75000);
     setTimeout(carnaval, 70000); setInterval(() => { if (chance(.5)) carnaval(); }, 95000);
+    setTimeout(skaters, 20000); setInterval(() => { if (chance(.5)) skaters(); }, 60000);
 })();
