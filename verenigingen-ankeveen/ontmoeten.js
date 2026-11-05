@@ -141,7 +141,7 @@
     // Fanfare: een rij muzikanten marcheert in de maat, met muzieknootjes
     function musician(color, kind, h) {
         const w = document.createElement('div'); w.className = 'om-p';
-        const inst = kind === 'drum' ? `<circle cx="16" cy="24" r="6" fill="#fff" stroke="${color}" stroke-width="1.5"/><path d="M12 22h8" stroke="${color}" stroke-width="1.2"/>`
+        const inst = kind === 'drum' ? `<circle cx="16" cy="24" r="6" fill="#fff" stroke="#111" stroke-width="1.5"/><path d="M12 22h8" stroke="#111" stroke-width="1.2"/>`
             : kind === 'trumpet' ? `<path d="M11 10 h7 l4 -3 v8 l-4 -3 h-7 z" fill="#C9A227"/>`
             : `<path d="M11 12 q6 -8 8 -2 l-3 4 z" fill="#C9A227"/>`;
         w.innerHTML = `<svg viewBox="0 0 24 40" width="${h * .6}" height="${h}" aria-hidden="true">
@@ -190,7 +190,9 @@
             <path d="M3 13 q6 -4 12 0 l1.5 13 h-3 l-1 12 h-3 l-0.5 -11 l-0.5 11 h-3 l-1 -12 h-3 z" fill="${skin}"/>
             <path d="M12 11 l6 2 l-1 13 l-3 0.5 z" fill="#ffffff" stroke="#9DC3E6" stroke-width=".8"/>
             <path d="M14 14 h3 M14 17 h3 M14 20 h3" stroke="#9DC3E6" stroke-width=".8"/>
-            <circle cx="9" cy="5" r="4.6" fill="none"/><path d="M5.5 3.5 q3.5 -3 7 0" fill="none" stroke="#5a3a2a" stroke-width="1.2"/></svg>`;
+            <path d="M5.5 3.5 q3.5 -3 7 0" fill="none" stroke="#5a3a2a" stroke-width="1.2"/>
+            <circle cx="7.4" cy="5.4" r=".7" fill="#2b2b2b"/><circle cx="10.6" cy="5.4" r=".7" fill="#2b2b2b"/>
+            <circle cx="6.4" cy="16.5" r=".9" fill="#D98B70"/><circle cx="11.6" cy="16.5" r=".9" fill="#D98B70"/></svg>`;
         return w;
     }
     function naturists() {
