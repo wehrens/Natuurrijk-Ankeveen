@@ -149,7 +149,7 @@
     }
     function fanfare() {
         if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, color = '#F39A2B';
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, color = '#D81E1E', noteColor = '#16233a';
         const n = 6, h = 23, y = GROUND - h, speed = 24, dur = (width + 200) * speed;
         const kinds = ['trumpet', 'trumpet', 'horn', 'drum', 'trumpet', 'horn'];
         const members = [];
@@ -165,7 +165,7 @@
         const tick = setInterval(() => {
             const p = (performance.now() - t0) / dur; if (p >= 1) { clearInterval(tick); return; }
             const m = pick(members); const x = m.x0 + (m.x1 - m.x0) * p + f * 6;
-            note(x, y - 6, color);
+            note(x, y - 6, noteColor);
         }, 450);
     }
 
