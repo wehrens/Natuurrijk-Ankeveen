@@ -6,7 +6,7 @@
     if (!strip) return;
     const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const KLEUR = ['#7B5CC4', '#F39A2B', '#2BB39A', '#D64541', '#3B8FE0', '#C9A227'];
-    const H = strip.clientHeight, GROUND = H - 14;
+    const H = strip.clientHeight, GROUND = H - 8;
     const W = () => strip.clientWidth;
     const rand = (a, b) => a + Math.random() * (b - a);
     const pick = a => a[Math.floor(Math.random() * a.length)];
@@ -33,7 +33,7 @@
         return w;
     }
     function bob(el, dur) {
-        return animate(el.firstElementChild, [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-1.6px) rotate(1.4deg)' }],
+        return animate(el.firstElementChild, [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-1px) rotate(1.4deg)' }],
             { duration: dur, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
     }
     function bubble(x, y, color) {
@@ -52,12 +52,12 @@
     function party(fromLeft, meet, color, speed) {
         const n = pick([1, 2, 2, 3]), width = W(), members = [];
         for (let i = 0; i < n; i++) {
-            const h = chance(.25) ? rand(22, 28) : rand(34, 42);
+            const h = chance(.25) ? rand(13, 16) : rand(20, 25);
             const p = person(chance(.3) ? pick(KLEUR) : color, h);
             strip.appendChild(p);
-            const off = i * rand(13, 18);
+            const off = i * rand(8, 11);
             const x0 = fromLeft ? -40 - off : width + 20 + off;
-            const x1 = fromLeft ? meet - 14 - off : meet + 14 + off;
+            const x1 = fromLeft ? meet - 9 - off : meet + 9 + off;
             const y = GROUND - h, f = fromLeft ? 1 : -1;
             p.style.transform = `translate(${x0}px, ${y}px) scaleX(${f})`;
             const b = bob(p, rand(380, 460)), dur = Math.abs(x1 - x0) * speed;
@@ -72,7 +72,7 @@
         const width = W();
         members.forEach((m, i) => {
             m.b.play();
-            const x2 = dir > 0 ? width + 40 + i * 14 : -60 - i * 14, d = Math.abs(x2 - m.x1) * speed;
+            const x2 = dir > 0 ? width + 40 + i * 9 : -60 - i * 9, d = Math.abs(x2 - m.x1) * speed;
             animate(m.p, [{ transform: `translate(${m.x1}px, ${m.y}px) scaleX(${dir})`, opacity: 1 },
                 { transform: `translate(${m.x1 + (x2 - m.x1) * .93}px, ${m.y}px) scaleX(${dir})`, opacity: 1, offset: .93 },
                 { transform: `translate(${x2}px, ${m.y}px) scaleX(${dir})`, opacity: 0 }], { duration: d, easing: 'linear' })
@@ -88,7 +88,7 @@
         const all = L.concat(R), arrive = Math.max(...all.map(m => m.dur));
         setTimeout(() => {
             all.forEach(m => m.b.pause());
-            const bb = bubble(meet - 14, GROUND - Math.max(...all.map(m => m.h)) - 24, cl);
+            const bb = bubble(meet - 10, GROUND - Math.max(...all.map(m => m.h)) - 16, cl);
             setTimeout(() => {
                 animate(bb, [{ opacity: 1 }, { opacity: 0 }], { duration: 400 }).finished.then(() => bb.remove()).catch(() => bb.remove());
                 const together = chance(.45);
@@ -102,9 +102,9 @@
     // Fietser: snel langs, af en toe
     function cyclist() {
         if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), h = 30, color = pick(KLEUR);
+        const fromLeft = chance(.5), width = W(), h = 19, color = pick(KLEUR);
         const w = document.createElement('div'); w.className = 'om-p';
-        w.innerHTML = `<svg viewBox="0 0 48 30" width="48" height="30" aria-hidden="true">
+        w.innerHTML = `<svg viewBox="0 0 48 30" width="30" height="19" aria-hidden="true">
             <circle cx="10" cy="22" r="7" fill="none" stroke="#5a6a7e" stroke-width="2"/><circle cx="38" cy="22" r="7" fill="none" stroke="#5a6a7e" stroke-width="2"/>
             <path d="M10 22 L20 10 L34 10 L38 22 M20 10 L24 22 M18 22 h12" fill="none" stroke="#5a6a7e" stroke-width="2"/>
             <circle cx="27" cy="4" r="3.6" fill="${color}"/><path d="M23 9 q4 -3 8 0 l3 8 l-6 5 l-4 -3 z" fill="${color}"/></svg>`;
@@ -117,8 +117,8 @@
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
         [[.3, 3], [.68, 2]].forEach(([f, n]) => {
             const c = pick(KLEUR);
-            for (let i = 0; i < n; i++) { const h = 36; const p = person(c, h); p.style.transform = `translate(${W() * f + i * 16}px, ${GROUND - h}px) scaleX(${i ? -1 : 1})`; strip.appendChild(p); }
-            bubble(W() * f + 6, GROUND - 58, c);
+            for (let i = 0; i < n; i++) { const h = 22; const p = person(c, h); p.style.transform = `translate(${W() * f + i * 10}px, ${GROUND - h}px) scaleX(${i ? -1 : 1})`; strip.appendChild(p); }
+            bubble(W() * f + 4, GROUND - 38, c);
         });
         return;
     }
