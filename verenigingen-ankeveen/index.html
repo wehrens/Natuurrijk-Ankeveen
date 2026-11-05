@@ -22,7 +22,8 @@ a{color:#1b4f9c}a:hover{color:#16233a}
   <header style="display: flex; flex-direction: column; gap: 28px">
     <div style="display: flex; align-items: flex-start; gap: clamp(12px, 3vw, 28px)">
     <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px">
-      <div style="font-size: 18px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #1b4f9c">Ankeveen · november 2026</div>
+      <div style="font-size: 18px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #1b4f9c">Ankeveen · laatste update <span id="lastUpdate" data-date="2026-11-05">5 november 2026</span></div>
+      <div style="font-size: 13px; color: #6b7587">Deze pagina wordt regelmatig bijgewerkt. Ververs de pagina (F5, of trek op je telefoon de pagina omlaag) om de nieuwste versie te zien.</div>
       <h1 style="margin: 0; font-family: 'Bricolage Grotesque', Inter, sans-serif; font-weight: 800; font-size: clamp(38px, 7vw, 76px); line-height: 1; letter-spacing: -0.02em">Verenigingen in Ankeveen</h1>
       <div style="font-size: 26px; color: #4a5568">Wat jullie betekenen voor het dorp</div>
     </div>
@@ -271,6 +272,7 @@ a{color:#1b4f9c}a:hover{color:#16233a}
 </div>
 
 <script data-goatcounter="https://natuurrijkankeveen.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>(function(){var e=document.getElementById("lastUpdate");if(!e)return;var m=["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];var h=new Date(e.getAttribute("data-date")+"T12:00:00");var d=new Date(document.lastModified);if(!isNaN(d)&&d>h&&d.getFullYear()>=2026){e.textContent=d.getDate()+" "+m[d.getMonth()]+" "+d.getFullYear();}})();</script>
 <script>document.querySelectorAll(".em").forEach(function(e){e.textContent=["r.wehrens","phasuma.com"].join("@")});</script>
 </body>
 </html>
