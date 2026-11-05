@@ -65,13 +65,16 @@ nav.site-nav {
 .nav-links { display: flex; gap: 1.6rem; list-style: none; align-items: center; }
 .nav-links a, .nav-links button {
     text-decoration: none; color: var(--text-medium); font-weight: 500;
-    background: none; border: 0; padding: 0; position: relative;
+    background: none; border: 0; padding: 0; position: relative; white-space: nowrap;
 }
+@media (max-width: 1180px) { .nav-links { gap: 1.1rem; } .nav-links a, .nav-links button { font-size: .95rem; } }
 .nav-links a::after, .nav-links button::after {
     content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px;
     background: var(--green-light); transform: scaleX(0); transform-origin: left; transition: transform .25s ease;
 }
 .nav-links a:hover::after, .nav-links button:hover::after { transform: scaleX(1); }
+.nav-links .nav-dorp { color: #1b4f9c; font-weight: 600; }
+.nav-links .nav-dorp::after { background: #1b4f9c; }
 .nav-links .nav-cta { background: var(--green-medium); color: var(--white); padding: .55rem 1.1rem; border-radius: 999px; }
 .nav-links .nav-cta::after { display: none; }
 .nav-links .nav-cta:hover { background: var(--green-dark); }
@@ -299,7 +302,7 @@ footer { background: var(--green-dark); color: rgba(255, 255, 255, .85); padding
     .footer-grid { grid-template-columns: 1fr 1fr; }
     .strip { grid-template-columns: repeat(3, 1fr); }
 }
-@media (max-width: 720px) {
+@media (max-width: 960px) {
     .menu-btn { display: block; }
     .nav-links { display: none; position: absolute; top: var(--header-total); left: 0; right: 0; flex-direction: column; gap: 0; background: var(--cream); border-bottom: 1px solid var(--cream-dark); padding: .5rem 0 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, .1); }
     body.menu-open nav.site-nav { z-index: 1045; }   /* uitgeklapt menu boven de biotoop */
