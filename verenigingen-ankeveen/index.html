@@ -18,20 +18,32 @@ a{color:#1b4f9c}a:hover{color:#16233a}
 #ontmoeten .om-p svg{display:block}
 #ontmoeten .om-bubble{position:absolute;left:0;top:0;background:#fff;border:1.5px solid #1b4f9c;border-radius:9px;padding:2px 5px;display:flex;gap:2px;box-shadow:0 1px 3px rgba(22,35,58,.12)}
 #ontmoeten .om-note{position:absolute;left:0;top:0;font-size:13px;line-height:1;font-weight:700;pointer-events:none}
+.top-links{display:flex;gap:18px;flex-wrap:wrap;font-size:15px;font-weight:500}
+.top-links a{color:#4a5a52;text-decoration:none}
+.top-links a.top-cta{background:#4a7c59;color:#fff;padding:6px 14px;border-radius:999px}
+.top-menu-btn{display:none;background:none;border:0;font-size:1.6rem;color:#2d4a3e;line-height:1;padding:0}
+@media (max-width:720px){
+  .top-menu-btn{display:block}
+  .top-links{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0;background:#f8f6f0;border-bottom:1px solid #e8e3d6;padding:8px 0 12px;box-shadow:0 8px 16px rgba(22,35,58,.08)}
+  .top-links.open{display:flex}
+  .top-links a{padding:10px 20px;font-size:16px}
+  .top-links a.top-cta{margin:6px 20px 0;display:inline-block;align-self:flex-start}
+}
 #ontmoeten .om-bubble span{width:3px;height:3px;border-radius:50%;background:#16233a;opacity:.7}
 </style>
 
 </head>
 <body style="margin:0;background:#eef2f7">
-<div style="position:sticky;top:0;z-index:50;background:#f8f6f0;border-bottom:1px solid #e8e3d6;font-family:Inter,system-ui,sans-serif;box-shadow:0 1px 6px rgba(22,35,58,.06)">
-  <div style="max-width:1240px;margin:0 auto;padding:12px clamp(12px,4.5vw,60px) 0;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
-    <a href="../" style="font-family:'Fraunces',Georgia,serif;font-size:1.3rem;font-weight:700;color:#2d4a3e;text-decoration:none">Natuurrijk Ankeveen</a>
-    <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:15px;font-weight:500">
-      <a href="../#activiteiten" style="color:#4a5a52;text-decoration:none">Wat we doen</a>
-      <a href="../#nieuws" style="color:#4a5a52;text-decoration:none">Nieuws</a>
-      <a href="../#over-ons" style="color:#4a5a52;text-decoration:none">Wie we zijn</a>
-      <a href="../#contact" style="background:#4a7c59;color:#fff;padding:6px 14px;border-radius:999px;text-decoration:none">Doe mee</a>
+<div id="topbar" style="position:sticky;top:0;z-index:50;background:#f8f6f0;border-bottom:1px solid #e8e3d6;font-family:Inter,system-ui,sans-serif;box-shadow:0 1px 6px rgba(22,35,58,.06)">
+  <div style="max-width:1240px;margin:0 auto;padding:12px clamp(12px,4.5vw,60px) 0;display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <a href="../" style="font-family:'Fraunces',Georgia,serif;font-size:1.3rem;font-weight:700;color:#2d4a3e;text-decoration:none;white-space:nowrap">Natuurrijk Ankeveen</a>
+    <div id="topLinks" class="top-links">
+      <a href="../#activiteiten">Wat we doen</a>
+      <a href="../#nieuws">Nieuws</a>
+      <a href="../#over-ons">Wie we zijn</a>
+      <a href="../#contact" class="top-cta">Doe mee</a>
     </div>
+    <button type="button" id="topMenuBtn" class="top-menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="topLinks">&#9776;</button>
   </div>
   <div id="ontmoeten" aria-hidden="true"></div>
 </div>
@@ -306,6 +318,7 @@ a{color:#1b4f9c}a:hover{color:#16233a}
 </div>
 <script>(function(){var e=document.getElementById("lastUpdate");if(!e)return;var m=["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];var h=new Date(e.getAttribute("data-date")+"T12:00:00");var d=new Date(document.lastModified);if(!isNaN(d)&&d>h&&d.getFullYear()>=2026){e.textContent=d.getDate()+" "+m[d.getMonth()]+" "+d.getFullYear();}})();</script>
 <script>document.querySelectorAll(".em").forEach(function(e){e.textContent=["r.wehrens","phasuma.com"].join("@")});</script>
+<script>(function(){var b=document.getElementById("topMenuBtn"),l=document.getElementById("topLinks");if(!b||!l)return;b.addEventListener("click",function(){var o=l.classList.toggle("open");b.setAttribute("aria-expanded",o);});l.addEventListener("click",function(e){if(e.target.closest("a"))l.classList.remove("open");});})();</script>
 <script src="ontmoeten.js?v=20261105e"></script>
 </body>
 </html>
