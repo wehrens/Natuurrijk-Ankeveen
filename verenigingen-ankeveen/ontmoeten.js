@@ -182,7 +182,7 @@
 
     // Naturisten (ALB): een rozig groepje slentert ontspannen voorbij met een handdoek over de schouder.
     // Kletsende groepjes die ze passeren kijken even op (wolkje wordt "!"), een van de naturisten zwaait.
-    function naturist(h) {
+    function naturist(h, male) {
         const w = document.createElement('div'); w.className = 'om-p';
         const skin = pick(['#F2B5A0', '#E8A58E', '#F6C6B2']);
         w.innerHTML = `<svg viewBox="0 0 22 40" width="${h * .55}" height="${h}" aria-hidden="true">
@@ -192,15 +192,18 @@
             <path d="M14 14 h3 M14 17 h3 M14 20 h3" stroke="#9DC3E6" stroke-width=".8"/>
             <path d="M5.5 3.5 q3.5 -3 7 0" fill="none" stroke="#5a3a2a" stroke-width="1.2"/>
             <circle cx="7.4" cy="5.4" r=".7" fill="#2b2b2b"/><circle cx="10.6" cy="5.4" r=".7" fill="#2b2b2b"/>
-            <circle cx="6.4" cy="16.5" r=".9" fill="#D98B70"/><circle cx="11.6" cy="16.5" r=".9" fill="#D98B70"/></svg>`;
+            <circle cx="6.4" cy="16.5" r=".9" fill="#D98B70"/><circle cx="11.6" cy="16.5" r=".9" fill="#D98B70"/>
+            ${male ? '<path d="M9 26.5 v2.6" stroke="#D98B70" stroke-width="1.6" stroke-linecap="round"/>' : ''}</svg>`;
         return w;
     }
     function naturists() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, n = pick([3, 4, 5]);
         const speed = 26, dur = (width + 160) * speed, members = [];
+        const hs = []; for (let i = 0; i < n; i++) hs.push(chance(.2) ? rand(14, 17) : rand(21, 25));
+        const tallest = hs.indexOf(Math.max(...hs));
         for (let i = 0; i < n; i++) {
-            const h = chance(.2) ? rand(14, 17) : rand(21, 25), w = naturist(h); strip.appendChild(w);
+            const h = hs[i], w = naturist(h, i === tallest); strip.appendChild(w);
             const off = i * rand(11, 14), y = GROUND - h;
             const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -60 + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
