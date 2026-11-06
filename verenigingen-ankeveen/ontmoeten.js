@@ -387,12 +387,17 @@
         { run: carnaval, dur: () => (W() + 260) * 22 },
         { run: yogis, dur: () => (W() + 200) * 40 },
     ];
-    let last = null;
+    // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
+    // geweest is), met een korte pauze ertussen. De eerste komt al na een paar seconden.
+    let bag = [], last = null;
     function nextSpecial() {
         if (document.hidden) { setTimeout(nextSpecial, 5000); return; }
-        let s; do { s = pick(specials); } while (s === last && specials.length > 1);
-        last = s; s.run();
-        setTimeout(nextSpecial, s.dur() + rand(25000, 45000));
+        if (!bag.length) {
+            bag = specials.slice().sort(() => Math.random() - 0.5);
+            if (bag[0] === last && bag.length > 1) bag.push(bag.shift());
+        }
+        const s = bag.shift(); last = s; s.run();
+        setTimeout(nextSpecial, s.dur() + rand(6000, 12000));
     }
-    setTimeout(nextSpecial, 18000);
+    setTimeout(nextSpecial, 4000);
 })();
