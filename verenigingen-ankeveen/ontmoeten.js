@@ -77,24 +77,45 @@
         return b;
     }
 
+    // Bejaarden: grijs of wit haar, iets voorovergebogen, met een wandelstok of een rollator
+    function oudje(color, h, hulp) {
+        const w = document.createElement('div'); w.className = 'om-p';
+        const huid = pick(HUID), haar = pick(['#d9d9d9', '#bdbdbd', '#f2f2f2', '#a8a8a8']), broek = pick(BROEK);
+        const vw = hulp === 'rollator' ? 30 : 22;
+        w.style.height = h + 'px'; w.style.width = h * vw / 40 + 'px';
+        const kap = pick([`<path d="M4.4 5 q0 -5.5 4.6 -5.5 q4.6 0 4.6 5.5 q-1.5 -2.5 -4.6 -2.5 q-3.1 0 -4.6 2.5z" fill="${haar}"/>`,
+            `<path d="M4.2 6.4 q-0.6 -6.8 4.8 -6.8 q5.4 0 4.8 6.8 q-1 -3 -4.8 -3.2 q-3.8 0.2 -4.8 3.2z" fill="${haar}"/><circle cx="9" cy="0.2" r="2" fill="${haar}"/>`]);
+        const stok = `<path d="M14.6 20.5 q1 -1.4 2.2 -0.2 l1.2 19.6" fill="none" stroke="#7a5c3e" stroke-width="1.1" stroke-linecap="round"/>`;
+        const rollator = `<path d="M15.5 21 h9.5 l2 17.4 M18.4 21 l-0.6 17.4 M18 31 h8" fill="none" stroke="#5a6a7e" stroke-width="1.1" stroke-linejoin="round"/>
+            <path d="M18.4 26 h7.4 l-0.4 3 h-6.8 z" fill="#3d4a5c"/><circle cx="17.8" cy="38.6" r="1.4" fill="#2b2b2b"/><circle cx="27.4" cy="38.6" r="1.4" fill="#2b2b2b"/>`;
+        w.innerHTML = `<svg viewBox="0 0 ${vw} 40" width="${h * vw / 40}" height="${h}" aria-hidden="true" style="overflow:visible">
+            <g transform="rotate(7 9 39)"><circle cx="9" cy="5" r="4.6" fill="${huid}"/>${kap}
+            <path d="M3 13 q6 -4 12 0 l1.5 13 h-3 l-0.3 -3 h-8.4 l-0.3 3 h-3 z" fill="${color}"/>
+            <path d="M13.5 15 l1.6 5.8" stroke="${color}" stroke-width="2.4" stroke-linecap="round"/><circle cx="15.2" cy="21" r="1.2" fill="${huid}"/></g>
+            <path d="M4.8 23 h8.4 l-1 15 h-3 l-0.2 -11 l-0.2 11 h-3 z" fill="${broek}"/>
+            ${hulp === 'rollator' ? rollator : stok}</svg>`;
+        return w;
+    }
     // Een ontmoeting: een groepje van links en een van rechts lopen naar hetzelfde punt,
     // staan even te kletsen, en gaan dan samen verder of ieder hun eigen kant op
     let active = 0; const chatting = [];
     function party(fromLeft, meet, color, speed) {
-        const n = pick([1, 2, 2, 3]), width = W(), members = [];
+        const oud = chance(.2);                                  // af en toe twee bejaarden: langzamer
+        const n = oud ? 2 : pick([1, 2, 2, 3]), width = W(), members = [];
         for (let i = 0; i < n; i++) {
-            const h = chance(.25) ? rand(13, 16) : rand(20, 25);
-            const p = person(chance(.3) ? pick(KLEUR) : color, h);
+            const h = oud ? rand(20.5, 23) : chance(.25) ? rand(13, 16) : rand(20, 25);
+            const kleur = chance(.3) ? pick(KLEUR) : color;
+            const p = oud ? oudje(kleur, h, i === 0 && chance(.6) ? 'rollator' : 'stok') : person(kleur, h);
             strip.appendChild(p);
-            const off = i * rand(8, 11);
+            const off = oud ? i * rand(13, 16) : i * rand(8, 11), sp = oud ? speed * 1.8 : speed;
             const x0 = fromLeft ? -40 - off : width + 20 + off;
             const x1 = fromLeft ? meet - 9 - off : meet + 9 + off;
             const y = GROUND - h, f = fromLeft ? 1 : -1;
             p.style.transform = `translate(${x0}px, ${y}px) scaleX(${f})`;
-            const b = bob(p, rand(380, 460)), dur = Math.abs(x1 - x0) * speed;
+            const b = bob(p, oud ? rand(620, 720) : rand(380, 460)), dur = Math.abs(x1 - x0) * sp;
             animate(p, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` },
                 { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' });
-            members.push({ p, b, x1, y, h, dur, f });
+            members.push({ p, b, x1, y, h, dur, f, sp });
         }
         return members;
     }
@@ -102,7 +123,7 @@
         const width = W();
         members.forEach((m, i) => {
             m.b.play();
-            const x2 = dir > 0 ? width + 40 + i * 9 : -60 - i * 9, d = Math.abs(x2 - m.x1) * speed;
+            const x2 = dir > 0 ? width + 40 + i * 9 : -60 - i * 9, d = Math.abs(x2 - m.x1) * (m.sp || speed);
             animate(m.p, [{ transform: `translate(${m.x1}px, ${m.y}px) scaleX(${dir})` },
                 { transform: `translate(${x2}px, ${m.y}px) scaleX(${dir})` }], { duration: d, easing: 'linear' })
                 .finished.then(() => { m.b.cancel(); m.p.remove(); }).catch(() => m.p.remove());
@@ -624,7 +645,7 @@
         animate(w.querySelector('img'), [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-0.7px) rotate(-0.35deg)', offset: .5 }, { transform: 'translateY(0) rotate(0deg)' }],
             { duration: 2800, iterations: Infinity, easing: 'ease-in-out' });
     }
-    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, hardloopsters, honden, oldtimer };   // handig om te testen
+    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, hardloopsters, honden, oldtimer, oudje };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
