@@ -468,36 +468,44 @@
     }
     function footballers() {
         if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = 11, dur = (width + 220) * speed;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = 11, dur = (width + 220 + EX) * speed;
+        // de hele groep zit in één wrapper die beweegt; spelers en bal staan daarin op vaste plekken,
+        // zodat de bal rustig van speler naar speler kan zonder achter de groep aan te hollen
+        const g = document.createElement('div'); g.className = 'om-p'; strip.appendChild(g);
+        const y = GROUND - 24, x0 = fromLeft ? -40 : width + 20, x1 = fromLeft ? width + 60 + EX : -80 - EX;
+        animate(g, [{ transform: `translate(${x0}px, ${y}px)` }, { transform: `translate(${x1}px, ${y}px)` }], { duration: dur, easing: 'linear' })
+            .finished.then(() => g.remove()).catch(() => g.remove());
         const players = [];
         for (let i = 0; i < 3; i++) {
-            const w = footballer(); strip.appendChild(w);
-            const off = i * 44, y = GROUND - 24;
-            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 60 - off : -80 + off;
-            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
-                .finished.then(() => w.remove()).catch(() => w.remove());
+            const w = footballer(); g.appendChild(w);
+            const px = -f * i * 46;
+            w.style.transform = `translate(${px}px, 0) scaleX(${f})`;
             const T = 420, d = -i * 140;
             animate(w.querySelector('.legA'), [{ transform: 'rotate(-32deg)' }, { transform: 'rotate(32deg)' }], { duration: T, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: d });
             animate(w.querySelector('.legB'), [{ transform: 'rotate(32deg)' }, { transform: 'rotate(-32deg)' }], { duration: T, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: d });
             animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-2px)' }], { duration: T / 2, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: d });
-            players.push({ x0, x1 });
+            players.push({ w, px });
         }
-        // de bal: om de beurt naar een andere speler, met een boogje
-        const ball = document.createElement('div'); ball.className = 'om-ball'; strip.appendChild(ball);
-        const t0 = performance.now(), pos = (p, tm) => p.x0 + (p.x1 - p.x0) * Math.min(1, (tm - t0) / dur) + f * 6;
+        // de bal: een echte voetbal (wit met zwarte vlakken), voor de voeten van de speler die hem heeft
+        const ball = document.createElement('div'); ball.className = 'om-ball';
+        ball.innerHTML = '<svg viewBox="0 0 10 10" width="7" height="7" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="#fff" stroke="#16233a" stroke-width=".8"/><path d="M5 2.6 l2.1 1.5 l-0.8 2.5 h-2.6 l-0.8 -2.5 z" fill="#16233a"/><path d="M5 2.6 l0 -2 M7.1 4.1 l2 -0.6 M6.3 6.6 l1.2 1.8 M3.7 6.6 l-1.2 1.8 M2.9 4.1 l-2 -0.6" stroke="#16233a" stroke-width=".7"/></svg>';
+        g.appendChild(ball);
+        const by = 24 - 7, bx = i => players[i].px + f * 7;
         let holder = 0;
+        ball.style.transform = `translate(${bx(0)}px, ${by}px)`;
         function pass() {
-            const now = performance.now(); if (now - t0 > dur - 800) { ball.remove(); return; }
+            if (!g.isConnected) return;
             let next; do { next = Math.floor(Math.random() * 3); } while (next === holder);
-            const flight = 520, xa = pos(players[holder], now), xb = pos(players[next], now + flight);
-            animate(ball, [{ transform: `translate(${xa}px, ${GROUND - 7}px)` }, { transform: `translate(${(xa + xb) / 2}px, ${GROUND - 18}px)`, offset: .5 }, { transform: `translate(${xb}px, ${GROUND - 7}px)` }], { duration: flight, easing: 'linear' });
+            const xa = bx(holder), xb = bx(next), flight = 380 + Math.abs(xb - xa) * 3;
+            // trap: het standbeen van de passer zwaait even naar voren
+            animate(players[holder].w.querySelector('.legA'), [{ transform: 'rotate(10deg)' }, { transform: 'rotate(-55deg)' }, { transform: 'rotate(10deg)' }], { duration: 260, easing: 'ease-out' });
+            animate(ball, [{ transform: `translate(${xa}px, ${by}px) rotate(0deg)` },
+                { transform: `translate(${(xa + xb) / 2}px, ${by - 9}px) rotate(${f * 180}deg)`, offset: .5 },
+                { transform: `translate(${xb}px, ${by}px) rotate(${f * 360}deg)` }], { duration: flight, easing: 'ease-out' });
             holder = next;
-            // bal rolt even mee met de ontvanger, dan de volgende pass
-            const hold = rand(500, 1100), startHold = now + flight;
-            const roll = setInterval(() => { const n = performance.now(); if (n >= startHold + hold) { clearInterval(roll); pass(); return; } ball.style.transform = `translate(${pos(players[holder], n)}px, ${GROUND - 7}px)`; }, 40);
-            setTimeout(() => {}, 0);
+            setTimeout(pass, flight + rand(700, 1300));
         }
-        setTimeout(pass, 600);
+        setTimeout(pass, 900);
     }
 
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
