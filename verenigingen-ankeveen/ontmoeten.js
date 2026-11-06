@@ -751,14 +751,14 @@
         w.innerHTML = `<svg viewBox="0 0 96 96" width="84" height="84" aria-hidden="true" style="overflow:visible">
             <path d="M48 44 l-22 52 h6 l16 -38 l16 38 h6 z" fill="#8a94a6"/>
             <path d="M20 96 h56" stroke="#5a6a7e" stroke-width="2"/>
-            <g class="rad" style="transform-box:fill-box;transform-origin:center">
+            <g class="rad" style="transform-box:view-box;transform-origin:48px 44px">
               <circle cx="48" cy="44" r="34" fill="none" stroke="#5a6a7e" stroke-width="2.2"/>
               <circle cx="48" cy="44" r="27" fill="none" stroke="#8a94a6" stroke-width="1"/>
               <path d="${KL.map((_, i) => { const a = i * Math.PI / 4; return `M48 44 L${48 + 34 * Math.cos(a)} ${44 + 34 * Math.sin(a)}`; }).join(' ')}" stroke="#8a94a6" stroke-width="1.2"/>
               ${gond}
             </g>
             <circle cx="48" cy="44" r="3.5" fill="#D64541" stroke="#5a6a7e" stroke-width="1"/>
-            <path d="M46 20 l0 -14 l9 3 l-9 3" fill="#D64541" stroke="#D64541" stroke-width="1" stroke-linejoin="round"/></svg>`;
+            </svg>`;
         bar.style.position = bar.style.position || 'sticky'; bar.appendChild(w);
         // verrijzen
         animate(w, [{ transform: 'scaleY(0)' }, { transform: 'scaleY(1.04)', offset: .85 }, { transform: 'scaleY(1)' }], { duration: 2200, easing: 'ease-out' });
