@@ -450,6 +450,56 @@
         }, 1800);
     }
 
+    // Voetballers van ASV '65: groen-witte shirts, witte broek, groene kousen. Drie spelers joggen voorbij
+    // en spelen de bal over naar elkaar.
+    function footballer() {
+        const w = document.createElement('div'); w.className = 'om-p';
+        const huid = pick(HUID), haar = pick(HAAR);
+        const leg = cls => `<g class="${cls}" style="transform-box:view-box;transform-origin:9px 24px"><path d="M9 24 l-0.5 6" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round"/><path d="M8.5 30 l-0.3 7" stroke="#1E9E3E" stroke-width="2.8" stroke-linecap="round"/><path d="M6.8 37.5 h4" stroke="#222" stroke-width="2" stroke-linecap="round"/></g>`;
+        w.innerHTML = `<svg viewBox="0 0 18 40" width="11" height="24" aria-hidden="true">
+            ${leg('legA')}${leg('legB')}
+            <path d="M3 13 q6 -4 12 0 l1.5 12 h-15 z" fill="#ffffff"/>
+            <path d="M6.2 11.2 h5.6 l1 13.8 h-7.6 z" fill="#1E9E3E"/>
+            <path d="M2.8 25 h12.4 l-0.6 4 h-11.2 z" fill="#ffffff"/>
+            <path d="M3.5 14 l-1.5 8 M14.5 14 l1.5 8" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
+            <circle cx="9" cy="5" r="4.6" fill="${huid}"/>
+            <path d="M4.4 5 q0 -5.5 4.6 -5.5 q4.6 0 4.6 5.5 q-1.5 -2.5 -4.6 -2.5 q-3.1 0 -4.6 2.5z" fill="${haar}"/></svg>`;
+        return w;
+    }
+    function footballers() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = 11, dur = (width + 220) * speed;
+        const players = [];
+        for (let i = 0; i < 3; i++) {
+            const w = footballer(); strip.appendChild(w);
+            const off = i * 44, y = GROUND - 24;
+            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 60 - off : -80 + off;
+            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+                .finished.then(() => w.remove()).catch(() => w.remove());
+            const T = 420, d = -i * 140;
+            animate(w.querySelector('.legA'), [{ transform: 'rotate(-32deg)' }, { transform: 'rotate(32deg)' }], { duration: T, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: d });
+            animate(w.querySelector('.legB'), [{ transform: 'rotate(32deg)' }, { transform: 'rotate(-32deg)' }], { duration: T, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: d });
+            animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-2px)' }], { duration: T / 2, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: d });
+            players.push({ x0, x1 });
+        }
+        // de bal: om de beurt naar een andere speler, met een boogje
+        const ball = document.createElement('div'); ball.className = 'om-ball'; strip.appendChild(ball);
+        const t0 = performance.now(), pos = (p, tm) => p.x0 + (p.x1 - p.x0) * Math.min(1, (tm - t0) / dur) + f * 6;
+        let holder = 0;
+        function pass() {
+            const now = performance.now(); if (now - t0 > dur - 800) { ball.remove(); return; }
+            let next; do { next = Math.floor(Math.random() * 3); } while (next === holder);
+            const flight = 520, xa = pos(players[holder], now), xb = pos(players[next], now + flight);
+            animate(ball, [{ transform: `translate(${xa}px, ${GROUND - 7}px)` }, { transform: `translate(${(xa + xb) / 2}px, ${GROUND - 18}px)`, offset: .5 }, { transform: `translate(${xb}px, ${GROUND - 7}px)` }], { duration: flight, easing: 'linear' });
+            holder = next;
+            // bal rolt even mee met de ontvanger, dan de volgende pass
+            const hold = rand(500, 1100), startHold = now + flight;
+            const roll = setInterval(() => { const n = performance.now(); if (n >= startHold + hold) { clearInterval(roll); pass(); return; } ball.style.transform = `translate(${pos(players[holder], n)}px, ${GROUND - 7}px)`; }, 40);
+            setTimeout(() => {}, 0);
+        }
+        setTimeout(pass, 600);
+    }
+
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
         [[.3, 3], [.68, 2]].forEach(([f, n]) => {
             const c = pick(KLEUR);
@@ -491,13 +541,14 @@
     function voetballer() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, h = 24, y = GROUND - h;
-        const huid = pick(HUID), haar = pick(HAAR), shirt = pick(['#7B5CC4', '#D64541', '#3B8FE0']);
+        const huid = pick(HUID), haar = pick(HAAR), shirt = '#1E9E3E';   // ASV '65: groen-wit
         const w = document.createElement('div'); w.className = 'om-p';
         w.style.height = h + 'px'; w.style.width = h * .45 + 'px';
         w.innerHTML = `<svg viewBox="0 0 18 40" width="${h * .45}" height="${h}" aria-hidden="true" style="overflow:visible">
             <circle cx="9" cy="5" r="4.6" fill="${huid}"/><path d="M4.4 5 q0 -5.5 4.6 -5.5 q4.6 0 4.6 5.5 q-1.5 -2.5 -4.6 -2.5 q-3.1 0 -4.6 2.5z" fill="${haar}"/>
-            <path d="M3 13 q6 -4 12 0 l1.5 9 h-3 l-0.3 -2 h-8.4 l-0.3 2 h-3 z" fill="${shirt}"/>
-            <path d="M5.4 15 h7.2" stroke="#ffffff" stroke-width="1"/>
+            <path d="M3 13 q6 -4 12 0 l1.5 9 h-3 l-0.3 -2 h-8.4 l-0.3 2 h-3 z" fill="#ffffff"/>
+            <path d="M6.3 11.3 h5.4 l0.9 8.7 h-7.2 z" fill="${shirt}"/>
+            <path d="M3 13 l1.5 9 h-3 z M15 13 l1.5 9 h-3 z" fill="${shirt}"/>
             <path d="M4.8 20 h8.4 l0.5 6 h-3.8 l-0.9 -2.6 l-0.9 2.6 h-3.8 z" fill="#ffffff"/>
             <path d="M5.4 26 h2.7 l-0.2 8.5 h-2.5 z M9.9 26 h2.7 l0.2 8.5 h-2.5 z" fill="${huid}"/>
             <path d="M5.4 33 h2.5 v3.5 h-2.5 z M10.1 33 h2.5 v3.5 h-2.5 z" fill="${shirt}"/>
@@ -645,7 +696,7 @@
         animate(w.querySelector('img'), [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-0.7px) rotate(-0.35deg)', offset: .5 }, { transform: 'translateY(0) rotate(0deg)' }],
             { duration: 2800, iterations: Infinity, easing: 'ease-in-out' });
     }
-    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, hardloopsters, honden, oldtimer, oudje };   // handig om te testen
+    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
@@ -664,6 +715,7 @@
         { run: yogis, dur: () => (W() + 200 + EX) * 40 },
         { run: klasje, dur: () => (W() + 220 + EX) * 22 },
         { run: voetballer, dur: () => (W() + 100) * 30 },
+        { run: footballers, dur: () => (W() + 220 + EX) * 11 },
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
