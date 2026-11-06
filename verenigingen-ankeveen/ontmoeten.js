@@ -431,7 +431,48 @@
         animate(w.firstElementChild, [{ transform: 'translateY(-1.6px)' }, { transform: 'translateY(0)', offset: .18 },
             { transform: 'translateY(0.6px)', offset: .8 }, { transform: 'translateY(-1.6px)' }], { duration: T, iterations: Infinity, easing: 'ease-in-out' });
     }
-    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer };   // handig om te testen
+    // Hardloopsters: een soepel groepje met blonde paardenstaarten, achteraan een steviger loopster die goed bijblijft
+    function runner(h, thick) {
+        const w = document.createElement('div'); w.className = 'om-p';
+        const top = pick(['#D64541', '#7B5CC4', '#3B8FE0', '#2BB39A', '#FF4F9A']), tight = pick(['#16233a', '#2f3e55', '#3b3b3b']);
+        const huid = pick(HUID), blond = pick(['#E9C46A', '#F1D27B', '#E2BC5C']), k = thick ? 1.7 : 1;
+        const torso = thick ? 'M5 12.6 q7 -4.6 14 0 q2.4 5.5 1.4 11.6 h-16.8 q-1 -6.1 1.4 -11.6 z' : 'M8 13 q4 -3 8 0 l0.6 11 h-9.2 z';
+        const shorts = thick ? 'M3.8 22 h16.4 l0.4 5 h-17.2 z' : 'M7.3 22 h9.4 l0.5 4 h-10.4 z';
+        const leg = `fill="none" stroke="${tight}" stroke-width="${2.6 * k}" stroke-linecap="round" stroke-linejoin="round"`;
+        const arm = `fill="none" stroke="${huid}" stroke-width="${1.9 * k}" stroke-linecap="round" stroke-linejoin="round"`;
+        w.innerHTML = `<svg viewBox="0 0 24 40" width="${h * .6}" height="${h}" aria-hidden="true" style="overflow:visible"><g transform="rotate(6 12 38)">
+            <path class="armB" d="M12 14 l-1.5 5 l3.5 3" ${arm} opacity=".75"/>
+            <path class="legB" d="M12 24 l1.2 7 l-2 7" ${leg} opacity=".8"/>
+            <path d="${torso}" fill="${top}"/><path d="${shorts}" fill="${tight}"/>
+            <path class="legA" d="M12 24 l1.2 7 l-2 7" ${leg}/>
+            <path class="armA" d="M12 14 l-1.5 5 l3.5 3" ${arm}/>
+            <path class="pony" d="M8.2 3.6 q-5.2 0.6 -6 6.4 q2.2 -2.4 6.4 -4 z" fill="${blond}"/>
+            <circle cx="12" cy="6" r="${thick ? 4.9 : 4.4}" fill="${huid}"/>
+            <path d="M7.6 6 q0 -5 4.4 -5 q4.4 0 4.4 5 q-1.6 -2.3 -4.4 -2.3 q-2.8 0 -4.4 2.3z" fill="${blond}"/></g></svg>`;
+        return w;
+    }
+    function hardloopsters() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = 9, dur = (width + 180 + EX) * speed;
+        const n = pick([4, 5]); let off = 0;
+        for (let i = 0; i <= n; i++) {
+            const thick = i === n, h = thick ? rand(22.5, 24) : rand(22.5, 25);
+            const w = runner(h, thick); strip.appendChild(w);
+            off += i === 0 ? 0 : (thick ? rand(18, 24) : rand(12, 17));
+            const y = GROUND - h;
+            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off : -60 - EX + off;
+            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+                .finished.then(() => w.remove()).catch(() => w.remove());
+            const T = thick ? 460 : rand(380, 430), d = -rand(0, T), o = { iterations: Infinity, direction: 'alternate', easing: 'ease-in-out', delay: d };
+            const swing = (sel, a, b, origin, dd) => { const el = w.querySelector(sel); el.style.transformBox = 'fill-box'; el.style.transformOrigin = origin;
+                animate(el, [{ transform: `rotate(${a}deg)` }, { transform: `rotate(${b}deg)` }], Object.assign({}, o, { duration: dd })); };
+            swing('.legA', -32, 32, '50% 0%', T / 2); swing('.legB', 32, -32, '50% 0%', T / 2);
+            swing('.armA', 38, -38, '50% 0%', T / 2); swing('.armB', -38, 38, '50% 0%', T / 2);
+            swing('.pony', 6, -22, '100% 0%', T / 4);
+            animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: `translateY(-${thick ? 1.5 : 2}px)` }], Object.assign({}, o, { duration: T / 4 }));
+        }
+    }
+    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, hardloopsters };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
@@ -447,6 +488,7 @@
         { run: yogis, dur: () => (W() + 200 + EX) * 40 },
         { run: klasje, dur: () => (W() + 220 + EX) * 22 },
         { run: voetballer, dur: () => (W() + 100) * 30 },
+        { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
     // geweest is), elkaar deels overlappend. De eerste komt al na een paar seconden.
