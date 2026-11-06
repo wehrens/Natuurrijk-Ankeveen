@@ -69,12 +69,32 @@
         return w;
     }
     // Loopbeweging: benen en armen zwaaien om en om, het lijf veert mee. Geeft één handvat voor pause/play/cancel.
+    // Bij pause gaan benen en armen netjes terug naar de ruststand (anders blijft iemand midden in een stap hangen).
     function bob(el, dur) {
-        const svg = el.firstElementChild, T = dur * 2, anims = [];
-        anims.push(animate(svg, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1px)' }], { duration: dur, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
-        const swing = (sel, deg, phase) => { const n = svg.querySelector(sel); if (n) anims.push(animate(n, [{ transform: `rotate(${-deg}deg)` }, { transform: `rotate(${deg}deg)` }], { duration: T / 2, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: phase ? -T / 2 : 0 })); };
-        swing('.legA', 24, false); swing('.legB', 24, true); swing('.armA', 18, true); swing('.armB', 18, false);
-        return { pause: () => anims.forEach(a => a.pause()), play: () => anims.forEach(a => a.play()), cancel: () => anims.forEach(a => a.cancel()) };
+        const svg = el.firstElementChild, T = dur * 2;
+        let body = null, limbs = [];
+        const start = () => {
+            body = animate(svg, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1px)' }], { duration: dur, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+            limbs = [];
+            const swing = (sel, deg, phase) => { const n = svg.querySelector(sel); if (n) limbs.push(animate(n, [{ transform: `rotate(${-deg}deg)` }, { transform: `rotate(${deg}deg)` }], { duration: T / 2, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: phase ? -T / 2 : 0 })); };
+            swing('.legA', 24, false); swing('.legB', 24, true); swing('.armA', 18, true); swing('.armB', 18, false);
+        };
+        const settle = () => {
+            limbs.forEach(a => { const n = a.effect.target, cur = getComputedStyle(n).transform; a.cancel(); animate(n, [{ transform: cur === 'none' ? 'rotate(0deg)' : cur }, { transform: 'rotate(0deg)' }], { duration: 220, easing: 'ease-out' }); });
+            limbs = [];
+            if (body) { body.cancel(); animate(svg, [{ transform: getComputedStyle(svg).transform === 'none' ? 'translateY(0)' : getComputedStyle(svg).transform }, { transform: 'translateY(0)' }], { duration: 220 }); body = null; }
+        };
+        start();
+        // zelf opletten: wie niet van zijn plek komt, staat stil (ook als een scène vergeet te pauzeren)
+        let lastX = null, still = 0;
+        const watch = setInterval(() => {
+            if (!el.isConnected) { clearInterval(watch); return; }
+            const x = el.getBoundingClientRect().left;
+            if (lastX !== null && Math.abs(x - lastX) < .3) { if (++still >= 2 && body) settle(); }
+            else { still = 0; if (!body && lastX !== null) start(); }
+            lastX = x;
+        }, 250);
+        return { pause: settle, play: () => { if (!body) start(); }, cancel: () => { clearInterval(watch); limbs.forEach(a => a.cancel()); if (body) body.cancel(); limbs = []; body = null; } };
     }
     function bubble(x, y, color) {
         const b = document.createElement('div');
