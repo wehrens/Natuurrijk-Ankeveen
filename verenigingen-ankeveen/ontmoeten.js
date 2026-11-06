@@ -592,16 +592,16 @@
         w.innerHTML = `<svg viewBox="0 0 70 40" width="52" height="30" aria-hidden="true" style="overflow:visible">
             <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="10" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M10 23.5v15M2.5 31h15M4.7 25.7l10.6 10.6M15.3 25.7L4.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
             <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="58" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M58 23.5v15M50.5 31h15M52.7 25.7l10.6 10.6M63.3 25.7L52.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
-            <path d="M44 13 h24 l-1 14 h-22 z" fill="#8b5a2b" stroke="#5a3a1e" stroke-width="1"/><path d="M45 17 h22 M45 21 h22" stroke="#5a3a1e" stroke-width=".7"/>
-            <path d="M10 31 l14 0 l-2 -12 M24 31 l12 -12 l9 0 M22 19 l-3 -1 M36 19 l0 -4 l4 0" fill="none" stroke="#3d4a5c" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M36 12 h32 l-1 15 h-30 z" fill="#8b5a2b" stroke="#5a3a1e" stroke-width="1"/><path d="M37 16 h30 M37 20 h30 M37 24 h30" stroke="#5a3a1e" stroke-width=".7"/>
+            <path d="M10 31 l14 0 l-2 -12 M24 31 l11 -6 l0 -11 M22 19 l-3 -1 M35 25 l1 2" fill="none" stroke="#3d4a5c" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M31 13 h5" stroke="#3d4a5c" stroke-width="2" stroke-linecap="round"/>
             <circle cx="24" cy="31" r="2.2" fill="#3d4a5c"/>
             <path class="legA" d="M23 20 l1 9" stroke="#1b4f9c" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
             <path class="legB" d="M23 20 l1 9" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
-            <path d="M18 21 q0 -11 9 -12 q10 0 11 10 l-1 2 l-18 1 z" fill="#1b4f9c"/>
-            <path d="M22 11 q4 -3 8 -1" stroke="#1b4f9c" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-            <path d="M32 14 l7 2" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/>
-            <circle cx="31" cy="7" r="4.2" fill="${huid}"/><path d="M26.5 6.5 q4.5 -5 9 0 l1.5 0.5 l-2 1 q-4 -3 -8 -0.5 z" fill="#6b4f2a"/>
-            <path d="M20 21 q7 3 15 0" stroke="#163f7a" stroke-width="1" fill="none"/></svg>`;
+            <path d="M18 21 q-1 -11 6 -12 q8 0 7 11 l-1 1 l-11 1 z" fill="#1b4f9c"/>
+            <path d="M23 11 l8 2" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="24" cy="5" r="4.2" fill="${huid}"/><path d="M19.5 4.5 q4.5 -5 9 0 l1.5 0.5 l-2 1 q-4 -3 -8 -0.5 z" fill="#6b4f2a"/>
+            <path d="M19 21 q5 2.5 11 0" stroke="#163f7a" stroke-width="1" fill="none"/></svg>`;
         strip.appendChild(w);
         const y = GROUND - 30 + 1, x0 = fromLeft ? -80 : width + 20, x1 = fromLeft ? width + 40 + EX : -100 - EX, dur = (width + 120 + EX) * 16;
         animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
