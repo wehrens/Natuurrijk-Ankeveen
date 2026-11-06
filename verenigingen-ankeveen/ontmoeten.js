@@ -609,8 +609,8 @@
             <path d="M10 31 l14 0 l-2 -12 M24 31 l11 -6 l0 -11 M22 19 l-3 -1 M35 25 l1 2" fill="none" stroke="#3d4a5c" stroke-width="2" stroke-linejoin="round"/>
             <path d="M31 13 h5" stroke="#3d4a5c" stroke-width="2" stroke-linecap="round"/>
             <circle cx="24" cy="31" r="2.2" fill="#3d4a5c"/>
-            <path class="legA" d="M23 20 l1 9" stroke="#1b4f9c" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
-            <path class="legB" d="M23 20 l1 9" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
+            <path class="legA" d="M23 20 l1.5 11" stroke="#1b4f9c" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
+            <path class="legB" d="M23 20 l1.5 11" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
             <path d="M18 21 q-1 -11 6 -12 q8 0 7 11 l-1 1 l-11 1 z" fill="#1b4f9c"/>
             <path d="M23 11 l8 2" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/>
             <circle cx="24" cy="5" r="4.2" fill="${huid}"/>
@@ -619,13 +619,40 @@
             <path d="M19 5 l-0.4 3.5 l1.6 -0.8 z M29 5 l0.4 3.5 l-1.6 -0.8 z" fill="#1a1a1a"/><path d="M19.2 6.5 l-0.3 1.4" stroke="#b8b8b8" stroke-width=".6"/>
             <path d="M19 21 q5 2.5 11 0" stroke="#163f7a" stroke-width="1" fill="none"/></svg>`;
         strip.appendChild(w);
-        const y = GROUND - 30 + 1, x0 = fromLeft ? -80 : width + 20, x1 = fromLeft ? width + 40 + EX : -100 - EX, dur = (width + 120 + EX) * 16;
-        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
-            .finished.then(() => w.remove()).catch(() => w.remove());
-        w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1400, iterations: Infinity, easing: 'linear' }));
-        animate(w.querySelector('.legA'), [{ transform: 'rotate(-24deg)' }, { transform: 'rotate(24deg)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
-        animate(w.querySelector('.legB'), [{ transform: 'rotate(24deg)' }, { transform: 'rotate(-24deg)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
-        animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-0.8px)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        const y = GROUND - 30 + 1, x0 = fromLeft ? -80 : width + 20, x1 = fromLeft ? width + 40 + EX : -100 - EX, speed = 16;
+        const ride = (xa, xb, cb) => animate(w, [{ transform: `translate(${xa}px, ${y}px) scaleX(${f})` }, { transform: `translate(${xb}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(xb - xa) * speed, easing: 'linear' }).finished.then(cb).catch(() => {});
+        const moving = [];
+        w.querySelectorAll('.wheel').forEach(g => moving.push(animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1400, iterations: Infinity, easing: 'linear' })));
+        moving.push(animate(w.querySelector('.legA'), [{ transform: 'rotate(-24deg)' }, { transform: 'rotate(24deg)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
+        moving.push(animate(w.querySelector('.legB'), [{ transform: 'rotate(24deg)' }, { transform: 'rotate(-24deg)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
+        moving.push(animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-0.8px)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
+        // meestal stopt hij ergens voor een praatje met een voorbijganger
+        if (chance(.75)) {
+            const stop = rand(width * .3, width * .7);
+            ride(x0, stop, () => {
+                moving.forEach(a => a.pause());
+                // de voorbijganger komt van de kant waar de bak naartoe wijst en blijft bij de bak staan
+                const h = rand(21, 25), p = person(pick(KLEUR), h); strip.appendChild(p);
+                const px0 = fromLeft ? width + 20 : -40, px1 = stop + (fromLeft ? 62 : -22);
+                p.style.transform = `translate(${px0}px, ${GROUND - h}px) scaleX(${-f})`;
+                const b = bob(p, 420), dwalk = Math.abs(px1 - px0) * 18;
+                animate(p, [{ transform: `translate(${px0}px, ${GROUND - h}px) scaleX(${-f})` }, { transform: `translate(${px1}px, ${GROUND - h}px) scaleX(${-f})` }], { duration: dwalk, easing: 'linear' })
+                    .finished.then(() => {
+                        b.pause();
+                        const bb = bubble(stop + (fromLeft ? 44 : 4), GROUND - 46, '#1b4f9c');
+                        const chat = { x: stop + 30, top: GROUND - 46, bb }; chatting.push(chat);
+                        later(() => {
+                            chatting.splice(chatting.indexOf(chat), 1);
+                            animate(bb, [{ opacity: 1 }, { opacity: 0 }], { duration: 400 }).finished.then(() => bb.remove()).catch(() => bb.remove());
+                            b.play();
+                            const px2 = fromLeft ? -60 : width + 40;
+                            animate(p, [{ transform: `translate(${px1}px, ${GROUND - h}px) scaleX(${-f})` }, { transform: `translate(${px2}px, ${GROUND - h}px) scaleX(${-f})` }], { duration: Math.abs(px2 - px1) * 18, easing: 'linear' })
+                                .finished.then(() => { b.cancel(); p.remove(); }).catch(() => p.remove());
+                            later(() => { moving.forEach(a => a.play()); ride(stop, x1, () => w.remove()); }, 600);
+                        }, rand(3500, 6000));
+                    }).catch(() => {});
+            });
+        } else ride(x0, x1, () => w.remove());
     }
 
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
@@ -845,7 +872,7 @@
         { run: voetballer, dur: () => (W() + 100) * 30 },
         { run: footballers, dur: () => (W() + 220 + EX) * 11 },
         { run: markt, dur: marktDur },
-        { run: bakfiets, dur: () => (W() + 120 + EX) * 16, rare: true },
+        { run: bakfiets, dur: () => (W() + 120 + EX) * 16 + 12000, rare: true },
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
@@ -859,7 +886,7 @@
             if (bag[0] === last && bag.length > 1) bag.push(bag.shift());
         }
         let s = bag.shift();
-        if (s.rare && chance(.7) && bag.length) { bag.push(s); s = bag.shift(); }   // zeldzame gasten slaan meestal een rondje over
+        if (s.rare && chance(.4) && bag.length) { bag.push(s); s = bag.shift(); }   // zeldzame gasten slaan meestal een rondje over
         last = s; s.run();
         // de volgende groep komt al als deze ruim halverwege is (mensen passeren elkaar gewoon)
         setTimeout(nextSpecial, s.dur() * .55 + rand(3000, 7000));
