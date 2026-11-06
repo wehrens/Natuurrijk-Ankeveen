@@ -12,6 +12,7 @@
     const rand = (a, b) => a + Math.random() * (b - a);
     const pick = a => a[Math.floor(Math.random() * a.length)];
     const chance = p => Math.random() < p;
+    const later = (fn, ms) => setTimeout(fn, ms);
     const running = new Set();
     // Looptochten (rechtlijnig van A naar B) onthouden we, zodat ze bij het kantelen van een telefoon
     // (strook wordt breder) gewoon doorlopen tot de nieuwe rand in plaats van halverwege te verdwijnen.
@@ -508,6 +509,109 @@
         setTimeout(pass, 900);
     }
 
+    // Weekmarkt van Bruisend Ankeveen: twee vrijwilligers zetten vijf kraampjes op, mensen komen boodschappen
+    // doen en gaan met een tas (met stokbrood) weer weg, en na een tijdje wordt de markt weer afgebroken.
+    const KRAAM = [
+        { luifel: '#D64541', waar: '<rect x="4" y="19" width="5" height="3" rx="1" fill="#c98b3a"/><rect x="10" y="18.5" width="6" height="3.5" rx="1" fill="#e0a650"/><rect x="17" y="19" width="5" height="3" rx="1" fill="#b87a2e"/>' },   // brood
+        { luifel: '#F2C318', waar: '<circle cx="7" cy="20.5" r="2.4" fill="#f4d35e"/><circle cx="13" cy="20.5" r="2.4" fill="#f1c232"/><rect x="17" y="18.5" width="6" height="4" fill="#f8e58c"/>' },                             // kaas
+        { luifel: '#1E9E3E', waar: '<circle cx="6" cy="20.5" r="2.2" fill="#e8552b"/><circle cx="11" cy="20.5" r="2.2" fill="#e8552b"/><rect x="15" y="18" width="2" height="5" fill="#f39a2b"/><rect x="18" y="18" width="2" height="5" fill="#f39a2b"/><circle cx="23" cy="20" r="2.4" fill="#3c9a3c"/>' }, // groente
+        { luifel: '#3B8FE0', waar: '<path d="M4 21 q5 -4 10 0 q-5 4 -10 0z" fill="#9fb8c8"/><path d="M14 21 q5 -4 10 0 q-5 4 -10 0z" fill="#8aa7ba"/><path d="M3 23 h22" stroke="#cfe3ee" stroke-width="2"/>' },     // vis
+        { luifel: '#FF4F9A', waar: '<path d="M6 23 v-5 M11 23 v-6 M16 23 v-5 M21 23 v-6" stroke="#3c9a3c" stroke-width="1.2"/><circle cx="6" cy="17.5" r="2" fill="#ff4f9a"/><circle cx="11" cy="16.5" r="2" fill="#f2c318"/><circle cx="16" cy="17.5" r="2" fill="#7b5cc4"/><circle cx="21" cy="16.5" r="2" fill="#ffffff" stroke="#ccc" stroke-width=".5"/>' } // bloemen
+    ];
+    function kraam(k) {
+        const w = document.createElement('div'); w.className = 'om-p om-kraam';
+        w.innerHTML = `<svg viewBox="0 0 28 34" width="30" height="36" aria-hidden="true">
+            <path d="M1 8 l2 -5 h22 l2 5 z" fill="${k.luifel}"/>
+            <path d="M1 8 q3.5 4 7 0 q3.5 4 7 0 q3.5 4 7 0 q3 4 5 0 v-1 h-26 z" fill="${k.luifel}" opacity=".85"/>
+            <path d="M3 8 v16 M25 8 v16" stroke="#8b5a2b" stroke-width="1.6"/>
+            <rect x="2" y="23" width="24" height="2" fill="#a97142"/><rect x="3" y="25" width="22" height="7" fill="#ffffff" stroke="#ddd" stroke-width=".5"/>
+            <path d="M3 25 h22" stroke="${k.luifel}" stroke-width="1.5"/>
+            ${k.waar}</svg>`;
+        return w;
+    }
+    function tas(color) {
+        const b = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        b.innerHTML = `<rect x="13" y="24" width="7" height="8" rx="1" fill="${color}"/><path d="M14.5 24 q2 -4 4 0" fill="none" stroke="#5a3a2a" stroke-width="1"/><path d="M15 24 l1.2 -8 l2 0.4 l-0.8 7.6" fill="#d9a35b" stroke="#b47a2e" stroke-width=".5"/>`;
+        return b;
+    }
+    function markt() {
+        if (document.hidden) return;
+        const width = W(), cx = width / 2, N = 5, gap = 40, xs = Array.from({ length: N }, (_, i) => cx + (i - (N - 1) / 2) * gap - 15);
+        const speed = 12;
+        const walkTo = (p, x0, x1, h, cb) => {
+            const y = GROUND - h, f = x1 > x0 ? 1 : -1;
+            p.style.transform = `translate(${x0}px, ${y}px) scaleX(${f})`;
+            const b = bob(p, rand(380, 460)), d = Math.abs(x1 - x0) * speed;
+            animate(p, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: d, easing: 'linear' })
+                .finished.then(() => { b.pause(); cb && cb(); }).catch(() => {});
+            return d;
+        };
+        // 1. twee vrijwilligers van Bruisend (groen) komen aanlopen en zetten de kramen op
+        const hb = 24, b1 = person('#1F6F5C', hb), b2 = person('#1F6F5C', hb); strip.appendChild(b1); strip.appendChild(b2);
+        const walkIn = walkTo(b1, -40, xs[0] - 22, hb); walkTo(b2, -60, xs[0] - 36, hb);
+        const kramen = [];
+        xs.forEach((x, i) => later(() => {
+            const k = kraam(KRAAM[i]); k.style.transform = `translate(${x}px, ${GROUND - 36}px)`; strip.appendChild(k); kramen.push(k);
+            animate(k, [{ transform: `translate(${x}px, ${GROUND - 36}px) scaleY(0)` }, { transform: `translate(${x}px, ${GROUND - 36}px) scaleY(1.06)`, offset: .8 }, { transform: `translate(${x}px, ${GROUND - 36}px) scaleY(1)` }], { duration: 700, easing: 'ease-out' });
+            // de bouwers schuiven mee naar de volgende kraam
+            [b1, b2].forEach((b, j) => walkTo(b, x - 22 - j * 14, x + gap - 22 - j * 14, hb));
+        }, walkIn + 400 + i * 1300));
+        const open = walkIn + 400 + N * 1300 + 500;
+        // 2. klanten: komen aanlopen, staan even bij een kraam, gaan met tas weer weg
+        const shopEnd = open + 34000;
+        function klant() {
+            if (performance.now() - t0 > shopEnd - 6000) return;
+            const h = chance(.2) ? rand(14, 17) : rand(20, 25), color = pick(KLEUR), p = person(color, h); strip.appendChild(p);
+            const fromLeft = chance(.5), k = Math.floor(Math.random() * N), stop = xs[k] + (fromLeft ? -12 : 36);
+            walkTo(p, fromLeft ? -40 : width + 20, stop, h, () => {
+                later(() => {
+                    p.firstElementChild.appendChild(tas(pick(['#D64541', '#1b4f9c', '#F39A2B', '#2BB39A'])));
+                    const leaveLeft = chance(.5);
+                    walkTo(p, stop, leaveLeft ? -60 : width + 40, h, () => p.remove());
+                }, rand(1800, 4000));
+            });
+        }
+        const t0 = performance.now();
+        later(() => { klant(); }, open);
+        const tick = setInterval(() => { if (performance.now() - t0 > shopEnd - 6000) { clearInterval(tick); return; } if (chance(.8)) klant(); }, 2600);
+        // 3. afbreken: kramen gaan een voor een weg, de vrijwilligers lopen af
+        xs.forEach((x, i) => later(() => {
+            const k = kramen[N - 1 - i]; if (!k) return;
+            animate(k, [{ transform: `translate(${x}px, ${GROUND - 36}px) scaleY(1)` }, { transform: `translate(${xs[N - 1 - i]}px, ${GROUND - 36}px) scaleY(0)` }], { duration: 600, easing: 'ease-in' }).finished.then(() => k.remove()).catch(() => k.remove());
+            [b1, b2].forEach((b, j) => walkTo(b, xs[N - 1 - i] + 36 + j * 14, xs[N - 1 - i] - gap + 36 + j * 14, hb));
+        }, shopEnd + i * 1200));
+        later(() => { [b1, b2].forEach((b, j) => walkTo(b, xs[0] - gap + 36 + j * 14, -60 - j * 20, hb, () => b.remove())); }, shopEnd + N * 1200 + 300);
+    }
+    const marktDur = () => 2000 + (W() / 2) * 12 + 7000 + 34000 + 5 * 1200 + (W() / 2) * 12 + 2000;
+
+    // Bakfiets: een wat dikkere man in blauwe overall op een ouderwetse bruine bakfiets, komt heel af en toe voorbij
+    function bakfiets() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, huid = pick(HUID);
+        const w = document.createElement('div'); w.className = 'om-p';
+        w.innerHTML = `<svg viewBox="0 0 70 40" width="52" height="30" aria-hidden="true" style="overflow:visible">
+            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="10" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M10 23.5v15M2.5 31h15M4.7 25.7l10.6 10.6M15.3 25.7L4.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
+            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="58" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M58 23.5v15M50.5 31h15M52.7 25.7l10.6 10.6M63.3 25.7L52.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
+            <path d="M44 13 h24 l-1 14 h-22 z" fill="#8b5a2b" stroke="#5a3a1e" stroke-width="1"/><path d="M45 17 h22 M45 21 h22" stroke="#5a3a1e" stroke-width=".7"/>
+            <path d="M10 31 l14 0 l-2 -12 M24 31 l12 -12 l9 0 M22 19 l-3 -1 M36 19 l0 -4 l4 0" fill="none" stroke="#3d4a5c" stroke-width="2" stroke-linejoin="round"/>
+            <circle cx="24" cy="31" r="2.2" fill="#3d4a5c"/>
+            <path class="legA" d="M23 20 l1 9" stroke="#1b4f9c" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
+            <path class="legB" d="M23 20 l1 9" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
+            <path d="M18 21 q0 -11 9 -12 q10 0 11 10 l-1 2 l-18 1 z" fill="#1b4f9c"/>
+            <path d="M22 11 q4 -3 8 -1" stroke="#1b4f9c" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+            <path d="M32 14 l7 2" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="31" cy="7" r="4.2" fill="${huid}"/><path d="M26.5 6.5 q4.5 -5 9 0 l1.5 0.5 l-2 1 q-4 -3 -8 -0.5 z" fill="#6b4f2a"/>
+            <path d="M20 21 q7 3 15 0" stroke="#163f7a" stroke-width="1" fill="none"/></svg>`;
+        strip.appendChild(w);
+        const y = GROUND - 30 + 1, x0 = fromLeft ? -80 : width + 20, x1 = fromLeft ? width + 40 + EX : -100 - EX, dur = (width + 120 + EX) * 16;
+        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+            .finished.then(() => w.remove()).catch(() => w.remove());
+        w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1400, iterations: Infinity, easing: 'linear' }));
+        animate(w.querySelector('.legA'), [{ transform: 'rotate(-24deg)' }, { transform: 'rotate(24deg)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        animate(w.querySelector('.legB'), [{ transform: 'rotate(24deg)' }, { transform: 'rotate(-24deg)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-0.8px)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+    }
+
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
         [[.3, 3], [.68, 2]].forEach(([f, n]) => {
             const c = pick(KLEUR);
@@ -704,7 +808,7 @@
         animate(w.querySelector('img'), [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-0.7px) rotate(-0.35deg)', offset: .5 }, { transform: 'translateY(0) rotate(0deg)' }],
             { duration: 2800, iterations: Infinity, easing: 'ease-in-out' });
     }
-    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje };   // handig om te testen
+    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
@@ -724,6 +828,8 @@
         { run: klasje, dur: () => (W() + 220 + EX) * 22 },
         { run: voetballer, dur: () => (W() + 100) * 30 },
         { run: footballers, dur: () => (W() + 220 + EX) * 11 },
+        { run: markt, dur: marktDur },
+        { run: bakfiets, dur: () => (W() + 120 + EX) * 16, rare: true },
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
@@ -736,7 +842,9 @@
             bag = specials.slice().sort(() => Math.random() - 0.5);
             if (bag[0] === last && bag.length > 1) bag.push(bag.shift());
         }
-        const s = bag.shift(); last = s; s.run();
+        let s = bag.shift();
+        if (s.rare && chance(.7) && bag.length) { bag.push(s); s = bag.shift(); }   // zeldzame gasten slaan meestal een rondje over
+        last = s; s.run();
         // de volgende groep komt al als deze ruim halverwege is (mensen passeren elkaar gewoon)
         setTimeout(nextSpecial, s.dur() * .55 + rand(3000, 7000));
     }
