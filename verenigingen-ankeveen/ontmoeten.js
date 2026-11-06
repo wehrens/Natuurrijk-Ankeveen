@@ -372,7 +372,36 @@
         });
         return;
     }
-    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis };   // handig om te testen
+    // Schoolklasje: een begeleider voorop en een achteraan, ertussen kinderen die rommelig huppelen.
+    // Iedereen in een feloranje hesje met reflecterende band.
+    function hesje(h) {
+        const w = person('#FF6A00', h);
+        const svg = w.firstElementChild;
+        svg.insertAdjacentHTML('beforeend', '<path d="M3.6 18.5 h10.8" stroke="#F4F4F4" stroke-width="1.6"/><path d="M3.3 21.5 h11.4" stroke="#F4F4F4" stroke-width="1.2" opacity=".8"/>');
+        return w;
+    }
+    function klasje() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1;
+        const nKids = pick([6, 7, 8]), speed = 22, dur = (width + 220) * speed;
+        const rij = [{ h: rand(23, 25), kid: false }];
+        for (let i = 0; i < nKids; i++) rij.push({ h: rand(12, 15.5), kid: true });
+        rij.push({ h: rand(22, 25), kid: false });
+        let off = 0;
+        rij.forEach((m, i) => {
+            const w = hesje(m.h); strip.appendChild(w);
+            off += i === 0 ? 0 : (m.kid && rij[i - 1].kid ? rand(5, 11) : rand(12, 16));
+            const y = GROUND - m.h;
+            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -60 + off;
+            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+                .finished.then(() => w.remove()).catch(() => w.remove());
+            if (m.kid) {                                    // huppelen: elk kind in een eigen ritme, met wat heen-en-weer
+                animate(w.firstElementChild, [{ transform: 'translate(0, 0)' }, { transform: `translate(${rand(-3, 3)}px, -${rand(2.5, 5)}px)` }],
+                    { duration: rand(230, 380), direction: 'alternate', iterations: Infinity, easing: 'ease-out', delay: rand(0, 300) });
+            } else bob(w, rand(420, 500));
+        });
+    }
+    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
@@ -386,6 +415,7 @@
         { run: naturists, dur: () => (W() + 160) * 26 },
         { run: carnaval, dur: () => (W() + 260) * 22 },
         { run: yogis, dur: () => (W() + 200) * 40 },
+        { run: klasje, dur: () => (W() + 220) * 22 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
     // geweest is), met een korte pauze ertussen. De eerste komt al na een paar seconden.
