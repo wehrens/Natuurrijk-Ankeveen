@@ -655,6 +655,54 @@
         } else ride(x0, x1, () => w.remove());
     }
 
+    // Stadsfiets met rechtop zittende fietser; optioneel een kindje achterop. scale = grootte (1 = volwassene)
+    function cityBike(opts) {
+        const { color, huid, haar, kind, scale = 1, ponytail = false } = opts;
+        const w = document.createElement('div'); w.className = 'om-p';
+        const W0 = 52 * scale, H0 = 40 * scale;
+        w.innerHTML = `<svg viewBox="0 0 52 40" width="${W0}" height="${H0}" aria-hidden="true" style="overflow:visible">
+            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="10" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M10 23.5v15M2.5 31h15M4.7 25.7l10.6 10.6M15.3 25.7L4.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
+            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="42" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M42 23.5v15M34.5 31h15M36.7 25.7l10.6 10.6M47.3 25.7L36.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
+            <path d="M10 31 l14 0 l-2 -12 M24 31 l12 -12 l6 12 M36 19 l0 -4 l3 0 M22 19 l-4 -1" fill="none" stroke="#3d4a5c" stroke-width="2" stroke-linejoin="round"/>
+            <circle cx="24" cy="31" r="2.2" fill="#3d4a5c"/>
+            ${kind ? `<path d="M12 22 h6 l0 -6 h-5 z" fill="#5a6a7e"/><circle cx="15" cy="12" r="3" fill="${kind.huid}"/><path d="M12.2 11.8 q2.8 -3.4 5.6 0 q-1 -1.4 -2.8 -1.4 q-1.8 0 -2.8 1.4z" fill="${kind.haar}"/><path d="M12.5 16 q2.5 -2 5 0 l0.5 6 h-6 z" fill="${kind.color}"/><path d="M13.5 22 l-1 5 M16.5 22 l1 5" stroke="#2f3e55" stroke-width="2" stroke-linecap="round"/>` : ''}
+            <path class="legA" d="M23 20 l1.5 11" stroke="#2f3e55" stroke-width="3" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
+            <path class="legB" d="M23 20 l1.5 11" stroke="#1f2d40" stroke-width="3" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
+            <path d="M19 21 q0 -10 5 -11 q6 0 6 10 l-1 1 l-9 1 z" fill="${color}"/>
+            <path d="M24 12 l11 3" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/>
+            <circle cx="25" cy="6" r="4.2" fill="${huid}"/>
+            ${ponytail ? `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/><path d="M21.5 5 q-4 1 -4.5 5.5 q2 -2 5 -3.2z" fill="${haar}"/>` : `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/>`}</svg>`;
+        return w;
+    }
+    function rideBike(w, fromLeft, h, extraDelay) {
+        const width = W(), f = fromLeft ? 1 : -1, y = GROUND - h + 1;
+        const x0 = fromLeft ? -80 - (extraDelay || 0) : width + 20 + (extraDelay || 0), x1 = fromLeft ? width + 40 + EX : -100 - EX, dur = Math.abs(x1 - x0) * 13;
+        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+            .finished.then(() => w.remove()).catch(() => w.remove());
+        w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1100, iterations: Infinity, easing: 'linear' }));
+        animate(w.querySelector('.legA'), [{ transform: 'rotate(-26deg)' }, { transform: 'rotate(26deg)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        animate(w.querySelector('.legB'), [{ transform: 'rotate(26deg)' }, { transform: 'rotate(-26deg)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-0.7px)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+    }
+    // Vader op de fiets met een kindje achterop (naar school of de opvang)
+    function vaderFiets() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5);
+        const w = cityBike({ color: pick(KLEUR), huid: pick(HUID), haar: pick(HAAR), kind: { huid: pick(HUID), haar: pick(HAAR), color: pick(['#D64541', '#F39A2B', '#3B8FE0', '#FF4F9A']) } });
+        w.firstElementChild.setAttribute('width', 52 * .68); w.firstElementChild.setAttribute('height', 40 * .68);
+        strip.appendChild(w); rideBike(w, fromLeft, 40 * .68);
+    }
+    // Moeder op de fiets, met een meisje op een klein fietsje dat voor haar uit rijdt
+    function moederFiets() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), haar = pick(HAAR);
+        const m = cityBike({ color: pick(KLEUR), huid: pick(HUID), haar, ponytail: true, scale: .68 });
+        const k = cityBike({ color: pick(['#FF4F9A', '#F39A2B', '#7B5CC4', '#2BB39A']), huid: pick(HUID), haar: pick(['#d9b36a', '#8b5a2b', '#2b2b2b']), ponytail: true, scale: .42 });
+        strip.appendChild(k); strip.appendChild(m);
+        rideBike(k, fromLeft, 40 * .42, -30);     // het meisje voorop
+        rideBike(m, fromLeft, 40 * .68, 16);
+    }
+
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
         [[.3, 3], [.68, 2]].forEach(([f, n]) => {
             const c = pick(KLEUR);
@@ -851,12 +899,12 @@
         animate(w.querySelector('img'), [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-0.7px) rotate(-0.35deg)', offset: .5 }, { transform: 'translateY(0) rotate(0deg)' }],
             { duration: 2800, iterations: Infinity, easing: 'ease-in-out' });
     }
-    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets };   // handig om te testen
+    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets, vaderFiets, moederFiets };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
     meeting();
-    const planMeeting = () => setTimeout(() => { if (active < 2) meeting(); planMeeting(); }, rand(10000, 16000));
+    const planMeeting = () => setTimeout(() => { const r = Math.random(); if (r < .12) vaderFiets(); else if (r < .24) moederFiets(); else if (active < 2) meeting(); planMeeting(); }, rand(10000, 16000));
     planMeeting();
     // af en toe een hondenuitlater (vaak twee die elkaar tegenkomen)
     const planHond = () => setTimeout(() => { honden(); planHond(); }, rand(22000, 38000));
