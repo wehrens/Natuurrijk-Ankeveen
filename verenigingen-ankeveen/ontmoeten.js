@@ -222,7 +222,7 @@
             : kind === 'trumpet' ? `<path d="M11 10 h7 l4 -3 v8 l-4 -3 h-7 z" fill="#C9A227"/>`
             : `<path d="M11 12 q6 -8 8 -2 l-3 4 z" fill="#C9A227"/>`;
         w.innerHTML = `<svg viewBox="0 0 24 40" width="${h * .6}" height="${h}" aria-hidden="true">
-            <circle cx="9" cy="5" r="4.6" fill="${color}"/><path d="M5 2 h8 l-1 -3 h-6 z" fill="#16233a"/>
+            <circle cx="9" cy="5" r="4.6" fill="${pick(HUID)}"/><path d="M5 2 h8 l-1 -3 h-6 z" fill="#16233a"/>
             <path d="M3 13 q6 -4 12 0 l1.5 13 h-3 l-1 12 h-3 l-0.5 -11 l-0.5 11 h-3 l-1 -12 h-3 z" fill="${color}"/>${inst}</svg>`;
         return w;
     }
