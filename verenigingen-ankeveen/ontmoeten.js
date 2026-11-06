@@ -472,13 +472,84 @@
             animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: `translateY(-${thick ? 1.5 : 2}px)` }], Object.assign({}, o, { duration: T / 4 }));
         }
     }
-    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, hardloopsters };   // handig om te testen
+    // Hondenuitlaters: een baasje met een hondje aan de lijn. Komen er twee elkaar tegen, dan snuffelen
+    // de hondjes aan elkaar en kletsen de baasjes even, daarna loopt ieder door.
+    const VACHT = ['#8b5a2b', '#2b2b2b', '#d9b36a', '#f4efe6', '#a0522d', '#6b6b6b'];
+    function baasMetHond() {
+        const h = rand(21, 24.5), w = document.createElement('div'); w.className = 'om-p';
+        w.style.width = '34px'; w.style.height = h + 'px';
+        const pers = person(pick(KLEUR), h); pers.style.position = 'absolute'; pers.style.left = '0'; pers.style.top = '0';
+        const vacht = pick(VACHT), vlek = pick(VACHT), klein = chance(.5), dw = klein ? 12 : 15, dh = dw * .65;
+        const dog = document.createElement('div');
+        dog.style.cssText = `position:absolute;left:${33 - dw}px;top:${h - dh}px;width:${dw}px;height:${dh}px`;
+        dog.innerHTML = `<svg viewBox="0 0 20 13" width="${dw}" height="${dh}" aria-hidden="true" style="overflow:visible">
+            <path class="tail" d="M3.2 5.5 q-2.6 -1.4 -2.6 -4.4" fill="none" stroke="${vacht}" stroke-width="1.5" stroke-linecap="round"/>
+            <ellipse cx="9" cy="6.6" rx="6.2" ry="3.2" fill="${vacht}"/>
+            <ellipse cx="7" cy="6" rx="2.2" ry="1.6" fill="${vlek}" opacity=".7"/>
+            <path d="M4.6 8.5 v4.3 M7 8.8 v4 M11.4 8.8 v4 M13.6 8.5 v4.3" stroke="${vacht}" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="15.6" cy="4" r="2.9" fill="${vacht}"/><ellipse cx="18.4" cy="4.9" rx="1.6" ry="1.1" fill="${vacht}"/>
+            <circle cx="19.6" cy="4.6" r=".6" fill="#16233a"/><circle cx="16.4" cy="3.4" r=".45" fill="#16233a"/>
+            <path d="M14.2 1.8 q-1.4 0.6 -1 3.2 q1 -0.6 1.8 -2.4 z" fill="${vlek}"/>
+            <path d="M13.2 5.6 l2.4 1.2" stroke="#D64541" stroke-width=".9"/></svg>`;
+        const lijn = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        lijn.setAttribute('width', 34); lijn.setAttribute('height', h); lijn.style.cssText = 'position:absolute;left:0;top:0;overflow:visible';
+        const hx = 10.4, hy = h * .37, cx = 33 - dw + dw * .7, cy = h - dh + dh * .45;
+        lijn.innerHTML = `<path d="M${hx} ${hy} Q${(hx + cx) / 2} ${Math.max(hy, cy) + 3} ${cx} ${cy}" fill="none" stroke="#3d4a5c" stroke-width=".8"/>`;
+        w.append(pers, lijn, dog);
+        bob(pers, rand(380, 460));
+        const trot = animate(dog.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1.2px)' }], { duration: rand(150, 190), direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        const tail = dog.querySelector('.tail'); tail.style.transformBox = 'fill-box'; tail.style.transformOrigin = '100% 100%';
+        const wag = animate(tail, [{ transform: 'rotate(-14deg)' }, { transform: 'rotate(14deg)' }], { duration: 260, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        return { w, h, pers, dog, trot, wag, b: pers.getAnimations()[0] };
+    }
+    function honden() {
+        if (document.hidden) return;
+        const width = W(), speed = rand(17, 21), samen = chance(.7);
+        const meet = rand(width * .25, width * .75);
+        const kanten = samen ? [1, -1] : [pick([1, -1])];
+        const lopers = kanten.map(f => {
+            const b = baasMetHond(); strip.appendChild(b.w);
+            const y = GROUND - b.h, x0 = f > 0 ? -50 : width + 16;
+            const xm = f > 0 ? meet - 31 : meet - 3;                  // hondenneuzen raken elkaar bij 'meet'
+            const xEnd = f > 0 ? width + 30 : -70;
+            return Object.assign(b, { f, y, x0, xm, xEnd });
+        });
+        const lopen = (l, a, z) => animate(l.w, [{ transform: `translate(${a}px, ${l.y}px) scaleX(${l.f})` }, { transform: `translate(${z}px, ${l.y}px) scaleX(${l.f})` }],
+            { duration: Math.abs(z - a) * speed, easing: 'linear' });
+        if (!samen) { const l = lopers[0]; lopen(l, l.x0, l.xEnd).finished.then(() => l.w.remove()).catch(() => l.w.remove()); return; }
+        const aan = lopers.map(l => lopen(l, l.x0, l.xm));
+        Promise.all(aan.map(a => a.finished)).then(() => {
+            lopers.forEach(l => { l.b && l.b.pause(); l.trot.pause(); });
+            // snuffelen: hondjes duiken met hun kop omlaag en wiebelen, staarten kwispelen harder
+            lopers.forEach((l, i) => {
+                l.wag.updatePlaybackRate(2.2);
+                const g = l.dog.firstElementChild; g.style.transformOrigin = '30% 100%';
+                l.sniff = animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(7deg) translateX(0.6px)' }, { transform: 'rotate(2deg)' }, { transform: 'rotate(8deg) translateX(0.8px)' }, { transform: 'rotate(0deg)' }],
+                    { duration: 900, iterations: Infinity, delay: i * 250, easing: 'ease-in-out' });
+            });
+            const top = GROUND - Math.max(...lopers.map(l => l.h)) - 16;
+            const bb = bubble(meet - 18, top, lopers[0].pers.querySelector('path:nth-of-type(2)') ? '#3d4a5c' : '#3d4a5c');
+            const chat = { x: meet - 10, top, bb }; chatting.push(chat);
+            setTimeout(() => {
+                chatting.splice(chatting.indexOf(chat), 1);
+                animate(bb, [{ opacity: 1 }, { opacity: 0 }], { duration: 400 }).finished.then(() => bb.remove()).catch(() => bb.remove());
+                lopers.forEach(l => {
+                    l.sniff.cancel(); l.wag.updatePlaybackRate(1); l.b && l.b.play(); l.trot.play();
+                    lopen(l, l.xm, l.xEnd).finished.then(() => l.w.remove()).catch(() => l.w.remove());
+                });
+            }, rand(4000, 6500));
+        }).catch(() => lopers.forEach(l => l.w.remove()));
+    }
+    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, hardloopsters, honden };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
     meeting();
     const planMeeting = () => setTimeout(() => { if (active < 2) meeting(); planMeeting(); }, rand(10000, 16000));
     planMeeting();
+    // af en toe een hondenuitlater (vaak twee die elkaar tegenkomen)
+    const planHond = () => setTimeout(() => { honden(); planHond(); }, rand(22000, 38000));
+    setTimeout(() => { honden(); planHond(); }, 9000);
     const specials = [
         { run: peloton, dur: () => (W() + 300 + EX) * 4.5 },
         { run: fanfare, dur: () => (W() + 200 + EX) * 24 },
