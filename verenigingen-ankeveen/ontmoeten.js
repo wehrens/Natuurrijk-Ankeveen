@@ -58,15 +58,23 @@
             `<path d="M4.6 4 q1 -4.6 4.4 -4.6 q3.4 0 4.4 4.6 q-2 -1.6 -4.4 -1.6 q-2.4 0 -4.4 1.6z" fill="${haar}"/>`,         // pet-achtig kort
             `<path d="M9 0.2 q5 0 4.8 5.6 q-1.8 -2.8 -4.8 -2.8 q-3 0 -4.8 2.8 q-0.2 -5.6 4.8 -5.6z M4 5 l10 0" fill="${haar}"/>` // bob
         ]);
-        w.innerHTML = `<svg viewBox="0 0 18 40" width="${h * .45}" height="${h}" aria-hidden="true">
-            <circle cx="9" cy="5" r="4.6" fill="${huid}"/>${hairStyle}
-            <path d="M3 13 q6 -4 12 0 l1.5 13 h-3 l-0.3 -3 h-8.4 l-0.3 3 h-3 z" fill="${color}"/>
-            <path d="M4.8 23 h8.4 l-1 15 h-3 l-0.2 -11 l-0.2 11 h-3 z" fill="${broek}"/></svg>`;
+        w.innerHTML = `<svg viewBox="0 0 18 40" width="${h * .45}" height="${h}" aria-hidden="true" style="overflow:visible">
+            <path class="legB" d="M9.5 24 l1.2 7 l-0.4 7" fill="none" stroke="${broek}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
+            <path class="armB" d="M13.5 14 l0.8 6 l-1 4" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:13px 14px"/>
+            <path class="legA" d="M8.5 24 l-1.2 7 l0.4 7" fill="none" stroke="${broek}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
+            <path d="M3 13 q6 -4 12 0 l1.5 12 h-15 z" fill="${color}"/>
+            <path d="M4.5 22 h9 l0.3 3.5 h-9.6 z" fill="${broek}"/>
+            <path class="armA" d="M4.5 14 l-0.8 6 l1 4" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:5px 14px"/>
+            <circle cx="9" cy="5" r="4.6" fill="${huid}"/>${hairStyle}</svg>`;
         return w;
     }
+    // Loopbeweging: benen en armen zwaaien om en om, het lijf veert mee. Geeft één handvat voor pause/play/cancel.
     function bob(el, dur) {
-        return animate(el.firstElementChild, [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-1px) rotate(1.4deg)' }],
-            { duration: dur, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        const svg = el.firstElementChild, T = dur * 2, anims = [];
+        anims.push(animate(svg, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1px)' }], { duration: dur, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
+        const swing = (sel, deg, phase) => { const n = svg.querySelector(sel); if (n) anims.push(animate(n, [{ transform: `rotate(${-deg}deg)` }, { transform: `rotate(${deg}deg)` }], { duration: T / 2, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: phase ? -T / 2 : 0 })); };
+        swing('.legA', 24, false); swing('.legB', 24, true); swing('.armA', 18, true); swing('.armB', 18, false);
+        return { pause: () => anims.forEach(a => a.pause()), play: () => anims.forEach(a => a.play()), cancel: () => anims.forEach(a => a.cancel()) };
     }
     function bubble(x, y, color) {
         const b = document.createElement('div');
