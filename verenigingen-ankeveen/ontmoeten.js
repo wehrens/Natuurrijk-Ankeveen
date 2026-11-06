@@ -300,7 +300,9 @@
               <path d="M12 24 l12 -11 q3 -2.5 6 -0.5 l-1.5 3.5 q-2 -1 -3.5 0.5 l-10 10 z" fill="${color}"/>
               <circle cx="33" cy="9.5" r="4" fill="${huid}"/>
               <path d="M28.6 9 q4.4 -6 8.8 0 l-0.5 -2.4 q-3.9 -4 -7.8 0z" fill="${muts}"/><circle cx="32.2" cy="4" r="1.3" fill="#fff"/>
-              <path d="M24 15 q-6 2 -9 7" stroke="${huid}" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+              <path d="M25 12.5 q-3 7 -10.5 6.5" stroke="${color}" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+              <path d="M25 12.5 q-3 7 -10.5 6.5" stroke="${huid}" stroke-width="1.4" stroke-linecap="round" fill="none" stroke-dasharray="0 9 20"/>
+              <circle cx="14" cy="19" r="1.7" fill="${huid}"/>
             </g></svg>`;
         return w;
     }
