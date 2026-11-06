@@ -290,10 +290,14 @@
     function naturist(h, male, female) {
         const w = document.createElement('div'); w.className = 'om-p';
         const skin = pick(['#F2B5A0', '#E8A58E', '#F6C6B2']);
-        w.innerHTML = `<svg viewBox="0 0 22 40" width="${h * .55}" height="${h}" aria-hidden="true">
+        w.innerHTML = `<svg viewBox="0 0 22 40" width="${h * .55}" height="${h}" aria-hidden="true" style="overflow:visible">
             ${female ? '<path d="M4.2 6 q0 -6.8 4.8 -6.8 q4.8 0 4.8 6.8 l0.6 8 l-2.4 0 l-0.4 -6 q-2.6 -1 -5.2 0 l-0.4 6 l-2.4 0 z" fill="#5a3a2a"/>' : ''}
+            <path class="legB" d="M9.5 25 l1.2 7 l-0.4 6" fill="none" stroke="${skin}" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 25px"/>
+            <path class="armB" d="M13.5 14 l0.8 6 l-1 4" fill="none" stroke="${skin}" stroke-width="2.4" stroke-linecap="round" style="transform-box:view-box;transform-origin:13px 14px"/>
+            <path class="legA" d="M8.5 25 l-1.2 7 l0.4 6" fill="none" stroke="${skin}" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 25px"/>
+            <path d="M3 13 q6 -4 12 0 l1.5 13 h-15 z" fill="${skin}"/>
+            <path class="armA" d="M4.5 14 l-0.8 6 l1 4" fill="none" stroke="${skin}" stroke-width="2.4" stroke-linecap="round" style="transform-box:view-box;transform-origin:5px 14px"/>
             <circle cx="9" cy="5" r="4.6" fill="${skin}"/>
-            <path d="M3 13 q6 -4 12 0 l1.5 13 h-3 l-1 12 h-3 l-0.5 -11 l-0.5 11 h-3 l-1 -12 h-3 z" fill="${skin}"/>
             <path d="M12 11 l6 2 l-1 13 l-3 0.5 z" fill="#ffffff" stroke="#9DC3E6" stroke-width=".8"/>
             <path d="M14 14 h3 M14 17 h3 M14 20 h3" stroke="#9DC3E6" stroke-width=".8"/>
             <path d="M5.2 3.2 q3.8 -3.2 7.6 0" fill="none" stroke="#5a3a2a" stroke-width="1.3"/>
