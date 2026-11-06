@@ -600,7 +600,10 @@
             <path class="legB" d="M23 20 l1 9" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
             <path d="M18 21 q-1 -11 6 -12 q8 0 7 11 l-1 1 l-11 1 z" fill="#1b4f9c"/>
             <path d="M23 11 l8 2" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/>
-            <circle cx="24" cy="5" r="4.2" fill="${huid}"/><path d="M19.5 4.5 q4.5 -5 9 0 l1.5 0.5 l-2 1 q-4 -3 -8 -0.5 z" fill="#6b4f2a"/>
+            <circle cx="24" cy="5" r="4.2" fill="${huid}"/>
+            <path d="M19.6 5.2 q0 -5.4 4.4 -5.4 q4.4 0 4.4 5.4 q-1.4 -2.4 -4.4 -2.4 q-3 0 -4.4 2.4 z" fill="#1a1a1a"/>
+            <path d="M21 2.2 q1.2 -1.4 2.4 -1.2 M26 1.6 q1 0.6 1.6 1.8" stroke="#b8b8b8" stroke-width=".7" fill="none" stroke-linecap="round"/>
+            <path d="M19 5 l-0.4 3.5 l1.6 -0.8 z M29 5 l0.4 3.5 l-1.6 -0.8 z" fill="#1a1a1a"/><path d="M19.2 6.5 l-0.3 1.4" stroke="#b8b8b8" stroke-width=".6"/>
             <path d="M19 21 q5 2.5 11 0" stroke="#163f7a" stroke-width="1" fill="none"/></svg>`;
         strip.appendChild(w);
         const y = GROUND - 30 + 1, x0 = fromLeft ? -80 : width + 20, x1 = fromLeft ? width + 40 + EX : -100 - EX, dur = (width + 120 + EX) * 16;
