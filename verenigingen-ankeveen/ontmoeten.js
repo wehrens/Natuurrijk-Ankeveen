@@ -13,11 +13,33 @@
     const pick = a => a[Math.floor(Math.random() * a.length)];
     const chance = p => Math.random() < p;
     const running = new Set();
+    // Looptochten (rechtlijnig van A naar B) onthouden we, zodat ze bij het kantelen van een telefoon
+    // (strook wordt breder) gewoon doorlopen tot de nieuwe rand in plaats van halverwege te verdwijnen.
+    const tochten = new Set(), TR = /translate\((-?[\d.]+)px, (-?[\d.]+)px\)(.*)/;
     function animate(el, frames, opts) {
         const a = el.animate(frames, Object.assign({ fill: 'forwards' }, opts));
         running.add(a); a.finished.then(() => running.delete(a)).catch(() => running.delete(a));
+        if (frames.length === 2 && opts && opts.easing === 'linear' && el.classList && el.classList.contains('om-p')) {
+            const m0 = TR.exec(frames[0].transform || ''), m1 = TR.exec(frames[1].transform || '');
+            if (m0 && m1) {
+                const t = { a, x0: +m0[1], x1: +m1[1], y: m0[2], rest: m1[3], dur: opts.duration };
+                tochten.add(t); const weg = () => tochten.delete(t); a.finished.then(weg).catch(weg);
+            }
+        }
         return a;
     }
+    let breedte = strip.clientWidth;
+    addEventListener('resize', () => {
+        const nu = strip.clientWidth, extra = nu - breedte; breedte = nu;
+        if (extra <= 0) return;
+        tochten.forEach(t => {
+            if (t.x1 > t.x0 && t.x1 >= nu - extra - 1) {             // loopt naar de rechterrand: verder doorlopen
+                const x1 = t.x1 + extra, dur = t.dur * (x1 - t.x0) / (t.x1 - t.x0);
+                t.a.effect.setKeyframes([{ transform: `translate(${t.x0}px, ${t.y}px)${t.rest}` }, { transform: `translate(${x1}px, ${t.y}px)${t.rest}` }]);
+                t.a.effect.updateTiming({ duration: dur }); t.x1 = x1; t.dur = dur;
+            }
+        });
+    });
     document.addEventListener('visibilitychange', () => running.forEach(a => document.hidden ? a.pause() : a.play()));
 
     // Een poppetje: hoofd (huid + haar), trui in clubkleur, eigen broek; h = lengte in px
@@ -234,7 +256,7 @@
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, n = pick([3, 4, 5]);
         const speed = 26, dur = (width + 160 + EX) * speed, members = [];
-        const hs = []; for (let i = 0; i < n; i++) hs.push(chance(.2) ? rand(14, 17) : rand(21, 25));
+        const hs = []; for (let i = 0; i < n; i++) hs.push(rand(21, 25));                   // alleen volwassenen
         const tallest = hs.indexOf(Math.max(...hs));
         const adults = hs.map((h, i) => i).filter(i => i !== tallest && hs[i] >= 20);
         const woman = adults.length ? pick(adults) : -1;
