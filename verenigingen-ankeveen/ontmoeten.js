@@ -513,20 +513,29 @@
     // doen en gaan met een tas (met stokbrood) weer weg, en na een tijdje wordt de markt weer afgebroken.
     const KRAAM = [
         { luifel: '#D64541', waar: '<rect x="4" y="19" width="5" height="3" rx="1" fill="#c98b3a"/><rect x="10" y="18.5" width="6" height="3.5" rx="1" fill="#e0a650"/><rect x="17" y="19" width="5" height="3" rx="1" fill="#b87a2e"/>' },   // brood
-        { luifel: '#F2C318', waar: '<circle cx="7" cy="20.5" r="2.4" fill="#f4d35e"/><circle cx="13" cy="20.5" r="2.4" fill="#f1c232"/><rect x="17" y="18.5" width="6" height="4" fill="#f8e58c"/>' },                             // kaas
+        { luifel: '#1b4f9c', waar: '<circle cx="7" cy="20.5" r="2.4" fill="#f4d35e"/><circle cx="13" cy="20.5" r="2.4" fill="#f1c232"/><rect x="17" y="18.5" width="6" height="4" fill="#f8e58c"/>' },                             // kaas
         { luifel: '#1E9E3E', waar: '<circle cx="6" cy="20.5" r="2.2" fill="#e8552b"/><circle cx="11" cy="20.5" r="2.2" fill="#e8552b"/><rect x="15" y="18" width="2" height="5" fill="#f39a2b"/><rect x="18" y="18" width="2" height="5" fill="#f39a2b"/><circle cx="23" cy="20" r="2.4" fill="#3c9a3c"/>' }, // groente
-        { luifel: '#3B8FE0', waar: '<path d="M4 21 q5 -4 10 0 q-5 4 -10 0z" fill="#9fb8c8"/><path d="M14 21 q5 -4 10 0 q-5 4 -10 0z" fill="#8aa7ba"/><path d="M3 23 h22" stroke="#cfe3ee" stroke-width="2"/>' },     // vis
-        { luifel: '#FF4F9A', waar: '<path d="M6 23 v-5 M11 23 v-6 M16 23 v-5 M21 23 v-6" stroke="#3c9a3c" stroke-width="1.2"/><circle cx="6" cy="17.5" r="2" fill="#ff4f9a"/><circle cx="11" cy="16.5" r="2" fill="#f2c318"/><circle cx="16" cy="17.5" r="2" fill="#7b5cc4"/><circle cx="21" cy="16.5" r="2" fill="#ffffff" stroke="#ccc" stroke-width=".5"/>' } // bloemen
+        { luifel: '#D64541', waar: '<path d="M4 21 q5 -4 10 0 q-5 4 -10 0z" fill="#9fb8c8"/><path d="M14 21 q5 -4 10 0 q-5 4 -10 0z" fill="#8aa7ba"/><path d="M3 23 h22" stroke="#cfe3ee" stroke-width="2"/>' },     // vis
+        { luifel: '#1b4f9c', waar: '<path d="M6 23 v-5 M11 23 v-6 M16 23 v-5 M21 23 v-6" stroke="#3c9a3c" stroke-width="1.2"/><circle cx="6" cy="17.5" r="2" fill="#ff4f9a"/><circle cx="11" cy="16.5" r="2" fill="#f2c318"/><circle cx="16" cy="17.5" r="2" fill="#7b5cc4"/><circle cx="21" cy="16.5" r="2" fill="#ffffff" stroke="#ccc" stroke-width=".5"/>' } // bloemen
     ];
     function kraam(k) {
         const w = document.createElement('div'); w.className = 'om-p om-kraam';
-        w.innerHTML = `<svg viewBox="0 0 28 34" width="30" height="36" aria-hidden="true">
-            <path d="M1 8 l2 -5 h22 l2 5 z" fill="${k.luifel}"/>
-            <path d="M1 8 q3.5 4 7 0 q3.5 4 7 0 q3.5 4 7 0 q3 4 5 0 v-1 h-26 z" fill="${k.luifel}" opacity=".85"/>
-            <path d="M3 8 v16 M25 8 v16" stroke="#8b5a2b" stroke-width="1.6"/>
-            <rect x="2" y="23" width="24" height="2" fill="#a97142"/><rect x="3" y="25" width="22" height="7" fill="#ffffff" stroke="#ddd" stroke-width=".5"/>
-            <path d="M3 25 h22" stroke="${k.luifel}" stroke-width="1.5"/>
-            ${k.waar}</svg>`;
+        const stripes = Array.from({ length: 7 }, (_, i) => `<rect x="${1 + i * 26 / 7}" y="3" width="${26 / 7 + .2}" height="6" fill="${i % 2 ? '#ffffff' : k.luifel}"/>`).join('');
+        w.innerHTML = `<svg viewBox="0 0 28 34" width="30" height="36" aria-hidden="true" style="overflow:visible">
+            <g class="tafel" style="transform-box:view-box;transform-origin:14px 32px">
+              <path d="M3 8 v16 M25 8 v16" stroke="#8b5a2b" stroke-width="1.6"/>
+              <rect x="2" y="23" width="24" height="2" fill="#a97142"/><rect x="3" y="25" width="22" height="7" fill="#ffffff" stroke="#ddd" stroke-width=".5"/>
+              <path d="M3 25 h22" stroke="${k.luifel}" stroke-width="1.5"/>
+              ${k.waar}
+            </g>
+            <g class="luifel" style="transform-box:view-box;transform-origin:14px 9px">
+              <path d="M1 9 l2 -6 h22 l2 6 z" fill="#ffffff"/>
+              <clipPath id="c${Math.random().toString(36).slice(2, 7)}"><path d="M1 9 l2 -6 h22 l2 6 z"/></clipPath>
+              ${stripes.replace(/<rect /g, '<rect clip-path="url(#__CLIP__)" ')}
+              <path d="M1 9 q3.5 4 7 0 q3.5 4 7 0 q3.5 4 7 0 q3 4 5 0 v-1 h-26 z" fill="${k.luifel}" opacity=".9"/>
+            </g></svg>`;
+        // clip-id invullen
+        const id = w.querySelector('clipPath').id; w.innerHTML = w.innerHTML.replace(/__CLIP__/g, id);
         return w;
     }
     function tas(color) {
@@ -552,7 +561,10 @@
         const kramen = [];
         xs.forEach((x, i) => later(() => {
             const k = kraam(KRAAM[i]); k.style.transform = `translate(${x}px, ${GROUND - 36}px)`; strip.appendChild(k); kramen.push(k);
-            animate(k, [{ transform: `translate(${x}px, ${GROUND - 36}px) scaleY(0)` }, { transform: `translate(${x}px, ${GROUND - 36}px) scaleY(1.06)`, offset: .8 }, { transform: `translate(${x}px, ${GROUND - 36}px) scaleY(1)` }], { duration: 700, easing: 'ease-out' });
+            const tafel = k.querySelector('.tafel'), luifel = k.querySelector('.luifel');
+            luifel.style.transform = 'scaleY(0)';
+            animate(tafel, [{ transform: 'scaleY(0.05)' }, { transform: 'scaleY(1)' }], { duration: 450, easing: 'ease-out' });
+            animate(luifel, [{ transform: 'scaleY(0)' }, { transform: 'scaleY(-0.15)', offset: .2 }, { transform: 'scaleY(1.08)', offset: .8 }, { transform: 'scaleY(1)' }], { duration: 600, easing: 'ease-out', delay: 450 });
             // de bouwers schuiven mee naar de volgende kraam
             [b1, b2].forEach((b, j) => walkTo(b, x - 22 - j * 14, x + gap - 22 - j * 14, hb));
         }, walkIn + 400 + i * 1300));
@@ -577,7 +589,8 @@
         // 3. afbreken: kramen gaan een voor een weg, de vrijwilligers lopen af
         xs.forEach((x, i) => later(() => {
             const k = kramen[N - 1 - i]; if (!k) return;
-            animate(k, [{ transform: `translate(${x}px, ${GROUND - 36}px) scaleY(1)` }, { transform: `translate(${xs[N - 1 - i]}px, ${GROUND - 36}px) scaleY(0)` }], { duration: 600, easing: 'ease-in' }).finished.then(() => k.remove()).catch(() => k.remove());
+            animate(k.querySelector('.luifel'), [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0)' }], { duration: 450, easing: 'ease-in' });
+            animate(k.querySelector('.tafel'), [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0.05)' }], { duration: 450, easing: 'ease-in', delay: 450 }).finished.then(() => k.remove()).catch(() => k.remove());
             [b1, b2].forEach((b, j) => walkTo(b, xs[N - 1 - i] + 36 + j * 14, xs[N - 1 - i] - gap + 36 + j * 14, hb));
         }, shopEnd + i * 1200));
         later(() => { [b1, b2].forEach((b, j) => walkTo(b, xs[0] - gap + 36 + j * 14, -60 - j * 20, hb, () => b.remove())); }, shopEnd + N * 1200 + 300);
