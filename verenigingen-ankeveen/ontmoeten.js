@@ -326,6 +326,44 @@
         }
     }
 
+    // Yogi: drie mediterende figuren in lotushouding, handen tegen elkaar, zweven langzaam voorbij
+    function yogi() {
+        const w = document.createElement('div'); w.className = 'om-p';
+        const huid = pick(HUID), kleur = pick(['#2BB39A', '#7B5CC4', '#F39A2B', '#5C9BD6', '#C9A227']), haar = pick(HAAR);
+        w.innerHTML = `<svg viewBox="0 0 30 30" width="24" height="24" aria-hidden="true">
+            <ellipse cx="15" cy="27.5" rx="12" ry="1.6" fill="#16233a" opacity=".08"/>
+            <path d="M4 25 q0 -5 7 -6 l4 0 l4 0 q7 1 7 6 q-5 1.5 -11 1.5 q-6 0 -11 -1.5 z" fill="${kleur}"/>
+            <path d="M6.5 24.6 q3 -4.5 8.5 -3 M23.5 24.6 q-3 -4.5 -8.5 -3" fill="none" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M10 20 q0 -8 5 -9 q5 1 5 9 z" fill="${kleur}"/>
+            <path d="M10.5 13 q-2.5 4 -0.5 8 M19.5 13 q2.5 4 0.5 8" fill="none" stroke="${huid}" stroke-width="2" stroke-linecap="round"/>
+            <path d="M15 17.5 l-1.4 4.2 l2.8 0 z" fill="${huid}"/>
+            <circle cx="15" cy="7.5" r="4" fill="${huid}"/>
+            <path d="M11 7 q0 -5 4 -5 q4 0 4 5 q-1.5 -2.2 -4 -2.2 q-2.5 0 -4 2.2z" fill="${haar}"/>
+            <path d="M13.3 8.2 q0.6 0.5 1.2 0 M15.5 8.2 q0.6 0.5 1.2 0" stroke="#2b2b2b" stroke-width=".6" fill="none" stroke-linecap="round"/></svg>`;
+        return w;
+    }
+    function yogis() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, dur = (width + 200) * 40;
+        for (let i = 0; i < 3; i++) {
+            const w = yogi(); strip.appendChild(w);
+            const off = i * 36, y = GROUND - 24 + 1;
+            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -60 + off;
+            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+                .finished.then(() => w.remove()).catch(() => w.remove());
+            animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-3px)' }], { duration: 2400, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: -i * 800 });
+        }
+        // af en toe een klein "om"-kringetje dat opstijgt
+        const t0 = performance.now();
+        const tick = setInterval(() => {
+            const p = (performance.now() - t0) / dur; if (p >= 1) { clearInterval(tick); return; }
+            const x = (fromLeft ? -40 : width + 20) + f * (width + 80) * p - f * rand(0, 80);
+            const c = document.createElement('div'); c.className = 'om-ring'; strip.appendChild(c);
+            animate(c, [{ transform: `translate(${x}px, ${GROUND - 26}px) scale(.4)`, opacity: .6 }, { transform: `translate(${x}px, ${GROUND - 46}px) scale(1.2)`, opacity: 0 }], { duration: 2600, easing: 'ease-out' })
+                .finished.then(() => c.remove()).catch(() => c.remove());
+        }, 1800);
+    }
+
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
         [[.3, 3], [.68, 2]].forEach(([f, n]) => {
             const c = pick(KLEUR);
@@ -334,7 +372,7 @@
         });
         return;
     }
-    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters };   // handig om te testen
+    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis };   // handig om te testen
     meeting(); setTimeout(meeting, 4000);
     setInterval(() => { if (chance(.75)) meeting(); }, 7000);
     setTimeout(peloton, 12000); setInterval(() => { if (chance(.5)) peloton(); }, 40000);
@@ -342,4 +380,5 @@
     setTimeout(naturists, 45000); setInterval(() => { if (chance(.5)) naturists(); }, 75000);
     setTimeout(carnaval, 70000); setInterval(() => { if (chance(.5)) carnaval(); }, 95000);
     setTimeout(skaters, 20000); setInterval(() => { if (chance(.5)) skaters(); }, 60000);
+    setTimeout(yogis, 35000); setInterval(() => { if (chance(.5)) yogis(); }, 85000);
 })();
