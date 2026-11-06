@@ -703,6 +703,49 @@
         rideBike(m, fromLeft, 40 * .68, 16);
     }
 
+    // Kermis: rechts van het logo verrijst een reuzenrad, draait een tijdje met bakjes, en zakt dan weer in
+    function kermis() {
+        if (document.hidden) return;
+        const bar = document.getElementById('topbar'), logo = bar && bar.querySelector('a');
+        if (!bar || !logo) return;
+        const br = bar.getBoundingClientRect(), lr = logo.getBoundingClientRect();
+        const left = lr.right - br.left + 24, bottom = br.bottom - (strip.getBoundingClientRect().bottom - 8);   // voet op de stoeprand
+        if (left + 110 > br.width - 260) return;                                                                 // te smal scherm: geen kermis
+        const w = document.createElement('div'); w.className = 'om-kermis';
+        w.style.cssText = `position:absolute;left:${left}px;bottom:${bottom}px;width:84px;height:84px;transform-origin:50% 100%;pointer-events:none;z-index:0`;
+        const KL = ['#D64541', '#F2C318', '#1E9E3E', '#3B8FE0', '#FF4F9A', '#F39A2B', '#7B5CC4', '#2BB39A'];
+        const gond = KL.map((c, i) => { const a = i * Math.PI / 4, x = 48 + 34 * Math.cos(a), y = 44 + 34 * Math.sin(a);
+            return `<g class="gond" style="transform-box:fill-box;transform-origin:50% 0%"><g transform="translate(${x},${y})"><path d="M0 0 v4" stroke="#444" stroke-width="1"/><path d="M-4 4 h8 l-1.5 6 h-5 z" fill="${c}"/><rect x="-3" y="5" width="6" height="2" fill="#fff" opacity=".5"/></g></g>`; }).join('');
+        w.innerHTML = `<svg viewBox="0 0 96 96" width="84" height="84" aria-hidden="true" style="overflow:visible">
+            <path d="M48 44 l-22 52 h6 l16 -38 l16 38 h6 z" fill="#8a94a6"/>
+            <path d="M20 96 h56" stroke="#5a6a7e" stroke-width="2"/>
+            <g class="rad" style="transform-box:fill-box;transform-origin:center">
+              <circle cx="48" cy="44" r="34" fill="none" stroke="#5a6a7e" stroke-width="2.2"/>
+              <circle cx="48" cy="44" r="27" fill="none" stroke="#8a94a6" stroke-width="1"/>
+              <path d="${KL.map((_, i) => { const a = i * Math.PI / 4; return `M48 44 L${48 + 34 * Math.cos(a)} ${44 + 34 * Math.sin(a)}`; }).join(' ')}" stroke="#8a94a6" stroke-width="1.2"/>
+              ${gond}
+            </g>
+            <circle cx="48" cy="44" r="3.5" fill="#D64541" stroke="#5a6a7e" stroke-width="1"/>
+            <path d="M46 20 l0 -14 l9 3 l-9 3" fill="#D64541" stroke="#D64541" stroke-width="1" stroke-linejoin="round"/></svg>`;
+        bar.style.position = bar.style.position || 'sticky'; bar.appendChild(w);
+        // verrijzen
+        animate(w, [{ transform: 'scaleY(0)' }, { transform: 'scaleY(1.04)', offset: .85 }, { transform: 'scaleY(1)' }], { duration: 2200, easing: 'ease-out' });
+        const rad = w.querySelector('.rad');
+        const spin = animate(rad, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 14000, iterations: Infinity, easing: 'linear', delay: 2200 });
+        w.querySelectorAll('.gond').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-360deg)' }], { duration: 14000, iterations: Infinity, easing: 'linear', delay: 2200 }));
+        // een rij mensen komt kijken en staat er even onder
+        const kijkers = [];
+        later(() => { for (let i = 0; i < 3; i++) { const h = chance(.4) ? rand(14, 17) : rand(20, 25), p = person(pick(KLEUR), h); strip.appendChild(p);
+            const x0 = chance(.5) ? -40 : W() + 20, x1 = left + 10 + i * 16, y = GROUND - h, f = x1 > x0 ? 1 : -1;
+            p.style.transform = `translate(${x0}px, ${y}px) scaleX(${f})`; const b = bob(p, 420);
+            animate(p, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(x1 - x0) * 14, easing: 'linear' }).finished.then(() => b.pause()).catch(() => {});
+            kijkers.push({ p, b, x1, y }); } }, 2500);
+        const stay = 38000;
+        later(() => { kijkers.forEach(k => { k.b.play(); const x2 = chance(.5) ? -60 : W() + 40;
+            animate(k.p, [{ transform: `translate(${k.x1}px, ${k.y}px) scaleX(${x2 > k.x1 ? 1 : -1})` }, { transform: `translate(${x2}px, ${k.y}px) scaleX(${x2 > k.x1 ? 1 : -1})` }], { duration: Math.abs(x2 - k.x1) * 14, easing: 'linear' }).finished.then(() => { k.b.cancel(); k.p.remove(); }).catch(() => k.p.remove()); }); }, stay - 3000);
+        later(() => { spin.pause(); animate(w, [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0)' }], { duration: 1800, easing: 'ease-in' }).finished.then(() => w.remove()).catch(() => w.remove()); }, stay);
+    }
+
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
         [[.3, 3], [.68, 2]].forEach(([f, n]) => {
             const c = pick(KLEUR);
@@ -899,7 +942,7 @@
         animate(w.querySelector('img'), [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-0.7px) rotate(-0.35deg)', offset: .5 }, { transform: 'translateY(0) rotate(0deg)' }],
             { duration: 2800, iterations: Infinity, easing: 'ease-in-out' });
     }
-    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets, vaderFiets, moederFiets };   // handig om te testen
+    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets, vaderFiets, moederFiets, kermis };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
@@ -921,6 +964,7 @@
         { run: footballers, dur: () => (W() + 220 + EX) * 11 },
         { run: markt, dur: marktDur },
         { run: bakfiets, dur: () => (W() + 120 + EX) * 16 + 12000, rare: true },
+        { run: kermis, dur: () => 42000, rare: true },
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
