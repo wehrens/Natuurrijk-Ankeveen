@@ -109,28 +109,62 @@
         }, arrive + 100);
     }
 
-    // Wielrenner: racefiets met draaiende wielen, voorovergebogen renner
+    // Wielrenner: grijze racefiets, renner in clubshirt met zwarte broek, helm en gezicht.
+    // De benen trappen echt rond: knie en voet volgen de pedalen (eenvoudige twee-botten-berekening).
+    const trappers = new Set();
     function racer(color) {
         const w = document.createElement('div'); w.className = 'om-p';
-        w.innerHTML = `<svg viewBox="0 0 60 34" width="38" height="22" aria-hidden="true">
-            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="11" cy="25" r="8" fill="none" stroke="#3d4a5c" stroke-width="1.6"/><path d="M11 17v16M3 25h16M5.3 19.3l11.4 11.4M16.7 19.3L5.3 30.7" stroke="#3d4a5c" stroke-width=".9"/></g>
-            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="47" cy="25" r="8" fill="none" stroke="#3d4a5c" stroke-width="1.6"/><path d="M47 17v16M39 25h16M41.3 19.3l11.4 11.4M52.7 19.3L41.3 30.7" stroke="#3d4a5c" stroke-width=".9"/></g>
-            <path d="M11 25 L24 11 L40 11 L47 25 M24 11 L30 25 M27 25 h7 M40 11 L43 7 h5" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round"/>
-            <circle cx="30" cy="25" r="2.2" fill="#3d4a5c"/>
-            <path d="M25 13 q8 -9 18 -6 l3 4 l-4 3 l-7 -1 l-6 7 l-2 -1 z" fill="${color}"/>
-            <path d="M44 7 l-6 6 M30 17 l-4 6" stroke="${color}" stroke-width="2.4" stroke-linecap="round"/>
-            <circle cx="47" cy="5" r="3.4" fill="#2b2b2b"/><circle cx="47.6" cy="5.6" r="2.4" fill="${color}"/></svg>`;
-        return w;
+        const huid = pick(HUID), helm = pick(['#ffffff', '#16233a', '#F2C318', color]);
+        const wiel = cx => `<g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="${cx}" cy="30" r="8.2" fill="none" stroke="#2b2b2b" stroke-width="1.9"/><circle cx="${cx}" cy="30" r="6.9" fill="none" stroke="#b8c0cc" stroke-width=".5"/><path d="M${cx} 22.4v15.2M${cx - 7.6} 30h15.2M${cx - 5.4} 24.6l10.8 10.8M${cx + 5.4} 24.6l-10.8 10.8" stroke="#9aa5b1" stroke-width=".45"/></g>`;
+        w.innerHTML = `<svg viewBox="0 0 60 40" width="38" height="25" aria-hidden="true" style="overflow:visible">
+            <path class="legB" d="" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+            ${wiel(12)}${wiel(48)}
+            <path d="M12 30 L28 30 L22.5 15.5 Z M22.5 15.5 L42 15.5 L28 30 M42 15.5 L48 30" fill="none" stroke="#8a96a6" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M42 15.5 l3.6 -1.2 q2.8 0 2.4 3 q-0.4 2.6 -2.6 2.6" fill="none" stroke="#3d4a5c" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M19.5 14.6 h6.5" stroke="#2b2b2b" stroke-width="1.8" stroke-linecap="round"/>
+            <path class="crank" d="" stroke="#3d4a5c" stroke-width="1.3" stroke-linecap="round"/><circle cx="28" cy="30" r="1.8" fill="#3d4a5c"/>
+            <path d="M23.5 13.5 Q30 8.6 39.5 9.6" fill="none" stroke="${color}" stroke-width="5.6" stroke-linecap="round"/>
+            <path d="M21.6 13.6 q2 -2.6 4.6 -1.4 l-0.4 3.6 h-4.6 z" fill="#2b2b2b"/>
+            <path class="legA" d="" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M39 10 L42.4 13 L45.4 14.4" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="45.6" cy="14.6" r="1.1" fill="${huid}"/>
+            <circle cx="44" cy="7.2" r="3.3" fill="${huid}"/>
+            <path d="M40.2 7 q0.4 -4.8 4.6 -4.6 q3.4 0.4 3.4 3.4 l-2.2 0.4 q-1.6 -1.4 -5.8 0.8 z" fill="${helm}" stroke="#16233a" stroke-width=".35"/>
+            <circle cx="46" cy="7" r=".55" fill="#16233a"/></svg>`;
+        const rider = { w, a: w.querySelector('.legA'), b: w.querySelector('.legB'), c: w.querySelector('.crank'), phase: rand(0, 6.28) };
+        trappers.add(rider);
+        return rider;
     }
+    function been(hx, hy, px, py) {                         // heup -> knie -> voet, knie naar voren
+        const L1 = 10.6, L2 = 10.2, dx = px - hx, dy = py - hy, d = Math.min(Math.hypot(dx, dy), L1 + L2 - .01);
+        const a = (L1 * L1 - L2 * L2 + d * d) / (2 * d), h = Math.sqrt(Math.max(0, L1 * L1 - a * a));
+        const bx = hx + a * dx / d, by = hy + a * dy / d;
+        let kx = bx - h * dy / d, ky = by + h * dx / d;
+        const k2x = bx + h * dy / d, k2y = by - h * dx / d; if (k2x > kx) { kx = k2x; ky = k2y; }
+        return `M${hx} ${hy} L${kx.toFixed(2)} ${ky.toFixed(2)} L${px.toFixed(2)} ${py.toFixed(2)} l2.4 0`;
+    }
+    let trapLoop = null;
+    function trap(t) {
+        if (!trappers.size) { trapLoop = null; return; }
+        trappers.forEach(r => {
+            if (!r.w.isConnected) { trappers.delete(r); return; }
+            const th = r.phase + t / 1000 * 2 * Math.PI * 1.9, R = 4.6;
+            const ax = 28 + R * Math.cos(th), ay = 30 + R * Math.sin(th), bx = 28 - R * Math.cos(th), by = 30 - R * Math.sin(th);
+            r.a.setAttribute('d', been(23.5, 13.6, ax, ay)); r.b.setAttribute('d', been(23.5, 13.6, bx, by));
+            r.c.setAttribute('d', `M${ax.toFixed(2)} ${ay.toFixed(2)} L${bx.toFixed(2)} ${by.toFixed(2)}`);
+        });
+        trapLoop = requestAnimationFrame(trap);
+    }
+    function startTrappen() { if (!trapLoop) trapLoop = requestAnimationFrame(trap); }
     // Peloton: vijf renners dicht achter elkaar, snel
     function peloton() {
         if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, y = GROUND - 22 + 1;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, y = GROUND - 25 + 1.2;
         const dur = (width + 300 + EX) * 4.5;
         for (let i = 0; i < 5; i++) {
-            const w = racer(pick(KLEUR)); strip.appendChild(w);
-            w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: `rotate(${f * 360}deg)` }], { duration: 420, iterations: Infinity, easing: 'linear' }));
-            const off = i * 34 + (i % 2) * 6;
+            const w = racer(pick(KLEUR)).w; strip.appendChild(w); startTrappen();
+            w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 420, iterations: Infinity, easing: 'linear' }));
+            const off = i * 40 + (i % 2) * 6;
             const x0 = fromLeft ? -60 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off * .2 : -80 - EX + off * .2;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
@@ -286,23 +320,26 @@
         }, 160);
     }
 
-    // Schaatsers: drie in een treintje, voorovergebogen, een arm op de rug.
-    // Beide benen hangen onder de heup; om de beurt zet een been af naar achteren (langzaam, krachtig)
-    // en komt het laag weer naar voren (snel), terwijl het andere been glijdt.
+    // Schaatsers: drie in een treintje in de klassieke houding: diep door de knieen, platte rug,
+    // handen op de rug. Om de beurt zet een been af naar achteren en komt laag weer naar voren;
+    // de lange schaats blijft daarbij plat op het ijs.
     function skater(color) {
         const w = document.createElement('div'); w.className = 'om-p';
-        const huid = pick(HUID), muts = pick(['#D64541', '#1b4f9c', '#F39A2B', '#2BB39A']), broek = pick(['#2f3e55', '#3b3b3b', '#1f4e79']);
-        const leg = cls => `<g class="${cls}" style="transform-box:view-box;transform-origin:15px 23px"><path d="M15 23 l-1.5 6.5 l1 5.5" fill="none" stroke="${broek}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 35.4 h9.5" stroke="#5a6a7e" stroke-width="1.6"/></g>`;
-        w.innerHTML = `<svg viewBox="0 0 40 40" width="24" height="24" aria-hidden="true">
-            ${leg('legA')}${leg('legB')}
-            <g class="torso" style="transform-box:view-box;transform-origin:14px 24px">
-              <path d="M12 24 l12 -11 q3 -2.5 6 -0.5 l-1.5 3.5 q-2 -1 -3.5 0.5 l-10 10 z" fill="${color}"/>
-              <circle cx="33" cy="9.5" r="4" fill="${huid}"/>
-              <path d="M28.6 9 q4.4 -6 8.8 0 l-0.5 -2.4 q-3.9 -4 -7.8 0z" fill="${muts}"/><circle cx="32.2" cy="4" r="1.3" fill="#fff"/>
-              <path d="M25 12.5 q-3 7 -10.5 6.5" stroke="${color}" stroke-width="2.6" stroke-linecap="round" fill="none"/>
-              <path d="M25 12.5 q-3 7 -10.5 6.5" stroke="${huid}" stroke-width="1.4" stroke-linecap="round" fill="none" stroke-dasharray="0 9 20"/>
-              <circle cx="14" cy="19" r="1.7" fill="${huid}"/>
-            </g></svg>`;
+        const huid = pick(HUID), muts = pick(['#D64541', '#1b4f9c', '#F39A2B', '#2BB39A', '#16233a']), pak = color;
+        const leg = (cls, op) => `<g class="${cls}" style="transform-box:view-box;transform-origin:15px 23px" opacity="${op}">
+              <path d="M15 23 L21.5 29.5 L17.2 36.4" fill="none" stroke="${pak}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <g class="blade"><path d="M15 35.6 h5 l0.6 1.6 h-5.8 z" fill="#2b2b2b"/><path d="M11.4 38.2 h13.4 q1 0 1 -0.8" fill="none" stroke="#8a96a6" stroke-width="1.1" stroke-linecap="round"/></g></g>`;
+        w.innerHTML = `<svg viewBox="0 0 40 40" width="26" height="26" aria-hidden="true" style="overflow:visible">
+            ${leg('legB', .6)}
+            <g class="torso" style="transform-box:view-box;transform-origin:15px 23px">
+              <path d="M14.6 23.2 Q21 17.6 29.2 17.8" fill="none" stroke="${pak}" stroke-width="6.4" stroke-linecap="round"/>
+              <path d="M28.4 18.2 L25.2 13.8 L19.4 19.4" fill="none" stroke="${pak}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="19" cy="19.6" r="1.4" fill="${huid}"/>
+              <circle cx="33.2" cy="15.8" r="3.7" fill="${huid}"/>
+              <path d="M29.4 15.4 q0.2 -4.8 4.2 -4.6 q3.2 0.3 3.4 3.4 q-3.6 -1.6 -7.6 1.2 z" fill="${muts}"/>
+              <circle cx="35.6" cy="16" r=".55" fill="#16233a"/>
+            </g>
+            ${leg('legA', 1)}</svg>`;
         return w;
     }
     function skaters() {
@@ -311,17 +348,24 @@
         const colors = [pick(KLEUR), pick(KLEUR), pick(KLEUR)];
         for (let i = 0; i < 3; i++) {
             const w = skater(colors[i]); strip.appendChild(w);
-            const off = i * 34, y = GROUND - 24 + 3;
+            const off = i * 34, y = GROUND - 26 + 0.6;
             const x0 = fromLeft ? -60 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off : -80 - EX + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
             const T = 1400, d = -i * 230;
-            // een slag: 0-55% afzetten (van iets voor naar ver naar achter), 55-100% laag terughalen
-            const stroke = [{ transform: 'rotate(-20deg)', easing: 'ease-in' }, { transform: 'rotate(72deg)', offset: .55, easing: 'ease-out' }, { transform: 'rotate(-20deg)' }];
-            animate(w.querySelector('.legA'), stroke, { duration: T, iterations: Infinity, delay: d });
-            animate(w.querySelector('.legB'), stroke, { duration: T, iterations: Infinity, delay: d - T / 2 });
-            // romp zakt bij elke afzet iets en duwt het hele lijf een tikje vooruit (glijden)
-            animate(w.querySelector('.torso'), [{ transform: 'translate(0,0) rotate(0deg)' }, { transform: 'translate(1.5px,1.2px) rotate(2deg)', offset: .3 }, { transform: 'translate(0,0) rotate(0deg)', offset: .5 }, { transform: 'translate(1.5px,1.2px) rotate(2deg)', offset: .8 }, { transform: 'translate(0,0) rotate(0deg)' }], { duration: T, iterations: Infinity, easing: 'ease-in-out', delay: d });
+            // een slag: 0-55% krachtig afzetten naar achteren, 55-100% laag en snel terughalen
+            const stroke = [{ transform: 'rotate(-4deg)', easing: 'ease-in' }, { transform: 'rotate(52deg)', offset: .55, easing: 'ease-out' },
+                { transform: 'translate(0,-1.8px) rotate(22deg)', offset: .78 }, { transform: 'rotate(-4deg)' }];
+            const flat = [{ transform: 'rotate(4deg)', easing: 'ease-in' }, { transform: 'rotate(-52deg)', offset: .55, easing: 'ease-out' },
+                { transform: 'rotate(-22deg)', offset: .78 }, { transform: 'rotate(4deg)' }];
+            ['legA', 'legB'].forEach((c, j) => {
+                const g = w.querySelector('.' + c), bl = g.querySelector('.blade');
+                bl.style.transformBox = 'fill-box'; bl.style.transformOrigin = '40% 50%';
+                const o = { duration: T, iterations: Infinity, delay: d - j * T / 2 };
+                animate(g, stroke, o); animate(bl, flat, o);
+            });
+            // romp zakt bij elke afzet iets en glijdt een tikje vooruit
+            animate(w.querySelector('.torso'), [{ transform: 'translate(0,0)' }, { transform: 'translate(1.2px,1px)', offset: .3 }, { transform: 'translate(0,0)', offset: .5 }, { transform: 'translate(1.2px,1px)', offset: .8 }, { transform: 'translate(0,0)' }], { duration: T, iterations: Infinity, easing: 'ease-in-out', delay: d });
         }
     }
 
