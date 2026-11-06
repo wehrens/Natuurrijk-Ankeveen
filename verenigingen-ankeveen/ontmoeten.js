@@ -280,9 +280,9 @@
         const t0 = performance.now();
         const tick = setInterval(() => {
             const p = (performance.now() - t0) / dur; if (p >= 1) { clearInterval(tick); return; }
-            const x = (fromLeft ? -40 : width + 20) + f * (width + 100) * p + rand(0, 150) * (fromLeft ? 1 : -1);
+            const x = (fromLeft ? -40 : width + 20) + f * (width + 100) * p - f * rand(-6, 165);   // boven de stoet, van prins tot staart
             const c = document.createElement('div'); c.className = 'om-conf'; c.style.background = pick(CARN.concat(PRUIK)); strip.appendChild(c);
-            animate(c, [{ transform: `translate(${x}px, ${GROUND - 34}px) rotate(0deg)`, opacity: 1 }, { transform: `translate(${x + rand(-8, 8)}px, ${GROUND - 4}px) rotate(${rand(180, 540)}deg)`, opacity: .2 }], { duration: rand(1200, 1800), easing: 'ease-in' })
+            animate(c, [{ transform: `translate(${x}px, ${GROUND - 44}px) rotate(0deg)`, opacity: 0 }, { transform: `translate(${x + rand(-3, 3)}px, ${GROUND - 36}px) rotate(90deg)`, opacity: 1, offset: .15 }, { transform: `translate(${x - f * rand(4, 14)}px, ${GROUND - 4}px) rotate(${rand(360, 720)}deg)`, opacity: .3 }], { duration: rand(1500, 2300), easing: 'ease-in' })
                 .finished.then(() => c.remove()).catch(() => c.remove());
         }, 160);
     }
