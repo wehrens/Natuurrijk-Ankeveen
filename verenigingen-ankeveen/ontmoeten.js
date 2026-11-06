@@ -373,12 +373,26 @@
         return;
     }
     window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis };   // handig om te testen
-    meeting(); setTimeout(meeting, 4000);
-    setInterval(() => { if (chance(.75)) meeting(); }, 7000);
-    setTimeout(peloton, 12000); setInterval(() => { if (chance(.5)) peloton(); }, 40000);
-    setTimeout(fanfare, 26000); setInterval(() => { if (chance(.5)) fanfare(); }, 55000);
-    setTimeout(naturists, 45000); setInterval(() => { if (chance(.5)) naturists(); }, 75000);
-    setTimeout(carnaval, 70000); setInterval(() => { if (chance(.5)) carnaval(); }, 95000);
-    setTimeout(skaters, 20000); setInterval(() => { if (chance(.5)) skaters(); }, 60000);
-    setTimeout(yogis, 35000); setInterval(() => { if (chance(.5)) yogis(); }, 85000);
+
+    // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
+    // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
+    meeting();
+    const planMeeting = () => setTimeout(() => { if (active < 2) meeting(); planMeeting(); }, rand(10000, 16000));
+    planMeeting();
+    const specials = [
+        { run: peloton, dur: () => (W() + 300) * 4.5 },
+        { run: fanfare, dur: () => (W() + 200) * 24 },
+        { run: skaters, dur: () => (W() + 200) * 7.5 },
+        { run: naturists, dur: () => (W() + 160) * 26 },
+        { run: carnaval, dur: () => (W() + 260) * 22 },
+        { run: yogis, dur: () => (W() + 200) * 40 },
+    ];
+    let last = null;
+    function nextSpecial() {
+        if (document.hidden) { setTimeout(nextSpecial, 5000); return; }
+        let s; do { s = pick(specials); } while (s === last && specials.length > 1);
+        last = s; s.run();
+        setTimeout(nextSpecial, s.dur() + rand(25000, 45000));
+    }
+    setTimeout(nextSpecial, 18000);
 })();
