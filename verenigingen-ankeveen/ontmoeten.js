@@ -449,7 +449,7 @@
         { run: voetballer, dur: () => (W() + 100) * 30 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
-    // geweest is), met een korte pauze ertussen. De eerste komt al na een paar seconden.
+    // geweest is), elkaar deels overlappend. De eerste komt al na een paar seconden.
     let bag = [], last = null;
     function nextSpecial() {
         if (document.hidden) { setTimeout(nextSpecial, 5000); return; }
@@ -458,7 +458,8 @@
             if (bag[0] === last && bag.length > 1) bag.push(bag.shift());
         }
         const s = bag.shift(); last = s; s.run();
-        setTimeout(nextSpecial, s.dur() + rand(6000, 12000));
+        // de volgende groep komt al als deze ruim halverwege is (mensen passeren elkaar gewoon)
+        setTimeout(nextSpecial, s.dur() * .55 + rand(3000, 7000));
     }
     setTimeout(nextSpecial, 4000);
 })();
