@@ -584,7 +584,39 @@
             }, rand(4000, 6500));
         }).catch(() => lopers.forEach(l => l.w.remove()));
     }
-    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, hardloopsters, honden };   // handig om te testen
+    // Oldtimer: een eigen ontwerp van een klassieke sedan, donkerblauw met rode bekleding,
+    // glijdt rustig voorbij en deint zachtjes op de vering.
+    function oldtimer() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, wpx = 56, hpx = 24, y = GROUND - hpx + 1;
+        const w = document.createElement('div'); w.className = 'om-p';
+        w.style.width = wpx + 'px'; w.style.height = hpx + 'px';
+        const wiel = cx => `<g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="${cx}" cy="28" r="5.8" fill="#1d1d1d"/><circle cx="${cx}" cy="28" r="3.2" fill="#d9dee5"/><path d="M${cx - 3} 28h6M${cx} 25v6" stroke="#8a96a6" stroke-width=".7"/><circle cx="${cx}" cy="28" r=".9" fill="#8a96a6"/></g>`;
+        w.innerHTML = `<svg viewBox="0 0 80 34" width="${wpx}" height="${hpx}" aria-hidden="true" style="overflow:visible">
+            <ellipse cx="40" cy="33.4" rx="34" ry="1.4" fill="#16233a" opacity=".12"/>
+            <g class="body">
+              <path d="M5 26 q-1.5 -7 4 -9 l12 -2 l6 -8 q1.4 -1.6 4 -1.6 h18 q2.6 0 4 1.6 l6.5 8 l11 1.6 q5 1 5 5.4 v4 z" fill="#1c2f5e"/>
+              <path d="M28.6 14.4 l4.8 -6.6 h8 v6.6 z" fill="#c9d6e6"/><path d="M43.4 7.8 h6.4 q1.4 0 2.2 1 l4.6 5.6 h-13.2 z" fill="#c9d6e6"/>
+              <path d="M34 14.4 v-3.4 q0 -1.6 1.6 -1.6 h3 q1.4 0 1.4 1.6 v3.4 z M45 14.4 v-3.2 q0 -1.5 1.5 -1.5 h3.2 q1.3 0 1.3 1.5 v3.2 z" fill="#B3262C"/>
+              <circle cx="46.8" cy="9.8" r="2" fill="#E3B093"/><path d="M44.8 9.6 q0.2 -2.4 2 -2.4 q2 0 2.1 2.2 q-1 -1 -2.1 -1 q-1.1 0 -2 1.2z" fill="#5a3a2a"/>
+              <path d="M42.4 7.8 v6.6" stroke="#1c2f5e" stroke-width="1.4"/>
+              <path d="M9 18.6 h62" stroke="#d9dee5" stroke-width=".8" opacity=".9"/>
+              <path d="M30 15.4 v9.6 M50 15.4 v9.6" stroke="#142347" stroke-width=".6"/>
+              <path d="M37 18 h3 M56.6 18 h3" stroke="#d9dee5" stroke-width="1" stroke-linecap="round"/>
+              <circle cx="74.2" cy="19.6" r="2" fill="#fff6c8" stroke="#d9dee5" stroke-width=".7"/>
+              <rect x="4.2" y="18.6" width="2" height="2.6" rx=".6" fill="#D64541"/>
+              <path d="M74 25.6 h4.2 M2 25.6 h4.8" stroke="#d9dee5" stroke-width="1.6" stroke-linecap="round"/>
+            </g>
+            ${wiel(18)}${wiel(62)}</svg>`;
+        strip.appendChild(w);
+        const dur = (width + 160) * 14, x0 = fromLeft ? -70 : width + 14, x1 = fromLeft ? width + 90 : -90;
+        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+            .finished.then(() => w.remove()).catch(() => w.remove());
+        w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 900, iterations: Infinity, easing: 'linear' }));
+        animate(w.querySelector('.body'), [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-0.8px) rotate(-0.4deg)', offset: .5 }, { transform: 'translateY(0) rotate(0deg)' }],
+            { duration: 2600, iterations: Infinity, easing: 'ease-in-out' });
+    }
+    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, hardloopsters, honden, oldtimer };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
@@ -604,6 +636,7 @@
         { run: klasje, dur: () => (W() + 220 + EX) * 22 },
         { run: voetballer, dur: () => (W() + 100) * 30 },
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
+        { run: oldtimer, dur: () => (W() + 160) * 14 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
     // geweest is), elkaar deels overlappend. De eerste komt al na een paar seconden.
