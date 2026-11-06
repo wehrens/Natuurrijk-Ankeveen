@@ -287,13 +287,15 @@
         }, 160);
     }
 
-    // Schaatsers: drie in een treintje, voorovergebogen, een arm op de rug, afzetten en glijden
+    // Schaatsers: drie in een treintje, voorovergebogen, een arm op de rug.
+    // Beide benen hangen onder de heup; om de beurt zet een been af naar achteren (langzaam, krachtig)
+    // en komt het laag weer naar voren (snel), terwijl het andere been glijdt.
     function skater(color) {
         const w = document.createElement('div'); w.className = 'om-p';
         const huid = pick(HUID), muts = pick(['#D64541', '#1b4f9c', '#F39A2B', '#2BB39A']), broek = pick(['#2f3e55', '#3b3b3b', '#1f4e79']);
+        const leg = cls => `<g class="${cls}" style="transform-box:view-box;transform-origin:15px 23px"><path d="M15 23 l-1.5 6.5 l1 5.5" fill="none" stroke="${broek}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 35.4 h9.5" stroke="#5a6a7e" stroke-width="1.6"/></g>`;
         w.innerHTML = `<svg viewBox="0 0 40 40" width="24" height="24" aria-hidden="true">
-            <g class="legA" style="transform-box:view-box;transform-origin:15px 23px"><path d="M15 23 l-9 8 l0 4" fill="none" stroke="${broek}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 35.5 h9" stroke="#5a6a7e" stroke-width="1.6"/></g>
-            <g class="legB" style="transform-box:view-box;transform-origin:16px 23px"><path d="M16 23 l2 8 l1 4" fill="none" stroke="${broek}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 35.5 h9" stroke="#5a6a7e" stroke-width="1.6"/></g>
+            ${leg('legA')}${leg('legB')}
             <g class="torso" style="transform-box:view-box;transform-origin:14px 24px">
               <path d="M12 24 l12 -11 q3 -2.5 6 -0.5 l-1.5 3.5 q-2 -1 -3.5 0.5 l-10 10 z" fill="${color}"/>
               <circle cx="33" cy="9.5" r="4" fill="${huid}"/>
@@ -312,11 +314,13 @@
             const x0 = fromLeft ? -60 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -80 + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
-            // de slag: benen om en om naar achteren afzetten, romp zakt bij elke afzet iets
-            const T = 1100, d = -i * 180;
-            animate(w.querySelector('.legA'), [{ transform: 'rotate(0deg)' }, { transform: 'rotate(42deg)' }, { transform: 'rotate(0deg)' }], { duration: T, iterations: Infinity, easing: 'ease-in-out', delay: d });
-            animate(w.querySelector('.legB'), [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-42deg)' }, { transform: 'rotate(0deg)' }], { duration: T, iterations: Infinity, easing: 'ease-in-out', delay: d });
-            animate(w.querySelector('.torso'), [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(1.2px) rotate(2deg)' }, { transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(1.2px) rotate(-2deg)' }, { transform: 'translateY(0) rotate(0deg)' }], { duration: T, iterations: Infinity, easing: 'ease-in-out', delay: d });
+            const T = 1400, d = -i * 230;
+            // een slag: 0-55% afzetten (van iets voor naar ver naar achter), 55-100% laag terughalen
+            const stroke = [{ transform: 'rotate(-20deg)', easing: 'ease-in' }, { transform: 'rotate(72deg)', offset: .55, easing: 'ease-out' }, { transform: 'rotate(-20deg)' }];
+            animate(w.querySelector('.legA'), stroke, { duration: T, iterations: Infinity, delay: d });
+            animate(w.querySelector('.legB'), stroke, { duration: T, iterations: Infinity, delay: d - T / 2 });
+            // romp zakt bij elke afzet iets en duwt het hele lijf een tikje vooruit (glijden)
+            animate(w.querySelector('.torso'), [{ transform: 'translate(0,0) rotate(0deg)' }, { transform: 'translate(1.5px,1.2px) rotate(2deg)', offset: .3 }, { transform: 'translate(0,0) rotate(0deg)', offset: .5 }, { transform: 'translate(1.5px,1.2px) rotate(2deg)', offset: .8 }, { transform: 'translate(0,0) rotate(0deg)' }], { duration: T, iterations: Infinity, easing: 'ease-in-out', delay: d });
         }
     }
 
