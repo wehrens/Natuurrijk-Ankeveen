@@ -182,17 +182,18 @@
 
     // Naturisten (ALB): een rozig groepje slentert ontspannen voorbij met een handdoek over de schouder.
     // Kletsende groepjes die ze passeren kijken even op (wolkje wordt "!"), een van de naturisten zwaait.
-    function naturist(h, male) {
+    function naturist(h, male, female) {
         const w = document.createElement('div'); w.className = 'om-p';
         const skin = pick(['#F2B5A0', '#E8A58E', '#F6C6B2']);
         w.innerHTML = `<svg viewBox="0 0 22 40" width="${h * .55}" height="${h}" aria-hidden="true">
+            ${female ? '<path d="M4.2 6 q0 -6.8 4.8 -6.8 q4.8 0 4.8 6.8 l0.6 8 l-2.4 0 l-0.4 -6 q-2.6 -1 -5.2 0 l-0.4 6 l-2.4 0 z" fill="#5a3a2a"/>' : ''}
             <circle cx="9" cy="5" r="4.6" fill="${skin}"/>
             <path d="M3 13 q6 -4 12 0 l1.5 13 h-3 l-1 12 h-3 l-0.5 -11 l-0.5 11 h-3 l-1 -12 h-3 z" fill="${skin}"/>
             <path d="M12 11 l6 2 l-1 13 l-3 0.5 z" fill="#ffffff" stroke="#9DC3E6" stroke-width=".8"/>
             <path d="M14 14 h3 M14 17 h3 M14 20 h3" stroke="#9DC3E6" stroke-width=".8"/>
-            <path d="M5.5 3.5 q3.5 -3 7 0" fill="none" stroke="#5a3a2a" stroke-width="1.2"/>
+            <path d="M5.2 3.2 q3.8 -3.2 7.6 0" fill="none" stroke="#5a3a2a" stroke-width="1.3"/>
             <circle cx="7.4" cy="5.4" r=".7" fill="#2b2b2b"/><circle cx="10.6" cy="5.4" r=".7" fill="#2b2b2b"/>
-            <circle cx="6.4" cy="16.5" r=".9" fill="#D98B70"/><circle cx="11.6" cy="16.5" r=".9" fill="#D98B70"/>
+            ${female ? '<circle cx="6.3" cy="16.8" r="2.1" fill="' + skin + '" stroke="#D98B70" stroke-width=".5"/><circle cx="11.7" cy="16.8" r="2.1" fill="' + skin + '" stroke="#D98B70" stroke-width=".5"/><circle cx="6.3" cy="17.2" r=".7" fill="#D98B70"/><circle cx="11.7" cy="17.2" r=".7" fill="#D98B70"/><path d="M7.2 25.2 l1.8 2.4 l1.8 -2.4 z" fill="#5a3a2a"/>' : '<circle cx="6.4" cy="16.5" r=".9" fill="#D98B70"/><circle cx="11.6" cy="16.5" r=".9" fill="#D98B70"/>'}
             ${male ? '<circle cx="8.2" cy="27.4" r="1.1" fill="#D98B70"/><circle cx="9.9" cy="27.4" r="1.1" fill="#D98B70"/><path d="M9 26.3 v4.2" stroke="#D98B70" stroke-width="1.5" stroke-linecap="round"/>' : ''}</svg>`;
         return w;
     }
@@ -202,8 +203,10 @@
         const speed = 26, dur = (width + 160) * speed, members = [];
         const hs = []; for (let i = 0; i < n; i++) hs.push(chance(.2) ? rand(14, 17) : rand(21, 25));
         const tallest = hs.indexOf(Math.max(...hs));
+        const adults = hs.map((h, i) => i).filter(i => i !== tallest && hs[i] >= 20);
+        const woman = adults.length ? pick(adults) : -1;
         for (let i = 0; i < n; i++) {
-            const h = hs[i], w = naturist(h, i === tallest); strip.appendChild(w);
+            const h = hs[i], w = naturist(h, i === tallest, i === woman); strip.appendChild(w);
             const off = i * rand(11, 14), y = GROUND - h;
             const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -60 + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
