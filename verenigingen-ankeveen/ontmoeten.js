@@ -587,20 +587,25 @@
                 .finished.then(() => { b.pause(); cb && cb(); }).catch(() => {});
             return d;
         };
-        // 1. twee vrijwilligers van Bruisend (groen) komen aanlopen en zetten de kramen op
+        // 1. twee vrijwilligers van Bruisend (groen) komen aanlopen; bij elke kraam staan ze eerst stil,
+        //    dan klapt de kraam overeind, en lopen ze door naar de volgende plek
         const hb = 24, b1 = person('#1F6F5C', hb), b2 = person('#1F6F5C', hb); strip.appendChild(b1); strip.appendChild(b2);
-        const walkIn = walkTo(b1, -40, xs[0] - 22, hb); walkTo(b2, -60, xs[0] - 36, hb);
-        const kramen = [];
-        xs.forEach((x, i) => later(() => {
-            const k = kraam(KRAAM[i]); k.style.transform = `translate(${x}px, ${GROUND - 36}px)`; strip.appendChild(k); kramen.push(k);
-            const tafel = k.querySelector('.tafel'), luifel = k.querySelector('.luifel');
-            luifel.style.transform = 'scaleY(0)';
-            animate(tafel, [{ transform: 'scaleY(0.05)' }, { transform: 'scaleY(1)' }], { duration: 450, easing: 'ease-out' });
-            animate(luifel, [{ transform: 'scaleY(0)' }, { transform: 'scaleY(-0.15)', offset: .2 }, { transform: 'scaleY(1.08)', offset: .8 }, { transform: 'scaleY(1)' }], { duration: 600, easing: 'ease-out', delay: 450 });
-            // de bouwers schuiven mee naar de volgende kraam
-            [b1, b2].forEach((b, j) => walkTo(b, x - 22 - j * 14, x + gap - 22 - j * 14, hb));
-        }, walkIn + 400 + i * 1300));
-        const open = walkIn + 400 + N * 1300 + 500;
+        const stand = (x, j) => x - 24 - j * 13;                       // plek van bouwer j naast kraam op x
+        const walkIn = walkTo(b1, -40, stand(xs[0], 0), hb); walkTo(b2, -60, stand(xs[0], 1), hb);
+        const kramen = [], UNFOLD = 1150, STEP = gap * speed;
+        let tt = walkIn + 300;
+        xs.forEach((x, i) => {
+            later(() => {
+                const k = kraam(KRAAM[i]); k.style.transform = `translate(${x}px, ${GROUND - 36}px)`; strip.appendChild(k); kramen.push(k);
+                const tafel = k.querySelector('.tafel'), luifel = k.querySelector('.luifel');
+                luifel.style.transform = 'scaleY(0)';
+                animate(tafel, [{ transform: 'scaleY(0.05)' }, { transform: 'scaleY(1)' }], { duration: 450, easing: 'ease-out' });
+                animate(luifel, [{ transform: 'scaleY(0)' }, { transform: 'scaleY(-0.15)', offset: .2 }, { transform: 'scaleY(1.08)', offset: .8 }, { transform: 'scaleY(1)' }], { duration: 600, easing: 'ease-out', delay: 450 });
+            }, tt);
+            tt += UNFOLD;
+            if (i < N - 1) { later(() => { [b1, b2].forEach((b, j) => walkTo(b, stand(x, j), stand(xs[i + 1], j), hb)); }, tt); tt += STEP + 150; }
+        });
+        const open = tt + 400;
         // 2. klanten: komen aanlopen, staan even bij een kraam, gaan met tas weer weg
         const shopEnd = open + 34000;
         function klant() {
@@ -618,16 +623,23 @@
         const t0 = performance.now();
         later(() => { klant(); }, open);
         const tick = setInterval(() => { if (performance.now() - t0 > shopEnd - 6000) { clearInterval(tick); return; } if (chance(.8)) klant(); }, 2600);
-        // 3. afbreken: kramen gaan een voor een weg, de vrijwilligers lopen af
-        xs.forEach((x, i) => later(() => {
-            const k = kramen[N - 1 - i]; if (!k) return;
-            animate(k.querySelector('.luifel'), [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0)' }], { duration: 450, easing: 'ease-in' });
-            animate(k.querySelector('.tafel'), [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0.05)' }], { duration: 450, easing: 'ease-in', delay: 450 }).finished.then(() => k.remove()).catch(() => k.remove());
-            [b1, b2].forEach((b, j) => walkTo(b, xs[N - 1 - i] + 36 + j * 14, xs[N - 1 - i] - gap + 36 + j * 14, hb));
-        }, shopEnd + i * 1200));
-        later(() => { [b1, b2].forEach((b, j) => walkTo(b, xs[0] - gap + 36 + j * 14, -60 - j * 20, hb, () => b.remove())); }, shopEnd + N * 1200 + 300);
+        // 3. afbreken: de vrijwilligers lopen naar de laatste kraam, klappen hem in, en zo terug naar voren
+        const standR = (x, j) => x + 34 + j * 13;
+        let td = shopEnd;
+        later(() => { [b1, b2].forEach((b, j) => walkTo(b, stand(xs[N - 1], j), standR(xs[N - 1], j), hb)); }, td); td += (34 + 24) * speed + 200;
+        for (let i = N - 1; i >= 0; i--) {
+            const x = xs[i];
+            later(() => {
+                const k = kramen[i]; if (!k) return;
+                animate(k.querySelector('.luifel'), [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0)' }], { duration: 450, easing: 'ease-in' });
+                animate(k.querySelector('.tafel'), [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0.05)' }], { duration: 450, easing: 'ease-in', delay: 450 }).finished.then(() => k.remove()).catch(() => k.remove());
+            }, td);
+            td += 1000;
+            if (i > 0) { later(() => { [b1, b2].forEach((b, j) => walkTo(b, standR(x, j), standR(xs[i - 1], j), hb)); }, td); td += STEP + 150; }
+        }
+        later(() => { [b1, b2].forEach((b, j) => walkTo(b, standR(xs[0], j), -60 - j * 20, hb, () => b.remove())); }, td + 300);
     }
-    const marktDur = () => 2000 + (W() / 2) * 12 + 7000 + 34000 + 5 * 1200 + (W() / 2) * 12 + 2000;
+    const marktDur = () => (W() / 2) * 12 + 300 + 5 * 1150 + 4 * (40 * 12 + 150) + 400 + 34000 + 900 + 5 * 1000 + 4 * (40 * 12 + 150) + (W() / 2) * 12 + 1500;
 
     // Bakfiets: een wat dikkere man in blauwe overall op een ouderwetse bruine bakfiets, komt heel af en toe voorbij
     function bakfiets() {
