@@ -8,6 +8,7 @@
     const KLEUR = ['#7B5CC4', '#F39A2B', '#2BB39A', '#D64541', '#3B8FE0', '#C9A227'];
     const H = strip.clientHeight, GROUND = H - 8;
     const W = () => strip.clientWidth;
+    const EX = 220;   // extra loopafstand: ook de achterste van een groep loopt helemaal uit beeld
     const rand = (a, b) => a + Math.random() * (b - a);
     const pick = a => a[Math.floor(Math.random() * a.length)];
     const chance = p => Math.random() < p;
@@ -69,9 +70,8 @@
             const y = GROUND - h, f = fromLeft ? 1 : -1;
             p.style.transform = `translate(${x0}px, ${y}px) scaleX(${f})`;
             const b = bob(p, rand(380, 460)), dur = Math.abs(x1 - x0) * speed;
-            animate(p, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})`, opacity: 0 },
-                { transform: `translate(${x0 + (x1 - x0) * .06}px, ${y}px) scaleX(${f})`, opacity: 1, offset: .06 },
-                { transform: `translate(${x1}px, ${y}px) scaleX(${f})`, opacity: 1 }], { duration: dur, easing: 'linear' });
+            animate(p, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` },
+                { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' });
             members.push({ p, b, x1, y, h, dur, f });
         }
         return members;
@@ -81,9 +81,8 @@
         members.forEach((m, i) => {
             m.b.play();
             const x2 = dir > 0 ? width + 40 + i * 9 : -60 - i * 9, d = Math.abs(x2 - m.x1) * speed;
-            animate(m.p, [{ transform: `translate(${m.x1}px, ${m.y}px) scaleX(${dir})`, opacity: 1 },
-                { transform: `translate(${m.x1 + (x2 - m.x1) * .93}px, ${m.y}px) scaleX(${dir})`, opacity: 1, offset: .93 },
-                { transform: `translate(${x2}px, ${m.y}px) scaleX(${dir})`, opacity: 0 }], { duration: d, easing: 'linear' })
+            animate(m.p, [{ transform: `translate(${m.x1}px, ${m.y}px) scaleX(${dir})` },
+                { transform: `translate(${x2}px, ${m.y}px) scaleX(${dir})` }], { duration: d, easing: 'linear' })
                 .finished.then(() => { m.b.cancel(); m.p.remove(); }).catch(() => m.p.remove());
         });
     }
@@ -127,12 +126,12 @@
     function peloton() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, y = GROUND - 22 + 1;
-        const dur = (width + 300) * 4.5;
+        const dur = (width + 300 + EX) * 4.5;
         for (let i = 0; i < 5; i++) {
             const w = racer(pick(KLEUR)); strip.appendChild(w);
             w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: `rotate(${f * 360}deg)` }], { duration: 420, iterations: Infinity, easing: 'linear' }));
             const off = i * 34 + (i % 2) * 6;
-            const x0 = fromLeft ? -60 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off * .2 : -80 + off * .2;
+            const x0 = fromLeft ? -60 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off * .2 : -80 - EX + off * .2;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
         }
@@ -161,12 +160,12 @@
     function fanfare() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, color = '#D81E1E', noteColor = '#16233a';
-        const n = 6, h = 23, y = GROUND - h, speed = 24, dur = (width + 200) * speed;
+        const n = 6, h = 23, y = GROUND - h, speed = 24, dur = (width + 200 + EX) * speed;
         const kinds = ['drum', 'trumpet', 'trumpet', 'horn', 'trumpet', 'horn'];   // trom voorop
         const members = [];
         for (let i = 0; i < n; i++) {
             const w = musician(color, kinds[i], h); strip.appendChild(w);
-            const off = i * 15, x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -60 + off;
+            const off = i * 15, x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off : -60 - EX + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
             animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-2px)' }], { duration: 300, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
@@ -200,7 +199,7 @@
     function naturists() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, n = pick([3, 4, 5]);
-        const speed = 26, dur = (width + 160) * speed, members = [];
+        const speed = 26, dur = (width + 160 + EX) * speed, members = [];
         const hs = []; for (let i = 0; i < n; i++) hs.push(chance(.2) ? rand(14, 17) : rand(21, 25));
         const tallest = hs.indexOf(Math.max(...hs));
         const adults = hs.map((h, i) => i).filter(i => i !== tallest && hs[i] >= 20);
@@ -208,7 +207,7 @@
         for (let i = 0; i < n; i++) {
             const h = hs[i], w = naturist(h, i === tallest, i === woman); strip.appendChild(w);
             const off = i * rand(11, 14), y = GROUND - h;
-            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -60 + off;
+            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off : -60 - EX + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
             const b = bob(w, rand(520, 640));
@@ -265,11 +264,11 @@
     }
     function carnaval() {
         if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = 22, dur = (width + 260) * speed;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = 22, dur = (width + 260 + EX) * speed;
         for (let i = 0; i < 12; i++) {
             const w = i === 0 ? prince() : reveler(i - 1); strip.appendChild(w);
             const off = i * 13 + (i ? 4 : 0), h = 22, y = GROUND - h;
-            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 60 - off : -80 + off;
+            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 60 + EX - off : -80 - EX + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
             // polonaise: hossen in de maat, om en om naar links en rechts
@@ -308,12 +307,12 @@
     }
     function skaters() {
         if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, dur = (width + 200) * 7.5;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, dur = (width + 200 + EX) * 7.5;
         const colors = [pick(KLEUR), pick(KLEUR), pick(KLEUR)];
         for (let i = 0; i < 3; i++) {
             const w = skater(colors[i]); strip.appendChild(w);
             const off = i * 34, y = GROUND - 24 + 3;
-            const x0 = fromLeft ? -60 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -80 + off;
+            const x0 = fromLeft ? -60 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off : -80 - EX + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
             const T = 1400, d = -i * 230;
@@ -330,7 +329,7 @@
     function yogi() {
         const w = document.createElement('div'); w.className = 'om-p';
         const huid = pick(HUID), kleur = pick(['#2BB39A', '#7B5CC4', '#F39A2B', '#5C9BD6', '#C9A227']), haar = pick(HAAR);
-        w.innerHTML = `<svg viewBox="0 0 30 30" width="24" height="24" aria-hidden="true">
+        w.innerHTML = `<svg viewBox="0 0 30 30" width="18" height="18" aria-hidden="true">
             <ellipse cx="15" cy="27.5" rx="12" ry="1.6" fill="#16233a" opacity=".08"/>
             <path d="M4 25 q0 -5 7 -6 l4 0 l4 0 q7 1 7 6 q-5 1.5 -11 1.5 q-6 0 -11 -1.5 z" fill="${kleur}"/>
             <path d="M6.5 24.6 q3 -4.5 8.5 -3 M23.5 24.6 q-3 -4.5 -8.5 -3" fill="none" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/>
@@ -344,11 +343,11 @@
     }
     function yogis() {
         if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, dur = (width + 200) * 40;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, dur = (width + 200 + EX) * 40;
         for (let i = 0; i < 3; i++) {
             const w = yogi(); strip.appendChild(w);
-            const off = i * 36, y = GROUND - 24 + 1;
-            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -60 + off;
+            const off = i * 30, y = GROUND - 18 + 1;
+            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off : -60 - EX + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
             animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-3px)' }], { duration: 2400, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: -i * 800 });
@@ -357,7 +356,7 @@
         const t0 = performance.now();
         const tick = setInterval(() => {
             const p = (performance.now() - t0) / dur; if (p >= 1) { clearInterval(tick); return; }
-            const x = (fromLeft ? -40 : width + 20) + f * (width + 80) * p - f * rand(0, 80);
+            const x = (fromLeft ? -40 : width + 20) + f * (width + 80 + EX) * p - f * rand(0, 70);
             const c = document.createElement('div'); c.className = 'om-ring'; strip.appendChild(c);
             animate(c, [{ transform: `translate(${x}px, ${GROUND - 26}px) scale(.4)`, opacity: .6 }, { transform: `translate(${x}px, ${GROUND - 46}px) scale(1.2)`, opacity: 0 }], { duration: 2600, easing: 'ease-out' })
                 .finished.then(() => c.remove()).catch(() => c.remove());
@@ -383,7 +382,7 @@
     function klasje() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1;
-        const nKids = pick([6, 7, 8]), speed = 22, dur = (width + 220) * speed;
+        const nKids = pick([6, 7, 8]), speed = 22, dur = (width + 220 + EX) * speed;
         const rij = [{ h: rand(23, 25), kid: false }];
         for (let i = 0; i < nKids; i++) rij.push({ h: rand(12, 15.5), kid: true });
         rij.push({ h: rand(22, 25), kid: false });
@@ -392,7 +391,7 @@
             const w = hesje(m.h); strip.appendChild(w);
             off += i === 0 ? 0 : (m.kid && rij[i - 1].kid ? rand(5, 11) : rand(12, 16));
             const y = GROUND - m.h;
-            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 - off : -60 + off;
+            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off : -60 - EX + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
             if (m.kid) {                                    // huppelen: elk kind in een eigen ritme, met wat heen-en-weer
@@ -440,13 +439,13 @@
     const planMeeting = () => setTimeout(() => { if (active < 2) meeting(); planMeeting(); }, rand(10000, 16000));
     planMeeting();
     const specials = [
-        { run: peloton, dur: () => (W() + 300) * 4.5 },
-        { run: fanfare, dur: () => (W() + 200) * 24 },
-        { run: skaters, dur: () => (W() + 200) * 7.5 },
-        { run: naturists, dur: () => (W() + 160) * 26 },
-        { run: carnaval, dur: () => (W() + 260) * 22 },
-        { run: yogis, dur: () => (W() + 200) * 40 },
-        { run: klasje, dur: () => (W() + 220) * 22 },
+        { run: peloton, dur: () => (W() + 300 + EX) * 4.5 },
+        { run: fanfare, dur: () => (W() + 200 + EX) * 24 },
+        { run: skaters, dur: () => (W() + 200 + EX) * 7.5 },
+        { run: naturists, dur: () => (W() + 160 + EX) * 26 },
+        { run: carnaval, dur: () => (W() + 260 + EX) * 22 },
+        { run: yogis, dur: () => (W() + 200 + EX) * 40 },
+        { run: klasje, dur: () => (W() + 220 + EX) * 22 },
         { run: voetballer, dur: () => (W() + 100) * 30 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
