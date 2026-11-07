@@ -699,22 +699,31 @@
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, huid = pick(HUID);
         const w = document.createElement('div'); w.className = 'om-p';
-        w.innerHTML = `<svg viewBox="0 0 70 40" width="52" height="30" aria-hidden="true" style="overflow:visible">
-            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="10" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M10 23.5v15M2.5 31h15M4.7 25.7l10.6 10.6M15.3 25.7L4.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
-            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="58" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M58 23.5v15M50.5 31h15M52.7 25.7l10.6 10.6M63.3 25.7L52.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
-            <path d="M36 12 h32 l-1 15 h-30 z" fill="#8b5a2b" stroke="#5a3a1e" stroke-width="1"/><path d="M37 16 h30 M37 20 h30 M37 24 h30" stroke="#5a3a1e" stroke-width=".7"/>
-            <path d="M10 31 l14 0 l-2 -12 M24 31 l11 -6 l0 -11 M22 19 l-3 -1 M35 25 l1 2" fill="none" stroke="#3d4a5c" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M31 13 h5" stroke="#3d4a5c" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="24" cy="31" r="2.2" fill="#3d4a5c"/>
-            <path class="legA" d="M23 20 l1.5 11" stroke="#1b4f9c" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
-            <path class="legB" d="M23 20 l1.5 11" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
-            <path d="M18 21 q-1 -11 6 -12 q8 0 7 11 l-1 1 l-11 1 z" fill="#1b4f9c"/>
-            <path d="M23 11 l8 2" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/>
-            <circle cx="24" cy="5" r="4.2" fill="${huid}"/>
-            <path d="M19.6 5.2 q0 -5.4 4.4 -5.4 q4.4 0 4.4 5.4 q-1.4 -2.4 -4.4 -2.4 q-3 0 -4.4 2.4 z" fill="#1a1a1a"/>
-            <path d="M21 2.2 q1.2 -1.4 2.4 -1.2 M26 1.6 q1 0.6 1.6 1.8" stroke="#b8b8b8" stroke-width=".7" fill="none" stroke-linecap="round"/>
-            <path d="M19 5 l-0.4 3.5 l1.6 -0.8 z M29 5 l0.4 3.5 l-1.6 -0.8 z" fill="#1a1a1a"/><path d="M19.2 6.5 l-0.3 1.4" stroke="#b8b8b8" stroke-width=".6"/>
-            <path d="M19 21 q5 2.5 11 0" stroke="#163f7a" stroke-width="1" fill="none"/></svg>`;
+        w.innerHTML = `<svg viewBox="0 0 80 40" width="60" height="30" aria-hidden="true" style="overflow:visible">
+            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="12" cy="31" r="7.5" fill="none" stroke="#2b2b2b" stroke-width="1.8"/><circle cx="12" cy="31" r="6.3" fill="none" stroke="#7a4a3a" stroke-width=".6"/><path d="M12 23.5v15M4.5 31h15M6.7 25.7l10.6 10.6M17.3 25.7L6.7 36.3" stroke="#555" stroke-width=".6"/></g>
+            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="56" cy="31" r="7.5" fill="none" stroke="#2b2b2b" stroke-width="1.8"/><circle cx="56" cy="31" r="6.3" fill="none" stroke="#7a4a3a" stroke-width=".6"/><path d="M56 23.5v15M48.5 31h15M50.7 25.7l10.6 10.6M61.3 25.7L50.7 36.3" stroke="#555" stroke-width=".6"/></g>
+            <path d="M47 31 a9 9 0 0 1 18 0" fill="none" stroke="#2a2a2a" stroke-width="2.2"/>
+            <path d="M5 31 a7.5 7.5 0 0 1 9 -7" fill="none" stroke="#ddd8cf" stroke-width="1.6"/>
+            <path d="M12 31 L24 31 L40 31 L46 25 M24 31 L19 17 M38 30 L38 7 M38 7 H31" fill="none" stroke="#3a2e26" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M31 7 l-3 1.2" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M14 17 h10 l1 -1.6 q-6 -1.6 -11.5 0 z" fill="#111"/>
+            <ellipse cx="25" cy="31" rx="4" ry="2.6" fill="#2a2a2a"/>
+            <rect x="41" y="5" width="38" height="19" rx=".6" fill="#4e4139" stroke="#2f2722" stroke-width=".8"/>
+            <path d="M41 10 h38 M41 15 h38 M41 20 h38" stroke="#3a3029" stroke-width=".7"/>
+            <path d="M46 6 v17 M56 6 v17 M66 6 v17 M74 6 v17" stroke="#5c4e44" stroke-width=".5"/>
+            <rect x="41" y="22" width="38" height="2.4" fill="#ddd8cf"/>
+            <path d="M44 5 h8 v-1.5 h5 v1.5 h4 v-2.5 h6 v2.5 z" fill="#c9a97a" opacity=".9"/>
+            <path d="M60 5 q6 -3 12 -1 l-1 1 z" fill="#e8e4dc"/>
+            <circle cx="24" cy="31" r="2" fill="#555"/>
+            <path class="legA" d="M22 19 l2.5 12" stroke="#1b4f9c" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:22px 19px"/>
+            <path class="legB" d="M22 19 l2.5 12" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:22px 19px"/>
+            <path d="M17 20 q-1 -11 6 -12 q8 0 7 11 l-1 1 l-11 1 z" fill="#1b4f9c"/>
+            <path d="M23 10 l7 -1.5" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="23" cy="5" r="4.2" fill="${huid}"/>
+            <path d="M18.6 5.2 q0 -5.4 4.4 -5.4 q4.4 0 4.4 5.4 q-1.4 -2.4 -4.4 -2.4 q-3 0 -4.4 2.4 z" fill="#1a1a1a"/>
+            <path d="M20 2.2 q1.2 -1.4 2.4 -1.2 M25 1.6 q1 0.6 1.6 1.8" stroke="#b8b8b8" stroke-width=".7" fill="none" stroke-linecap="round"/>
+            <path d="M18 5 l-0.4 3.5 l1.6 -0.8 z M28 5 l0.4 3.5 l-1.6 -0.8 z" fill="#1a1a1a"/><path d="M18.2 6.5 l-0.3 1.4" stroke="#b8b8b8" stroke-width=".6"/>
+            <path d="M18 20 q5 2.5 11 0" stroke="#163f7a" stroke-width="1" fill="none"/></svg>`;
         strip.appendChild(w);
         const y = GROUND - 30 + 1, x0 = fromLeft ? -80 : width + 20, x1 = fromLeft ? width + 40 + EX : -100 - EX, speed = 16;
         const ride = (xa, xb, cb) => animate(w, [{ transform: `translate(${xa}px, ${y}px) scaleX(${f})` }, { transform: `translate(${xb}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(xb - xa) * speed, easing: 'linear' }).finished.then(cb).catch(() => {});
@@ -730,13 +739,13 @@
                 moving.forEach(a => a.pause());
                 // de voorbijganger komt van de kant waar de bak naartoe wijst en blijft bij de bak staan
                 const h = rand(21, 25), p = person(pick(KLEUR), h); strip.appendChild(p);
-                const px0 = fromLeft ? width + 20 : -40, px1 = stop + (fromLeft ? 62 : -22);
+                const px0 = fromLeft ? width + 20 : -40, px1 = stop + (fromLeft ? 70 : -22);
                 p.style.transform = `translate(${px0}px, ${GROUND - h}px) scaleX(${-f})`;
                 const b = bob(p, 420), dwalk = Math.abs(px1 - px0) * 18;
                 animate(p, [{ transform: `translate(${px0}px, ${GROUND - h}px) scaleX(${-f})` }, { transform: `translate(${px1}px, ${GROUND - h}px) scaleX(${-f})` }], { duration: dwalk, easing: 'linear' })
                     .finished.then(() => {
                         b.pause();
-                        const bb = bubble(stop + (fromLeft ? 44 : 4), GROUND - 46, '#1b4f9c');
+                        const bb = bubble(stop + (fromLeft ? 50 : 4), GROUND - 46, '#1b4f9c');
                         const chat = { x: stop + 30, top: GROUND - 46, bb }; chatting.push(chat);
                         later(() => {
                             chatting.splice(chatting.indexOf(chat), 1);
