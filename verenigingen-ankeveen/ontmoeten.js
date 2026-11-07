@@ -824,22 +824,46 @@
         if (!bar || !logo) return;
         const br = bar.getBoundingClientRect(), lr = logo.getBoundingClientRect();
         const left = lr.right - br.left + 24, bottom = br.bottom - (strip.getBoundingClientRect().bottom - 8);   // voet op de stoeprand
-        if (left + 110 > br.width - 260) return;                                                                 // te smal scherm: geen kermis
+        if (left + 140 > br.width - 260) return;                                                                 // te smal scherm: geen kermis
         const w = document.createElement('div'); w.className = 'om-kermis';
-        w.style.cssText = `position:absolute;left:${left}px;bottom:${bottom}px;width:84px;height:84px;transform-origin:50% 100%;pointer-events:none;z-index:0`;
-        const KL = ['#D64541', '#F2C318', '#1E9E3E', '#3B8FE0', '#FF4F9A', '#F39A2B', '#7B5CC4', '#2BB39A'];
+        const SC = 84 / 96, VB = 132;                          // reuzenrad (0-96) met rechts ernaast de kop van Jut (96-132)
+        w.style.cssText = `position:absolute;left:${left}px;bottom:${bottom}px;width:${VB * SC}px;height:84px;transform-origin:50% 100%;pointer-events:none;z-index:0`;
+        const KL = ['#B23A2E', '#2F5D8A', '#C9A227', '#3F7D4E', '#B23A2E', '#2F5D8A', '#C9A227', '#3F7D4E'];
+        const RAND = '#7a2e22', HOUT = '#f1e6cf', DONKER = '#4a3b2f';
+        // ouderwetse vakwerkpoten: twee lijnen met een zigzag ertussen
+        const vakwerk = (ax, ay, bx, by, cx, cy, dx, dy, n) => { let d = `M${ax} ${ay} L${bx} ${by} M${cx} ${cy} L${dx} ${dy} M${ax} ${ay}`;
+            for (let i = 1; i <= n; i++) { const t = i / n, o = i % 2; d += ` L${(o ? cx + (dx - cx) * t : ax + (bx - ax) * t).toFixed(1)} ${(o ? cy + (dy - cy) * t : ay + (by - ay) * t).toFixed(1)}`; } return d; };
+        const poten = vakwerk(46, 46, 22, 95, 49, 47, 31, 95, 9) + ' ' + vakwerk(50, 46, 74, 95, 47, 47, 65, 95, 9);
+        // velg: dubbele ring met zigzag-vakwerk ertussen
+        let zig = ''; for (let i = 0; i <= 48; i++) { const a = i * Math.PI / 24, r = i % 2 ? 29 : 34; zig += `${i ? 'L' : 'M'}${(48 + r * Math.cos(a)).toFixed(1)} ${(44 + r * Math.sin(a)).toFixed(1)} `; }
+        const spaken = Array.from({ length: 16 }, (_, i) => { const a = i * Math.PI / 8; return `M${48 + 5 * Math.cos(a)} ${44 + 5 * Math.sin(a)} L${(48 + 29 * Math.cos(a)).toFixed(1)} ${(44 + 29 * Math.sin(a)).toFixed(1)}`; }).join(' ');
+        const lampjes = Array.from({ length: 16 }, (_, i) => { const a = (i + .5) * Math.PI / 8; return `<circle cx="${(48 + 34 * Math.cos(a)).toFixed(1)}" cy="${(44 + 34 * Math.sin(a)).toFixed(1)}" r="1.1" fill="#ffe08a"/>`; }).join('');
         const gond = KL.map((c, i) => { const a = i * Math.PI / 4, x = 48 + 34 * Math.cos(a), y = 44 + 34 * Math.sin(a);
-            return `<g class="gond" style="transform-box:fill-box;transform-origin:50% 0%"><g transform="translate(${x},${y})"><path d="M0 0 v4" stroke="#444" stroke-width="1"/><path d="M-4 4 h8 l-1.5 6 h-5 z" fill="${c}"/><rect x="-3" y="5" width="6" height="2" fill="#fff" opacity=".5"/></g></g>`; }).join('');
-        w.innerHTML = `<svg viewBox="0 0 96 96" width="84" height="84" aria-hidden="true" style="overflow:visible">
-            <path d="M48 44 l-22 52 h6 l16 -38 l16 38 h6 z" fill="#8a94a6"/>
-            <path d="M20 96 h56" stroke="#5a6a7e" stroke-width="2"/>
+            return `<g class="gond" style="transform-box:fill-box;transform-origin:50% 0%"><g transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><path d="M0 0 v3.4" stroke="${DONKER}" stroke-width=".9"/><path d="M-5 4.4 q5 -3.2 10 0 z" fill="${c}"/><path d="M-4.4 4.4 v4.6 M4.4 4.4 v4.6" stroke="${DONKER}" stroke-width=".6"/><path d="M-4.6 8 h9.2 l-.8 3.4 h-7.6 z" fill="${c}"/><path d="M-4.6 8 h9.2" stroke="${HOUT}" stroke-width=".7"/></g></g>`; }).join('');
+        // kop van Jut: blok om op te slaan, een paal met schaalverdeling, het gewicht dat omhoog schiet en de bel
+        const streep = Array.from({ length: 9 }, (_, i) => `<rect x="115.6" y="${18 + i * 8}" width="4.8" height="4" fill="${i % 2 ? '#B23A2E' : '#F2C318'}"/>`).join('');
+        w.innerHTML = `<svg viewBox="0 0 ${VB} 96" width="${VB * SC}" height="84" aria-hidden="true" style="overflow:visible">
+            <path d="${poten}" fill="none" stroke="${RAND}" stroke-width="1.3" stroke-linejoin="round"/>
+            <path d="M18 95.5 h60" stroke="${DONKER}" stroke-width="2"/>
             <g class="rad" style="transform-box:view-box;transform-origin:48px 44px">
-              <circle cx="48" cy="44" r="34" fill="none" stroke="#5a6a7e" stroke-width="2.2"/>
-              <circle cx="48" cy="44" r="27" fill="none" stroke="#8a94a6" stroke-width="1"/>
-              <path d="${KL.map((_, i) => { const a = i * Math.PI / 4; return `M48 44 L${48 + 34 * Math.cos(a)} ${44 + 34 * Math.sin(a)}`; }).join(' ')}" stroke="#8a94a6" stroke-width="1.2"/>
+              <path d="${zig}" fill="none" stroke="${RAND}" stroke-width=".8"/>
+              <circle cx="48" cy="44" r="34" fill="none" stroke="${RAND}" stroke-width="2"/>
+              <circle cx="48" cy="44" r="29" fill="none" stroke="${RAND}" stroke-width="1.2"/>
+              <path d="${spaken}" stroke="${HOUT}" stroke-width="1.1"/>
+              <path d="${spaken}" stroke="${RAND}" stroke-width=".35"/>
+              <circle cx="48" cy="44" r="9" fill="none" stroke="${RAND}" stroke-width=".8"/>
+              ${lampjes}
               ${gond}
             </g>
-            <circle cx="48" cy="44" r="3.5" fill="#D64541" stroke="#5a6a7e" stroke-width="1"/>
+            <circle cx="48" cy="44" r="5" fill="${HOUT}" stroke="${RAND}" stroke-width="1.2"/><circle cx="48" cy="44" r="1.8" fill="${RAND}"/>
+            <rect x="99" y="92" width="27" height="4" rx=".6" fill="#8b5a2b"/>
+            <rect x="100" y="89.2" width="8" height="3" rx="1" fill="#B23A2E" stroke="${DONKER}" stroke-width=".5"/>
+            <rect x="115.6" y="14" width="4.8" height="78" fill="${HOUT}" stroke="${DONKER}" stroke-width=".6"/>
+            ${streep}
+            <rect class="puk" x="114.4" y="86" width="7.2" height="3.4" rx=".8" fill="#2b2b2b"/>
+            <path d="M112 11 h12" stroke="${DONKER}" stroke-width="1.4"/>
+            <g class="bel" style="transform-box:view-box;transform-origin:118px 4px"><path d="M114.2 10.6 q0 -5.4 3.8 -6 q3.8 .6 3.8 6 z" fill="#E0B23A" stroke="#9a7420" stroke-width=".5"/><circle cx="118" cy="3.6" r="1" fill="#9a7420"/></g>
+            <circle class="pling" cx="118" cy="7" r="7" fill="none" stroke="#F2C318" stroke-width="1.2" opacity="0"/>
             </svg>`;
         bar.style.position = bar.style.position || 'sticky'; bar.appendChild(w);
         // verrijzen
@@ -855,6 +879,47 @@
             animate(p, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(x1 - x0) * 14, easing: 'linear' }).finished.then(() => b.pause()).catch(() => {});
             kijkers.push({ p, b, x1, y }); } }, 2500);
         const stay = 38000;
+        // twee mensen slaan om de beurt met een grote houten hamer op de kop van Jut
+        const padX = left + 104 * SC, puk = w.querySelector('.puk'), bel = w.querySelector('.bel'), pling = w.querySelector('.pling');
+        const klapper = h => {
+            const p = person(pick(KLEUR), h), sv = p.firstElementChild;
+            sv.querySelector('.armB').remove();
+            sv.insertAdjacentHTML('beforeend', `<g class="hamer" style="transform-box:view-box;transform-origin:13px 14px"><path d="M13 14 l0 7" stroke="${sv.querySelector('path:nth-of-type(4)') ? '#555' : '#555'}" stroke-width="2.6" stroke-linecap="round" opacity="0"/><path d="M13 14 v18" stroke="#a0703c" stroke-width="1.6" stroke-linecap="round"/><rect x="9.6" y="31" width="6.8" height="4.6" rx=".8" fill="#6b4a2b"/><circle cx="13" cy="19" r="1.4" fill="#e0b090"/></g>`);
+            return p;
+        };
+        const klappers = [];
+        later(() => { [23.5, 21.5].forEach((h, i) => { const p = klapper(h); strip.appendChild(p);
+            const xs = padX - 14.4 * h / 24 - (i ? 22 : 0), x0 = W() + 30 + i * 30, y = GROUND - h;
+            p.style.transform = `translate(${x0}px, ${y}px) scaleX(-1)`; const b = bob(p, 430);
+            animate(p, [{ transform: `translate(${x0}px, ${y}px) scaleX(-1)` }, { transform: `translate(${xs}px, ${y}px) scaleX(-1)` }], { duration: Math.abs(xs - x0) * 9, easing: 'linear' })
+                .finished.then(() => { b.pause(); p.style.transform = `translate(${xs}px, ${y}px) scaleX(1)`; animate(p, [{ transform: `translate(${xs}px, ${y}px) scaleX(1)` }], { duration: 1, fill: 'forwards' }); }).catch(() => {});
+            klappers.push({ p, b, xs, y, h }); }); }, 2600);
+        const sla = (k, kracht) => {
+            const ham = k.p.querySelector('.hamer');
+            animate(ham, [{ transform: 'rotate(-30deg)', easing: 'ease-in-out' }, { transform: 'rotate(200deg)', offset: .5, easing: 'cubic-bezier(.5,0,1,1)' },
+                { transform: 'rotate(330deg)', offset: .66 }, { transform: 'rotate(330deg)', offset: .85 }, { transform: 'rotate(330deg)' }], { duration: 1400 });
+            animate(k.p.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(0)', offset: .6 }, { transform: 'translateY(1.5px)', offset: .68 }, { transform: 'translateY(0)' }], { duration: 1400 });
+            later(() => {                                   // klap: het gewicht schiet omhoog
+                const top = 72 * kracht;
+                animate(puk, [{ transform: 'translateY(0)', easing: 'cubic-bezier(.1,.7,.3,1)' }, { transform: `translateY(-${top}px)`, offset: .45, easing: 'cubic-bezier(.6,0,.9,.5)' }, { transform: 'translateY(0)' }], { duration: 1500 });
+                if (kracht >= 1) later(() => {               // raak: de bel rinkelt
+                    animate(bel, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(18deg)' }, { transform: 'rotate(-14deg)' }, { transform: 'rotate(9deg)' }, { transform: 'rotate(0deg)' }], { duration: 700 });
+                    animate(pling, [{ opacity: 1, transform: 'scale(.4)' }, { opacity: 0, transform: 'scale(1.6)' }], { duration: 600, easing: 'ease-out' });
+                }, 640);
+            }, 924);
+        };
+        let beurt = 0;
+        const rondje = () => { if (klappers.length === 2 && performance.now() < eind) { const k = klappers[beurt % 2];
+            if (beurt % 2 === 0 || true) { // wie aan de beurt is stapt naar voren
+                const v = klappers[(beurt + 1) % 2];
+                animate(k.p, [{ transform: `translate(${padX - 14.4 * k.h / 24}px, ${k.y}px) scaleX(1)` }], { duration: 300, fill: 'forwards' });
+                animate(v.p, [{ transform: `translate(${padX - 14.4 * v.h / 24 - 22}px, ${v.y}px) scaleX(1)` }], { duration: 300, fill: 'forwards' });
+            }
+            later(() => sla(k, chance(.45) ? 1 : rand(.45, .9)), 400); beurt++; } if (performance.now() < eind) later(rondje, 3400); };
+        const eind = performance.now() + stay - 6000;
+        later(rondje, 9000);
+        later(() => { klappers.forEach(k => { k.b.play(); const x2 = W() + 40;
+            animate(k.p, [{ transform: `translate(${padX - 14.4 * k.h / 24 - 10}px, ${k.y}px) scaleX(1)` }, { transform: `translate(${x2}px, ${k.y}px) scaleX(1)` }], { duration: Math.abs(x2 - padX) * 12, easing: 'linear' }).finished.then(() => { k.b.cancel(); k.p.remove(); }).catch(() => k.p.remove()); }); }, stay - 3500);
         later(() => { kijkers.forEach(k => { k.b.play(); const x2 = chance(.5) ? -60 : W() + 40;
             animate(k.p, [{ transform: `translate(${k.x1}px, ${k.y}px) scaleX(${x2 > k.x1 ? 1 : -1})` }, { transform: `translate(${x2}px, ${k.y}px) scaleX(${x2 > k.x1 ? 1 : -1})` }], { duration: Math.abs(x2 - k.x1) * 14, easing: 'linear' }).finished.then(() => { k.b.cancel(); k.p.remove(); }).catch(() => k.p.remove()); }); }, stay - 3000);
         later(() => { spin.pause(); animate(w, [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0)' }], { duration: 1800, easing: 'ease-in' }).finished.then(() => w.remove()).catch(() => w.remove()); }, stay);
