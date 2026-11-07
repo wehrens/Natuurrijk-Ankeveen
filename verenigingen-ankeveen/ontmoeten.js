@@ -568,7 +568,7 @@
         const stripes = Array.from({ length: 7 }, (_, i) => `<rect x="${1 + i * 26 / 7}" y="3" width="${26 / 7 + .2}" height="6" fill="${i % 2 ? '#ffffff' : k.luifel}"/>`).join('');
         w.innerHTML = `<svg viewBox="0 0 28 34" width="30" height="36" aria-hidden="true" style="overflow:visible">
             <g class="tafel" style="transform-box:view-box;transform-origin:14px 32px">
-              <path d="M3 8 v16 M25 8 v16" stroke="#8b5a2b" stroke-width="1.6"/>
+              <path d="M3 8 v26 M25 8 v26" stroke="#8b5a2b" stroke-width="1.6"/>
               <rect x="2" y="23" width="24" height="2" fill="#a97142"/><rect x="3" y="25" width="22" height="7" fill="#ffffff" stroke="#ddd" stroke-width=".5"/>
               <path d="M3 25 h22" stroke="${k.luifel}" stroke-width="1.5"/>
               <g class="waar" style="opacity:0">${k.waar}</g>
@@ -577,6 +577,7 @@
               <path d="M1 9 l2 -6 h22 l2 6 z" fill="#ffffff"/>
               <clipPath id="c${Math.random().toString(36).slice(2, 7)}"><path d="M1 9 l2 -6 h22 l2 6 z"/></clipPath>
               ${stripes.replace(/<rect /g, '<rect clip-path="url(#__CLIP__)" ')}
+              <rect x="2.4" y="1.6" width="23.2" height="1.8" rx=".5" fill="${k.luifel}"/>
               <path d="M1 9 q3.5 4 7 0 q3.5 4 7 0 q3.5 4 7 0 q3 4 5 0 v-1 h-26 z" fill="${k.luifel}" opacity=".9"/>
             </g></svg>`;
         // clip-id invullen
