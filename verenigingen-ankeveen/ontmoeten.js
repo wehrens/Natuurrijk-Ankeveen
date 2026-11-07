@@ -701,24 +701,25 @@
         const w = document.createElement('div'); w.className = 'om-p';
         w.innerHTML = `<svg viewBox="0 0 80 40" width="60" height="30" aria-hidden="true" style="overflow:visible">
             <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="12" cy="31" r="7.5" fill="none" stroke="#2b2b2b" stroke-width="1.8"/><circle cx="12" cy="31" r="6.3" fill="none" stroke="#7a4a3a" stroke-width=".6"/><path d="M12 23.5v15M4.5 31h15M6.7 25.7l10.6 10.6M17.3 25.7L6.7 36.3" stroke="#555" stroke-width=".6"/></g>
-            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="56" cy="31" r="7.5" fill="none" stroke="#2b2b2b" stroke-width="1.8"/><circle cx="56" cy="31" r="6.3" fill="none" stroke="#7a4a3a" stroke-width=".6"/><path d="M56 23.5v15M48.5 31h15M50.7 25.7l10.6 10.6M61.3 25.7L50.7 36.3" stroke="#555" stroke-width=".6"/></g>
-            <path d="M47 31 a9 9 0 0 1 18 0" fill="none" stroke="#2a2a2a" stroke-width="2.2"/>
-            <path d="M5 31 a7.5 7.5 0 0 1 9 -7" fill="none" stroke="#ddd8cf" stroke-width="1.6"/>
-            <path d="M12 31 L24 31 L40 31 L46 25 M24 31 L19 17 M38 30 L38 7 M38 7 H31" fill="none" stroke="#3a2e26" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-            <path d="M31 7 l-3 1.2" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
+            <g class="wheel" style="transform-box:fill-box;transform-origin:center" opacity="0.55"><circle cx="62" cy="29.6" r="7.5" fill="none" stroke="#2b2b2b" stroke-width="1.8"/><circle cx="62" cy="29.6" r="6.3" fill="none" stroke="#7a4a3a" stroke-width=".6"/><path d="M62 22.1v15M54.5 29.6h15M56.7 24.3l10.6 10.6M67.3 24.3L56.7 34.9" stroke="#555" stroke-width=".6"/></g>
+                        <path d="M5 31 a7.5 7.5 0 0 1 9 -7" fill="none" stroke="#ddd8cf" stroke-width="1.6"/>
+            <path d="M12 31 L24 31 L42 31 L44 27 M24 31 L19 17 M38 30 L38 10 M38 10 H31" fill="none" stroke="#3a2e26" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M31 10 l-3 1.2" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
             <path d="M14 17 h10 l1 -1.6 q-6 -1.6 -11.5 0 z" fill="#111"/>
             <ellipse cx="25" cy="31" rx="4" ry="2.6" fill="#2a2a2a"/>
-            <rect x="41" y="5" width="38" height="19" rx=".6" fill="#4e4139" stroke="#2f2722" stroke-width=".8"/>
-            <path d="M41 10 h38 M41 15 h38 M41 20 h38" stroke="#3a3029" stroke-width=".7"/>
-            <path d="M46 6 v17 M56 6 v17 M66 6 v17 M74 6 v17" stroke="#5c4e44" stroke-width=".5"/>
-            <rect x="41" y="22" width="38" height="2.4" fill="#ddd8cf"/>
-            <path d="M44 5 h8 v-1.5 h5 v1.5 h4 v-2.5 h6 v2.5 z" fill="#c9a97a" opacity=".9"/>
-            <path d="M60 5 q6 -3 12 -1 l-1 1 z" fill="#e8e4dc"/>
+            <rect x="41" y="16" width="38" height="12" rx=".6" fill="#4e4139" stroke="#2f2722" stroke-width=".8"/>
+            <path d="M41 20 h38 M41 24 h38" stroke="#3a3029" stroke-width=".7"/>
+            <path d="M46 17 v10 M56 17 v10 M66 17 v10 M74 17 v10" stroke="#5c4e44" stroke-width=".5"/>
+            <rect x="41" y="25.6" width="38" height="2.4" fill="#ddd8cf"/>
+            <path d="M44 16 h8 v-1.5 h5 v1.5 h4 v-2.5 h6 v2.5 z" fill="#c9a97a" opacity=".9"/>
+            <path d="M60 16 q6 -3 12 -1 l-1 1 z" fill="#e8e4dc"/>
+            <g class="wheel" style="transform-box:fill-box;transform-origin:center" opacity="1"><circle cx="57" cy="31" r="7.5" fill="none" stroke="#2b2b2b" stroke-width="1.8"/><circle cx="57" cy="31" r="6.3" fill="none" stroke="#7a4a3a" stroke-width=".6"/><path d="M57 23.5v15M49.5 31h15M51.7 25.7l10.6 10.6M62.3 25.7L51.7 36.3" stroke="#555" stroke-width=".6"/></g>
+            <path d="M48 31 a9 9 0 0 1 18 0" fill="none" stroke="#2a2a2a" stroke-width="2.2"/>
             <circle cx="24" cy="31" r="2" fill="#555"/>
             <path class="legA" d="M22 19 l2.5 12" stroke="#1b4f9c" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:22px 19px"/>
             <path class="legB" d="M22 19 l2.5 12" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:22px 19px"/>
             <path d="M17 20 q-1 -11 6 -12 q8 0 7 11 l-1 1 l-11 1 z" fill="#1b4f9c"/>
-            <path d="M23 10 l7 -1.5" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M23 11 l8 -0.6" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/>
             <circle cx="23" cy="5" r="4.2" fill="${huid}"/>
             <path d="M18.6 5.2 q0 -5.4 4.4 -5.4 q4.4 0 4.4 5.4 q-1.4 -2.4 -4.4 -2.4 q-3 0 -4.4 2.4 z" fill="#1a1a1a"/>
             <path d="M20 2.2 q1.2 -1.4 2.4 -1.2 M25 1.6 q1 0.6 1.6 1.8" stroke="#b8b8b8" stroke-width=".7" fill="none" stroke-linecap="round"/>
