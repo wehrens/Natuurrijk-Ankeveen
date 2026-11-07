@@ -824,10 +824,14 @@
         if (!bar || !logo) return;
         const br = bar.getBoundingClientRect(), lr = logo.getBoundingClientRect();
         const left = lr.right - br.left + 24, bottom = br.bottom - (strip.getBoundingClientRect().bottom - 8);   // voet op de stoeprand
-        if (left + 140 > br.width - 260) return;                                                                 // te smal scherm: geen kermis
-        const w = document.createElement('div'); w.className = 'om-kermis';
+        // vrije ruimte tussen logo en menu (op een smal scherm is dat de hamburgerknop); te weinig: geen kermis, iets te weinig: kleiner
+        const menu = Array.from(bar.querySelectorAll('.top-links, #topMenuBtn')).map(el => el.getBoundingClientRect()).filter(r => r.width > 0 && r.left > lr.right);
+        const menuLeft = menu.length ? Math.min(...menu.map(r => r.left)) - br.left : br.width;
         const SC = 84 / 96, VB = 132;                          // reuzenrad (0-96) met rechts ernaast de kop van Jut (96-132)
-        w.style.cssText = `position:absolute;left:${left}px;bottom:${bottom}px;width:${VB * SC}px;height:84px;transform-origin:50% 100%;pointer-events:none;z-index:0`;
+        const free = menuLeft - 10 - left, sc = Math.min(1, free / (VB * SC));
+        if (sc < .55) return;                                  // te smal scherm: geen kermis
+        const w = document.createElement('div'); w.className = 'om-kermis';
+        w.style.cssText = `position:absolute;left:${left}px;bottom:${bottom}px;width:${VB * SC}px;height:84px;transform-origin:0 100%;transform:scale(${sc});pointer-events:none;z-index:0`;
         const KL = ['#B23A2E', '#2F5D8A', '#C9A227', '#3F7D4E', '#B23A2E', '#2F5D8A', '#C9A227', '#3F7D4E'];
         const RAND = '#7a2e22', HOUT = '#f1e6cf', DONKER = '#4a3b2f';
         // ouderwetse vakwerkpoten: twee lijnen met een zigzag ertussen
@@ -867,7 +871,7 @@
             </svg>`;
         bar.style.position = bar.style.position || 'sticky'; bar.appendChild(w);
         // verrijzen
-        animate(w, [{ transform: 'scaleY(0)' }, { transform: 'scaleY(1.04)', offset: .85 }, { transform: 'scaleY(1)' }], { duration: 2200, easing: 'ease-out' });
+        animate(w, [{ transform: `scale(${sc}) scaleY(0)` }, { transform: `scale(${sc}) scaleY(1.04)`, offset: .85 }, { transform: `scale(${sc})` }], { duration: 2200, easing: 'ease-out' });
         const rad = w.querySelector('.rad');
         const spin = animate(rad, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 14000, iterations: Infinity, easing: 'linear', delay: 2200 });
         w.querySelectorAll('.gond').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-360deg)' }], { duration: 14000, iterations: Infinity, easing: 'linear', delay: 2200 }));
@@ -922,7 +926,7 @@
             animate(k.p, [{ transform: `translate(${padX - 14.4 * k.h / 24 - 10}px, ${k.y}px) scaleX(1)` }, { transform: `translate(${x2}px, ${k.y}px) scaleX(1)` }], { duration: Math.abs(x2 - padX) * 12, easing: 'linear' }).finished.then(() => { k.b.cancel(); k.p.remove(); }).catch(() => k.p.remove()); }); }, stay - 3500);
         later(() => { kijkers.forEach(k => { k.b.play(); const x2 = chance(.5) ? -60 : W() + 40;
             animate(k.p, [{ transform: `translate(${k.x1}px, ${k.y}px) scaleX(${x2 > k.x1 ? 1 : -1})` }, { transform: `translate(${x2}px, ${k.y}px) scaleX(${x2 > k.x1 ? 1 : -1})` }], { duration: Math.abs(x2 - k.x1) * 14, easing: 'linear' }).finished.then(() => { k.b.cancel(); k.p.remove(); }).catch(() => k.p.remove()); }); }, stay - 3000);
-        later(() => { spin.pause(); animate(w, [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0)' }], { duration: 1800, easing: 'ease-in' }).finished.then(() => w.remove()).catch(() => w.remove()); }, stay);
+        later(() => { spin.pause(); animate(w, [{ transform: `scale(${sc})` }, { transform: `scale(${sc}) scaleY(0)` }], { duration: 1800, easing: 'ease-in' }).finished.then(() => w.remove()).catch(() => w.remove()); }, stay);
     }
 
     if (REDUCE) {                                   // stil beeld: twee groepjes die praten
