@@ -90,10 +90,10 @@
         const watch = setInterval(() => {
             if (!el.isConnected) { clearInterval(watch); return; }
             const x = el.getBoundingClientRect().left;
-            if (lastX !== null && Math.abs(x - lastX) < .3) { if (++still >= 2 && body) settle(); }
+            if (lastX !== null && Math.abs(x - lastX) < .3) { if (++still >= 1 && body) settle(); }
             else { still = 0; if (!body && lastX !== null) start(); }
             lastX = x;
-        }, 250);
+        }, 90);
         return { pause: settle, play: () => { if (!body) start(); }, cancel: () => { clearInterval(watch); limbs.forEach(a => a.cancel()); if (body) body.cancel(); limbs = []; body = null; } };
     }
     function bubble(x, y, color) {
@@ -253,7 +253,11 @@
             : `<path d="M11 12 q6 -8 8 -2 l-3 4 z" fill="#C9A227"/>`;
         w.innerHTML = `<svg viewBox="0 0 24 40" width="${h * .6}" height="${h}" aria-hidden="true">
             <circle cx="9" cy="5" r="4.6" fill="${pick(HUID)}"/><path d="M5 2 h8 l-1 -3 h-6 z" fill="#16233a"/>
-            <path d="M3 13 q6 -4 12 0 l1.5 13 h-3 l-1 12 h-3 l-0.5 -11 l-0.5 11 h-3 l-1 -12 h-3 z" fill="${color}"/>${inst}</svg>`;
+            <path class="legB" d="M9.5 24 l1.2 7 l-0.4 7" fill="none" stroke="${color}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
+            <path class="legA" d="M8.5 24 l-1.2 7 l0.4 7" fill="none" stroke="${color}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
+            <path d="M3 13 q6 -4 12 0 l1.5 12 h-15 z" fill="${color}"/>
+            <path d="M4.5 22 h9 l0.3 3.5 h-9.6 z" fill="${color}"/>
+            <path d="M6.5 37.5 h2.4 M9.6 37.5 h2.4" stroke="#111" stroke-width="2" stroke-linecap="round"/>${inst}</svg>`;
         return w;
     }
     function note(x, y, color) {
@@ -277,6 +281,10 @@
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
             animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-2px)' }], { duration: 300, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+            // marcheren, allemaal precies in de pas (zelfde starttijd, geen verschuiving per muzikant)
+            const t0m = document.timeline.currentTime;
+            animate(w.querySelector('.legA'), [{ transform: 'rotate(-28deg)' }, { transform: 'rotate(28deg)' }], { duration: 300, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }).startTime = t0m;
+            animate(w.querySelector('.legB'), [{ transform: 'rotate(28deg)' }, { transform: 'rotate(-28deg)' }], { duration: 300, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }).startTime = t0m;
             members.push({ w, x0, x1 });
         }
         const t0 = performance.now();
