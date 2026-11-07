@@ -347,6 +347,7 @@ footer { background: var(--green-dark); color: rgba(255, 255, 255, .85); padding
 .agenda-month { display: block; font-size: .95rem; margin-top: .2rem; }
 .agenda-head h2 { font-size: 1.7rem; margin-bottom: .5rem; }
 .agenda-head p { color: var(--text-medium); margin-bottom: .9rem; }
+.agenda-head p.verslag-namen { font-size: .92rem; color: var(--text-soft); }
 .agenda-cols { display: grid; grid-template-columns: 1fr 1.4fr; gap: 2rem; margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--cream-dark); }
 .agenda-cols h3 { font-size: 1.15rem; margin-bottom: .5rem; }
 .agenda-cols ul { list-style: none; }
