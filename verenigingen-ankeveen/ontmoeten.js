@@ -597,14 +597,30 @@
                 .finished.then(() => { b.pause(); cb && cb(); }).catch(() => {});
             return d;
         };
-        // 1. twee vrijwilligers van Bruisend (groen) komen aanlopen; bij elke kraam staan ze eerst stil,
-        //    dan klapt de kraam overeind, en lopen ze door naar de volgende plek
+        // 1. twee vrijwilligers van Bruisend (groen) komen aanlopen. Bij elke kraam gaan ze tegenover elkaar staan,
+        //    door de knieën, armen omhoog, en klapt de kraam tegelijk overeind. Dan naar de volgende.
         const hb = 24, b1 = person('#1F6F5C', hb), b2 = person('#1F6F5C', hb); strip.appendChild(b1); strip.appendChild(b2);
-        const stand = (x, j) => x - 24 - j * 13;                       // plek van bouwer j naast kraam op x
-        const walkIn = walkTo(b1, -40, stand(xs[0], 0), hb); walkTo(b2, -60, stand(xs[0], 1), hb);
-        const kramen = [], UNFOLD = 1150, STEP = gap * speed;
-        let tt = walkIn + 300;
+        const yb = GROUND - hb;
+        const posL = x => x - 16, posR = x => x + 34;                  // links en rechts van een kraam op x
+        const face = (p, x, f) => animate(p, [{ transform: `translate(${x}px, ${yb}px) scaleX(${-f})` }, { transform: `translate(${x}px, ${yb}px) scaleX(${f})` }], { duration: 180 });
+        const tillen = (p, up) => {                                   // door de knieën en armen omhoog (up=true) of weer omlaag
+            const svg = p.firstElementChild, a = p.querySelector('.armA'), b = p.querySelector('.armB');
+            if (up) {
+                animate(svg, [{ transform: 'translateY(0)' }, { transform: 'translateY(3px)' }, { transform: 'translateY(0)' }], { duration: 700, easing: 'ease-in-out' });
+                animate(a, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(165deg)' }], { duration: 500, easing: 'ease-out', delay: 250 });
+                animate(b, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-165deg)' }], { duration: 500, easing: 'ease-out', delay: 250 });
+            } else {
+                animate(a, [{ transform: 'rotate(165deg)' }, { transform: 'rotate(0deg)' }], { duration: 350, easing: 'ease-in' });
+                animate(b, [{ transform: 'rotate(-165deg)' }, { transform: 'rotate(0deg)' }], { duration: 350, easing: 'ease-in' });
+            }
+        };
+        const UNFOLD = 1100, LIFT = 250, DOWN = 400;
+        const walkIn = walkTo(b1, -40, posL(xs[0]), hb); walkTo(b2, -70, posR(xs[0]), hb);
+        const kramen = [];
+        let tt = walkIn + 200;
         xs.forEach((x, i) => {
+            later(() => face(b2, posR(x), -1), tt); tt += 250;          // de rechter draait zich om, ze staan tegenover elkaar
+            later(() => { tillen(b1, true); tillen(b2, true); }, tt); tt += LIFT;
             later(() => {
                 const k = kraam(KRAAM[i]); k.style.transform = `translate(${x}px, ${GROUND - 36}px)`; strip.appendChild(k); kramen.push(k);
                 const tafel = k.querySelector('.tafel'), luifel = k.querySelector('.luifel');
@@ -613,7 +629,11 @@
                 animate(luifel, [{ transform: 'scaleY(0)' }, { transform: 'scaleY(-0.15)', offset: .2 }, { transform: 'scaleY(1.08)', offset: .8 }, { transform: 'scaleY(1)' }], { duration: 600, easing: 'ease-out', delay: 450 });
             }, tt);
             tt += UNFOLD;
-            if (i < N - 1) { later(() => { [b1, b2].forEach((b, j) => walkTo(b, stand(x, j), stand(xs[i + 1], j), hb)); }, tt); tt += STEP + 150; }
+            later(() => { tillen(b1, false); tillen(b2, false); }, tt); tt += DOWN;
+            if (i < N - 1) {
+                later(() => { face(b2, posR(x), 1); }, tt); tt += 200;
+                later(() => { walkTo(b1, posL(x), posL(xs[i + 1]), hb); walkTo(b2, posR(x), posR(xs[i + 1]), hb); }, tt); tt += gap * speed + 150;
+            }
         });
         const open = tt + 400;
         // 2. klanten: komen aanlopen, staan even bij een kraam, gaan met tas weer weg
@@ -633,23 +653,28 @@
         const t0 = performance.now();
         later(() => { klant(); }, open);
         const tick = setInterval(() => { if (performance.now() - t0 > shopEnd - 6000) { clearInterval(tick); return; } if (chance(.8)) klant(); }, 2600);
-        // 3. afbreken: de vrijwilligers lopen naar de laatste kraam, klappen hem in, en zo terug naar voren
-        const standR = (x, j) => x + 34 + j * 13;
+        // 3. afbreken: omgekeerd. Ze staan nog bij de laatste kraam: tegenover elkaar, door de knieën, armen omhoog,
+        //    kraam klapt in, en zo terug naar voren
         let td = shopEnd;
-        later(() => { [b1, b2].forEach((b, j) => walkTo(b, stand(xs[N - 1], j), standR(xs[N - 1], j), hb)); }, td); td += (34 + 24) * speed + 200;
         for (let i = N - 1; i >= 0; i--) {
             const x = xs[i];
+            later(() => face(b2, posR(x), -1), td); td += 250;
+            later(() => { tillen(b1, true); tillen(b2, true); }, td); td += LIFT;
             later(() => {
                 const k = kramen[i]; if (!k) return;
                 animate(k.querySelector('.luifel'), [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0)' }], { duration: 450, easing: 'ease-in' });
                 animate(k.querySelector('.tafel'), [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0.05)' }], { duration: 450, easing: 'ease-in', delay: 450 }).finished.then(() => k.remove()).catch(() => k.remove());
             }, td);
             td += 1000;
-            if (i > 0) { later(() => { [b1, b2].forEach((b, j) => walkTo(b, standR(x, j), standR(xs[i - 1], j), hb)); }, td); td += STEP + 150; }
+            later(() => { tillen(b1, false); tillen(b2, false); }, td); td += DOWN;
+            if (i > 0) {
+                later(() => face(b2, posR(x), 1), td); td += 200;
+                later(() => { walkTo(b1, posL(x), posL(xs[i - 1]), hb); walkTo(b2, posR(x), posR(xs[i - 1]), hb); }, td); td += gap * speed + 150;
+            }
         }
-        later(() => { [b1, b2].forEach((b, j) => walkTo(b, standR(xs[0], j), -60 - j * 20, hb, () => b.remove())); }, td + 300);
+        later(() => { walkTo(b1, posL(xs[0]), -60, hb, () => b1.remove()); walkTo(b2, posR(xs[0]), -80, hb, () => b2.remove()); }, td + 300);
     }
-    const marktDur = () => (W() / 2) * 12 + 300 + 5 * 1150 + 4 * (40 * 12 + 150) + 400 + 34000 + 900 + 5 * 1000 + 4 * (40 * 12 + 150) + (W() / 2) * 12 + 1500;
+    const marktDur = () => (W() / 2) * 12 + 200 + 5 * (250 + 250 + 1100 + 400) + 4 * (200 + 40 * 12 + 150) + 400 + 34000 + 5 * (250 + 250 + 1000 + 400) + 4 * (200 + 40 * 12 + 150) + 300 + (W() / 2) * 12 + 1500;
 
     // Bakfiets: een wat dikkere man in blauwe overall op een ouderwetse bruine bakfiets, komt heel af en toe voorbij
     function bakfiets() {
