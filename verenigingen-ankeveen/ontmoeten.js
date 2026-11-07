@@ -121,7 +121,9 @@
             <g transform="rotate(7 9 39)"><circle cx="9" cy="5" r="4.6" fill="${huid}"/>${kap}
             <path d="M3 13 q6 -4 12 0 l1.5 13 h-3 l-0.3 -3 h-8.4 l-0.3 3 h-3 z" fill="${color}"/>
             <path d="M13.5 15 l1.6 5.8" stroke="${color}" stroke-width="2.4" stroke-linecap="round"/><circle cx="15.2" cy="21" r="1.2" fill="${huid}"/></g>
-            <path d="M4.8 23 h8.4 l-1 15 h-3 l-0.2 -11 l-0.2 11 h-3 z" fill="${broek}"/>
+            <path class="legB" d="M9.5 24 l1 7 l-0.3 7" fill="none" stroke="${broek}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
+            <path class="legA" d="M8.5 24 l-1 7 l0.3 7" fill="none" stroke="${broek}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
+            <path d="M4.5 22 h9 l0.3 3.5 h-9.6 z" fill="${broek}"/>
             ${hulp === 'rollator' ? rollator : stok}</svg>`;
         return w;
     }
