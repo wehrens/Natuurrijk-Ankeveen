@@ -209,8 +209,8 @@
         trappers.add(rider);
         return rider;
     }
-    function been(hx, hy, px, py) {                         // heup -> knie -> voet, knie naar voren
-        const L1 = 10.6, L2 = 10.2, dx = px - hx, dy = py - hy, d = Math.min(Math.hypot(dx, dy), L1 + L2 - .01);
+    function been(hx, hy, px, py, L1 = 10.6, L2 = 10.2) {   // heup -> knie -> voet, knie naar voren
+        const dx = px - hx, dy = py - hy, d = Math.min(Math.hypot(dx, dy), L1 + L2 - .01);
         const a = (L1 * L1 - L2 * L2 + d * d) / (2 * d), h = Math.sqrt(Math.max(0, L1 * L1 - a * a));
         const bx = hx + a * dx / d, by = hy + a * dy / d;
         let kx = bx - h * dy / d, ky = by + h * dx / d;
@@ -222,9 +222,12 @@
         if (!trappers.size) { trapLoop = null; return; }
         trappers.forEach(r => {
             if (!r.w.isConnected) { trappers.delete(r); return; }
-            const th = r.phase + t / 1000 * 2 * Math.PI * 1.9, R = 4.6;
-            const ax = 28 + R * Math.cos(th), ay = 30 + R * Math.sin(th), bx = 28 - R * Math.cos(th), by = 30 - R * Math.sin(th);
-            r.a.setAttribute('d', been(23.5, 13.6, ax, ay)); r.b.setAttribute('d', been(23.5, 13.6, bx, by));
+            if (r.stil) return;
+            const g = r.g || { cx: 28, cy: 30, R: 4.6, hx: 23.5, hy: 13.6, rate: 1.9 };
+            if (r.t0 === undefined) r.t0 = t;
+            const th = r.phase + (t - r.t0) / 1000 * 2 * Math.PI * g.rate, R = g.R;
+            const ax = g.cx + R * Math.cos(th), ay = g.cy + R * Math.sin(th), bx = g.cx - R * Math.cos(th), by = g.cy - R * Math.sin(th);
+            r.a.setAttribute('d', been(g.hx, g.hy, ax, ay, g.L1, g.L2)); r.b.setAttribute('d', been(g.hx, g.hy, bx, by, g.L1, g.L2));
             r.c.setAttribute('d', `M${ax.toFixed(2)} ${ay.toFixed(2)} L${bx.toFixed(2)} ${by.toFixed(2)}`);
         });
         trapLoop = requestAnimationFrame(trap);
@@ -699,55 +702,58 @@
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, huid = pick(HUID);
         const w = document.createElement('div'); w.className = 'om-p';
-        w.innerHTML = `<svg viewBox="0 0 80 40" width="60" height="30" aria-hidden="true" style="overflow:visible">
-            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="12" cy="31" r="7.5" fill="none" stroke="#2b2b2b" stroke-width="1.8"/><circle cx="12" cy="31" r="6.3" fill="none" stroke="#7a4a3a" stroke-width=".6"/><path d="M12 23.5v15M4.5 31h15M6.7 25.7l10.6 10.6M17.3 25.7L6.7 36.3" stroke="#555" stroke-width=".6"/></g>
-            <g class="wheel" style="transform-box:fill-box;transform-origin:center" opacity="0.55"><circle cx="62" cy="29.6" r="7.5" fill="none" stroke="#2b2b2b" stroke-width="1.8"/><circle cx="62" cy="29.6" r="6.3" fill="none" stroke="#7a4a3a" stroke-width=".6"/><path d="M62 22.1v15M54.5 29.6h15M56.7 24.3l10.6 10.6M67.3 24.3L56.7 34.9" stroke="#555" stroke-width=".6"/></g>
-                        <path d="M5 31 a7.5 7.5 0 0 1 9 -7" fill="none" stroke="#ddd8cf" stroke-width="1.6"/>
-            <path d="M12 31 L24 31 L42 31 L44 27 M24 31 L19 17 M38 30 L38 10 M38 10 H31" fill="none" stroke="#3a2e26" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-            <path d="M31 10 l-3 1.2" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
-            <path d="M14 17 h10 l1 -1.6 q-6 -1.6 -11.5 0 z" fill="#111"/>
-            <ellipse cx="25" cy="31" rx="4" ry="2.6" fill="#2a2a2a"/>
-            <rect x="41" y="16" width="38" height="12" rx=".6" fill="#4e4139" stroke="#2f2722" stroke-width=".8"/>
-            <path d="M41 20 h38 M41 24 h38" stroke="#3a3029" stroke-width=".7"/>
-            <path d="M46 17 v10 M56 17 v10 M66 17 v10 M74 17 v10" stroke="#5c4e44" stroke-width=".5"/>
-            <rect x="41" y="25.6" width="38" height="2.4" fill="#ddd8cf"/>
-            <path d="M44 16 h8 v-1.5 h5 v1.5 h4 v-2.5 h6 v2.5 z" fill="#c9a97a" opacity=".9"/>
-            <path d="M60 16 q6 -3 12 -1 l-1 1 z" fill="#e8e4dc"/>
-            <g class="wheel" style="transform-box:fill-box;transform-origin:center" opacity="1"><circle cx="57" cy="31" r="7.5" fill="none" stroke="#2b2b2b" stroke-width="1.8"/><circle cx="57" cy="31" r="6.3" fill="none" stroke="#7a4a3a" stroke-width=".6"/><path d="M57 23.5v15M49.5 31h15M51.7 25.7l10.6 10.6M62.3 25.7L51.7 36.3" stroke="#555" stroke-width=".6"/></g>
-            <path d="M48 31 a9 9 0 0 1 18 0" fill="none" stroke="#2a2a2a" stroke-width="2.2"/>
-            <circle cx="24" cy="31" r="2" fill="#555"/>
-            <path class="legA" d="M22 19 l2.5 12" stroke="#1b4f9c" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:22px 19px"/>
-            <path class="legB" d="M22 19 l2.5 12" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:22px 19px"/>
-            <path d="M17 20 q-1 -11 6 -12 q8 0 7 11 l-1 1 l-11 1 z" fill="#1b4f9c"/>
-            <path d="M23 11 l8 -0.6" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/>
-            <circle cx="23" cy="5" r="4.2" fill="${huid}"/>
-            <path d="M18.6 5.2 q0 -5.4 4.4 -5.4 q4.4 0 4.4 5.4 q-1.4 -2.4 -4.4 -2.4 q-3 0 -4.4 2.4 z" fill="#1a1a1a"/>
-            <path d="M20 2.2 q1.2 -1.4 2.4 -1.2 M25 1.6 q1 0.6 1.6 1.8" stroke="#b8b8b8" stroke-width=".7" fill="none" stroke-linecap="round"/>
-            <path d="M18 5 l-0.4 3.5 l1.6 -0.8 z M28 5 l0.4 3.5 l-1.6 -0.8 z" fill="#1a1a1a"/><path d="M18.2 6.5 l-0.3 1.4" stroke="#b8b8b8" stroke-width=".6"/>
-            <path d="M18 20 q5 2.5 11 0" stroke="#163f7a" stroke-width="1" fill="none"/></svg>`;
+        const SW = 44, SH = SW * 48 / 80;                      // zelfde maat als de andere fietsers
+        const wiel = (cx, cy, r, op) => `<g class="wheel" style="transform-box:fill-box;transform-origin:center" opacity="${op}"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2b2b2b" stroke-width="1.8"/><circle cx="${cx}" cy="${cy}" r="${r - 1.2}" fill="none" stroke="#7a4a3a" stroke-width=".6"/><path d="M${cx} ${cy - r}v${2 * r}M${cx - r} ${cy}h${2 * r}M${cx - r * .7} ${cy - r * .7}l${r * 1.4} ${r * 1.4}M${cx + r * .7} ${cy - r * .7}l${-r * 1.4} ${r * 1.4}" stroke="#555" stroke-width=".6"/><circle cx="${cx}" cy="${cy}" r="1" fill="#555"/></g>`;
+        w.innerHTML = `<svg viewBox="0 0 80 48" width="${SW}" height="${SH}" aria-hidden="true" style="overflow:visible">
+            ${wiel(64.5, 39.6, 7, .5)}
+            ${wiel(12, 38.5, 9, 1)}
+            <path d="M3.4 38.5 a8.6 8.6 0 0 1 12.6 -7.6" fill="none" stroke="#ddd8cf" stroke-width="1.6"/>
+            <path class="legB" d="" fill="none" stroke="#163f7a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 38.5 L25 38.5 L43 37 M25 38.5 L20.5 24 M12 38.5 L21 27 M39.5 37 L37.5 17 M37.5 17 L33 17" fill="none" stroke="#3a2e26" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M33 17 l-2.4 0.8" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M15.6 23.4 h9 l0.8 -1.4 q-5.4 -1.4 -10.2 0 z" fill="#111"/>
+            <path class="crank" d="" stroke="#3d4a5c" stroke-width="1.3" stroke-linecap="round"/><circle cx="25" cy="38.5" r="2.2" fill="#555"/>
+            <rect x="42" y="23" width="37" height="14" rx=".8" fill="#4e4139" stroke="#2f2722" stroke-width=".8"/>
+            <path d="M42 27.6 h37 M42 32.2 h37" stroke="#3a3029" stroke-width=".7"/>
+            <path d="M48 24 v12 M57 24 v12 M66 24 v12 M74 24 v12" stroke="#5c4e44" stroke-width=".5"/>
+            <rect x="42" y="35" width="37" height="2.2" fill="#ddd8cf"/>
+            <path d="M45 23 h8 v-1.6 h5 v1.6 h4 v-2.6 h6 v2.6 z" fill="#c9a97a" opacity=".9"/>
+            <path d="M62 23 q6 -3 12 -1 l-1 1 z" fill="#e8e4dc"/>
+            ${wiel(59, 40, 7, 1)}
+            <path d="M50.6 40 a8.4 8.4 0 0 1 16.8 0" fill="none" stroke="#2a2a2a" stroke-width="2"/>
+            <path d="M15.5 25 q-2 -14 6 -17 q9 -2 10 9 q0.6 6 -2 9.4 q-7 1.6 -14 -1.4 z" fill="#1b4f9c"/>
+            <path d="M17 22 q6 2.6 12.6 0" stroke="#163f7a" stroke-width="1" fill="none"/>
+            <path class="legA" d="" fill="none" stroke="#1b4f9c" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M25 12 q4 3.4 7.6 5" fill="none" stroke="#1b4f9c" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="32.6" cy="17" r="1.4" fill="${huid}"/>
+            <circle cx="24.6" cy="4" r="4.6" fill="${huid}"/>
+            <path d="M19.8 4.2 q0 -5.8 4.8 -5.8 q4.8 0 4.8 5.8 q-1.5 -2.6 -4.8 -2.6 q-3.3 0 -4.8 2.6 z" fill="#1a1a1a"/>
+            <path d="M21.4 1 q1.3 -1.5 2.6 -1.3 M26.8 0.4 q1.1 0.7 1.7 2" stroke="#b8b8b8" stroke-width=".7" fill="none" stroke-linecap="round"/>
+            <circle cx="27.4" cy="4" r=".6" fill="#16233a"/></svg>`;
         strip.appendChild(w);
-        const y = GROUND - 30 + 1, x0 = fromLeft ? -80 : width + 20, x1 = fromLeft ? width + 40 + EX : -100 - EX, speed = 16;
+        const rider = { w, a: w.querySelector('.legA'), b: w.querySelector('.legB'), c: w.querySelector('.crank'), phase: rand(0, 6.28),
+            g: { cx: 25, cy: 38.5, R: 3.6, hx: 21, hy: 23.5, rate: .75, L1: 9.4, L2: 9.2 } };
+        trappers.add(rider); startTrappen();
+        const y = GROUND - SH + .6, x0 = fromLeft ? -60 : width + 20, x1 = fromLeft ? width + 40 + EX : -80 - EX, speed = 16;
         const ride = (xa, xb, cb) => animate(w, [{ transform: `translate(${xa}px, ${y}px) scaleX(${f})` }, { transform: `translate(${xb}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(xb - xa) * speed, easing: 'linear' }).finished.then(cb).catch(() => {});
         const moving = [];
         w.querySelectorAll('.wheel').forEach(g => moving.push(animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1400, iterations: Infinity, easing: 'linear' })));
-        moving.push(animate(w.querySelector('.legA'), [{ transform: 'rotate(-24deg)' }, { transform: 'rotate(24deg)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
-        moving.push(animate(w.querySelector('.legB'), [{ transform: 'rotate(24deg)' }, { transform: 'rotate(-24deg)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
         moving.push(animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-0.8px)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
         // meestal stopt hij ergens voor een praatje met een voorbijganger
         if (chance(.75)) {
             const stop = rand(width * .3, width * .7);
             ride(x0, stop, () => {
-                moving.forEach(a => a.pause());
+                moving.forEach(a => a.pause()); rider.stil = true;
                 // de voorbijganger komt van de kant waar de bak naartoe wijst en blijft bij de bak staan
                 const h = rand(21, 25), p = person(pick(KLEUR), h); strip.appendChild(p);
-                const px0 = fromLeft ? width + 20 : -40, px1 = stop + (fromLeft ? 70 : -22);
+                const px0 = fromLeft ? width + 20 : -40, px1 = stop + (fromLeft ? 50 : -16);
                 p.style.transform = `translate(${px0}px, ${GROUND - h}px) scaleX(${-f})`;
                 const b = bob(p, 420), dwalk = Math.abs(px1 - px0) * 18;
                 animate(p, [{ transform: `translate(${px0}px, ${GROUND - h}px) scaleX(${-f})` }, { transform: `translate(${px1}px, ${GROUND - h}px) scaleX(${-f})` }], { duration: dwalk, easing: 'linear' })
                     .finished.then(() => {
                         b.pause();
-                        const bb = bubble(stop + (fromLeft ? 50 : 4), GROUND - 46, '#1b4f9c');
-                        const chat = { x: stop + 30, top: GROUND - 46, bb }; chatting.push(chat);
+                        const bb = bubble(stop + (fromLeft ? 34 : 2), GROUND - 44, '#1b4f9c');
+                        const chat = { x: stop + 22, top: GROUND - 44, bb }; chatting.push(chat);
                         later(() => {
                             chatting.splice(chatting.indexOf(chat), 1);
                             animate(bb, [{ opacity: 1 }, { opacity: 0 }], { duration: 400 }).finished.then(() => bb.remove()).catch(() => bb.remove());
@@ -755,7 +761,7 @@
                             const px2 = fromLeft ? -60 : width + 40;
                             animate(p, [{ transform: `translate(${px1}px, ${GROUND - h}px) scaleX(${-f})` }, { transform: `translate(${px2}px, ${GROUND - h}px) scaleX(${-f})` }], { duration: Math.abs(px2 - px1) * 18, easing: 'linear' })
                                 .finished.then(() => { b.cancel(); p.remove(); }).catch(() => p.remove());
-                            later(() => { moving.forEach(a => a.play()); ride(stop, x1, () => w.remove()); }, 600);
+                            later(() => { moving.forEach(a => a.play()); rider.stil = false; ride(stop, x1, () => w.remove()); }, 600);
                         }, rand(3500, 6000));
                     }).catch(() => {});
             });
@@ -1070,7 +1076,7 @@
         { run: voetballer, dur: () => (W() + 100) * 30 },
         { run: footballers, dur: () => (W() + 220 + EX) * 11 },
         { run: markt, dur: marktDur },
-        { run: bakfiets, dur: () => (W() + 120 + EX) * 16 + 12000, rare: true },
+        { run: bakfiets, dur: () => (W() + 100 + EX) * 16 + 12000, rare: true },
         { run: kermis, dur: () => 42000, rare: true },
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
