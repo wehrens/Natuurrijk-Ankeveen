@@ -284,6 +284,7 @@ footer { background: var(--green-dark); color: rgba(255, 255, 255, .85); padding
 .photo-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; margin: 1.2rem 0; }
 @media (max-width: 520px) { .photo-row { grid-template-columns: 1fr; } }
 .photo-row img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; }
+.content .bijschrift { font-size: .9rem; color: var(--text-soft); margin-top: -.6rem; }
 .cta-band { background: var(--green-dark); color: var(--white); text-align: center; padding: 3rem 1.5rem; }
 .cta-band h2 { color: var(--white); font-size: 1.9rem; margin-bottom: .6rem; }
 .cta-band p { margin: 0 auto 1.4rem; opacity: .9; }
