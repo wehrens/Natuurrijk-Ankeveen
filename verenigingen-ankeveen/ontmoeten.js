@@ -701,7 +701,7 @@
     // Bakfiets: een wat dikkere man in blauwe overall op een ouderwetse bruine bakfiets, komt heel af en toe voorbij
     function bakfiets() {
         if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, huid = pick(HUID);
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, huid = '#F2C2A8';
         const w = document.createElement('div'); w.className = 'om-p';
         const SW = 44, SH = SW * 48 / 80;                      // zelfde maat als de andere fietsers
         const wiel = (cx, cy, r, op) => `<g class="wheel" style="transform-box:fill-box;transform-origin:center" opacity="${op}"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2b2b2b" stroke-width="1.8"/><circle cx="${cx}" cy="${cy}" r="${r - 1.2}" fill="none" stroke="#7a4a3a" stroke-width=".6"/><path d="M${cx} ${cy - r}v${2 * r}M${cx - r} ${cy}h${2 * r}M${cx - r * .7} ${cy - r * .7}l${r * 1.4} ${r * 1.4}M${cx + r * .7} ${cy - r * .7}l${-r * 1.4} ${r * 1.4}" stroke="#555" stroke-width=".6"/><circle cx="${cx}" cy="${cy}" r="1" fill="#555"/></g>`;
