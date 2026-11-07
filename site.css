@@ -353,7 +353,15 @@ footer { background: var(--green-dark); color: rgba(255, 255, 255, .85); padding
 .agenda-cols li { padding: .3rem 0 .3rem 1.1rem; position: relative; color: var(--text-medium); font-size: .98rem; }
 .agenda-cols li::before { content: ''; position: absolute; left: 0; top: .78rem; width: 6px; height: 6px; border-radius: 50%; background: var(--green-light); }
 .agenda-cols a { font-weight: 600; }
+/* Fotoverslag onder de agenda-kaart */
+.verslag-fotos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--cream-dark); }
+.verslag-fotos figure { margin: 0; }
+.verslag-fotos button { border: 0; padding: 0; background: none; border-radius: 12px; overflow: hidden; aspect-ratio: 4 / 3; width: 100%; display: block; cursor: zoom-in; }
+.verslag-fotos img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
+.verslag-fotos button:hover img { transform: scale(1.04); }
+.verslag-fotos figcaption { font-size: .9rem; color: var(--text-medium); margin-top: .4rem; }
 @media (max-width: 720px) {
+    .verslag-fotos { grid-template-columns: repeat(2, 1fr); gap: .7rem; }
     .agenda-card { padding: 1.3rem 1.2rem; }
     .agenda-head { flex-direction: column; gap: 1rem; }
     .agenda-date { width: 80px; }
