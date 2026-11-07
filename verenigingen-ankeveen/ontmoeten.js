@@ -884,7 +884,7 @@
             kijkers.push({ p, b, x1, y }); } }, 2500);
         const stay = 38000;
         // twee mensen slaan om de beurt met een grote houten hamer op de kop van Jut
-        const padX = left + 104 * SC, puk = w.querySelector('.puk'), bel = w.querySelector('.bel'), pling = w.querySelector('.pling');
+        const padX = left + 104 * SC * sc, puk = w.querySelector('.puk'), bel = w.querySelector('.bel'), pling = w.querySelector('.pling');
         const klapper = h => {
             const p = person(pick(KLEUR), h), sv = p.firstElementChild;
             sv.querySelector('.armB').remove();
