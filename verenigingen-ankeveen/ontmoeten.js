@@ -322,19 +322,26 @@
     function naturists() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, n = pick([3, 4, 5]);
-        const speed = 26, dur = (width + 160 + EX) * speed, members = [];
+        const speed = 26, members = [];
         const hs = []; for (let i = 0; i < n; i++) hs.push(rand(21, 25));                   // alleen volwassenen
         const tallest = hs.indexOf(Math.max(...hs));
         const adults = hs.map((h, i) => i).filter(i => i !== tallest && hs[i] >= 20);
         const woman = adults.length ? pick(adults) : -1;
+        // halverwege leggen ze een grote handdoek neer en gaan er even op liggen zonnen
+        const stopX = rand(width * .3, width * .6), GAP = 27, LIG = rand(7000, 9500);
+        const inDur = (stopX + 60) * speed, outDur = (width + 100 + EX) * speed;
         for (let i = 0; i < n; i++) {
             const h = hs[i], w = naturist(h, i === tallest, i === woman); strip.appendChild(w);
+            w.style.transformOrigin = '0 100%';
             const off = i * rand(11, 14), y = GROUND - h;
-            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off : -60 - EX + off;
-            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
-                .finished.then(() => w.remove()).catch(() => w.remove());
+            const x0 = fromLeft ? -40 - off : width + 20 + off, xs = stopX + i * GAP * f, x1 = fromLeft ? width + 40 + EX - off : -60 - EX + off;
+            const sta = x => `translate(${x}px, ${y}px) scaleX(${f}) rotate(0deg)`, lig = `translate(${xs}px, ${y}px) scaleX(${f}) rotate(-90deg)`;
+            animate(w, [{ transform: sta(x0) }, { transform: sta(xs) }], { duration: inDur, easing: 'linear' });
             const b = bob(w, rand(520, 640));
-            members.push({ w, x0, x1, b });
+            later(() => { b.pause(); animate(w, [{ transform: sta(xs) }, { transform: lig }], { duration: 800, easing: 'ease-in-out', delay: i * 120 }); }, inDur + 600);
+            later(() => { animate(w, [{ transform: lig }, { transform: sta(xs) }], { duration: 700, easing: 'ease-in-out', delay: i * 100 }); }, inDur + 1400 + LIG);
+            later(() => { b.play(); animate(w, [{ transform: sta(xs) }, { transform: sta(x1) }], { duration: outDur, easing: 'linear' }).finished.then(() => w.remove()).catch(() => w.remove()); }, inDur + 1400 + LIG + 1400);
+            members.push({ w, x0, xs, x1, b });
             if (i === 0) {                                   // de voorste zwaait af en toe
                 const arm = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 arm.setAttribute('d', 'M14 13 l5 -7'); arm.setAttribute('stroke', '#F2B5A0'); arm.setAttribute('stroke-width', '2.4'); arm.setAttribute('stroke-linecap', 'round');
@@ -343,10 +350,24 @@
                 animate(arm, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(25deg)' }], { duration: 350, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
             }
         }
-        const t0 = performance.now(), seen = new Set();
+        // de handdoek: wit met blauwe strepen, wordt uitgerold vóór het liggen en weer opgerold erna
+        const tw = (n - 1) * GAP + 34, tx = fromLeft ? stopX - 30 : stopX - tw + 30;
+        const towel = document.createElement('div'); towel.className = 'om-p';
+        towel.style.cssText = `z-index:0;transform-origin:${fromLeft ? '0' : '100%'} 100%`;
+        towel.innerHTML = `<svg viewBox="0 0 ${tw} 5" width="${tw}" height="5" aria-hidden="true"><rect width="${tw}" height="5" rx="1" fill="#fff" stroke="#9DC3E6" stroke-width=".6"/>${Array.from({ length: Math.floor(tw / 6) }, (_, i) => `<rect x="${3 + i * 6}" y="0" width="2.4" height="5" fill="#9DC3E6"/>`).join('')}</svg>`;
+        later(() => { strip.appendChild(towel); towel.style.transform = `translate(${tx}px, ${GROUND - 4}px)`;
+            animate(towel, [{ transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(0)` }, { transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(1)` }], { duration: 500, easing: 'ease-out' }); }, inDur + 100);
+        later(() => { animate(towel, [{ transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(1)` }, { transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(0)` }], { duration: 400, easing: 'ease-in' }).finished.then(() => towel.remove()).catch(() => towel.remove()); }, inDur + 1400 + LIG + 1000);
+        // zonnetje boven de handdoek
+        later(() => { const z = document.createElement('div'); z.className = 'om-p'; z.style.cssText = 'font-size:12px;line-height:1;pointer-events:none';
+            z.textContent = '☀️'; z.style.transform = `translate(${stopX + (n - 1) * GAP * f / 2 - 6}px, ${GROUND - 34}px)`; strip.appendChild(z);
+            animate(z, [{ opacity: 0, transform: z.style.transform + ' scale(.5)' }, { opacity: 1, transform: z.style.transform + ' scale(1)' }], { duration: 600, easing: 'ease-out' });
+            later(() => animate(z, [{ opacity: 1 }, { opacity: 0 }], { duration: 500 }).finished.then(() => z.remove()).catch(() => z.remove()), LIG - 1800); }, inDur + 1800);
+        // omstanders schrikken: hun tekstballon wordt een uitroepteken
+        const t0 = performance.now(), seen = new Set(), total = inDur + 1400 + LIG + 1400 + outDur;
         const tick = setInterval(() => {
-            const p = (performance.now() - t0) / dur; if (p >= 1) { clearInterval(tick); return; }
-            const x = members[0].x0 + (members[0].x1 - members[0].x0) * p;
+            if (performance.now() - t0 > total) { clearInterval(tick); return; }
+            const r = members[0].w.getBoundingClientRect(), x = r.left - strip.getBoundingClientRect().left;
             chatting.forEach(c => {
                 if (seen.has(c) || Math.abs(c.x - x) > 60) return;
                 seen.add(c);
@@ -1139,7 +1160,7 @@
         { run: peloton, dur: () => (W() + 300 + EX) * 4.5 },
         { run: fanfare, dur: () => (W() + 200 + EX) * 24 },
         { run: skaters, dur: () => (W() + 200 + EX) * 7.5 },
-        { run: naturists, dur: () => (W() + 160 + EX) * 26 },
+        { run: naturists, dur: () => (W() + 160 + EX) * 26 + 13000 },
         { run: carnaval, dur: () => (W() + 260 + EX) * 22 },
         { run: yogis, dur: () => (W() + 200 + EX) * 40 },
         { run: klasje, dur: () => (W() + 220 + EX) * 22 },
