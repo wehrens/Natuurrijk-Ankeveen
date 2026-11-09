@@ -757,14 +757,29 @@
             g: { cx: 25, cy: 38.5, R: 3.6, hx: 21, hy: 23.5, rate: .75, L1: 9.4, L2: 9.2 } };
         trappers.add(rider); startTrappen();
         const y = GROUND - SH + .6, x0 = fromLeft ? -60 : width + 20, x1 = fromLeft ? width + 40 + EX : -80 - EX, speed = 16;
-        const ride = (xa, xb, cb) => animate(w, [{ transform: `translate(${xa}px, ${y}px) scaleX(${f})` }, { transform: `translate(${xb}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(xb - xa) * speed, easing: 'linear' }).finished.then(cb).catch(() => {});
         const moving = [];
+        const tr = x => `translate(${x}px, ${y}px) scaleX(${f})`;
+        // mode 'stop': de laatste 40px uitrollen (wielen draaien steeds langzamer); 'start': de eerste 40px optrekken
+        const ride = (xa, xb, cb, mode) => {
+            const dist = Math.abs(xb - xa), dir = xb > xa ? 1 : -1;
+            let frames, duration;
+            if (mode === 'stop' && dist > 80) {
+                const lin = (dist - 40) * speed, roll = 1300; duration = lin + roll;
+                frames = [{ transform: tr(xa), easing: 'linear' }, { transform: tr(xb - 40 * dir), offset: lin / duration, easing: 'cubic-bezier(.2,.6,.4,1)' }, { transform: tr(xb) }];
+                [.75, .5, .3, .15].forEach((r, i) => later(() => moving.forEach(a => a.updatePlaybackRate(r)), lin + i * roll / 4));
+            } else if (mode === 'start' && dist > 80) {
+                const acc = 1000, lin = (dist - 40) * speed; duration = acc + lin;
+                frames = [{ transform: tr(xa), easing: 'cubic-bezier(.5,0,.8,.5)' }, { transform: tr(xa + 40 * dir), offset: acc / duration, easing: 'linear' }, { transform: tr(xb) }];
+                [.2, .45, .7, 1].forEach((r, i) => later(() => moving.forEach(a => a.updatePlaybackRate(r)), i * acc / 4));
+            } else { duration = dist * speed; frames = [{ transform: tr(xa) }, { transform: tr(xb) }]; }
+            return animate(w, frames, { duration, easing: 'linear' }).finished.then(() => { if (mode === 'stop') moving.forEach(a => a.updatePlaybackRate(1)); cb(); }).catch(() => {});
+        };
         w.querySelectorAll('.wheel').forEach(g => moving.push(animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1400, iterations: Infinity, easing: 'linear' })));
         moving.push(animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-0.8px)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
         // meestal stopt hij ergens voor een praatje met een voorbijganger
         if (chance(.75)) {
             const stop = rand(width * .3, width * .7);
-            ride(x0, stop, () => {
+            ride(x0, stop, function () {
                 moving.forEach(a => a.pause()); rider.stil = true;
                 // de voorbijganger komt van de kant waar de bak naartoe wijst en blijft bij de bak staan
                 const h = rand(21, 25), p = person(pick(KLEUR), h); strip.appendChild(p);
@@ -783,10 +798,10 @@
                             const px2 = fromLeft ? -60 : width + 40;
                             animate(p, [{ transform: `translate(${px1}px, ${GROUND - h}px) scaleX(${-f})` }, { transform: `translate(${px2}px, ${GROUND - h}px) scaleX(${-f})` }], { duration: Math.abs(px2 - px1) * 18, easing: 'linear' })
                                 .finished.then(() => { b.cancel(); p.remove(); }).catch(() => p.remove());
-                            later(() => { moving.forEach(a => a.play()); rider.stil = false; ride(stop, x1, () => w.remove()); }, 600);
+                            later(() => { moving.forEach(a => a.play()); rider.stil = false; ride(stop, x1, () => w.remove(), 'start'); }, 600);
                         }, rand(3500, 6000));
                     }).catch(() => {});
-            });
+            }, 'stop');
         } else ride(x0, x1, () => w.remove());
     }
 
