@@ -816,9 +816,10 @@
             <path d="M10 31 l14 0 l-2 -12 M24 31 l12 -12 l6 12 M36 19 l0 -4 l3 0 M22 19 l-4 -1" fill="none" stroke="#3d4a5c" stroke-width="2" stroke-linejoin="round"/>
             <circle cx="24" cy="31" r="2.2" fill="#3d4a5c"/>
             ${kind ? `<path d="M12 22 h6 l0 -6 h-5 z" fill="#5a6a7e"/><circle cx="15" cy="12" r="3" fill="${kind.huid}"/><path d="M12.2 11.8 q2.8 -3.4 5.6 0 q-1 -1.4 -2.8 -1.4 q-1.8 0 -2.8 1.4z" fill="${kind.haar}"/><path d="M12.5 16 q2.5 -2 5 0 l0.5 6 h-6 z" fill="${kind.color}"/><path d="M13.5 22 l-1 5 M16.5 22 l1 5" stroke="#2f3e55" stroke-width="2" stroke-linecap="round"/>` : ''}
-            <path class="legA" d="M23 20 l1.5 11" stroke="#2f3e55" stroke-width="3" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
-            <path class="legB" d="M23 20 l1.5 11" stroke="#1f2d40" stroke-width="3" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
+            <path class="legB" d="" fill="none" stroke="#1f2d40" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="crank" d="" stroke="#3d4a5c" stroke-width="1.2" stroke-linecap="round"/>
             <path d="M19 21 q0 -10 5 -11 q6 0 6 10 l-1 1 l-9 1 z" fill="${color}"/>
+            <path class="legA" d="" fill="none" stroke="#2f3e55" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M24 12 l11 3" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/>
             <circle cx="25" cy="6" r="4.2" fill="${huid}"/>
             ${ponytail ? `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/><path d="M21.5 5 q-4 1 -4.5 5.5 q2 -2 5 -3.2z" fill="${haar}"/>` : `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/>`}</svg>`;
@@ -830,8 +831,8 @@
         animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
             .finished.then(() => w.remove()).catch(() => w.remove());
         w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1100, iterations: Infinity, easing: 'linear' }));
-        animate(w.querySelector('.legA'), [{ transform: 'rotate(-26deg)' }, { transform: 'rotate(26deg)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
-        animate(w.querySelector('.legB'), [{ transform: 'rotate(26deg)' }, { transform: 'rotate(-26deg)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        trappers.add({ w, a: w.querySelector('.legA'), b: w.querySelector('.legB'), c: w.querySelector('.crank'), phase: rand(0, 6.28),
+            g: { cx: 24, cy: 31, R: 3.4, hx: 22, hy: 19.5, rate: 1.1, L1: 8.6, L2: 8.2 } }); startTrappen();
         animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-0.7px)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
     }
     // Vader op de fiets met een kindje achterop (naar school of de opvang)

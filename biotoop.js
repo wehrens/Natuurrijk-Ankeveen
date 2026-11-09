@@ -535,6 +535,34 @@
         later(done, dur + 100);
     }
 
+    // Trappen: twee-delige benen (heup -> knie -> voet) waarvan de voeten rondjes draaien op de trappers
+    const trappers = new Set(); let trapLoop = null;
+    function been(hx, hy, px, py, L1, L2) {
+        const dx = px - hx, dy = py - hy, d = Math.min(Math.hypot(dx, dy), L1 + L2 - .01);
+        const a = (L1 * L1 - L2 * L2 + d * d) / (2 * d), h = Math.sqrt(Math.max(0, L1 * L1 - a * a));
+        const bx = hx + a * dx / d, by = hy + a * dy / d;
+        let kx = bx - h * dy / d, ky = by + h * dx / d;
+        const k2x = bx + h * dy / d, k2y = by - h * dx / d; if (k2x > kx) { kx = k2x; ky = k2y; }   // knie naar voren
+        return `M${hx} ${hy} L${kx.toFixed(2)} ${ky.toFixed(2)} L${px.toFixed(2)} ${py.toFixed(2)} l2.4 0`;
+    }
+    function trap(t) {
+        if (!trappers.size) { trapLoop = null; return; }
+        trappers.forEach(r => {
+            if (!r.w.isConnected) { trappers.delete(r); return; }
+            if (paused) return;
+            const g = r.g; if (r.t0 === undefined) r.t0 = t;
+            const th = r.phase + (t - r.t0) / 1000 * 2 * Math.PI * g.rate, R = g.R;
+            const ax = g.cx + R * Math.cos(th), ay = g.cy + R * Math.sin(th), bx = g.cx - R * Math.cos(th), by = g.cy - R * Math.sin(th);
+            r.a.setAttribute('d', been(g.hx, g.hy, ax, ay, g.L1, g.L2)); r.b.setAttribute('d', been(g.hx, g.hy, bx, by, g.L1, g.L2));
+            r.c.setAttribute('d', `M${ax.toFixed(2)} ${ay.toFixed(2)} L${bx.toFixed(2)} ${by.toFixed(2)}`);
+        });
+        trapLoop = requestAnimationFrame(trap);
+    }
+    function trapper(w, g) {
+        trappers.add({ w, a: w.querySelector('.legA'), b: w.querySelector('.legB'), c: w.querySelector('.crank'), phase: rand(0, 6.28), g });
+        if (!trapLoop) trapLoop = requestAnimationFrame(trap);
+    }
+
     // Fietsers: stadsfiets, rechtop; soms een kindje achterop, soms twee naast elkaar
     function stadsfiets(opts) {
         const { color, huid, haar, kind, scale = 1, ponytail = false } = opts;
@@ -545,9 +573,10 @@
             <path d="M10 31 l14 0 l-2 -12 M24 31 l12 -12 l6 12 M36 19 l0 -4 l3 0 M22 19 l-4 -1" fill="none" stroke="#3d4a5c" stroke-width="2" stroke-linejoin="round"/>
             <circle cx="24" cy="31" r="2.2" fill="#3d4a5c"/>
             ${kind ? `<path d="M12 22 h6 l0 -6 h-5 z" fill="#5a6a7e"/><circle cx="15" cy="12" r="3" fill="${kind.huid}"/><path d="M12.2 11.8 q2.8 -3.4 5.6 0 q-1 -1.4 -2.8 -1.4 q-1.8 0 -2.8 1.4z" fill="${kind.haar}"/><path d="M12.5 16 q2.5 -2 5 0 l0.5 6 h-6 z" fill="${kind.color}"/><path d="M13.5 22 l-1 5 M16.5 22 l1 5" stroke="#2f3e55" stroke-width="2" stroke-linecap="round"/>` : ''}
-            <path class="legA" d="M23 20 l1.5 11" stroke="#2f3e55" stroke-width="3" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
-            <path class="legB" d="M23 20 l1.5 11" stroke="#1f2d40" stroke-width="3" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
+            <path class="legB" d="" fill="none" stroke="#1f2d40" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="crank" d="" stroke="#3d4a5c" stroke-width="1.2" stroke-linecap="round"/>
             <path d="M19 21 q0 -10 5 -11 q6 0 6 10 l-1 1 l-9 1 z" fill="${color}"/>
+            <path class="legA" d="" fill="none" stroke="#2f3e55" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M24 12 l11 3" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/>
             <circle cx="25" cy="6" r="4.2" fill="${huid}"/><circle cx="26.3" cy="5.7" r=".5" fill="#2b2b2b"/><circle cx="28.1" cy="5.7" r=".5" fill="#2b2b2b"/>
             ${ponytail ? `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/><path d="M21.5 5 q-4 1 -4.5 5.5 q2 -2 5 -3.2z" fill="${haar}"/>` : `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/>`}</svg>`;
@@ -559,8 +588,7 @@
         animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
             .finished.then(() => remove(w)).catch(() => remove(w));
         w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1100, iterations: Infinity, easing: 'linear' }));
-        animate(w.querySelector('.legA'), [{ transform: 'rotate(-26deg)' }, { transform: 'rotate(26deg)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
-        animate(w.querySelector('.legB'), [{ transform: 'rotate(26deg)' }, { transform: 'rotate(-26deg)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        trapper(w, { cx: 24, cy: 31, R: 3.4, hx: 22, hy: 19.5, rate: 1.1, L1: 8.6, L2: 8.2 });
         animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1.2px)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         return dur;
     }
@@ -595,10 +623,10 @@
             <rect x="41" y="25" width="38" height="2.2" fill="#ddd8cf"/>
             <path d="M44 13 h8 v-1.5 h5 v1.5 h4 v-2.5 h6 v2.5 z" fill="#c9a97a" opacity=".9"/>
             <path d="M60 13 q6 -3 12 -1 l-1 1 z" fill="#e8e4dc"/>
-            <circle cx="24" cy="31" r="2" fill="#555"/>
-            <path class="legA" d="M22 19 l2.5 12" stroke="#1b4f9c" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:22px 19px"/>
-            <path class="legB" d="M22 19 l2.5 12" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:22px 19px"/>
+            <path class="legB" d="" fill="none" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="crank" d="" stroke="#3d4a5c" stroke-width="1.2" stroke-linecap="round"/><circle cx="24" cy="31" r="2" fill="#555"/>
             <path d="M17 20 q-1 -11 6 -12 q8 0 7 11 l-1 1 l-11 1 z" fill="#1b4f9c"/>
+            <path class="legA" d="" fill="none" stroke="#1b4f9c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M23 11 l7 2.2" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/><circle cx="30.4" cy="13.2" r="1.3" fill="${huid}"/>
             <circle cx="23" cy="5" r="4.2" fill="${huid}"/><circle cx="24.6" cy="4.6" r=".5" fill="#2b2b2b"/><circle cx="26.4" cy="4.6" r=".5" fill="#2b2b2b"/>
             <path d="M18.6 5.2 q0 -5.4 4.4 -5.4 q4.4 0 4.4 5.4 q-1.4 -2.4 -4.4 -2.4 q-3 0 -4.4 2.4 z" fill="#1a1a1a"/>
@@ -609,8 +637,7 @@
         animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
             .finished.then(() => remove(w)).catch(() => remove(w));
         w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1400, iterations: Infinity, easing: 'linear' }));
-        animate(w.querySelector('.legA'), [{ transform: 'rotate(-24deg)' }, { transform: 'rotate(24deg)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
-        animate(w.querySelector('.legB'), [{ transform: 'rotate(24deg)' }, { transform: 'rotate(-24deg)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        trapper(w, { cx: 24, cy: 31, R: 3.4, hx: 21.5, hy: 19.5, rate: .8, L1: 8.6, L2: 8.2 });
         animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1px)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         later(done, dur + 100);
     }
