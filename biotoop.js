@@ -360,6 +360,7 @@
         animate(img, [{ transform: `translate(${x0}px, ${y}px)` }, { transform: `translate(${x0 + (x1 - x0) / 2}px, ${y - 6}px)`, offset: .5 },
             { transform: `translate(${x1}px, ${y}px)` }], { duration: dur, easing: 'linear' });
         later(() => remove(img), dur + 50);
+        return img;
     }
     const goose = () => highFlyer('Goose.webp', 16, false, 13000, 6, .85);
     const geese = () => highFlyer('Geese.webp', 20, true, 17000, 4, .8);
@@ -375,18 +376,282 @@
         return img;
     }
 
-    // Wandelaars (Bergse Pad)
-    function walker(done) {
-        const girl = chance(.5), h = 52;
-        const { w, img } = wrap(L.bioFront, girl ? 'Walkinggirl.webp' : 'WalkingGuy2.webp', h);
-        const right = chance(.5), width = W();
-        const x0 = right ? -120 : width + 20, x1 = right ? width + 20 : -120, y = GROUND - h + 4;
-        const dur = rand(22000, 30000), flip = right ? 1 : -1;
-        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${flip})`, opacity: 0 },
-            { transform: `translate(${x0 + (x1 - x0) * .06}px, ${y}px) scaleX(${flip})`, opacity: 1, offset: .06 },
-            { transform: `translate(${x0 + (x1 - x0) * .94}px, ${y}px) scaleX(${flip})`, opacity: 1, offset: .94 },
-            { transform: `translate(${x1}px, ${y}px) scaleX(${flip})`, opacity: 0 }], { duration: dur, easing: 'linear' });
-        later(() => { remove(w); done(); }, dur + 50);
+    // ---------- MENSEN (Bergse Pad) ----------
+    // Dezelfde bouwstenen als de ontmoetingsstrook op de verenigingenpagina, maar groter: een mens is hier ~50px.
+    const KLEUR = ['#7B5CC4', '#F39A2B', '#2BB39A', '#D64541', '#3B8FE0', '#C9A227', '#5B8C5A', '#8A6D3B'];
+    const HUID = ['#F2C9B0', '#E3B093', '#C68A5C', '#8D5A3C', '#F6D6C2'];
+    const HAAR = ['#2b2b2b', '#5a3a2a', '#8b5a2b', '#d9b36a', '#b0b0b0', '#c0392b'];
+    const BROEK = ['#2f3e55', '#4a5568', '#6b7b8c', '#3b3b3b', '#7a5c3e', '#1f4e79', '#9aa5b1'];
+    const MENS = 44;                                   // standaardlengte in px
+    const FEET = GROUND - 1;                           // de voeten staan net op de graslijn
+    function mensDiv(h, w) { const d = document.createElement('div'); d.className = 'bio-wrap bio-mens'; d.style.height = h + 'px'; d.style.width = w + 'px'; return d; }
+    function person(color, h) {
+        const w = mensDiv(h, h * .45);
+        const huid = pick(HUID), haar = pick(HAAR), broek = pick(BROEK);
+        const hairStyle = pick([
+            `<path d="M4.4 5 q0 -5.5 4.6 -5.5 q4.6 0 4.6 5.5 q-1.5 -2.5 -4.6 -2.5 q-3.1 0 -4.6 2.5z" fill="${haar}"/>`,
+            `<path d="M4.4 6 q0 -6.5 4.6 -6.5 q4.6 0 4.6 6.5 l0 6 l-2 0 l0 -4 q-2.6 -1.5 -5.2 0 l0 4 l-2 0 z" fill="${haar}"/>`,
+            `<path d="M4.6 4 q1 -4.6 4.4 -4.6 q3.4 0 4.4 4.6 q-2 -1.6 -4.4 -1.6 q-2.4 0 -4.4 1.6z" fill="${haar}"/>`,
+            `<path d="M9 0.2 q5 0 4.8 5.6 q-1.8 -2.8 -4.8 -2.8 q-3 0 -4.8 2.8 q-0.2 -5.6 4.8 -5.6z M4 5 l10 0" fill="${haar}"/>`
+        ]);
+        w.innerHTML = `<svg viewBox="0 0 18 40" width="${h * .45}" height="${h}" aria-hidden="true" style="overflow:visible">
+            <path class="legB" d="M9.5 24 l1.2 7 l-0.4 7" fill="none" stroke="${broek}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
+            <path class="armB" d="M13.5 14 l0.8 6 l-1 4" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:13px 14px"/>
+            <path class="legA" d="M8.5 24 l-1.2 7 l0.4 7" fill="none" stroke="${broek}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
+            <path class="romp" d="M3 13 q6 -4 12 0 l1.5 12 h-15 z" fill="${color}"/>
+            <path d="M4.5 22 h9 l0.3 3.5 h-9.6 z" fill="${broek}"/>
+            <path class="armA" d="M4.5 14 l-0.8 6 l1 4" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:5px 14px"/>
+            <g class="kop" style="transform-box:view-box;transform-origin:9px 10px"><circle cx="9" cy="5" r="4.6" fill="${huid}"/>${hairStyle}</g></svg>`;
+        w.dataset.huid = huid;
+        return w;
+    }
+    // Loopbeweging: benen en armen zwaaien om en om, het lijf veert mee. Bij pause gaan de ledematen terug naar rust.
+    function bob(el, dur) {
+        const svg = el.firstElementChild, T = dur * 2;
+        let body = null, limbs = [];
+        const start = () => {
+            body = animate(svg, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1.5px)' }], { duration: dur, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+            limbs = [];
+            const swing = (sel, deg, phase) => { const n = svg.querySelector(sel); if (n) limbs.push(animate(n, [{ transform: `rotate(${-deg}deg)` }, { transform: `rotate(${deg}deg)` }], { duration: T / 2, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: phase ? -T / 2 : 0 })); };
+            swing('.legA', 24, false); swing('.legB', 24, true); swing('.armA', 18, true); swing('.armB', 18, false);
+        };
+        const settle = () => {
+            limbs.forEach(a => { const n = a.effect.target, cur = getComputedStyle(n).transform; a.cancel(); animate(n, [{ transform: cur === 'none' ? 'rotate(0deg)' : cur }, { transform: 'rotate(0deg)' }], { duration: 220, easing: 'ease-out' }); });
+            limbs = [];
+            if (body) { body.cancel(); animate(svg, [{ transform: getComputedStyle(svg).transform === 'none' ? 'translateY(0)' : getComputedStyle(svg).transform }, { transform: 'translateY(0)' }], { duration: 220 }); body = null; }
+        };
+        start();
+        return { pause: settle, play: () => { if (!body) start(); }, cancel: () => { limbs.forEach(a => a.cancel()); if (body) body.cancel(); limbs = []; body = null; } };
+    }
+    // Lopen van x0 naar x1 (ms per px = speed); geeft de duur terug en roept cb aan het eind
+    function loop(p, x0, x1, h, speed, cb) {
+        const y = FEET - h, f = x1 > x0 ? 1 : -1, d = Math.abs(x1 - x0) * speed;
+        p.style.transform = `translate(${x0}px, ${y}px) scaleX(${f})`;
+        animate(p, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: d, easing: 'linear' })
+            .finished.then(() => cb && cb()).catch(() => {});
+        return d;
+    }
+    const WALK = () => rand(26, 32);                   // ms per px: rustig wandeltempo
+
+    // Wandelaars: alleen, met z'n tweeën, soms met een hondje aan de lijn
+    const VACHT = ['#8b5a2b', '#2b2b2b', '#d9b36a', '#f4efe6', '#a0522d', '#6b6b6b'];
+    function hondje(h) {
+        const vacht = pick(VACHT), vlek = pick(VACHT), klein = chance(.5), dw = klein ? 24 : 30, dh = dw * .65;
+        const licht = vacht === '#f4efe6' || vacht === '#d9b36a', rnd = licht ? 'stroke="#8a7560" stroke-width=".6"' : '', poot = licht ? '#c9bca8' : vacht;
+        const dog = document.createElement('div');
+        dog.style.cssText = `position:absolute;left:${h * .45 + 22 - dw}px;top:${h - dh}px;width:${dw}px;height:${dh}px`;
+        dog.innerHTML = `<svg viewBox="0 0 20 13" width="${dw}" height="${dh}" aria-hidden="true" style="overflow:visible">
+            <path class="tail" d="M3.2 5.5 q-2.6 -1.4 -2.6 -4.4" fill="none" stroke="${poot}" stroke-width="1.5" stroke-linecap="round" style="transform-box:fill-box;transform-origin:100% 100%"/>
+            <ellipse cx="9" cy="6.6" rx="6.2" ry="3.2" fill="${vacht}" ${rnd}/>
+            <ellipse cx="7" cy="6" rx="2.2" ry="1.6" fill="${vlek}" opacity=".7"/>
+            <path d="M4.6 8.5 v4.3 M7 8.8 v4 M11.4 8.8 v4 M13.6 8.5 v4.3" stroke="${poot}" stroke-width="1.5" stroke-linecap="round"/>
+            <ellipse cx="18.4" cy="4.9" rx="1.6" ry="1.1" fill="${vacht}" ${rnd}/><circle cx="15.6" cy="4" r="2.9" fill="${vacht}" ${rnd}/><ellipse cx="18.2" cy="4.9" rx="1.3" ry=".8" fill="${vacht}"/>
+            <circle cx="19.6" cy="4.6" r=".6" fill="#16233a"/><circle cx="16.4" cy="3.4" r=".45" fill="#16233a"/>
+            <path d="M14.2 1.8 q-1.4 0.6 -1 3.2 q1 -0.6 1.8 -2.4 z" fill="${vlek}"/>
+            <path d="M13.2 5.6 l2.4 1.2" stroke="#D64541" stroke-width=".9"/></svg>`;
+        return { dog, dw, dh };
+    }
+    function wandelaar(done) {
+        const n = chance(.55) ? 1 : 2, metHond = chance(.4), right = chance(.5), width = W(), speed = WALK();
+        const x0 = right ? -80 : width + 40, x1 = right ? width + 60 : -120;
+        let dur = 0;
+        for (let i = 0; i < n; i++) {
+            const h = rand(MENS - 6, MENS + 2), p = person(pick(KLEUR), h);
+            const off = i * rand(24, 30) * (right ? -1 : 1);
+            if (metHond && i === 0) {
+                // baasje en hondje in één wrapper, met een lijn ertussen
+                const wrapW = h * .45 + 22, box = mensDiv(h, wrapW);
+                p.style.cssText = 'position:absolute;left:0;top:0';
+                const { dog, dw, dh } = hondje(h);
+                const lijn = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                lijn.setAttribute('width', wrapW); lijn.setAttribute('height', h); lijn.style.cssText = 'position:absolute;left:0;top:0;overflow:visible';
+                const hx = h * .45 * .58, hy = h * .37, cx = wrapW - dw + dw * .7, cy = h - dh + dh * .45;
+                lijn.innerHTML = `<path d="M${hx} ${hy} Q${(hx + cx) / 2} ${Math.max(hy, cy) + 5} ${cx} ${cy}" fill="none" stroke="#3d4a5c" stroke-width=".9"/>`;
+                box.append(p, lijn, dog); L.bioFront.appendChild(box);
+                animate(dog.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-2px)' }], { duration: rand(150, 190), direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+                animate(dog.querySelector('.tail'), [{ transform: 'rotate(-14deg)' }, { transform: 'rotate(14deg)' }], { duration: 260, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+                const b = bob(p, rand(400, 470));
+                dur = Math.max(dur, loop(box, x0 + off, x1 + off, h, speed, () => { b.cancel(); remove(box); }));
+            } else {
+                L.bioFront.appendChild(p);
+                const b = bob(p, rand(400, 470));
+                dur = Math.max(dur, loop(p, x0 + off, x1 + off, h, speed, () => { b.cancel(); remove(p); }));
+            }
+        }
+        later(done, dur + 100);
+    }
+
+    // Joggers: 1 of 2, soepel tempo
+    function jogger(h) {
+        const w = mensDiv(h, h * .6);
+        const top = pick(['#D64541', '#7B5CC4', '#3B8FE0', '#2BB39A', '#FF4F9A', '#F39A2B']), tight = pick(['#16233a', '#2f3e55', '#3b3b3b']);
+        const huid = pick(HUID), haar = pick(HAAR), pony = chance(.5);
+        const leg = `fill="none" stroke="${tight}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"`;
+        const arm = `fill="none" stroke="${huid}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"`;
+        w.innerHTML = `<svg viewBox="0 0 24 40" width="${h * .6}" height="${h}" aria-hidden="true" style="overflow:visible"><g transform="rotate(6 12 38)">
+            <path class="armB" d="M12 14 l-1.5 5 l3.5 3" ${arm} opacity=".75" style="transform-box:fill-box;transform-origin:50% 0%"/>
+            <path class="legB" d="M12 24 l1.2 7 l-2 7" ${leg} opacity=".8" style="transform-box:fill-box;transform-origin:50% 0%"/>
+            <path d="M8 13 q4 -3 8 0 l0.6 11 h-9.2 z" fill="${top}"/><path d="M7.3 22 h9.4 l0.5 4 h-10.4 z" fill="${tight}"/>
+            <path class="legA" d="M12 24 l1.2 7 l-2 7" ${leg} style="transform-box:fill-box;transform-origin:50% 0%"/>
+            <path class="armA" d="M12 14 l-1.5 5 l3.5 3" ${arm} style="transform-box:fill-box;transform-origin:50% 0%"/>
+            ${pony ? `<path class="pony" d="M8.2 3.6 q-5.2 0.6 -6 6.4 q2.2 -2.4 6.4 -4 z" fill="${haar}" style="transform-box:fill-box;transform-origin:100% 0%"/>` : ''}
+            <circle cx="12" cy="6" r="4.4" fill="${huid}"/>
+            <path d="M7.6 6 q0 -5 4.4 -5 q4.4 0 4.4 5 q-1.6 -2.3 -4.4 -2.3 q-2.8 0 -4.4 2.3z" fill="${haar}"/></g></svg>`;
+        return w;
+    }
+    function joggers(done) {
+        const n = chance(.6) ? 1 : 2, right = chance(.5), width = W(), speed = 12;
+        const x0 = right ? -80 : width + 40, x1 = right ? width + 60 : -120;
+        let dur = 0;
+        for (let i = 0; i < n; i++) {
+            const h = rand(MENS - 4, MENS + 2), w = jogger(h); L.bioFront.appendChild(w);
+            const off = i * rand(28, 36) * (right ? -1 : 1);
+            dur = Math.max(dur, loop(w, x0 + off, x1 + off, h, speed, () => remove(w)));
+            const T = rand(380, 430), o = { iterations: Infinity, direction: 'alternate', easing: 'ease-in-out', delay: -rand(0, T) };
+            const swing = (sel, a, b, dd) => { const el = w.querySelector(sel); if (el) animate(el, [{ transform: `rotate(${a}deg)` }, { transform: `rotate(${b}deg)` }], Object.assign({}, o, { duration: dd })); };
+            swing('.legA', -32, 32, T / 2); swing('.legB', 32, -32, T / 2); swing('.armA', 38, -38, T / 2); swing('.armB', -38, 38, T / 2); swing('.pony', 6, -22, T / 4);
+            animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-3px)' }], Object.assign({}, o, { duration: T / 4 }));
+        }
+        later(done, dur + 100);
+    }
+
+    // Fietsers: stadsfiets, rechtop; soms een kindje achterop, soms twee naast elkaar
+    function stadsfiets(opts) {
+        const { color, huid, haar, kind, scale = 1, ponytail = false } = opts;
+        const W0 = 52 * scale, H0 = 40 * scale, w = mensDiv(H0, W0);
+        w.innerHTML = `<svg viewBox="0 0 52 40" width="${W0}" height="${H0}" aria-hidden="true" style="overflow:visible">
+            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="10" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M10 23.5v15M2.5 31h15M4.7 25.7l10.6 10.6M15.3 25.7L4.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
+            <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="42" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M42 23.5v15M34.5 31h15M36.7 25.7l10.6 10.6M47.3 25.7L36.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
+            <path d="M10 31 l14 0 l-2 -12 M24 31 l12 -12 l6 12 M36 19 l0 -4 l3 0 M22 19 l-4 -1" fill="none" stroke="#3d4a5c" stroke-width="2" stroke-linejoin="round"/>
+            <circle cx="24" cy="31" r="2.2" fill="#3d4a5c"/>
+            ${kind ? `<path d="M12 22 h6 l0 -6 h-5 z" fill="#5a6a7e"/><circle cx="15" cy="12" r="3" fill="${kind.huid}"/><path d="M12.2 11.8 q2.8 -3.4 5.6 0 q-1 -1.4 -2.8 -1.4 q-1.8 0 -2.8 1.4z" fill="${kind.haar}"/><path d="M12.5 16 q2.5 -2 5 0 l0.5 6 h-6 z" fill="${kind.color}"/><path d="M13.5 22 l-1 5 M16.5 22 l1 5" stroke="#2f3e55" stroke-width="2" stroke-linecap="round"/>` : ''}
+            <path class="legA" d="M23 20 l1.5 11" stroke="#2f3e55" stroke-width="3" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
+            <path class="legB" d="M23 20 l1.5 11" stroke="#1f2d40" stroke-width="3" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
+            <path d="M19 21 q0 -10 5 -11 q6 0 6 10 l-1 1 l-9 1 z" fill="${color}"/>
+            <path d="M24 12 l11 3" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/>
+            <circle cx="25" cy="6" r="4.2" fill="${huid}"/>
+            ${ponytail ? `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/><path d="M21.5 5 q-4 1 -4.5 5.5 q2 -2 5 -3.2z" fill="${haar}"/>` : `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/>`}</svg>`;
+        return w;
+    }
+    function rijd(w, right, h, off, speed) {
+        const width = W(), f = right ? 1 : -1, y = FEET - h + 1;
+        const x0 = right ? -120 - off : width + 40 + off, x1 = right ? width + 80 : -160, dur = Math.abs(x1 - x0) * speed;
+        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+            .finished.then(() => remove(w)).catch(() => remove(w));
+        w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1100, iterations: Infinity, easing: 'linear' }));
+        animate(w.querySelector('.legA'), [{ transform: 'rotate(-26deg)' }, { transform: 'rotate(26deg)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        animate(w.querySelector('.legB'), [{ transform: 'rotate(26deg)' }, { transform: 'rotate(-26deg)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1.2px)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        return dur;
+    }
+    function fietsers(done) {
+        const right = chance(.5), n = chance(.6) ? 1 : 2, sc = 1.15, speed = 15;
+        let dur = 0;
+        for (let i = 0; i < n; i++) {
+            const kind = n === 1 && chance(.35) ? { huid: pick(HUID), haar: pick(HAAR), color: pick(['#D64541', '#F39A2B', '#3B8FE0', '#FF4F9A']) } : null;
+            const w = stadsfiets({ color: pick(KLEUR), huid: pick(HUID), haar: pick(HAAR), kind, scale: sc, ponytail: chance(.5) });
+            L.bioFront.appendChild(w);
+            dur = Math.max(dur, rijd(w, right, 40 * sc, i * 75, speed));
+        }
+        later(done, dur + 100);
+    }
+
+    // Bakfiets: de oude houten bak voorop, man in blauwe overall erachter
+    function bakfiets(done) {
+        const right = chance(.5), width = W(), f = right ? 1 : -1, huid = '#F2C2A8';
+        const SW = 82, SH = SW * 40 / 80, w = mensDiv(SH, SW);
+        const wiel = (cx, cy, r) => `<g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2b2b2b" stroke-width="1.8"/><circle cx="${cx}" cy="${cy}" r="${r - 1.2}" fill="none" stroke="#7a4a3a" stroke-width=".6"/><path d="M${cx} ${cy - r}v${2 * r}M${cx - r} ${cy}h${2 * r}M${cx - r * .7} ${cy - r * .7}l${r * 1.4} ${r * 1.4}M${cx + r * .7} ${cy - r * .7}l${-r * 1.4} ${r * 1.4}" stroke="#555" stroke-width=".6"/></g>`;
+        w.innerHTML = `<svg viewBox="0 0 80 40" width="${SW}" height="${SH}" aria-hidden="true" style="overflow:visible">
+            ${wiel(12, 31, 7.5)}${wiel(56, 31, 7.5)}
+            <path d="M47 31 a9 9 0 0 1 18 0" fill="none" stroke="#2a2a2a" stroke-width="2.2"/>
+            <path d="M5 31 a7.5 7.5 0 0 1 9 -7" fill="none" stroke="#ddd8cf" stroke-width="1.6"/>
+            <path d="M12 31 L24 31 L40 31 L46 25 M24 31 L19 17 M38 30 L38 7 M38 7 H31" fill="none" stroke="#3a2e26" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M31 7 l-3 1.2" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M14 17 h10 l1 -1.6 q-6 -1.6 -11.5 0 z" fill="#111"/>
+            <ellipse cx="25" cy="31" rx="4" ry="2.6" fill="#2a2a2a"/>
+            <rect x="41" y="5" width="38" height="19" rx=".6" fill="#4e4139" stroke="#2f2722" stroke-width=".8"/>
+            <path d="M41 10 h38 M41 15 h38 M41 20 h38" stroke="#3a3029" stroke-width=".7"/>
+            <path d="M46 6 v17 M56 6 v17 M66 6 v17 M74 6 v17" stroke="#5c4e44" stroke-width=".5"/>
+            <rect x="41" y="22" width="38" height="2.4" fill="#ddd8cf"/>
+            <path d="M44 5 h8 v-1.5 h5 v1.5 h4 v-2.5 h6 v2.5 z" fill="#c9a97a" opacity=".9"/>
+            <path d="M60 5 q6 -3 12 -1 l-1 1 z" fill="#e8e4dc"/>
+            <circle cx="24" cy="31" r="2" fill="#555"/>
+            <path class="legA" d="M22 19 l2.5 12" stroke="#1b4f9c" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:22px 19px"/>
+            <path class="legB" d="M22 19 l2.5 12" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:22px 19px"/>
+            <path d="M17 20 q-1 -11 6 -12 q8 0 7 11 l-1 1 l-11 1 z" fill="#1b4f9c"/>
+            <path d="M23 10 l7 -1.5" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="23" cy="5" r="4.2" fill="${huid}"/>
+            <path d="M18.6 5.2 q0 -5.4 4.4 -5.4 q4.4 0 4.4 5.4 q-1.4 -2.4 -4.4 -2.4 q-3 0 -4.4 2.4 z" fill="#1a1a1a"/>
+            <path d="M20 2.2 q1.2 -1.4 2.4 -1.2 M25 1.6 q1 0.6 1.6 1.8" stroke="#b8b8b8" stroke-width=".7" fill="none" stroke-linecap="round"/>
+            <path d="M18 20 q5 2.5 11 0" stroke="#163f7a" stroke-width="1" fill="none"/></svg>`;
+        L.bioFront.appendChild(w);
+        const y = FEET - SH + 1, x0 = right ? -140 : width + 40, x1 = right ? width + 80 : -180, dur = Math.abs(x1 - x0) * 17;
+        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+            .finished.then(() => remove(w)).catch(() => remove(w));
+        w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1400, iterations: Infinity, easing: 'linear' }));
+        animate(w.querySelector('.legA'), [{ transform: 'rotate(-24deg)' }, { transform: 'rotate(24deg)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        animate(w.querySelector('.legB'), [{ transform: 'rotate(24deg)' }, { transform: 'rotate(-24deg)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1px)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        later(done, dur + 100);
+    }
+
+    // Vogelaars: een of twee wandelaars met rugzakje en verrekijker. Ze blijven staan, zetten de kijker aan de ogen
+    // en volgen een groepje overvliegende ganzen; daarna lopen ze verder.
+    function vogelaar(h) {
+        const p = person(pick(['#5B8C5A', '#8A6D3B', '#6b7b8c', '#7a5c3e', '#4a5568']), h), svg = p.firstElementChild;
+        const rugzak = pick(['#D64541', '#1f4e79', '#C9A227', '#2BB39A']);
+        svg.insertAdjacentHTML('afterbegin', `<rect x="0.8" y="12.5" width="4.6" height="10" rx="1.6" fill="${rugzak}"/><path d="M3 12.5 q2.5 -2 5 0" fill="none" stroke="${rugzak}" stroke-width="1"/>`);
+        // verrekijker hangt op de borst; bij het kijken verschijnt hij aan de ogen (in de kop-groep)
+        svg.querySelector('.romp').insertAdjacentHTML('afterend', `<g class="borst"><rect x="7.6" y="15.5" width="1.6" height="2.2" fill="#222"/><rect x="9.6" y="15.5" width="1.6" height="2.2" fill="#222"/></g>`);
+        svg.querySelector('.kop').insertAdjacentHTML('beforeend', `<g class="kijker" opacity="0"><rect x="9.6" y="3.6" width="2.4" height="3" rx=".6" fill="#222"/><rect x="12.4" y="3.6" width="2.4" height="3" rx=".6" fill="#222"/><path d="M12 5 h0.4" stroke="#222" stroke-width="1"/></g>`);
+        return p;
+    }
+    function vogelaars(done) {
+        const n = chance(.5) ? 1 : 2, right = chance(.5), width = W(), speed = WALK(), f = right ? 1 : -1;
+        const stopX = width * rand(.3, .55) + (right ? 0 : width * .15);
+        const x0 = right ? -80 : width + 40, x1 = right ? width + 60 : -120;
+        const group = [];
+        let inDur = 0;
+        for (let i = 0; i < n; i++) {
+            const h = rand(MENS - 4, MENS + 2), p = vogelaar(h); L.bioFront.appendChild(p);
+            const off = i * 30 * -f, xs = stopX + off;
+            const b = bob(p, rand(400, 470));
+            inDur = Math.max(inDur, loop(p, x0 + off, xs, h, speed, () => b.pause()));
+            group.push({ p, h, xs, b, f });
+        }
+        // kijken: armen omhoog, verrekijker aan de ogen, hoofd volgt de ganzen
+        const kijk = (g, aan) => {
+            const svg = g.p.firstElementChild;
+            ['.armA', '.armB'].forEach(s => animate(svg.querySelector(s), [{ transform: aan ? 'rotate(0deg)' : 'rotate(-130deg)' }, { transform: aan ? 'rotate(-130deg)' : 'rotate(0deg)' }], { duration: 500, easing: 'ease-in-out' }));
+            animate(svg.querySelector('.kijker'), [{ opacity: aan ? 0 : 1 }, { opacity: aan ? 1 : 0 }], { duration: 300, delay: aan ? 300 : 0 });
+            animate(svg.querySelector('.borst'), [{ opacity: aan ? 1 : 0 }, { opacity: aan ? 0 : 1 }], { duration: 300, delay: aan ? 300 : 0 });
+        };
+        const face = (g, dir) => { if (g.f === dir) return; g.f = dir; animate(g.p, [{ transform: `translate(${g.xs}px, ${FEET - g.h}px) scaleX(${-dir})` }, { transform: `translate(${g.xs}px, ${FEET - g.h}px) scaleX(${dir})` }], { duration: 350, easing: 'ease-in-out' }); };
+        later(() => {
+            // de ganzen komen van de kant waar ze vandaan kwamen en vliegen over hen heen
+            const img = highFlyer('Geese.webp', 20, right, 15000, 4, .85), t0 = performance.now();
+            later(() => group.forEach(g => kijk(g, true)), 600);
+            const watch = every(() => {
+                if (!img.isConnected || performance.now() - t0 > 15000) { clearInterval(watch); return; }
+                const gr = img.getBoundingClientRect(), gx = gr.left + gr.width / 2, gy = gr.top + gr.height / 2;
+                group.forEach(g => {
+                    const pr = g.p.getBoundingClientRect(), px0 = pr.left + pr.width / 2, py0 = pr.top + 8;
+                    const dx = gx - px0, dy = py0 - gy, dir = dx >= 0 ? 1 : -1;
+                    face(g, dir);
+                    const ang = Math.atan2(dy, Math.abs(dx)) * 180 / Math.PI;           // 0 = horizon, 90 = recht boven
+                    const tilt = -(6 + Math.min(ang, 80) * .38);                        // tot ~ -36 graden achterover
+                    g.p.firstElementChild.querySelector('.kop').style.transform = `rotate(${tilt.toFixed(1)}deg)`;
+                });
+            }, 120);
+            later(() => {
+                group.forEach(g => { kijk(g, false); g.p.firstElementChild.querySelector('.kop').style.transition = 'transform .5s'; g.p.firstElementChild.querySelector('.kop').style.transform = 'rotate(0deg)'; });
+                later(() => {
+                    let out = 0;
+                    group.forEach(g => { face(g, f); later(() => { g.b.play(); out = Math.max(out, loop(g.p, g.xs, x1 + (g.xs - stopX), g.h, speed, () => { g.b.cancel(); remove(g.p); })); }, 400); });
+                    later(done, 400 + (Math.abs(x1 - stopX) + 60) * speed + 200);
+                }, 1200);
+            }, 15200);
+        }, inDur + 700);
     }
 
     // De sloot-scène (oevers): otter komt aan, plonst in de poel, slobeend zwemt boos weg,
@@ -801,8 +1066,8 @@
         }),
         bergsepad: Object.assign({}, BASE, {            // wandelpad: riet, bomen die gesnoeid worden, wandelaars, ganzen
             flowersMax: 5, flowerEvery: 12000, flowers: byName('Lisdodde2', 'Klaproos.', 'Veldoeket'),
-            slots: [6, 14, 40, 50, 70],
-            animals: [[walker, 4], [swallow, 3], [butterfly, 1]],
+            slots: [6, 14, 40, 50, 70], eventEvery: 11000,
+            animals: [[wandelaar, 5], [fietsers, 3], [joggers, 2], [bakfiets, 1], [vogelaars, 3], [swallow, 3], [butterfly, 1]],
             geeseAt: 5000, eagleAt: 90000,
             setup: () => {
                 (NARROW() ? [[10, 'Rietkraag.webp', 40, 1]] : [[33, 'Rietkraag.webp', 46, 1], [76, 'Rietkraag.webp', 42, -1]]).forEach(([p, s, h, f], i) => later(() => prop(L.bioPond, s, h, p, { flip: f }), 500 + i * 800));
@@ -892,6 +1157,7 @@
         if (Math.abs(innerWidth - lastW) > 150) { lastW = innerWidth; clear(); start(); }
     });
 
+    window.biotoop = { wandelaar, fietsers, joggers, bakfiets, vogelaars };   // handig om te testen
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => later(start, 800));
     else later(start, 800);
 })();
