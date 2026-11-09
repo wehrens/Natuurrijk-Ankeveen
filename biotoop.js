@@ -132,7 +132,7 @@
         const free = flowerSlots().filter(s => !used.includes(s));
         if (!free.length) return;
         const slot = pick(free), data = pick(currentScene.flowers || SPRITES.flowers);
-        const h = rand(data.h[0], data.h[1]);
+        const h = rand(data.h[0], data.h[1]) * (currentScene.flowerScale || 1);
         const img = sprite(L.bioGarden, data.src, h, 'bio-flower');
         const x = px(slot) - 20, y = GROUND - 3 + (data.sink || 0) - h;   // top van de bloem
         const pos = `translate(${x.toFixed(0)}px, ${y.toFixed(0)}px)${chance(.5) ? ' scaleX(-1)' : ''}`;
@@ -218,7 +218,7 @@
     // Vlinder: gebogen pad met fladder-bobbel, rust even op een bloem
     function butterfly(done) {
         const blue = chance(.5);
-        const { w, img } = wrap(L.bioSky, blue ? 'Vlinder2.webp' : 'Vlinder.webp', blue ? 22 : 26);
+        const { w, img } = wrap(L.bioSky, blue ? 'Vlinder2.webp' : 'Vlinder.webp', (blue ? 22 : 26) * (currentScene.flowerScale || 1));
         const right = chance(.5), width = W();
         const x0 = right ? -40 : width + 40, x1 = right ? width + 40 : -40;
         const rest = flowers.length ? pick(flowers) : null;
@@ -382,26 +382,39 @@
     const HUID = ['#F2C9B0', '#E3B093', '#C68A5C', '#8D5A3C', '#F6D6C2'];
     const HAAR = ['#2b2b2b', '#5a3a2a', '#8b5a2b', '#d9b36a', '#b0b0b0', '#c0392b'];
     const BROEK = ['#2f3e55', '#4a5568', '#6b7b8c', '#3b3b3b', '#7a5c3e', '#1f4e79', '#9aa5b1'];
-    const MENS = 44;                                   // standaardlengte in px
+    const MENS = 46;                                   // standaardlengte in px
     const FEET = GROUND - 1;                           // de voeten staan net op de graslijn
     function mensDiv(h, w) { const d = document.createElement('div'); d.className = 'bio-wrap bio-mens'; d.style.height = h + 'px'; d.style.width = w + 'px'; return d; }
     function person(color, h) {
         const w = mensDiv(h, h * .45);
-        const huid = pick(HUID), haar = pick(HAAR), broek = pick(BROEK);
+        const huid = pick(HUID), haar = pick(HAAR), broek = pick(BROEK), schoen = pick(['#2b2b2b', '#4a3728', '#6b4a2b', '#1f2d40']);
         const hairStyle = pick([
             `<path d="M4.4 5 q0 -5.5 4.6 -5.5 q4.6 0 4.6 5.5 q-1.5 -2.5 -4.6 -2.5 q-3.1 0 -4.6 2.5z" fill="${haar}"/>`,
             `<path d="M4.4 6 q0 -6.5 4.6 -6.5 q4.6 0 4.6 6.5 l0 6 l-2 0 l0 -4 q-2.6 -1.5 -5.2 0 l0 4 l-2 0 z" fill="${haar}"/>`,
             `<path d="M4.6 4 q1 -4.6 4.4 -4.6 q3.4 0 4.4 4.6 q-2 -1.6 -4.4 -1.6 q-2.4 0 -4.4 1.6z" fill="${haar}"/>`,
             `<path d="M9 0.2 q5 0 4.8 5.6 q-1.8 -2.8 -4.8 -2.8 q-3 0 -4.8 2.8 q-0.2 -5.6 4.8 -5.6z M4 5 l10 0" fill="${haar}"/>`
         ]);
+        const been = (cls, d, ox) => `<g class="${cls}" style="transform-box:view-box;transform-origin:${ox}px 24px"><path d="${d}" fill="none" stroke="${broek}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="#000" stroke-width=".7" opacity=".18" stroke-linecap="round" stroke-linejoin="round" transform="translate(0.9 0)"/></g>`;
+        const schoenen = (x, y) => `<path d="M${x - 2.1} ${y - .2} h4.4 a1.1 1.1 0 0 1 0 2.2 h-4.4 z" fill="${schoen}"/>`;
+        const arm = (cls, d, ox, hx, hy) => `<g class="${cls}" style="transform-box:view-box;transform-origin:${ox}px 14px"><path d="${d}" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round"/><circle cx="${hx}" cy="${hy}" r="1.3" fill="${huid}"/></g>`;
         w.innerHTML = `<svg viewBox="0 0 18 40" width="${h * .45}" height="${h}" aria-hidden="true" style="overflow:visible">
-            <path class="legB" d="M9.5 24 l1.2 7 l-0.4 7" fill="none" stroke="${broek}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
-            <path class="armB" d="M13.5 14 l0.8 6 l-1 4" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:13px 14px"/>
-            <path class="legA" d="M8.5 24 l-1.2 7 l0.4 7" fill="none" stroke="${broek}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
+            <g class="legB" style="transform-box:view-box;transform-origin:9px 24px"><path d="M9.5 24 l1.2 7 l-0.4 7" fill="none" stroke="${broek}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 24 l1.2 7 l-0.4 7" fill="none" stroke="#000" stroke-width="3.6" opacity=".15" stroke-linecap="round" stroke-linejoin="round"/>${schoenen(10.6, 38)}</g>
+            ${arm('armB', 'M13.5 14 l0.8 6 l-1 4', 13, 13.2, 24.4)}
+            <g class="legA" style="transform-box:view-box;transform-origin:9px 24px"><path d="M8.5 24 l-1.2 7 l0.4 7" fill="none" stroke="${broek}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>${schoenen(7.6, 38)}</g>
             <path class="romp" d="M3 13 q6 -4 12 0 l1.5 12 h-15 z" fill="${color}"/>
+            <path d="M3 13 q3 -2 6 -2.2 l0.3 14.2 h-6.3 z" fill="#000" opacity=".1"/>
+            <path d="M9.4 11 l0.3 13.6" stroke="#000" opacity=".18" stroke-width=".5"/>
+            <path d="M7.2 11.6 l1.9 2.6 l1.9 -2.6" fill="none" stroke="#fff" opacity=".55" stroke-width=".7"/>
             <path d="M4.5 22 h9 l0.3 3.5 h-9.6 z" fill="${broek}"/>
-            <path class="armA" d="M4.5 14 l-0.8 6 l1 4" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:5px 14px"/>
-            <g class="kop" style="transform-box:view-box;transform-origin:9px 10px"><circle cx="9" cy="5" r="4.6" fill="${huid}"/>${hairStyle}</g></svg>`;
+            <path d="M4.3 22.3 h9.4" stroke="#3a2a1a" stroke-width=".9"/>
+            ${arm('armA', 'M4.5 14 l-0.8 6 l1 4', 5, 4.8, 24.4)}
+            <g class="kop" style="transform-box:view-box;transform-origin:9px 10px">
+                <path d="M9 9.2 l0.2 1.6" stroke="${huid}" stroke-width="2.2"/>
+                <circle cx="9" cy="5" r="4.6" fill="${huid}"/>
+                <circle cx="10.3" cy="4.6" r=".55" fill="#2b2b2b"/><circle cx="12.4" cy="4.6" r=".55" fill="#2b2b2b"/>
+                <path d="M10.6 7.2 q1.2 0.9 2.3 0" fill="none" stroke="#9a5a4a" stroke-width=".5" stroke-linecap="round"/>
+                <circle cx="5.2" cy="5.6" r=".9" fill="${huid}" stroke="#000" stroke-opacity=".12" stroke-width=".4"/>
+                ${hairStyle}</g></svg>`;
         w.dataset.huid = huid;
         return w;
     }
@@ -495,7 +508,8 @@
             <path class="legA" d="M12 24 l1.2 7 l-2 7" ${leg} style="transform-box:fill-box;transform-origin:50% 0%"/>
             <path class="armA" d="M12 14 l-1.5 5 l3.5 3" ${arm} style="transform-box:fill-box;transform-origin:50% 0%"/>
             ${pony ? `<path class="pony" d="M8.2 3.6 q-5.2 0.6 -6 6.4 q2.2 -2.4 6.4 -4 z" fill="${haar}" style="transform-box:fill-box;transform-origin:100% 0%"/>` : ''}
-            <circle cx="12" cy="6" r="4.4" fill="${huid}"/>
+            <circle cx="12" cy="6" r="4.4" fill="${huid}"/><circle cx="13.3" cy="5.7" r=".5" fill="#2b2b2b"/><circle cx="15.2" cy="5.7" r=".5" fill="#2b2b2b"/>
+            <path d="M12.4 32.6 h3.6 a1 1 0 0 1 0 2 h-3.6z" fill="#f4f4f4" opacity=".0"/>
             <path d="M7.6 6 q0 -5 4.4 -5 q4.4 0 4.4 5 q-1.6 -2.3 -4.4 -2.3 q-2.8 0 -4.4 2.3z" fill="${haar}"/></g></svg>`;
         return w;
     }
@@ -529,7 +543,7 @@
             <path class="legB" d="M23 20 l1.5 11" stroke="#1f2d40" stroke-width="3" stroke-linecap="round" style="transform-box:view-box;transform-origin:23px 20px"/>
             <path d="M19 21 q0 -10 5 -11 q6 0 6 10 l-1 1 l-9 1 z" fill="${color}"/>
             <path d="M24 12 l11 3" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/>
-            <circle cx="25" cy="6" r="4.2" fill="${huid}"/>
+            <circle cx="25" cy="6" r="4.2" fill="${huid}"/><circle cx="26.3" cy="5.7" r=".5" fill="#2b2b2b"/><circle cx="28.1" cy="5.7" r=".5" fill="#2b2b2b"/>
             ${ponytail ? `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/><path d="M21.5 5 q-4 1 -4.5 5.5 q2 -2 5 -3.2z" fill="${haar}"/>` : `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/>`}</svg>`;
         return w;
     }
@@ -1066,12 +1080,12 @@
         }),
         bergsepad: Object.assign({}, BASE, {            // wandelpad: riet, bomen die gesnoeid worden, wandelaars, ganzen
             flowersMax: 5, flowerEvery: 12000, flowers: byName('Lisdodde2', 'Klaproos.', 'Veldoeket'),
-            slots: [6, 14, 40, 50, 70], eventEvery: 11000,
+            slots: [6, 14, 40, 50, 70], eventEvery: 11000, flowerScale: .6,       // mensen zijn ~46px, dus bloemen kleiner
             animals: [[wandelaar, 5], [fietsers, 3], [joggers, 2], [bakfiets, 1], [vogelaars, 3], [swallow, 3], [butterfly, 1]],
             geeseAt: 5000, eagleAt: 90000,
             setup: () => {
                 (NARROW() ? [[10, 'Rietkraag.webp', 40, 1]] : [[33, 'Rietkraag.webp', 46, 1], [76, 'Rietkraag.webp', 42, -1]]).forEach(([p, s, h, f], i) => later(() => prop(L.bioPond, s, h, p, { flip: f }), 500 + i * 800));
-                prop(L.bioGround, 'Bankje.webp', NARROW() ? 28 : 34, NARROW() ? 66 : 64, { instant: true }); prop(L.bioGarden, 'Maria.webp', NARROW() ? 40 : 46, NARROW() ? 79 : 84, { instant: true });
+                prop(L.bioGround, 'Bankje.webp', NARROW() ? 22 : 25, NARROW() ? 66 : 64, { instant: true }); prop(L.bioGarden, 'Maria.webp', NARROW() ? 36 : 40, NARROW() ? 79 : 84, { instant: true });
                 later(treeCycle, 3000);
             }
         }),
