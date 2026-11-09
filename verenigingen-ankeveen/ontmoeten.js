@@ -1037,10 +1037,11 @@
             <rect x="100" y="89.2" width="8" height="3" rx="1" fill="#B23A2E" stroke="${DONKER}" stroke-width=".5"/>
             <rect x="115.6" y="14" width="4.8" height="78" fill="${HOUT}" stroke="${DONKER}" stroke-width=".6"/>
             ${streep}
-            <rect class="puk" x="114.4" y="86" width="7.2" height="3.4" rx=".8" fill="#2b2b2b"/>
+            <rect class="puk" x="114.4" y="86" width="7.2" height="3.4" rx=".8" fill="#D64541" stroke="#8a1c1c" stroke-width=".5"/>
             <path d="M112 11 h12" stroke="${DONKER}" stroke-width="1.4"/>
             <g class="bel" style="transform-box:view-box;transform-origin:118px 4px"><path d="M114.2 10.6 q0 -5.4 3.8 -6 q3.8 .6 3.8 6 z" fill="#E0B23A" stroke="#9a7420" stroke-width=".5"/><circle cx="118" cy="3.6" r="1" fill="#9a7420"/></g>
-            <circle class="pling" cx="118" cy="7" r="7" fill="none" stroke="#F2C318" stroke-width="1.2" opacity="0"/>
+            <circle class="pling" cx="118" cy="7" r="7" fill="none" stroke="#F2C318" stroke-width="1.6" opacity="0" style="transform-box:fill-box;transform-origin:center"/>
+            <g class="stralen" opacity="0" style="transform-box:fill-box;transform-origin:center">${[0, 45, 90, 135, 180, 225, 270, 315].map(a => `<path d="M118 7 l0 -9" stroke="${a % 90 ? '#D64541' : '#F2C318'}" stroke-width="1.6" stroke-linecap="round" transform="rotate(${a} 118 7)"/>`).join('')}</g>
             </svg>`;
         bar.style.position = bar.style.position || 'sticky'; bar.appendChild(w);
         // verrijzen
@@ -1079,9 +1080,12 @@
             later(() => {                                   // klap: het gewicht schiet omhoog
                 const top = 72 * kracht;
                 animate(puk, [{ transform: 'translateY(0)', easing: 'cubic-bezier(.1,.7,.3,1)' }, { transform: `translateY(-${top}px)`, offset: .45, easing: 'cubic-bezier(.6,0,.9,.5)' }, { transform: 'translateY(0)' }], { duration: 1500 });
-                if (kracht >= 1) later(() => {               // raak: de bel rinkelt
+                if (kracht >= 1) later(() => {               // raak: de bel rinkelt, licht op en er spatten stralen uit
                     animate(bel, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(18deg)' }, { transform: 'rotate(-14deg)' }, { transform: 'rotate(9deg)' }, { transform: 'rotate(0deg)' }], { duration: 700 });
-                    animate(pling, [{ opacity: 1, transform: 'scale(.4)' }, { opacity: 0, transform: 'scale(1.6)' }], { duration: 600, easing: 'ease-out' });
+                    const klok = bel.querySelector('path');
+                    animate(klok, [{ fill: '#E0B23A' }, { fill: '#FFF1A8', offset: .15 }, { fill: '#D64541', offset: .4 }, { fill: '#FFF1A8', offset: .65 }, { fill: '#E0B23A' }], { duration: 900 });
+                    animate(pling, [{ opacity: 1, transform: 'scale(.4)' }, { opacity: 0, transform: 'scale(2.2)' }], { duration: 700, easing: 'ease-out' });
+                    animate(w.querySelector('.stralen'), [{ opacity: 0, transform: 'scale(.3) rotate(0deg)' }, { opacity: 1, transform: 'scale(1) rotate(10deg)', offset: .3 }, { opacity: 0, transform: 'scale(1.5) rotate(25deg)' }], { duration: 800, easing: 'ease-out' });
                 }, 640);
             }, 924);
         };
