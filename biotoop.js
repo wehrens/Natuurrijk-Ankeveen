@@ -382,7 +382,7 @@
     const HUID = ['#F2C9B0', '#E3B093', '#C68A5C', '#8D5A3C', '#F6D6C2'];
     const HAAR = ['#2b2b2b', '#5a3a2a', '#8b5a2b', '#d9b36a', '#b0b0b0', '#c0392b'];
     const BROEK = ['#2f3e55', '#4a5568', '#6b7b8c', '#3b3b3b', '#7a5c3e', '#1f4e79', '#9aa5b1'];
-    const MENS = 46;                                   // standaardlengte in px
+    const MENS = 41;                                   // standaardlengte in px
     const FEET = GROUND - 1;                           // de voeten staan net op de graslijn
     function mensDiv(h, w) { const d = document.createElement('div'); d.className = 'bio-wrap bio-mens'; d.style.height = h + 'px'; d.style.width = w + 'px'; return d; }
     function person(color, h) {
@@ -617,7 +617,10 @@
         svg.insertAdjacentHTML('afterbegin', `<rect x="0.8" y="12.5" width="4.6" height="10" rx="1.6" fill="${rugzak}"/><path d="M3 12.5 q2.5 -2 5 0" fill="none" stroke="${rugzak}" stroke-width="1"/>`);
         // verrekijker hangt op de borst; bij het kijken verschijnt hij aan de ogen (in de kop-groep)
         svg.querySelector('.romp').insertAdjacentHTML('afterend', `<g class="borst"><rect x="7.6" y="15.5" width="1.6" height="2.2" fill="#222"/><rect x="9.6" y="15.5" width="1.6" height="2.2" fill="#222"/></g>`);
-        svg.querySelector('.kop').insertAdjacentHTML('beforeend', `<g class="kijker" opacity="0"><rect x="9.6" y="3.6" width="2.4" height="3" rx=".6" fill="#222"/><rect x="12.4" y="3.6" width="2.4" height="3" rx=".6" fill="#222"/><path d="M12 5 h0.4" stroke="#222" stroke-width="1"/></g>`);
+        svg.querySelector('.kop').insertAdjacentHTML('beforeend', `<g class="kijker" opacity="0"><rect x="9.4" y="3.4" width="7.4" height="1.5" rx=".5" fill="#222"/><rect x="9.4" y="5.3" width="7.4" height="1.5" rx=".5" fill="#222"/><rect x="9.4" y="3.2" width="2.2" height="3.8" rx=".6" fill="#333"/><rect x="15.4" y="3.6" width="1.6" height="3" rx=".4" fill="#111"/></g>`);
+        // kijkhouding: gebogen armen met de handen bij de kijker (los van de gewone zwaai-armen)
+        const kleur = svg.querySelector('.romp').getAttribute('fill');
+        svg.insertAdjacentHTML('beforeend', `<g class="kijkarmen" opacity="0"><path d="M5 14 l2.5 -3.5 l4 -3" fill="none" stroke="${kleur}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11.6" cy="7.3" r="1.3" fill="${p.dataset.huid}"/><path d="M13.5 14 l1.5 -3.5 l-0.3 -3.6" fill="none" stroke="${kleur}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14.6" cy="6.8" r="1.3" fill="${p.dataset.huid}"/></g>`);
         return p;
     }
     function vogelaars(done) {
@@ -636,7 +639,8 @@
         // kijken: armen omhoog, verrekijker aan de ogen, hoofd volgt de ganzen
         const kijk = (g, aan) => {
             const svg = g.p.firstElementChild;
-            ['.armA', '.armB'].forEach(s => animate(svg.querySelector(s), [{ transform: aan ? 'rotate(0deg)' : 'rotate(-130deg)' }, { transform: aan ? 'rotate(-130deg)' : 'rotate(0deg)' }], { duration: 500, easing: 'ease-in-out' }));
+            ['.armA', '.armB'].forEach(s => animate(svg.querySelector(s), [{ opacity: aan ? 1 : 0 }, { opacity: aan ? 0 : 1 }], { duration: 350, delay: aan ? 0 : 200 }));
+            animate(svg.querySelector('.kijkarmen'), [{ opacity: aan ? 0 : 1 }, { opacity: aan ? 1 : 0 }], { duration: 350, delay: aan ? 200 : 0 });
             animate(svg.querySelector('.kijker'), [{ opacity: aan ? 0 : 1 }, { opacity: aan ? 1 : 0 }], { duration: 300, delay: aan ? 300 : 0 });
             animate(svg.querySelector('.borst'), [{ opacity: aan ? 1 : 0 }, { opacity: aan ? 0 : 1 }], { duration: 300, delay: aan ? 300 : 0 });
         };
@@ -861,19 +865,43 @@
     }
 
     // Bomen die groeien en gesnoeid worden (Bergse Pad)
+    function tak(x, y, right) {
+        const d = document.createElement('div'); d.className = 'bio-wrap';
+        d.innerHTML = `<svg viewBox="0 0 20 12" width="22" height="13" aria-hidden="true" style="overflow:visible"><path d="M1 10 q8 -4 18 -8" fill="none" stroke="#6b4a2b" stroke-width="1.6" stroke-linecap="round"/><circle cx="8" cy="6" r="2.4" fill="#5f9b3c"/><circle cx="13" cy="3.6" r="2.6" fill="#4f8a32"/><circle cx="17" cy="2.4" r="2" fill="#6fae46"/></svg>`;
+        L.bioFront.appendChild(d);
+        const dx = (right ? 1 : -1) * rand(10, 26), y1 = GROUND - 6;
+        animate(d, [{ transform: `translate(${x}px, ${y}px) rotate(0deg)`, opacity: 1 }, { transform: `translate(${x + dx}px, ${y1}px) rotate(${right ? 160 : -160}deg)`, opacity: 1, offset: .75 }, { transform: `translate(${x + dx}px, ${y1}px) rotate(${right ? 160 : -160}deg)`, opacity: 0 }], { duration: 2600, easing: 'cubic-bezier(.4,0,.8,.6)' });
+        later(() => remove(d), 2700);
+    }
     function treeCycle() {
         const spots = NARROW() ? [30] : [24, 58, 90];
         spots.forEach((pct, i) => later(() => {
-            const h = 88, src = i % 2 ? 'Tree.webp' : 'Iep.webp';
-            const img = sprite(L.bioGarden, src, h);
-            const base = (s) => `translate(${px(pct)}px, ${GROUND - 2 - h}px) scale(${s})`;
-            animate(img, [{ transform: base(.15), opacity: 0 }, { transform: base(1), opacity: 1 }], { duration: 14000, easing: 'ease-out' });
-            later(() => animate(img, [{ transform: base(1), opacity: 1 }, { transform: base(.5), opacity: .9, offset: .3 }, { transform: base(.5), opacity: 0 }],
-                { duration: 6000, easing: 'ease-in-out' }).finished.then(() => remove(img)).catch(() => {}), 30000);
-        }, i * 4000));
-        later(treeCycle, 45000);
+            const h = 88, src = i % 2 ? 'Tree.webp' : 'Iep.webp', wdt = h * .78;
+            const wrap = document.createElement('div'); wrap.className = 'bio-wrap';
+            wrap.style.cssText = `width:${wdt}px;height:${h}px;transform-origin:50% 100%`;
+            const img = document.createElement('img'); img.src = IMG + src; img.alt = ''; img.draggable = false;
+            img.style.cssText = `height:${h}px;width:auto;display:block;margin:0 auto`;
+            wrap.appendChild(img); L.bioGarden.appendChild(wrap);
+            const x = px(pct) - wdt / 2, y = GROUND - 2 - h, right = chance(.5);
+            const base = (sc, rot = 0) => `translate(${x}px, ${y}px) scale(${sc}) rotate(${rot}deg)`;
+            animate(wrap, [{ transform: base(.15), opacity: 0 }, { transform: base(1), opacity: 1 }], { duration: 14000, easing: 'ease-out' });
+            // snoeien: de kroon wordt in stappen kleiner, bij elke knip valt er een tak
+            const snoei = [[12, 6, 0, 4], [22, 16, 0, 12], [34, 24, 0, 20]];
+            let prev = 'inset(0 0 0 0 round 0 0 0 0)';
+            snoei.forEach(([t, r, b, l], k) => later(() => {
+                const next = `inset(${t}% ${r}% ${b}% ${l}% round ${38 + k * 6}% ${42 + k * 5}% 0 0)`;
+                animate(img, [{ clipPath: prev }, { clipPath: next }], { duration: 500, easing: 'steps(2, end)' }); prev = next;
+                tak(x + wdt * (k % 2 ? .78 - r / 100 : .2 + l / 100), y + h * t / 100, k % 2 === 1);
+                if (k === 2) later(() => tak(x + wdt * .5, y + h * .3, !right), 700);
+            }, 24000 + k * 6000));
+            // dan wankelt hij even en valt om; op de grond vervaagt hij
+            later(() => {
+                animate(wrap, [{ transform: base(1, 0) }, { transform: base(1, right ? -3 : 3) }, { transform: base(1, right ? 2 : -2) }, { transform: base(1, 0) }], { duration: 900, easing: 'ease-in-out' });
+                later(() => animate(wrap, [{ transform: base(1, 0), easing: 'cubic-bezier(.6,0,1,.6)' }, { transform: base(1, right ? 86 : -86), offset: .55 }, { transform: base(1, right ? 83 : -83), offset: .7 }, { transform: base(1, right ? 86 : -86), opacity: 1, offset: .82 }, { transform: base(1, right ? 86 : -86), opacity: 0 }], { duration: 4800 }).finished.then(() => remove(wrap)).catch(() => remove(wrap)), 1000);
+            }, 46000);
+        }, i * 5000));
+        later(treeCycle, 70000);
     }
-
 
     // ---------- EGELSNELWEG (egels): schutting, egel loopt vast, poortje, en door ----------
     const fence = { el: null, x: 0, w: 72, gap: false };
@@ -1085,7 +1113,7 @@
             geeseAt: 5000, eagleAt: 90000,
             setup: () => {
                 (NARROW() ? [[10, 'Rietkraag.webp', 40, 1]] : [[33, 'Rietkraag.webp', 46, 1], [76, 'Rietkraag.webp', 42, -1]]).forEach(([p, s, h, f], i) => later(() => prop(L.bioPond, s, h, p, { flip: f }), 500 + i * 800));
-                prop(L.bioGround, 'Bankje.webp', NARROW() ? 22 : 25, NARROW() ? 66 : 64, { instant: true }); prop(L.bioGarden, 'Maria.webp', NARROW() ? 36 : 40, NARROW() ? 79 : 84, { instant: true });
+                prop(L.bioGround, 'Bankje.webp', NARROW() ? 24 : 28, NARROW() ? 66 : 64, { instant: true }); prop(L.bioGarden, 'Maria.webp', NARROW() ? 36 : 40, NARROW() ? 79 : 84, { instant: true });
                 later(treeCycle, 3000);
             }
         }),
