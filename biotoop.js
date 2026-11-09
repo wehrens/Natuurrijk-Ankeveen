@@ -97,14 +97,20 @@
     // Pad-keyframes: pts = lijst {x,y}; flip = -1 spiegelt; tilt = draaien mee met de richting
     function pathFrames(pts, { flip = 1, tilt = 0, scale = 1, fadeIn = 0, fadeOut = 0 } = {}) {
         const n = pts.length;
+        // richting per segment: de hoek waarmee de neus (die na scaleX in de bewegingsrichting wijst) omhoog of omlaag moet
+        const ang = pts.map((p, i) => {
+            if (!tilt || i === 0) return 0;
+            const q = pts[i - 1], dx = p.x - q.x, dy = p.y - q.y;
+            if (Math.abs(dx) < .01 && Math.abs(dy) < .01) return null;
+            const a = Math.atan2(dy, dx) * 180 / Math.PI;
+            return dx >= 0 ? a : a - 180 * Math.sign(a);          // naar links: hoek t.o.v. de linker horizon
+        });
+        for (let i = 1; i < n; i++) if (ang[i] === null) ang[i] = ang[i - 1] || 0;
+        if (n > 1) ang[0] = ang[1];
+        const smooth = ang.map((a, i) => { const w = [ang[i - 1], a, ang[i + 1]].filter(v => v !== undefined); return w.reduce((x, y) => x + y, 0) / w.length; });
         return pts.map((p, i) => {
-            let rot = 0;
-            if (tilt && i > 0) {
-                const q = pts[i - 1];
-                rot = Math.atan2(p.y - q.y, p.x - q.x) * 180 / Math.PI;
-                if (flip < 0) rot = 180 - rot;              // gespiegeld: hoek omkeren
-                rot = Math.max(-tilt, Math.min(tilt, rot)) * (flip < 0 ? -1 : 1);
-            }
+            let rot = Math.max(-tilt, Math.min(tilt, smooth[i]));
+            if (flip < 0) rot = -rot;                                 // gespiegeld: de rotatie keert om
             const t = i / (n - 1);
             let op = 1;
             if (fadeIn && t < fadeIn) op = t / fadeIn;
@@ -301,7 +307,7 @@
                 : sampleCurve({ x: x0, y: 18 + ys }, { x: x0 + (x1 - x0) * .35, y: dip + 25 }, { x: x0 + (x1 - x0) * .65, y: dip }, { x: x1, y: 5 + ys }, 40);
             const img = sprite(L.bioSky, s.src, 28, 'center');
             const dur = rand(4200, 5600);
-            animate(img, pathFrames(pts, { flip, tilt: 28 }), { duration: dur, easing: 'cubic-bezier(.35,0,.65,1)' });
+            animate(img, pathFrames(pts, { flip, tilt: 55 }), { duration: dur, easing: 'cubic-bezier(.3,0,.7,1)' });
             later(() => { remove(img); done(); }, dur + 50);
         }, delay || 0);
     }
@@ -1201,7 +1207,7 @@
         if (Math.abs(innerWidth - lastW) > 150) { lastW = innerWidth; clear(); start(); }
     });
 
-    window.biotoop = { wandelaar, fietsers, joggers, bakfiets, vogelaars };   // handig om te testen
+    window.biotoop = { wandelaar, fietsers, joggers, bakfiets, vogelaars, swallow, swallowGroup };   // handig om te testen
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => later(start, 800));
     else later(start, 800);
 })();
