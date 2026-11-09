@@ -57,7 +57,7 @@
     let timers = [];
     let paused = false;
     let active = 0;               // aantal actieve 'gebeurtenissen' (dieren)
-    const MAX_ACTIVE = () => NARROW() ? 2 : 3;
+    const MAX_ACTIVE = () => { const m = (currentScene && currentScene.maxActive) || 3; return NARROW() ? m - 1 : m; };
 
     function later(fn, ms) { const t = setTimeout(fn, ms); timers.push(t); return t; }
     function every(fn, ms) { const t = setInterval(fn, ms); timers.push(t); return t; }
@@ -579,22 +579,22 @@
             ${wiel(12, 31, 7.5)}${wiel(56, 31, 7.5)}
             <path d="M47 31 a9 9 0 0 1 18 0" fill="none" stroke="#2a2a2a" stroke-width="2.2"/>
             <path d="M5 31 a7.5 7.5 0 0 1 9 -7" fill="none" stroke="#ddd8cf" stroke-width="1.6"/>
-            <path d="M12 31 L24 31 L40 31 L46 25 M24 31 L19 17 M38 30 L38 7 M38 7 H31" fill="none" stroke="#3a2e26" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-            <path d="M31 7 l-3 1.2" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M12 31 L24 31 L40 31 L46 27 M24 31 L19 17 M38 30 L38 13 M38 13 H31" fill="none" stroke="#3a2e26" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M31 13 l-3 0.8" stroke="#5a2a1a" stroke-width="2.4" stroke-linecap="round"/>
             <path d="M14 17 h10 l1 -1.6 q-6 -1.6 -11.5 0 z" fill="#111"/>
             <ellipse cx="25" cy="31" rx="4" ry="2.6" fill="#2a2a2a"/>
-            <rect x="41" y="5" width="38" height="19" rx=".6" fill="#4e4139" stroke="#2f2722" stroke-width=".8"/>
-            <path d="M41 10 h38 M41 15 h38 M41 20 h38" stroke="#3a3029" stroke-width=".7"/>
-            <path d="M46 6 v17 M56 6 v17 M66 6 v17 M74 6 v17" stroke="#5c4e44" stroke-width=".5"/>
-            <rect x="41" y="22" width="38" height="2.4" fill="#ddd8cf"/>
-            <path d="M44 5 h8 v-1.5 h5 v1.5 h4 v-2.5 h6 v2.5 z" fill="#c9a97a" opacity=".9"/>
-            <path d="M60 5 q6 -3 12 -1 l-1 1 z" fill="#e8e4dc"/>
+            <rect x="41" y="13" width="38" height="14" rx=".6" fill="#4e4139" stroke="#2f2722" stroke-width=".8"/>
+            <path d="M41 17.5 h38 M41 22 h38" stroke="#3a3029" stroke-width=".7"/>
+            <path d="M46 14 v12 M56 14 v12 M66 14 v12 M74 14 v12" stroke="#5c4e44" stroke-width=".5"/>
+            <rect x="41" y="25" width="38" height="2.2" fill="#ddd8cf"/>
+            <path d="M44 13 h8 v-1.5 h5 v1.5 h4 v-2.5 h6 v2.5 z" fill="#c9a97a" opacity=".9"/>
+            <path d="M60 13 q6 -3 12 -1 l-1 1 z" fill="#e8e4dc"/>
             <circle cx="24" cy="31" r="2" fill="#555"/>
             <path class="legA" d="M22 19 l2.5 12" stroke="#1b4f9c" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:22px 19px"/>
             <path class="legB" d="M22 19 l2.5 12" stroke="#163f7a" stroke-width="3.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:22px 19px"/>
             <path d="M17 20 q-1 -11 6 -12 q8 0 7 11 l-1 1 l-11 1 z" fill="#1b4f9c"/>
-            <path d="M23 10 l7 -1.5" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/>
-            <circle cx="23" cy="5" r="4.2" fill="${huid}"/>
+            <path d="M23 11 l7 2.2" stroke="${huid}" stroke-width="2.4" stroke-linecap="round"/><circle cx="30.4" cy="13.2" r="1.3" fill="${huid}"/>
+            <circle cx="23" cy="5" r="4.2" fill="${huid}"/><circle cx="24.6" cy="4.6" r=".5" fill="#2b2b2b"/><circle cx="26.4" cy="4.6" r=".5" fill="#2b2b2b"/>
             <path d="M18.6 5.2 q0 -5.4 4.4 -5.4 q4.4 0 4.4 5.4 q-1.4 -2.4 -4.4 -2.4 q-3 0 -4.4 2.4 z" fill="#1a1a1a"/>
             <path d="M20 2.2 q1.2 -1.4 2.4 -1.2 M25 1.6 q1 0.6 1.6 1.8" stroke="#b8b8b8" stroke-width=".7" fill="none" stroke-linecap="round"/>
             <path d="M18 20 q5 2.5 11 0" stroke="#163f7a" stroke-width="1" fill="none"/></svg>`;
@@ -647,20 +647,22 @@
         const face = (g, dir) => { if (g.f === dir) return; g.f = dir; animate(g.p, [{ transform: `translate(${g.xs}px, ${FEET - g.h}px) scaleX(${-dir})` }, { transform: `translate(${g.xs}px, ${FEET - g.h}px) scaleX(${dir})` }], { duration: 350, easing: 'ease-in-out' }); };
         later(() => {
             // de ganzen komen van de kant waar ze vandaan kwamen en vliegen over hen heen
-            const img = highFlyer('Geese.webp', 20, right, 15000, 4, .85), t0 = performance.now();
+            const DUR = 15000, width = W(), gx0 = right ? -140 : width + 40, gx1 = right ? width + 40 : -140;
+            const img = highFlyer('Geese.webp', 20, right, DUR, 4, .85), t0 = performance.now();
             later(() => group.forEach(g => kijk(g, true)), 600);
             const watch = every(() => {
-                if (!img.isConnected || performance.now() - t0 > 15000) { clearInterval(watch); return; }
-                const gr = img.getBoundingClientRect(), gx = gr.left + gr.width / 2, gy = gr.top + gr.height / 2;
+                const t = (performance.now() - t0) / DUR;
+                if (t >= 1) { clearInterval(watch); return; }
+                const gx = gx0 + (gx1 - gx0) * t + 40, gy = 14;
                 group.forEach(g => {
-                    const pr = g.p.getBoundingClientRect(), px0 = pr.left + pr.width / 2, py0 = pr.top + 8;
+                    const px0 = g.xs + g.h * .22, py0 = FEET - g.h + 8;
                     const dx = gx - px0, dy = py0 - gy, dir = dx >= 0 ? 1 : -1;
                     face(g, dir);
                     const ang = Math.atan2(dy, Math.abs(dx)) * 180 / Math.PI;           // 0 = horizon, 90 = recht boven
                     const tilt = -(6 + Math.min(ang, 80) * .38);                        // tot ~ -36 graden achterover
                     g.p.firstElementChild.querySelector('.kop').style.transform = `rotate(${tilt.toFixed(1)}deg)`;
                 });
-            }, 120);
+            }, 160);
             later(() => {
                 group.forEach(g => { kijk(g, false); g.p.firstElementChild.querySelector('.kop').style.transition = 'transform .5s'; g.p.firstElementChild.querySelector('.kop').style.transform = 'rotate(0deg)'; });
                 later(() => {
@@ -1108,12 +1110,12 @@
         }),
         bergsepad: Object.assign({}, BASE, {            // wandelpad: riet, bomen die gesnoeid worden, wandelaars, ganzen
             flowersMax: 5, flowerEvery: 12000, flowers: byName('Lisdodde2', 'Klaproos.', 'Veldoeket'),
-            slots: [6, 14, 40, 50, 70], eventEvery: 11000, flowerScale: .6,       // mensen zijn ~46px, dus bloemen kleiner
+            slots: [6, 14, 40, 50, 70], eventEvery: 7500, maxActive: 4, flowerScale: .6,       // mensen zijn ~46px, dus bloemen kleiner
             animals: [[wandelaar, 5], [fietsers, 3], [joggers, 2], [bakfiets, 1], [vogelaars, 3], [swallow, 3], [butterfly, 1]],
             geeseAt: 5000, eagleAt: 90000,
             setup: () => {
                 (NARROW() ? [[10, 'Rietkraag.webp', 40, 1]] : [[33, 'Rietkraag.webp', 46, 1], [76, 'Rietkraag.webp', 42, -1]]).forEach(([p, s, h, f], i) => later(() => prop(L.bioPond, s, h, p, { flip: f }), 500 + i * 800));
-                prop(L.bioGround, 'Bankje.webp', NARROW() ? 24 : 28, NARROW() ? 66 : 64, { instant: true }); prop(L.bioGarden, 'Maria.webp', NARROW() ? 36 : 40, NARROW() ? 79 : 84, { instant: true });
+                prop(L.bioGround, 'Bankje.webp', NARROW() ? 28 : 33, NARROW() ? 66 : 64, { instant: true }); prop(L.bioGarden, 'Maria.webp', NARROW() ? 36 : 40, NARROW() ? 79 : 84, { instant: true });
                 later(treeCycle, 3000);
             }
         }),
