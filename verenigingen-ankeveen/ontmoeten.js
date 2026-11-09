@@ -927,6 +927,69 @@
     }
     const vogelaarsDur = () => (W() + 120 + EX) * 19 + 600 + 13000 + 1800;
 
+
+    // Bubbling Blue Notes Jazz Club: een trio in donker pak met hoed (sax, contrabas, trompet) komt aanlopen,
+    // blijft staan en speelt; uit de instrumenten borrelen blauwe bellen met nootjes omhoog. Dan lopen ze verder.
+    function jazzer(kind, h) {
+        const w = document.createElement('div'); w.className = 'om-p';
+        const pak = pick(['#1c2238', '#2a2a2a', '#1f3350']), huid = pick(HUID), hoed = pick(['#16233a', '#3a2a1a', '#2b2b2b']);
+        const inst = kind === 'sax'
+            ? `<g class="inst"><path d="M11 9 q0 10 4 14 q4 2 6 -3" fill="none" stroke="#C9A227" stroke-width="2.6" stroke-linecap="round"/><circle cx="21.5" cy="19" r="2.6" fill="#C9A227"/><path d="M12 11 h2 M12.3 14 h2 M13 17 h2" stroke="#8a6a10" stroke-width=".9"/></g>`
+            : kind === 'bas'
+            ? `<g class="inst"><path d="M14 36 q-7 -6 -4 -14 q2 -4 6 -3 q4 -1 6 3 q3 8 -4 14 z" fill="#7a4a22" stroke="#4a2a10" stroke-width=".8"/><path d="M17 20 l1.5 -17" stroke="#3a2a1a" stroke-width="1.6"/><path d="M15.5 24 l2 0 M15.5 28 l2 0" stroke="#111" stroke-width=".9"/><path d="M15 22 v12 M16.6 22 v12 M18.2 22 v12" stroke="#eee" stroke-width=".4"/><path class="pluk" d="M5 14 l6 9" stroke="${pak}" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:5px 14px"/></g>`
+            : `<g class="inst"><path d="M11 10 h7 l4 -3 v8 l-4 -3 h-7 z" fill="#C9A227"/><path d="M13 9 v-2 M15 9 v-2 M17 9 v-2" stroke="#8a6a10" stroke-width=".9"/></g>`;
+        w.innerHTML = `<svg viewBox="0 0 24 40" width="${h * .6}" height="${h}" aria-hidden="true" style="overflow:visible">
+            <path class="legB" d="M9.5 24 l1.2 7 l-0.4 7" fill="none" stroke="${pak}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
+            <path class="legA" d="M8.5 24 l-1.2 7 l0.4 7" fill="none" stroke="${pak}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
+            <path d="M6.5 37.5 h2.4 M9.6 37.5 h2.4" stroke="#111" stroke-width="2" stroke-linecap="round"/>
+            <g class="lijf" style="transform-box:view-box;transform-origin:9px 24px">
+            <path d="M3 13 q6 -4 12 0 l1.5 12 h-15 z" fill="${pak}"/><path d="M8.2 12.5 l0.8 3 l0.8 -3" fill="#fff"/><path d="M9 13 l0 9" stroke="#D64541" stroke-width="1"/>
+            <path d="M4.5 22 h9 l0.3 3.5 h-9.6 z" fill="${pak}"/>
+            <circle cx="9" cy="5" r="4.6" fill="${huid}"/><circle cx="10.3" cy="4.6" r=".5" fill="#2b2b2b"/><circle cx="12.3" cy="4.6" r=".5" fill="#2b2b2b"/>
+            <path d="M3.5 2.2 h11 l-0.4 -1.2 h-2.2 l-0.8 -3.4 h-4.6 l-0.8 3.4 h-2.1 z" fill="${hoed}"/><path d="M6 1 h6" stroke="#9DC3E6" stroke-width=".8"/>
+            ${kind === 'sax' ? `<path d="M5 14 l5 4 l3 -3" fill="none" stroke="${pak}" stroke-width="2.6" stroke-linecap="round"/>` : kind === 'trompet' ? `<path d="M5 14 l6 -1 M13.5 14 l1 -4" fill="none" stroke="${pak}" stroke-width="2.6" stroke-linecap="round"/>` : `<path d="M13.5 14 l3 -5" fill="none" stroke="${pak}" stroke-width="2.6" stroke-linecap="round"/>`}
+            ${inst}</g></svg>`;
+        return w;
+    }
+    function bubbel(x, y) {                                // borrelende blauwe bel met een nootje erin
+        const b = document.createElement('div'); b.className = 'om-note';
+        const r = rand(4, 6.5);
+        b.style.cssText = `width:${2 * r}px;height:${2 * r}px;border-radius:50%;background:rgba(157,195,230,.3);border:1px solid rgba(59,143,224,.7);color:#1b4f9c;font-size:${r + 1.5}px;display:flex;align-items:center;justify-content:center;font-weight:700`;
+        b.textContent = pick(['\u266a', '\u266b', '\u2669']);
+        strip.appendChild(b);
+        const dx = rand(-14, 14), h = rand(16, 24);
+        animate(b, [{ transform: `translate(${x}px, ${y}px) scale(.3)`, opacity: 0 }, { transform: `translate(${x + dx * .3}px, ${y - h * .3}px) scale(1)`, opacity: 1, offset: .25 },
+            { transform: `translate(${x + dx * .7}px, ${y - h * .75}px) scale(1.05)`, opacity: 1, offset: .8 }, { transform: `translate(${x + dx}px, ${y - h}px) scale(1.5)`, opacity: 0 }],
+            { duration: rand(1800, 2800), easing: 'ease-out' }).finished.then(() => b.remove()).catch(() => b.remove());
+    }
+    function jazz() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, h = 24, y = GROUND - h, speed = 20;
+        const kinds = ['sax', 'bas', 'trompet'], stopX = width * rand(.35, .55), SPEEL = rand(9000, 12000);
+        const x0 = fromLeft ? -40 : width + 20, x1 = fromLeft ? width + 40 + EX : -60 - EX;
+        let inDur = 0;
+        kinds.forEach((kind, i) => {
+            const w = jazzer(kind, h); strip.appendChild(w);
+            const off = i * 20 * -f, xs = stopX + off, b = bob(w, rand(420, 500));
+            const d = Math.abs(xs - x0 - off) * speed; inDur = Math.max(inDur, d);
+            animate(w, [{ transform: `translate(${x0 + off}px, ${y}px) scaleX(${f})` }, { transform: `translate(${xs}px, ${y}px) scaleX(${f})` }], { duration: d, easing: 'linear' })
+                .finished.then(() => b.pause()).catch(() => {});
+            later(() => {
+                // spelen: zachtjes wiegen, de bassist plukt, en bellen borrelen uit het instrument
+                const sway = animate(w.querySelector('.lijf'), [{ transform: 'rotate(-4deg)' }, { transform: 'rotate(4deg)' }], { duration: rand(700, 900), direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+                const pluk = w.querySelector('.pluk'), pl = pluk ? animate(pluk, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(12deg)' }], { duration: 260, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }) : null;
+                const bx = xs + (f > 0 ? 13 : 1), by = y + (kind === 'bas' ? 14 : 10);
+                const tick = setInterval(() => { if (chance(.6)) bubbel(bx + rand(-3, 3), by); }, rand(750, 1000));
+                later(() => {
+                    clearInterval(tick); sway.cancel(); if (pl) pl.cancel();
+                    animate(w.querySelector('.lijf'), [{ transform: getComputedStyle(w.querySelector('.lijf')).transform === 'none' ? 'rotate(0deg)' : getComputedStyle(w.querySelector('.lijf')).transform }, { transform: 'rotate(0deg)' }], { duration: 300 });
+                    later(() => { b.play(); animate(w, [{ transform: `translate(${xs}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1 + off}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(x1 + off - xs) * speed, easing: 'linear' }).finished.then(() => { b.cancel(); w.remove(); }).catch(() => w.remove()); }, 500);
+                }, SPEEL);
+            }, inDur + 500 + i * 300);
+        });
+    }
+    const jazzDur = () => (W() + 120 + EX) * 20 + 500 + 12000 + 1500;
+
     // Kermis: rechts van het logo verrijst een reuzenrad, draait een tijdje met bakjes, en zakt dan weer in
     function kermis() {
         if (document.hidden) return;
@@ -1235,7 +1298,7 @@
         animate(w.querySelector('img'), [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-0.7px) rotate(-0.35deg)', offset: .5 }, { transform: 'translateY(0) rotate(0deg)' }],
             { duration: 2800, iterations: Infinity, easing: 'ease-in-out' });
     }
-    window.ontmoeten = { vogelaars, meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets, vaderFiets, moederFiets, kermis };   // handig om te testen
+    window.ontmoeten = { jazz, vogelaars, meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets, vaderFiets, moederFiets, kermis };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
@@ -1260,6 +1323,7 @@
         { run: kermis, dur: () => 42000, rare: true },
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
         { run: vogelaars, dur: vogelaarsDur },
+        { run: jazz, dur: jazzDur },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
