@@ -665,7 +665,7 @@
             later(() => {
                 const k = kramen[i]; if (!k) return;
                 animate(k.querySelector('.waar'), [{ opacity: 0, transform: 'translateY(-4px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: VUL, easing: 'ease-out' });
-                const hv = rand(22, 25), v = person(pick(KLEUR), hv); v.classList.add('om-achter'); strip.insertBefore(v, kramen[0]); verkopers[i] = v;
+                const hv = rand(22, 25), v = person(pick(KLEUR), hv); v.classList.add('om-achter'); v.style.transform = `translate(-30px, ${GROUND - hv}px)`; strip.insertBefore(v, kramen[0]); verkopers[i] = v;
                 later(() => walkTo(v, -30, x + 5, hv), VUL);
             }, tt);
             if (i < N - 1) {
