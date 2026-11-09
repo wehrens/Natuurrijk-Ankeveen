@@ -977,46 +977,58 @@
         });
         later(klaar, total + 200);
     }
-    // Opruim-intro: het klasje komt aan, de kinderen rennen naar het zwerfafval, rapen het op en brengen het naar de
-    // vuilniszak bij de juf; daarna lopen ze verder
-    function cleanupIntro(cb) {
-        klasBusy = true;
-        const items = [['Redbull.webp', 17, 30, 0], ['Redbull.webp', 17, 48, 90], ['Pringles.webp', 16, 66, -90]]
-            .map(([src, h, pct, rot]) => { const p = prop(L.bioGround, src, h, pct, { instant: true }); p.style.transform += ` rotate(${rot}deg)`; return { p, x: px(pct), pos: p.style.transform }; });
-        const klas = maakKlas(3), speed = 22, stopX = px(14);
-        const bagX = stopX + 22, bag = sprite(L.bioGround, 'Garbage.webp', 26); bag.style.opacity = 0;
-        bag.style.transform = `translate(${bagX}px, ${GROUND - 2 - 26}px)`;
+    // Opruimen: er ligt zwerfafval; het klasje komt aan, de kinderen rennen ernaartoe, rapen het op en brengen het
+    // naar de vuilniszak bij de juf; daarna lopen ze verder. Als intro (vast, van links) en als terugkerende gebeurtenis.
+    const AFVAL = [['Redbull.webp', 17], ['Pringles.webp', 16], ['Redbull.webp', 17]];
+    function opruimen(done, vast) {
+        if (klasBusy) return done(); klasBusy = true;
+        const width = W(), right = vast ? true : chance(.5), f = right ? 1 : -1;
+        const nItems = vast ? 3 : pick([1, 2, 3]);
+        const pcts = vast ? [30, 48, 66] : [rand(20, 32), rand(42, 56), rand(66, 80)].slice(0, nItems);
+        const items = pcts.map((pct, i) => {
+            const [src, h] = AFVAL[i % AFVAL.length], rot = pick([0, 90, -90]);
+            const p = prop(L.bioGround, src, h, pct, { instant: vast }); p.style.transform += ` rotate(${rot}deg)`;
+            return { p, x: px(pct), pos: p.style.transform };
+        });
+        const klas = maakKlas(nItems), speed = 22;
+        const stopX = right ? px(12) : width - px(12), bagX = stopX + 22 * f;
+        const bag = sprite(L.bioGround, 'Garbage.webp', 26); bag.style.opacity = 0;
+        bag.style.transform = `translate(${bagX - 13}px, ${GROUND - 2 - 26}px)`;
         let tIn = 0;
-        klas.forEach((m, i) => {
+        klas.forEach(m => {
             const anim = m.kid ? huppel(m.w) : null, b = m.kid ? null : bob(m.w, rand(420, 500));
-            m.anim = anim; m.b = b; m.xs = stopX - m.off;
-            tIn = Math.max(tIn, loop(m.w, -60 - m.off, m.xs, m.h, speed, () => { if (b) b.pause(); if (anim) anim.pause(); }));
+            m.anim = anim; m.b = b; m.xs = stopX - m.off * f;
+            const xa = right ? -60 - m.off : width + 40 + m.off;
+            tIn = Math.max(tIn, loop(m.w, xa, m.xs, m.h, speed, () => { if (b) b.pause(); if (anim) anim.pause(); }));
         });
         later(() => {
             animate(bag, [{ opacity: 0 }, { opacity: 1 }], { duration: 500 });
             const kids = klas.filter(m => m.kid);
             let tAll = 0;
             kids.forEach((k, i) => {
-                const it = items[i], tx = it.x - 8;
-                const t0 = 600 + i * 700;
+                const it = items[i], tx = it.x - 8, t0 = 600 + i * 700;
                 later(() => {
                     k.anim.play();
-                    const d = loop(k.w, k.xs, tx, k.h, 11, () => {        // rennen naar het blikje
+                    loop(k.w, k.xs, tx, k.h, 11, () => {                         // rennen naar het afval
                         k.anim.pause();
                         animate(k.w.firstElementChild, [{ transform: 'translateY(0) scaleY(1)' }, { transform: `translateY(${k.h * .2}px) scaleY(.8)` }, { transform: 'translateY(0) scaleY(1)' }], { duration: 700, easing: 'ease-in-out' });
                         animate(it.p, [{ transform: it.pos, opacity: 1 }, { transform: `translate(${tx + 6}px, ${FEET - k.h * .55}px) scale(.35)`, opacity: 0 }], { duration: 500, easing: 'ease-in', delay: 300 }).finished.then(() => remove(it.p)).catch(() => {});
-                        later(() => { k.anim.play(); loop(k.w, tx, k.xs, k.h, 11, () => { k.anim.pause(); }); }, 800);      // terug naar de zak
+                        later(() => { k.anim.play(); loop(k.w, tx, k.xs, k.h, 11, () => k.anim.pause()); }, 800);   // terug naar de zak
                     });
-                    tAll = Math.max(tAll, t0 + d + 800 + Math.abs(tx - k.xs) * 11);
                 }, t0);
+                tAll = Math.max(tAll, t0 + Math.abs(tx - k.xs) * 11 * 2 + 800 + 400);
             });
             later(() => {
                 animate(bag, [{ opacity: 1 }, { opacity: 0 }], { duration: 600 }).finished.then(() => remove(bag)).catch(() => {});
-                klas.forEach(m => { if (m.b) m.b.play(); if (m.anim) m.anim.play(); loop(m.w, m.xs, W() + 80 - m.off, m.h, 24, () => { if (m.b) m.b.cancel(); remove(m.w); }); });
-                later(() => { klasBusy = false; cb(); }, 1200);
-            }, 600 + 2 * 700 + (Math.abs(items[2].x - 8 - (stopX - klas[3].off)) * 11) * 2 + 1500 + 1200);
+                const x1 = right ? width + 80 : -140;
+                let tOut = 0;
+                klas.forEach(m => { if (m.b) m.b.play(); if (m.anim) m.anim.play(); tOut = Math.max(tOut, loop(m.w, m.xs, x1 - m.off * f, m.h, 24, () => { if (m.b) m.b.cancel(); remove(m.w); })); });
+                later(() => klasBusy = false, tOut + 200);                       // pas als de klas uit beeld is mag de volgende
+                later(done, vast ? 1200 : tOut + 200);
+            }, tAll + 900);
         }, tIn + 400);
     }
+    function cleanupIntro(cb) { opruimen(cb, true); }
     // Kind met schepnet rent achter een vlinder aan (haalt hem nooit)
     function schepnet(done) {
         if (klasBusy) return done(); klasBusy = true;
@@ -1274,8 +1286,8 @@
             setup: placeNight
         }),
         educatie: Object.assign({}, BASE, {             // speels: het klasje ruimt op, komt langs, kijkt naar bloemen; egel, rups, vlinders
-            flowersMax: 8, flowerEvery: 5000, eventEvery: 8000, flowerScale: .6,
-            animals: [[klasje, 3], [schepnet, 2], [hedgehog, 3], [caterpillar, 2], [butterfly, 3], [ladybug, 2]],
+            flowersMax: 8, flowerEvery: 5000, eventEvery: 6500, maxActive: 3, flowerScale: .6,
+            animals: [[opruimen, 4], [klasje, 3], [schepnet, 3], [hedgehog, 1], [caterpillar, 1], [butterfly, 2], [ladybug, 1]],
             intro: cleanupIntro
         })
     };
@@ -1332,7 +1344,7 @@
         if (Math.abs(innerWidth - lastW) > 150) { lastW = innerWidth; clear(); start(); }
     });
 
-    window.biotoop = { wandelaar, fietsers, joggers, bakfiets, vogelaars, swallow, swallowGroup, klasje, schepnet };   // handig om te testen
+    window.biotoop = { wandelaar, fietsers, joggers, bakfiets, vogelaars, swallow, swallowGroup, klasje, schepnet, opruimen };   // handig om te testen
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => later(start, 800));
     else later(start, 800);
 })();
