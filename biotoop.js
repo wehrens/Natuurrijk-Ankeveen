@@ -881,24 +881,6 @@
         later(() => { remove(img); done(); }, 5300);
     }
 
-    // Opruim-intro (educatie): afval op het gras, vuilniszak, alles opgeruimd
-    function cleanupIntro(cb) {
-        const items = [['Redbull.webp', 44, 25, 0], ['Redbull.webp', 44, 45, 90], ['Pringles.webp', 40, 65, -90]]
-            .map(([src, h, pct, rot]) => { const p = prop(L.bioGround, src, h, pct); p.style.transform += ` rotate(${rot}deg)`; return p; });
-        later(() => {
-            const bag = prop(L.bioGround, 'Garbage.webp', 48, 50);
-            items.forEach((it, i) => later(() => {
-                const pos = it.style.transform;
-                animate(it, [{ transform: pos, opacity: 1 }, { transform: `translate(${px(50) + 14}px, ${GROUND - 30}px) scale(.3)`, opacity: 0 }],
-                    { duration: 900, easing: 'ease-in' }).finished.then(() => remove(it)).catch(() => {});
-            }, 1500 + i * 1800));
-            later(() => {
-                animate(bag, [{ opacity: 1 }, { opacity: 0 }], { duration: 800 }).finished.then(() => remove(bag)).catch(() => {});
-                later(cb, 900);
-            }, 1500 + items.length * 1800 + 2500);
-        }, 2500);
-    }
-
     // Bomen die groeien en gesnoeid worden (Bergse Pad)
     function tak(x, y, right) {
         const d = document.createElement('div'); d.className = 'bio-wrap';
@@ -936,6 +918,122 @@
             }, 46000);
         }, i * 5000));
         later(treeCycle, 70000);
+    }
+
+    // ---------- SCHOOLKLAS (educatie) ----------
+    // Kinderen van de Joseph Lokinschool in oranje hesjes, met een begeleider voorop en achteraan.
+    const KID = () => rand(22, 27), JUF = () => rand(MENS - 3, MENS + 1);
+    function hesje(h) {
+        const w = person('#FF6A00', h), svg = w.firstElementChild;
+        svg.querySelector('.romp').insertAdjacentHTML('afterend', '<path d="M3.6 18.5 h10.8" stroke="#F4F4F4" stroke-width="1.6"/><path d="M3.3 21.5 h11.4" stroke="#F4F4F4" stroke-width="1.2" opacity=".8"/>');
+        return w;
+    }
+    // huppelen: kinderen veren vrolijk op en neer, elk in een eigen ritme
+    function huppel(w) {
+        return animate(w.firstElementChild, [{ transform: 'translate(0, 0)' }, { transform: `translate(${rand(-2, 2)}px, -${rand(3, 5)}px)` }],
+            { duration: rand(230, 360), direction: 'alternate', iterations: Infinity, easing: 'ease-out', delay: rand(0, 300) });
+    }
+    // Rij maken: [{w, h, kid, off}] met de juf voorop
+    function maakKlas(nKids) {
+        const rij = [{ h: JUF(), kid: false }];
+        for (let i = 0; i < nKids; i++) rij.push({ h: KID(), kid: true });
+        rij.push({ h: JUF(), kid: false });
+        let off = 0;
+        return rij.map((m, i) => {
+            const w = hesje(m.h); L.bioFront.appendChild(w);
+            off += i === 0 ? 0 : (m.kid && rij[i - 1].kid ? rand(12, 20) : rand(22, 28));
+            return { w, h: m.h, kid: m.kid, off };
+        });
+    }
+    // Het klasje komt langs; de helft van de keren stoppen ze bij een bloem: de juf wijst, de kinderen hurken om te kijken
+    let klasBusy = false;                                // hooguit één klas (of schepnet-kind) tegelijk
+    function klasje(done) {
+        if (klasBusy) return done(); klasBusy = true; const klaar = () => { klasBusy = false; done(); };
+        const right = chance(.5), width = W(), f = right ? 1 : -1, speed = 24;
+        const klas = maakKlas(pick([4, 5, 6]));
+        const x0 = right ? -60 : width + 40, x1 = right ? width + 80 : -140;
+        const stop = flowers.length && chance(.6) ? pick(flowers) : null;
+        const stopX = stop ? px(stop.slot) - 20 + (right ? -30 : 40) : null;
+        let total = 0;
+        klas.forEach((m, i) => {
+            const y = FEET - m.h, xa = x0 - m.off * f, xb = x1 - m.off * f;
+            const anim = m.kid ? huppel(m.w) : null, b = m.kid ? null : bob(m.w, rand(420, 500));
+            if (!stopX) {
+                total = Math.max(total, loop(m.w, xa, xb, m.h, speed, () => { if (b) b.cancel(); remove(m.w); }));
+            } else {
+                const xs = stopX - m.off * f, d1 = loop(m.w, xa, xs, m.h, speed, () => {
+                    if (b) b.pause(); if (anim) anim.pause();
+                    if (m.kid) animate(m.w.firstElementChild, [{ transform: 'translateY(0) scaleY(1)' }, { transform: `translateY(${m.h * .18}px) scaleY(.82)` }], { duration: 400, easing: 'ease-out' });   // hurken
+                    else if (i === 0) animate(m.w.querySelector('.armB'), [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-110deg)' }], { duration: 500, easing: 'ease-out' });   // de juf wijst
+                });
+                const kijk = 4500;
+                later(() => {
+                    if (m.kid) animate(m.w.firstElementChild, [{ transform: `translateY(${m.h * .18}px) scaleY(.82)` }, { transform: 'translateY(0) scaleY(1)' }], { duration: 350 });
+                    else if (i === 0) animate(m.w.querySelector('.armB'), [{ transform: 'rotate(-110deg)' }, { transform: 'rotate(0deg)' }], { duration: 400 });
+                    later(() => { if (b) b.play(); if (anim) anim.play(); loop(m.w, xs, xb, m.h, speed, () => { if (b) b.cancel(); remove(m.w); }); }, 450);
+                }, d1 + kijk);
+                total = Math.max(total, d1 + kijk + 450 + Math.abs(xb - xs) * speed);
+            }
+        });
+        later(klaar, total + 200);
+    }
+    // Opruim-intro: het klasje komt aan, de kinderen rennen naar het zwerfafval, rapen het op en brengen het naar de
+    // vuilniszak bij de juf; daarna lopen ze verder
+    function cleanupIntro(cb) {
+        klasBusy = true;
+        const items = [['Redbull.webp', 17, 30, 0], ['Redbull.webp', 17, 48, 90], ['Pringles.webp', 16, 66, -90]]
+            .map(([src, h, pct, rot]) => { const p = prop(L.bioGround, src, h, pct, { instant: true }); p.style.transform += ` rotate(${rot}deg)`; return { p, x: px(pct), pos: p.style.transform }; });
+        const klas = maakKlas(3), speed = 22, stopX = px(14);
+        const bagX = stopX + 22, bag = sprite(L.bioGround, 'Garbage.webp', 26); bag.style.opacity = 0;
+        bag.style.transform = `translate(${bagX}px, ${GROUND - 2 - 26}px)`;
+        let tIn = 0;
+        klas.forEach((m, i) => {
+            const anim = m.kid ? huppel(m.w) : null, b = m.kid ? null : bob(m.w, rand(420, 500));
+            m.anim = anim; m.b = b; m.xs = stopX - m.off;
+            tIn = Math.max(tIn, loop(m.w, -60 - m.off, m.xs, m.h, speed, () => { if (b) b.pause(); if (anim) anim.pause(); }));
+        });
+        later(() => {
+            animate(bag, [{ opacity: 0 }, { opacity: 1 }], { duration: 500 });
+            const kids = klas.filter(m => m.kid);
+            let tAll = 0;
+            kids.forEach((k, i) => {
+                const it = items[i], tx = it.x - 8;
+                const t0 = 600 + i * 700;
+                later(() => {
+                    k.anim.play();
+                    const d = loop(k.w, k.xs, tx, k.h, 11, () => {        // rennen naar het blikje
+                        k.anim.pause();
+                        animate(k.w.firstElementChild, [{ transform: 'translateY(0) scaleY(1)' }, { transform: `translateY(${k.h * .2}px) scaleY(.8)` }, { transform: 'translateY(0) scaleY(1)' }], { duration: 700, easing: 'ease-in-out' });
+                        animate(it.p, [{ transform: it.pos, opacity: 1 }, { transform: `translate(${tx + 6}px, ${FEET - k.h * .55}px) scale(.35)`, opacity: 0 }], { duration: 500, easing: 'ease-in', delay: 300 }).finished.then(() => remove(it.p)).catch(() => {});
+                        later(() => { k.anim.play(); loop(k.w, tx, k.xs, k.h, 11, () => { k.anim.pause(); }); }, 800);      // terug naar de zak
+                    });
+                    tAll = Math.max(tAll, t0 + d + 800 + Math.abs(tx - k.xs) * 11);
+                }, t0);
+            });
+            later(() => {
+                animate(bag, [{ opacity: 1 }, { opacity: 0 }], { duration: 600 }).finished.then(() => remove(bag)).catch(() => {});
+                klas.forEach(m => { if (m.b) m.b.play(); if (m.anim) m.anim.play(); loop(m.w, m.xs, W() + 80 - m.off, m.h, 24, () => { if (m.b) m.b.cancel(); remove(m.w); }); });
+                later(() => { klasBusy = false; cb(); }, 1200);
+            }, 600 + 2 * 700 + (Math.abs(items[2].x - 8 - (stopX - klas[3].off)) * 11) * 2 + 1500 + 1200);
+        }, tIn + 400);
+    }
+    // Kind met schepnet rent achter een vlinder aan (haalt hem nooit)
+    function schepnet(done) {
+        if (klasBusy) return done(); klasBusy = true;
+        const right = chance(.5), width = W(), h = KID();
+        const w = hesje(h), svg = w.firstElementChild; L.bioFront.appendChild(w);
+        svg.querySelector('.armB').insertAdjacentHTML('beforeend', '');
+        svg.insertAdjacentHTML('beforeend', '<g class="net" style="transform-box:view-box;transform-origin:13px 14px"><path d="M13 14 l6 -12" stroke="#8b5a2b" stroke-width="1.3" stroke-linecap="round"/><ellipse cx="21" cy="-1" rx="4" ry="3" fill="rgba(255,255,255,.35)" stroke="#555" stroke-width=".8"/></g>');
+        huppel(w);
+        animate(svg.querySelector('.net'), [{ transform: 'rotate(-10deg)' }, { transform: 'rotate(25deg)' }], { duration: 420, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        // de vlinder vliegt laag voor het kind uit
+        const { w: vw, img } = wrap(L.bioSky, chance(.5) ? 'Vlinder2.webp' : 'Vlinder.webp', 16);
+        const x0 = right ? -40 : width + 40, x1 = right ? width + 60 : -60, dur = Math.abs(x1 - x0) * 10;
+        const pts = sampleCurve({ x: x0, y: GROUND - 34 }, { x: x0 + (x1 - x0) * .3, y: GROUND - 56 }, { x: x0 + (x1 - x0) * .7, y: GROUND - 26 }, { x: x1, y: GROUND - 50 }, 30);
+        animate(vw, pathFrames(pts, { flip: right ? 1 : -1 }), { duration: dur, easing: 'linear' });
+        animate(img, [{ transform: 'translateY(0) rotate(-6deg)' }, { transform: 'translateY(-4px) rotate(6deg)' }], { duration: rand(300, 420), direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        loop(w, x0 - 34 * (right ? 1 : -1), x1 - 34 * (right ? 1 : -1), h, 10, () => remove(w));
+        later(() => { remove(vw); remove(w); klasBusy = false; done(); }, dur + 300);
     }
 
     // ---------- EGELSNELWEG (egels): schutting, egel loopt vast, poortje, en door ----------
@@ -1175,9 +1273,9 @@
             animals: [[bat, 5], [batPair, 3]],
             setup: placeNight
         }),
-        educatie: Object.assign({}, BASE, {             // speels: eerst opruimen, dan egel, rups, vlinders
-            flowersMax: 8, flowerEvery: 5000, eventEvery: 8000,
-            animals: [[hedgehog, 3], [caterpillar, 2], [butterfly, 3], [ladybug, 2]],
+        educatie: Object.assign({}, BASE, {             // speels: het klasje ruimt op, komt langs, kijkt naar bloemen; egel, rups, vlinders
+            flowersMax: 8, flowerEvery: 5000, eventEvery: 8000, flowerScale: .6,
+            animals: [[klasje, 3], [schepnet, 2], [hedgehog, 3], [caterpillar, 2], [butterfly, 3], [ladybug, 2]],
             intro: cleanupIntro
         })
     };
@@ -1219,7 +1317,7 @@
         timers.forEach(t => { clearTimeout(t); clearInterval(t); }); timers = [];
         running.forEach(a => { try { a.cancel(); } catch (e) {} }); running.clear();
         ['bioPond', 'bioGround', 'bioGarden', 'bioSky', 'bioFront'].forEach(k => { if (L[k]) L[k].innerHTML = ''; });
-        kingfisherBusy = false; otterBusy = false; flowers.length = 0; pond.el = null; pond.roerdomp = null; pond.reeds = []; active = 0; til = null; nests.length = 0; fence.el = null; fence.right = null; moon.r = 0;
+        kingfisherBusy = false; otterBusy = false; flowers.length = 0; klasBusy = false; pond.el = null; pond.roerdomp = null; pond.reeds = []; active = 0; til = null; nests.length = 0; fence.el = null; fence.right = null; moon.r = 0;
     }
 
     // Pauzeren als het tabblad niet zichtbaar is
@@ -1234,7 +1332,7 @@
         if (Math.abs(innerWidth - lastW) > 150) { lastW = innerWidth; clear(); start(); }
     });
 
-    window.biotoop = { wandelaar, fietsers, joggers, bakfiets, vogelaars, swallow, swallowGroup };   // handig om te testen
+    window.biotoop = { wandelaar, fietsers, joggers, bakfiets, vogelaars, swallow, swallowGroup, klasje, schepnet };   // handig om te testen
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => later(start, 800));
     else later(start, 800);
 })();
