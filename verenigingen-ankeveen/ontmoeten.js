@@ -853,6 +853,79 @@
         rideBike(m, fromLeft, 40 * .68, 16);
     }
 
+
+    // Vogelaars: een of twee wandelaars met rugzakje en verrekijker. Ze blijven staan en volgen met de kijker
+    // een groepje overvliegende ganzen, daarna lopen ze verder.
+    function vogelaar(h) {
+        const color = pick(['#5B8C5A', '#8A6D3B', '#6b7b8c', '#7a5c3e', '#4a5568']);
+        const p = person(color, h), svg = p.firstElementChild, NS = 'http://www.w3.org/2000/svg';
+        const huid = svg.querySelector('circle').getAttribute('fill');
+        // hoofd en haar in een eigen groep, zodat het hoofd achterover kan
+        const head = svg.querySelector('circle'), g = document.createElementNS(NS, 'g');
+        g.setAttribute('class', 'kop'); g.style.cssText = 'transform-box:view-box;transform-origin:9px 10px';
+        head.parentNode.insertBefore(g, head); g.appendChild(head); while (g.nextSibling) g.appendChild(g.nextSibling);
+        const rugzak = pick(['#D64541', '#1f4e79', '#C9A227', '#2BB39A']);
+        svg.insertAdjacentHTML('afterbegin', `<rect x="0.8" y="12.5" width="4.6" height="10" rx="1.6" fill="${rugzak}"/>`);
+        g.insertAdjacentHTML('beforeend', `<g class="kijker" opacity="0"><rect x="9.4" y="3.4" width="7.4" height="1.5" rx=".5" fill="#222"/><rect x="9.4" y="5.3" width="7.4" height="1.5" rx=".5" fill="#222"/><rect x="9.4" y="3.2" width="2.2" height="3.8" rx=".6" fill="#333"/></g>`);
+        svg.insertAdjacentHTML('beforeend', `<g class="kijkarmen" opacity="0"><path d="M5 14 l2.5 -3.5 l4 -3" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11.6" cy="7.3" r="1.3" fill="${huid}"/><path d="M13.5 14 l1.5 -3.5 l-0.3 -3.6" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14.6" cy="6.8" r="1.3" fill="${huid}"/></g>`);
+        return p;
+    }
+    function ganzen(fromLeft, dur) {
+        const w = document.createElement('div'); w.className = 'om-p'; w.style.zIndex = 0;
+        const gans = (x, y, d) => `<g transform="translate(${x} ${y})"><path class="vl" d="M-4 0 q2 -1.5 4 0 q2 -1.5 4 0" fill="none" stroke="#3b3b3b" stroke-width="1.1" stroke-linecap="round" style="transform-box:fill-box;transform-origin:50% 50%;animation:none"><animate attributeName="d" dur="${d}s" repeatCount="indefinite" values="M-4 0 q2 -1.5 4 0 q2 -1.5 4 0;M-4 1.2 q2 -2.4 4 -1 q2 -2.4 4 0;M-4 0 q2 -1.5 4 0 q2 -1.5 4 0"/></path></g>`;
+        w.innerHTML = `<svg viewBox="0 0 60 16" width="60" height="16" aria-hidden="true" style="overflow:visible">${gans(30, 3, .55)}${gans(22, 6, .5)}${gans(38, 6, .6)}${gans(14, 9.5, .55)}${gans(46, 9.5, .5)}${gans(6, 13, .6)}</svg>`;
+        strip.appendChild(w);
+        const width = W(), x0 = fromLeft ? -70 : width + 10, x1 = fromLeft ? width + 10 : -70;
+        animate(w, [{ transform: `translate(${x0}px, 2px) scaleX(${fromLeft ? 1 : -1})` }, { transform: `translate(${(x0 + x1) / 2}px, 0px) scaleX(${fromLeft ? 1 : -1})`, offset: .5 }, { transform: `translate(${x1}px, 2px) scaleX(${fromLeft ? 1 : -1})` }], { duration: dur, easing: 'linear' })
+            .finished.then(() => w.remove()).catch(() => w.remove());
+        return { x0, x1 };
+    }
+    function vogelaars() {
+        if (document.hidden) return;
+        const n = chance(.5) ? 1 : 2, fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = rand(15, 19);
+        const stopX = width * rand(.3, .6) + (fromLeft ? 0 : width * .1);
+        const x0 = fromLeft ? -40 : width + 20, x1 = fromLeft ? width + 40 + EX : -60 - EX;
+        const group = []; let inDur = 0;
+        for (let i = 0; i < n; i++) {
+            const h = rand(21, 25), p = vogelaar(h); strip.appendChild(p);
+            const off = i * 16 * -f, xs = stopX + off, y = GROUND - h;
+            p.style.transform = `translate(${x0 + off}px, ${y}px) scaleX(${f})`;
+            const b = bob(p, rand(380, 460)), d = Math.abs(xs - x0 - off) * speed;
+            animate(p, [{ transform: `translate(${x0 + off}px, ${y}px) scaleX(${f})` }, { transform: `translate(${xs}px, ${y}px) scaleX(${f})` }], { duration: d, easing: 'linear' }).finished.then(() => b.pause()).catch(() => {});
+            inDur = Math.max(inDur, d);
+            group.push({ p, h, xs, y, b, f });
+        }
+        const kijk = (g, aan) => {
+            const svg = g.p.firstElementChild;
+            ['.armA', '.armB'].forEach(sel => animate(svg.querySelector(sel), [{ opacity: aan ? 1 : 0 }, { opacity: aan ? 0 : 1 }], { duration: 300, delay: aan ? 0 : 200 }));
+            animate(svg.querySelector('.kijkarmen'), [{ opacity: aan ? 0 : 1 }, { opacity: aan ? 1 : 0 }], { duration: 300, delay: aan ? 200 : 0 });
+            animate(svg.querySelector('.kijker'), [{ opacity: aan ? 0 : 1 }, { opacity: aan ? 1 : 0 }], { duration: 300, delay: aan ? 300 : 0 });
+        };
+        const face = (g, dir) => { if (g.f === dir) return; g.f = dir; animate(g.p, [{ transform: `translate(${g.xs}px, ${g.y}px) scaleX(${-dir})` }, { transform: `translate(${g.xs}px, ${g.y}px) scaleX(${dir})` }], { duration: 350, easing: 'ease-in-out' }); };
+        const DUR = 13000;
+        later(() => {
+            const { x0: gx0, x1: gx1 } = ganzen(fromLeft, DUR), t0 = performance.now();
+            later(() => group.forEach(g => kijk(g, true)), 500);
+            const watch = setInterval(() => {
+                const t = (performance.now() - t0) / DUR;
+                if (t >= 1) { clearInterval(watch); return; }
+                const gx = gx0 + (gx1 - gx0) * t + 30, gy = 8;
+                group.forEach(g => {
+                    const px0 = g.xs + g.h * .22, py0 = g.y + 4, dx = gx - px0, dir = dx >= 0 ? 1 : -1;
+                    face(g, dir);
+                    const ang = Math.atan2(py0 - gy, Math.abs(dx)) * 180 / Math.PI;
+                    g.p.firstElementChild.querySelector('.kop').style.transform = `rotate(${(-(6 + Math.min(ang, 80) * .38)).toFixed(1)}deg)`;
+                });
+            }, 160);
+            later(() => {
+                group.forEach(g => { kijk(g, false); const k = g.p.firstElementChild.querySelector('.kop'); k.style.transition = 'transform .5s'; k.style.transform = 'rotate(0deg)'; });
+                later(() => group.forEach(g => { face(g, f); later(() => { g.b.play();
+                    animate(g.p, [{ transform: `translate(${g.xs}px, ${g.y}px) scaleX(${f})` }, { transform: `translate(${x1 + (g.xs - stopX)}px, ${g.y}px) scaleX(${f})` }], { duration: Math.abs(x1 - g.xs) * speed, easing: 'linear' }).finished.then(() => { g.b.cancel(); g.p.remove(); }).catch(() => g.p.remove()); }, 400); }), 1100);
+            }, DUR + 200);
+        }, inDur + 600);
+    }
+    const vogelaarsDur = () => (W() + 120 + EX) * 19 + 600 + 13000 + 1800;
+
     // Kermis: rechts van het logo verrijst een reuzenrad, draait een tijdje met bakjes, en zakt dan weer in
     function kermis() {
         if (document.hidden) return;
@@ -1161,7 +1234,7 @@
         animate(w.querySelector('img'), [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-0.7px) rotate(-0.35deg)', offset: .5 }, { transform: 'translateY(0) rotate(0deg)' }],
             { duration: 2800, iterations: Infinity, easing: 'ease-in-out' });
     }
-    window.ontmoeten = { meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets, vaderFiets, moederFiets, kermis };   // handig om te testen
+    window.ontmoeten = { vogelaars, meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets, vaderFiets, moederFiets, kermis };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
@@ -1185,6 +1258,7 @@
         { run: bakfiets, dur: () => (W() + 100 + EX) * 16 + 12000, rare: true },
         { run: kermis, dur: () => 42000, rare: true },
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
+        { run: vogelaars, dur: vogelaarsDur },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
