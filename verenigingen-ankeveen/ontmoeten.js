@@ -936,7 +936,7 @@
         const inst = kind === 'sax'
             ? `<g class="inst"><path d="M11 9 q0 10 4 14 q4 2 6 -3" fill="none" stroke="#C9A227" stroke-width="2.6" stroke-linecap="round"/><circle cx="21.5" cy="19" r="2.6" fill="#C9A227"/><path d="M12 11 h2 M12.3 14 h2 M13 17 h2" stroke="#8a6a10" stroke-width=".9"/></g>`
             : kind === 'bas'
-            ? `<g class="inst"><path d="M14 36 q-7 -6 -4 -14 q2 -4 6 -3 q4 -1 6 3 q3 8 -4 14 z" fill="#7a4a22" stroke="#4a2a10" stroke-width=".8"/><path d="M17 20 l1.5 -17" stroke="#3a2a1a" stroke-width="1.6"/><path d="M15.5 24 l2 0 M15.5 28 l2 0" stroke="#111" stroke-width=".9"/><path d="M15 22 v12 M16.6 22 v12 M18.2 22 v12" stroke="#eee" stroke-width=".4"/><path class="pluk" d="M5 14 l6 9" stroke="${pak}" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:5px 14px"/></g>`
+            ? `<g class="inst"><path d="M15 38 q-11 -8 -6 -21 q3 -5 8 -4 q5 -1 8 4 q5 13 -6 21 z" fill="#7a4a22" stroke="#4a2a10" stroke-width=".8"/><path d="M17 13 l1.5 -17" stroke="#3a2a1a" stroke-width="1.8"/><path d="M15 -3 h4" stroke="#3a2a1a" stroke-width="1.6" stroke-linecap="round"/><path d="M13.5 20 q1.5 2.5 0 5 M20.5 20 q-1.5 2.5 0 5" fill="none" stroke="#2a1a0a" stroke-width=".9"/><path d="M14.5 29 h5" stroke="#111" stroke-width="1.2"/><path d="M15 12 v24 M16.6 12 v24 M18.2 12 v24 M19.8 12 v24" stroke="#eee" stroke-width=".4"/><path class="pluk" d="M5 14 l6 10" stroke="${pak}" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:5px 14px"/></g>`
             : `<g class="inst"><path d="M11 10 h7 l4 -3 v8 l-4 -3 h-7 z" fill="#C9A227"/><path d="M13 9 v-2 M15 9 v-2 M17 9 v-2" stroke="#8a6a10" stroke-width=".9"/></g>`;
         w.innerHTML = `<svg viewBox="0 0 24 40" width="${h * .6}" height="${h}" aria-hidden="true" style="overflow:visible">
             <path class="legB" d="M9.5 24 l1.2 7 l-0.4 7" fill="none" stroke="${pak}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
@@ -947,7 +947,7 @@
             <path d="M4.5 22 h9 l0.3 3.5 h-9.6 z" fill="${pak}"/>
             <circle cx="9" cy="5" r="4.6" fill="${huid}"/><circle cx="10.3" cy="4.6" r=".5" fill="#2b2b2b"/><circle cx="12.3" cy="4.6" r=".5" fill="#2b2b2b"/>
             <path d="M3.5 2.2 h11 l-0.4 -1.2 h-2.2 l-0.8 -3.4 h-4.6 l-0.8 3.4 h-2.1 z" fill="${hoed}"/><path d="M6 1 h6" stroke="#9DC3E6" stroke-width=".8"/>
-            ${kind === 'sax' ? `<path d="M5 14 l5 4 l3 -3" fill="none" stroke="${pak}" stroke-width="2.6" stroke-linecap="round"/>` : kind === 'trompet' ? `<path d="M5 14 l6 -1 M13.5 14 l1 -4" fill="none" stroke="${pak}" stroke-width="2.6" stroke-linecap="round"/>` : `<path d="M13.5 14 l3 -5" fill="none" stroke="${pak}" stroke-width="2.6" stroke-linecap="round"/>`}
+            ${kind === 'sax' ? `<path d="M5 14 l5 4 l3 -3" fill="none" stroke="${pak}" stroke-width="2.6" stroke-linecap="round"/>` : kind === 'trompet' ? `<path d="M5 14 l6 -1 M13.5 14 l1 -4" fill="none" stroke="${pak}" stroke-width="2.6" stroke-linecap="round"/>` : `<path d="M13.5 14 l3 -8" fill="none" stroke="${pak}" stroke-width="2.6" stroke-linecap="round"/>`}
             ${inst}</g></svg>`;
         return w;
     }
