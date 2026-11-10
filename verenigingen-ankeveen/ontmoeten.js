@@ -1119,6 +1119,33 @@
     }
     const havenloosDur = () => (W() + 220) * 16 + 500 + 16000 + (W() + 220 + EX) * 16 * .5;
 
+
+    // Gitaarschool (VSK): twee mensen met een gitaar op de rug lopen naar hun les
+    function gitarist(h, soort) {
+        const p = person(pick(KLEUR), h), svg = p.firstElementChild;
+        const gitaar = soort === 'hout'
+            ? `<g transform="rotate(-14 4 20)"><path d="M3.9 14.8 l.5 -11.4" stroke="#5a3a1e" stroke-width="1.3"/><rect x="3.3" y="1.2" width="2" height="3" rx=".5" fill="#3a2a1a"/>
+               <circle cx="3.9" cy="17.4" r="2.6" fill="#C98B4B" stroke="#7a4a22" stroke-width=".4"/><circle cx="3.7" cy="22" r="3.4" fill="#C98B4B" stroke="#7a4a22" stroke-width=".4"/><circle cx="3.8" cy="19.6" r=".9" fill="#3a2a1a"/></g>`
+            : `<g transform="rotate(-14 4 20)"><path d="M3.9 15 l.5 -11.6" stroke="#222" stroke-width="2"/><rect x="3" y="1" width="2.6" height="3.4" rx=".8" fill="#222"/>
+               <path d="M1.4 16.6 q2.6 -3 5 0 q1.4 3 .4 4.6 q1.4 3.6 -1.8 5.4 q-2.6 .6 -4 -1.2 q-1.4 -2.6 .2 -4.4 q-1 -1.8 .2 -4.4 z" fill="#2b2b2b"/><path d="M3.6 17 v8" stroke="#555" stroke-width=".4"/></g>`;
+        svg.insertAdjacentHTML('afterbegin', gitaar);                                    // achter het lijf, dus op de rug
+        svg.querySelector('path[d^="M3 13 q6"]').insertAdjacentHTML('afterend', '<path d="M14 13.4 l-9 9" stroke="#3a2a1a" stroke-width=".8" opacity=".8"/>');   // draagband
+        delete p.dataset.groet;
+        return p;
+    }
+    function gitaarschool() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = rand(17, 20);
+        const x0 = fromLeft ? -40 : width + 20, x1 = fromLeft ? width + 40 + EX : -60 - EX;
+        [[rand(23, 25), 'hout', 0], [rand(20, 23), chance(.5) ? 'hoes' : 'hout', 16]].forEach(([h, soort, off]) => {
+            const p = gitarist(h, soort), y = GROUND - h; strip.appendChild(p);
+            const b = bob(p, rand(420, 480)), xa = x0 - off * f, xb = x1 - off * f;
+            p.style.transform = `translate(${xa}px, ${y}px) scaleX(${f})`;
+            animate(p, [{ transform: `translate(${xa}px, ${y}px) scaleX(${f})` }, { transform: `translate(${xb}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(xb - xa) * speed, easing: 'linear' })
+                .finished.then(() => { b.cancel(); p.remove(); }).catch(() => p.remove());
+        });
+    }
+
     // Kermis: rechts van het logo verrijst een reuzenrad, draait een tijdje met bakjes, en zakt dan weer in
     function kermis() {
         if (document.hidden) return;
@@ -1458,6 +1485,7 @@
         { run: vogelaars, dur: vogelaarsDur },
         { run: jazz, dur: jazzDur },
         { run: havenloos, dur: havenloosDur },
+        { run: gitaarschool, dur: () => (W() + 120 + EX) * 20 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
@@ -1509,7 +1537,7 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
     toon(); window.addEventListener('hashchange', toon);
