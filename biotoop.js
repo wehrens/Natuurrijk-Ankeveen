@@ -363,8 +363,15 @@
         const img = sprite(L.bioSky, src, h, 'center');
         img.style.opacity = opacity;
         const width = W(), x0 = right ? -140 : width + 40, x1 = right ? width + 40 : -140;
-        animate(img, [{ transform: `translate(${x0}px, ${y}px)` }, { transform: `translate(${x0 + (x1 - x0) / 2}px, ${y - 6}px)`, offset: .5 },
-            { transform: `translate(${x1}px, ${y}px)` }], { duration: dur, easing: 'linear' });
+        // Zachte golfbeweging (glijden/klapwieken) en een 3D-transform met minieme schaal, zodat de browser de
+        // positie niet op hele pixels afrondt: dat gaf een schokkerige vlucht bij lage snelheid.
+        const N = 48, frames = [];
+        for (let i = 0; i <= N; i++) {
+            const t = i / N, x = x0 + (x1 - x0) * t, yy = y - 6 * Math.sin(Math.PI * t) + 2.2 * Math.sin(t * Math.PI * 2 * 3.5);
+            const rot = (right ? 1 : -1) * 2.5 * Math.cos(t * Math.PI * 2 * 3.5);
+            frames.push({ transform: `translate3d(${x.toFixed(2)}px, ${yy.toFixed(2)}px, 0) rotate(${rot.toFixed(2)}deg) scale(1.001)`, offset: t });
+        }
+        animate(img, frames, { duration: dur, easing: 'linear' });
         later(() => remove(img), dur + 50);
         return img;
     }
