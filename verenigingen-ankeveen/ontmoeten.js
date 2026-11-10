@@ -1260,7 +1260,6 @@
         <path d="M1 8 q12 3.6 24 0 l-1.2 3 q-10.8 2.6 -21.6 0 z" fill="${TAK}"/>
         <path d="M2 8.6 l5 2.2 M6 8.2 l6 3 M12 9.6 l6 -1.6 M17 10.6 l7 -2.6 M4 10.4 l7 -1 M15 9 l6 2" stroke="${TAK2}" stroke-width=".7" stroke-linecap="round"/>
         <path d="M0 7.6 l3.6 1.4 M22.4 9 l3.6 -1.6" stroke="${TAK}" stroke-width=".9" stroke-linecap="round"/></svg>`;
-    rand0.style.zIndex = '0';
     const ooi = document.createElement('div');
     ooi.style.cssText = 'position:absolute;left:0;top:0;width:30px;height:20px;pointer-events:none;will-change:transform;opacity:0';
     const POOT = '#E0472B';
@@ -1285,6 +1284,7 @@
           <g class="vleugel" style="transform-box:view-box;transform-origin:14px 7.6px">
             <path d="M10.6 7.7 L4.6 .2 L4.4 -1.4 L5.8 -1 L6 -2.6 L7.4 -1.9 L8 -3.2 L9.3 -2 L17.2 7.5 Z" fill="#1d1d1d"/>
             <path d="M13 7.6 L9.2 -1.2 L10.6 -.4 L17.2 7.5 Z" fill="#fff" stroke="${GR}" stroke-width=".5" stroke-linejoin="round"/></g></svg>`;
+    paal.style.zIndex = rand0.style.zIndex = ooi.style.zIndex = 1;      // ganzen (z-index 0) vliegen achter de paal langs
     strip.appendChild(paal); strip.appendChild(ooi); strip.appendChild(rand0);
     let ooiThuis = false, ooiBezig = false, ooiSinds = 0;
     const nestX = () => paal.offsetLeft + 13, NESTY = GROUND + 2 - PH + 8;       // midden bovenop het nest
@@ -1603,12 +1603,74 @@
         animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
             .finished.then(() => w.remove()).catch(() => w.remove());
         // bal: omhoog (afremmen), omlaag (versnellen), tik op het hoofd
-        animate(bal, [{ transform: 'translateY(0) rotate(0deg)', easing: 'cubic-bezier(.2,.7,.4,1)' },
+        const hoog = animate(bal, [{ transform: 'translateY(0) rotate(0deg)', easing: 'cubic-bezier(.2,.7,.4,1)' },
             { transform: 'translateY(-11px) rotate(180deg)', offset: .5, easing: 'cubic-bezier(.6,0,.8,.3)' },
             { transform: 'translateY(0) rotate(360deg)' }], { duration: T, iterations: Infinity });
         // hoofd en lijf geven een tikje mee op het moment dat de bal landt
         animate(w.firstElementChild, [{ transform: 'translateY(-1.6px)' }, { transform: 'translateY(0)', offset: .18 },
             { transform: 'translateY(0.6px)', offset: .8 }, { transform: 'translateY(-1.6px)' }], { duration: T, iterations: Infinity, easing: 'ease-in-out' });
+        overDeLetters(w, bal, hoog, f, dur / Math.abs(x1 - x0), T);
+    }
+    // Kunststukje: als de voetballer onder de naam doorloopt, kopt hij de bal extra hoog. De bal landt op de letters
+    // van "Ankeveen", rolt over de bovenkanten van de letters mee, valt er aan het eind af en de voetballer vangt
+    // hem weer op zijn hoofd en loopt koppend door.
+    function overDeLetters(w, bal, hoog, f, speed, T) {
+        const logo = balk.querySelector('a'), tekst = logo && [...logo.childNodes].find(n => n.nodeType === 3 && n.textContent.includes('Ankeveen'));
+        if (!tekst) return;
+        const B = () => balk.getBoundingClientRect();
+        const punten = () => {                                                 // bovenkant van elke letter (in kopbalk-coördinaten)
+            const b = B(), i0 = tekst.textContent.indexOf('Ankeveen'), uit = [];
+            for (let i = 0; i < 8; i++) {
+                const r = document.createRange(); r.setStart(tekst, i0 + i); r.setEnd(tekst, i0 + i + 1);
+                const q = r.getBoundingClientRect(), ch = tekst.textContent[i0 + i];
+                if (!q.width) return null;
+                uit.push({ x: q.left + q.width / 2 - b.left, y: q.top + q.height * (/[Akl]/.test(ch) ? .2 : .4) - b.top - 3.6 });
+            }
+            return f > 0 ? uit : uit.reverse();
+        };
+        const TD = 650;                                                        // van de laatste letter af terug naar het hoofd
+        let klaar = false;
+        const kijk = setInterval(() => {
+            if (!w.isConnected) { clearInterval(kijk); return; }
+            if (klaar || document.hidden) return;
+            const pts = punten(); if (!pts) { clearInterval(kijk); return; }
+            const b = B(), r = w.getBoundingClientRect(), hx = r.left + r.width / 2 - b.left;
+            if (hx < 0 || hx > b.width) return;
+            const wacht = T - (hoog.currentTime % T), straks = hx + f * wacht / speed;   // wachten tot de bal weer op zijn hoofd is
+            const nog = f * (pts[0].x - straks);                                    // afstand tot de eerste letter bij het koppen
+            if (nog > 2000 / speed) return;
+            if (nog < 750 / speed) { clearInterval(kijk); return; }             // al te dichtbij of voorbij: deze keer niet
+            klaar = true; clearInterval(kijk);
+            later(() => {
+                const b2 = B(), r2 = w.getBoundingClientRect(), x0 = r2.left + r2.width / 2 - b2.left, y0 = r2.top - b2.top - 3.3, p = punten();
+                if (!p) return;
+                hoog.pause(); bal.style.opacity = 0;
+                const vb = document.createElement('div');
+                vb.style.cssText = 'position:absolute;left:0;top:0;width:6.6px;height:6.6px;will-change:transform';
+                vb.innerHTML = bal.innerHTML; lucht.appendChild(vb);
+                const pos = (x, y, rot) => `translate(${x - 3.3}px, ${y - 3.3}px) rotate(${rot}deg)`;
+                // 1. hoog de lucht in en op de eerste letter
+                const TF = Math.abs(p[0].x - x0) * speed;                    // zo lang dat hij precies onder de eerste letter is als de bal landt
+                const top = Math.max(4, Math.min(y0, p[0].y) - 34), fr = [];
+                for (let i = 0; i <= 14; i++) {
+                    const t = i / 14, x = x0 + (p[0].x - x0) * t;
+                    const y = (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * (2 * top - (y0 + p[0].y) / 2) + t * t * p[0].y;
+                    fr.push({ transform: pos(x, y, f * 540 * t) });
+                }
+                // 2. rollen over de letters, in het tempo van de voetballer
+                const span = Math.abs(p[p.length - 1].x - p[0].x), TR = span * speed, rol = [];
+                let afst = 0;
+                p.forEach((q, i) => { if (i) afst += Math.hypot(q.x - p[i - 1].x, q.y - p[i - 1].y); rol.push({ transform: pos(q.x, q.y, f * (540 + afst / 3.3 * 57.3)), offset: Math.abs(q.x - p[0].x) / span }); });
+                // 3. eraf en terug op het hoofd
+                const last = p[p.length - 1], xl = last.x + f * TD / speed, eind = f * (540 + afst / 3.3 * 57.3), af = [];
+                for (let i = 0; i <= 10; i++) { const t = i / 10, x = last.x + (xl - last.x) * t, y = last.y + (y0 - last.y) * t * t - 5 * Math.sin(Math.PI * t); af.push({ transform: pos(x, y, eind + f * 200 * t) }); }
+                animate(vb, fr, { duration: TF, easing: 'linear' }).finished.then(() =>
+                    animate(vb, rol, { duration: TR, easing: 'linear' }).finished).then(() =>
+                    animate(vb, af, { duration: TD, easing: 'linear' }).finished).then(() => {
+                        vb.remove(); bal.style.opacity = 1; hoog.currentTime = 0; hoog.play();
+                    }).catch(() => { vb.remove(); bal.style.opacity = 1; hoog.play(); });
+            }, wacht);
+        }, 60);
     }
     // Hardloopsters: een soepel groepje met blonde paardenstaarten, achteraan een steviger loopster die goed bijblijft
     function runner(h, thick) {
@@ -1854,7 +1916,7 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
     toon(); window.addEventListener('hashchange', toon);
