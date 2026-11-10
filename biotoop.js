@@ -428,7 +428,7 @@
                 <path d="M10.6 7.2 q1.2 0.9 2.3 0" fill="none" stroke="#9a5a4a" stroke-width=".5" stroke-linecap="round"/>
                 <circle cx="5.2" cy="5.6" r=".9" fill="${huid}" stroke="#000" stroke-opacity=".12" stroke-width=".4"/>
                 ${hairStyle}</g></svg>`;
-        w.dataset.huid = huid;
+        w.dataset.huid = huid; w.dataset.groet = '1';
         return w;
     }
     // Loopbeweging: benen en armen zwaaien om en om, het lijf veert mee. Bij pause gaan de ledematen terug naar rust.
@@ -573,7 +573,7 @@
     // Fietsers: stadsfiets, rechtop; soms een kindje achterop, soms twee naast elkaar
     function stadsfiets(opts) {
         const { color, huid, haar, kind, scale = 1, ponytail = false } = opts;
-        const W0 = 52 * scale, H0 = 40 * scale, w = mensDiv(H0, W0);
+        const W0 = 52 * scale, H0 = 40 * scale, w = mensDiv(H0, W0); w.dataset.groet = 'fiets';
         w.innerHTML = `<svg viewBox="0 0 52 40" width="${W0}" height="${H0}" aria-hidden="true" style="overflow:visible">
             <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="10" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M10 23.5v15M2.5 31h15M4.7 25.7l10.6 10.6M15.3 25.7L4.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
             <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="42" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M42 23.5v15M34.5 31h15M36.7 25.7l10.6 10.6M47.3 25.7L36.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
@@ -584,7 +584,7 @@
             <path class="crank" d="" stroke="#3d4a5c" stroke-width="1.2" stroke-linecap="round"/>
             <path d="M19 21 q0 -10 5 -11 q6 0 6 10 l-1 1 l-9 1 z" fill="${color}"/>
             <path class="legA" d="" fill="none" stroke="#2f3e55" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M24 12 l11 3" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/>
+            <path class="zwaaiarm" d="M24 12 l11 3" stroke="${huid}" stroke-width="2.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:24px 12px"/>
             <circle cx="25" cy="6" r="4.2" fill="${huid}"/><circle cx="26.3" cy="5.7" r=".5" fill="#2b2b2b"/><circle cx="28.1" cy="5.7" r=".5" fill="#2b2b2b"/>
             ${ponytail ? `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/><path d="M21.5 5 q-4 1 -4.5 5.5 q2 -2 5 -3.2z" fill="${haar}"/>` : `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/>`}</svg>`;
         return w;
@@ -1306,6 +1306,41 @@
         for (const [fn, wgt] of scene.animals) { r -= wgt; if (r <= 0) { withActive(fn); break; } }
     }
 
+
+    // Groeten in het voorbijgaan: als twee wandelaars of fietsers elkaar tegemoet komen, zwaait af en toe
+    // een van beiden (en soms de ander terug). Een zwaai is de hand boven het hoofd die heen en weer gaat.
+    function zwaai(el) {
+        const svg = el.firstElementChild; if (!svg) return;
+        const nu = performance.now(); if (nu - (+el.dataset.gezwaaid || 0) < 6000) return; el.dataset.gezwaaid = nu;   // niet steeds opnieuw
+        if (el.dataset.groet === 'fiets') {
+            const arm = svg.querySelector('.zwaaiarm'); if (!arm) return;
+            arm.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(-85deg)', offset: .2 }, { transform: 'rotate(-65deg)', offset: .4 },
+                { transform: 'rotate(-85deg)', offset: .6 }, { transform: 'rotate(-65deg)', offset: .8 }, { transform: 'rotate(0deg)' }], { duration: 1400, easing: 'ease-in-out' });
+        } else {
+            const arm = svg.querySelector('.armA'); if (!arm) return;
+            arm.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(-170deg)', offset: .2 }, { transform: 'rotate(-195deg)', offset: .35 },
+                { transform: 'rotate(-168deg)', offset: .5 }, { transform: 'rotate(-195deg)', offset: .65 }, { transform: 'rotate(-170deg)', offset: .8 }, { transform: 'rotate(0deg)' }], { duration: 1500, easing: 'ease-in-out' });
+        }
+    }
+    function groeten(root) {
+        let prev = new Map(); const gezien = new WeakMap();
+        setInterval(() => {
+            if (document.hidden) return;
+            const now = [...root.querySelectorAll('[data-groet]')].map(el => { const r = el.getBoundingClientRect(); return { el, x: r.left + r.width / 2 }; });
+            const mov = now.map(o => ({ ...o, v: prev.has(o.el) ? o.x - prev.get(o.el) : 0 })).filter(o => Math.abs(o.v) > 2);
+            prev = new Map(now.map(o => [o.el, o.x]));
+            for (let i = 0; i < mov.length; i++) for (let j = i + 1; j < mov.length; j++) {
+                const a = mov[i], b = mov[j];
+                if (a.v * b.v >= 0) continue;                                   // zelfde kant op: geen groet
+                const gap = b.x - a.x;
+                if (Math.abs(gap) > 70 || (a.v - b.v) * Math.sign(gap) <= 0) continue;   // te ver of al voorbij
+                const sa = gezien.get(a.el) || new Set(); if (sa.has(b.el)) continue;
+                sa.add(b.el); gezien.set(a.el, sa);
+                if (chance(.22)) { const [x, y] = chance(.5) ? [a, b] : [b, a]; zwaai(x.el); if (chance(.6)) setTimeout(() => zwaai(y.el), 350); }
+            }
+        }, 450);
+    }
+
     function start() {
         const scene = currentScene = SCENES[SCENE] || SCENES.home;
         document.body.classList.add('scene-' + SCENE);   // vangnet: de klasse hoort al in de HTML te staan
@@ -1316,6 +1351,7 @@
             return;
         }
         const go = () => {
+            groeten(L.bioFront);
             for (let i = 0; i < 4; i++) later(addFlower, 800 + i * Math.min(2200, scene.flowerEvery));
             every(addFlower, scene.flowerEvery);
             later(() => every(() => { if (chance(.5)) { wiltFlower(); later(addFlower, 4000); } }, 40000), 120000);

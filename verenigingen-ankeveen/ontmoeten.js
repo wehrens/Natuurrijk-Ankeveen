@@ -66,6 +66,7 @@
             <path d="M4.5 22 h9 l0.3 3.5 h-9.6 z" fill="${broek}"/>
             <path class="armA" d="M4.5 14 l-0.8 6 l1 4" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:5px 14px"/>
             <circle cx="9" cy="5" r="4.6" fill="${huid}"/>${hairStyle}</svg>`;
+        w.dataset.groet = '1';
         return w;
     }
     // Loopbeweging: benen en armen zwaaien om en om, het lijf veert mee. Geeft één handvat voor pause/play/cancel.
@@ -626,7 +627,7 @@
         //    door de knieën, armen omhoog, en klapt de kraam tegelijk overeind. Dan naar de volgende.
         const hb = 24, b1 = person('#1F6F5C', hb), b2 = person('#1F6F5C', hb); strip.appendChild(b1); strip.appendChild(b2);
         const yb = GROUND - hb;
-        const posL = x => x - 16, posR = x => x + 34;                  // links en rechts van een kraam op x
+        const posL = x => x - 7, posR = x => x + 26;                   // links en rechts van een kraam op x, handen aan de palen
         const face = (p, x, f) => animate(p, [{ transform: `translate(${x}px, ${yb}px) scaleX(${-f})` }, { transform: `translate(${x}px, ${yb}px) scaleX(${f})` }], { duration: 180 });
         // Opbouw: eerst door de knieën (350ms), dan omhoog komen (600ms) terwijl de kraam meekomt; de armen zijn op
         // het hoogste punt precies als de kraam staat. Afbreken omgekeerd: armen zakken en kraam klapt in terwijl ze
@@ -646,11 +647,11 @@
         };
         const armenNeer = p => { ['.armA', '.armB'].forEach((s, i) => animate(p.querySelector(s), [{ transform: `rotate(${i ? -165 : 165}deg)` }, { transform: 'rotate(0deg)' }], { duration: 350, easing: 'ease-in' })); };
         const DOWN = 400, VUL = 600;
-        const walkIn = walkTo(b1, -40, posL(xs[0]), hb); walkTo(b2, -70, posR(xs[0]), hb);
+        const walkIn = Math.max(walkTo(b1, -40, posL(xs[0]), hb), walkTo(b2, -70, posR(xs[0]), hb));   // pas beginnen als ze er allebei zijn
         const kramen = [], verkopers = [];
         let tt = walkIn + 200;
         xs.forEach((x, i) => {
-            later(() => face(b2, posR(x), -1), tt); tt += 250;          // de rechter draait zich om, ze staan tegenover elkaar
+            later(() => face(b2, posR(x), -1), tt); tt += 450;          // de rechter draait zich om, ze staan tegenover elkaar
             later(() => {
                 opbouw(b1); opbouw(b2);
                 const k = kraam(KRAAM[i]); k.style.transform = `translate(${x}px, ${GROUND - 36}px)`; strip.appendChild(k); kramen.push(k);
@@ -701,7 +702,7 @@
                 if (v) walkTo(v, x + 5, -60, 24, () => v.remove());
                 if (k) animate(k.querySelector('.waar'), [{ opacity: 1 }, { opacity: 0 }], { duration: VUL });
             }, td); td += VUL + 100;
-            later(() => face(b2, posR(x), -1), td); td += 250;
+            later(() => face(b2, posR(x), -1), td); td += 450;
             later(() => { ['.armA', '.armB'].forEach((s, j) => [b1, b2].forEach(p => animate(p.querySelector(s), [{ transform: 'rotate(0deg)' }, { transform: `rotate(${j ? -165 : 165}deg)` }], { duration: 400, easing: 'ease-out' }))); }, td); td += 450;
             later(() => {
                 afbouw(b1); afbouw(b2);
@@ -717,7 +718,7 @@
         }
         later(() => { walkTo(b1, posL(xs[0]), -60, hb, () => b1.remove()); walkTo(b2, posR(xs[0]), -80, hb, () => b2.remove()); }, td + 300);
     }
-    const marktDur = () => (W() / 2) * 12 + 200 + 5 * (250 + 950 + 400) + 4 * (200 + 40 * 12 + 150) + 400 + 34000 + 5 * (700 + 250 + 450 + 950) + 4 * (200 + 40 * 12 + 150) + 300 + (W() / 2) * 12 + 2500;
+    const marktDur = () => (W() / 2) * 12 + 200 + 5 * (450 + 950 + 400) + 4 * (200 + 40 * 12 + 150) + 400 + 34000 + 5 * (700 + 450 + 450 + 950) + 4 * (200 + 40 * 12 + 150) + 300 + (W() / 2) * 12 + 2500;
 
     // Bakfiets: een wat dikkere man in blauwe overall op een ouderwetse bruine bakfiets, komt heel af en toe voorbij
     function bakfiets() {
@@ -808,7 +809,7 @@
     // Stadsfiets met rechtop zittende fietser; optioneel een kindje achterop. scale = grootte (1 = volwassene)
     function cityBike(opts) {
         const { color, huid, haar, kind, scale = 1, ponytail = false } = opts;
-        const w = document.createElement('div'); w.className = 'om-p';
+        const w = document.createElement('div'); w.className = 'om-p'; w.dataset.groet = 'fiets';
         const W0 = 52 * scale, H0 = 40 * scale;
         w.innerHTML = `<svg viewBox="0 0 52 40" width="${W0}" height="${H0}" aria-hidden="true" style="overflow:visible">
             <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="10" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M10 23.5v15M2.5 31h15M4.7 25.7l10.6 10.6M15.3 25.7L4.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
@@ -820,7 +821,7 @@
             <path class="crank" d="" stroke="#3d4a5c" stroke-width="1.2" stroke-linecap="round"/>
             <path d="M19 21 q0 -10 5 -11 q6 0 6 10 l-1 1 l-9 1 z" fill="${color}"/>
             <path class="legA" d="" fill="none" stroke="#2f3e55" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M24 12 l11 3" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/>
+            <path class="zwaaiarm" d="M24 12 l11 3" stroke="${huid}" stroke-width="2.2" stroke-linecap="round" style="transform-box:view-box;transform-origin:24px 12px"/>
             <circle cx="25" cy="6" r="4.2" fill="${huid}"/>
             ${ponytail ? `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/><path d="M21.5 5 q-4 1 -4.5 5.5 q2 -2 5 -3.2z" fill="${haar}"/>` : `<path d="M20.8 6 q0 -5 4.2 -5 q4.2 0 4.2 5 q-1.4 -2.2 -4.2 -2.2 q-2.8 0 -4.2 2.2z" fill="${haar}"/>`}</svg>`;
         return w;
@@ -1345,5 +1346,40 @@
         // de volgende groep komt al als deze ruim halverwege is (mensen passeren elkaar gewoon)
         setTimeout(nextSpecial, s.dur() * .55 + rand(3000, 7000));
     }
+
+    // Groeten in het voorbijgaan: als twee wandelaars of fietsers elkaar tegemoet komen, zwaait af en toe
+    // een van beiden (en soms de ander terug). Een zwaai is de hand boven het hoofd die heen en weer gaat.
+    function zwaai(el) {
+        const svg = el.firstElementChild; if (!svg) return;
+        const nu = performance.now(); if (nu - (+el.dataset.gezwaaid || 0) < 6000) return; el.dataset.gezwaaid = nu;   // niet steeds opnieuw
+        if (el.dataset.groet === 'fiets') {
+            const arm = svg.querySelector('.zwaaiarm'); if (!arm) return;
+            arm.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(-85deg)', offset: .2 }, { transform: 'rotate(-65deg)', offset: .4 },
+                { transform: 'rotate(-85deg)', offset: .6 }, { transform: 'rotate(-65deg)', offset: .8 }, { transform: 'rotate(0deg)' }], { duration: 1400, easing: 'ease-in-out' });
+        } else {
+            const arm = svg.querySelector('.armA'); if (!arm) return;
+            arm.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(-170deg)', offset: .2 }, { transform: 'rotate(-195deg)', offset: .35 },
+                { transform: 'rotate(-168deg)', offset: .5 }, { transform: 'rotate(-195deg)', offset: .65 }, { transform: 'rotate(-170deg)', offset: .8 }, { transform: 'rotate(0deg)' }], { duration: 1500, easing: 'ease-in-out' });
+        }
+    }
+    function groeten(root) {
+        let prev = new Map(); const gezien = new WeakMap();
+        setInterval(() => {
+            if (document.hidden) return;
+            const now = [...root.querySelectorAll('[data-groet]')].map(el => { const r = el.getBoundingClientRect(); return { el, x: r.left + r.width / 2 }; });
+            const mov = now.map(o => ({ ...o, v: prev.has(o.el) ? o.x - prev.get(o.el) : 0 })).filter(o => Math.abs(o.v) > 2);
+            prev = new Map(now.map(o => [o.el, o.x]));
+            for (let i = 0; i < mov.length; i++) for (let j = i + 1; j < mov.length; j++) {
+                const a = mov[i], b = mov[j];
+                if (a.v * b.v >= 0) continue;                                   // zelfde kant op: geen groet
+                const gap = b.x - a.x;
+                if (Math.abs(gap) > 70 || (a.v - b.v) * Math.sign(gap) <= 0) continue;   // te ver of al voorbij
+                const sa = gezien.get(a.el) || new Set(); if (sa.has(b.el)) continue;
+                sa.add(b.el); gezien.set(a.el, sa);
+                if (chance(.22)) { const [x, y] = chance(.5) ? [a, b] : [b, a]; zwaai(x.el); if (chance(.6)) setTimeout(() => zwaai(y.el), 350); }
+            }
+        }, 450);
+    }
+    groeten(strip); if (window.ontmoeten) window.ontmoeten.zwaai = zwaai;
     setTimeout(nextSpecial, 4000);
 })();
