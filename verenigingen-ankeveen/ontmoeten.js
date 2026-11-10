@@ -1256,21 +1256,27 @@
     const ooi = document.createElement('div');
     ooi.style.cssText = 'position:absolute;left:0;top:0;width:30px;height:20px;pointer-events:none;will-change:transform;opacity:0';
     const POOT = '#E0472B';
+    // Witte ooievaar: lange rechte, spits toelopende rode snavel, lange nek, zwarte slagpennen, lange rode poten
+    const GR = '#6f757c', SNAVEL = '#E2502A';
     ooi.innerHTML = `<svg class="staan" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" style="position:absolute;left:5px;top:0;overflow:visible;opacity:0">
-          <path d="M8.6 12.5 v7.5 M10.6 12.5 v7.5" stroke="${POOT}" stroke-width=".9"/>
-          <ellipse cx="9" cy="10.4" rx="6" ry="3.4" fill="#fff" stroke="#6f757c" stroke-width=".7" transform="rotate(-12 9 10.4)"/>
-          <path d="M2.6 11.6 q5 1.6 10 -.6 l-.6 2 q-5 1.6 -9.6 -.4 z" fill="#1d1d1d"/>
+          <path d="M8.4 12.6 l.3 3.6 l-.2 3.8 M10.6 12.6 l-.2 3.6 l.3 3.8" fill="none" stroke="${POOT}" stroke-width=".9"/>
+          <ellipse cx="8.6" cy="10.6" rx="6" ry="3.1" fill="#fff" stroke="${GR}" stroke-width=".7" transform="rotate(-14 8.6 10.6)"/>
+          <path d="M2.2 12.6 q4.4 2.2 9.4 .2 q-1.4 2 -4.8 2.2 q-3 .1 -4.6 -2.4 z" fill="#1d1d1d"/>
           <g class="kop" style="transform-box:view-box;transform-origin:13px 9px">
-            <path d="M12.6 9 q1.6 -3 2.4 -6.6" fill="none" stroke="#6f757c" stroke-width="3.2" stroke-linecap="round"/><circle cx="15.3" cy="2.2" r="2.15" fill="#6f757c"/>
-            <path d="M12.6 9 q1.6 -3 2.4 -6.6" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/><circle cx="15.3" cy="2.2" r="1.55" fill="#fff"/><circle cx="15.8" cy="1.9" r=".35" fill="#222"/>
-            <path d="M16.6 2.3 l4.4 1.6" stroke="${POOT}" stroke-width="1.1" stroke-linecap="round"/></g></svg>
+            <path d="M12.8 9.4 q1.4 -2.4 1.6 -6.4" fill="none" stroke="${GR}" stroke-width="2.6" stroke-linecap="round"/><ellipse cx="14.7" cy="2.6" rx="1.95" ry="1.6" fill="${GR}"/>
+            <path d="M12.8 9.4 q1.4 -2.4 1.6 -6.4" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><ellipse cx="14.7" cy="2.6" rx="1.4" ry="1.05" fill="#fff"/>
+            <path d="M15.7 1.9 L22.4 4.6 L15.8 3.3 Z" fill="${SNAVEL}" stroke="#b83a1c" stroke-width=".25" stroke-linejoin="round"/>
+            <circle cx="15" cy="2.3" r=".42" fill="#1d1d1d"/></g></svg>
         <svg class="vlieg" viewBox="0 0 30 16" width="30" height="16" aria-hidden="true" style="position:absolute;left:0;top:2px;overflow:visible">
-          <path d="M8.6 8.4 l-8.6 1.4" stroke="${POOT}" stroke-width=".8"/>
-          <path d="M19 7.6 l5.6 -.8" stroke="#6f757c" stroke-width="2.9" stroke-linecap="round"/><circle cx="25.2" cy="6.8" r="1.85" fill="#6f757c"/>
-          <ellipse cx="14" cy="8" rx="6" ry="2.2" fill="#fff" stroke="#6f757c" stroke-width=".7"/>
-          <path d="M19 7.6 l5.6 -.8" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><circle cx="25.2" cy="6.8" r="1.3" fill="#fff"/>
-          <path d="M26.2 6.9 l3.8 1.1" stroke="${POOT}" stroke-width="1" stroke-linecap="round"/>
-          <g class="vleugel" style="transform-box:view-box;transform-origin:14px 7.6px"><path d="M10 7.6 L11.6 -.8 L19.6 .2 L17.4 7.6 z" fill="#fff" stroke="#6f757c" stroke-width=".7"/><path d="M11.6 -.8 L19.6 .2 L18.9 2.8 L11.2 1.4 z" fill="#1d1d1d"/></g></svg>`;
+          <path d="M8.8 8.5 l-9.6 1.2" stroke="${POOT}" stroke-width=".75"/>
+          <path d="M18.4 7.7 l5.6 -.5" stroke="${GR}" stroke-width="2.3" stroke-linecap="round"/><ellipse cx="24.5" cy="7.1" rx="1.75" ry="1.4" fill="${GR}"/>
+          <ellipse cx="13.5" cy="8" rx="5.6" ry="1.9" fill="#fff" stroke="${GR}" stroke-width=".7"/>
+          <path d="M18.4 7.7 l5.6 -.5" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/><ellipse cx="24.5" cy="7.1" rx="1.2" ry=".9" fill="#fff"/>
+          <path d="M25.4 6.6 L31.6 8.2 L25.5 7.6 Z" fill="${SNAVEL}" stroke="#b83a1c" stroke-width=".25" stroke-linejoin="round"/>
+          <path d="M8.2 8.6 l-2 .4 l2 .6 z" fill="#fff" stroke="${GR}" stroke-width=".4"/>
+          <g class="vleugel" style="transform-box:view-box;transform-origin:14px 7.6px">
+            <path d="M10.6 7.7 L4.6 .2 L4.4 -1.4 L5.8 -1 L6 -2.6 L7.4 -1.9 L8 -3.2 L9.3 -2 L17.2 7.5 Z" fill="#1d1d1d"/>
+            <path d="M13 7.6 L9.2 -1.2 L10.6 -.4 L17.2 7.5 Z" fill="#fff" stroke="${GR}" stroke-width=".5" stroke-linejoin="round"/></g></svg>`;
     strip.appendChild(paal); strip.appendChild(ooi); strip.appendChild(rand0);
     let ooiThuis = false, ooiBezig = false;
     const nestX = () => paal.offsetLeft + 13, NESTY = GROUND + 2 - PH + 8;       // midden bovenop het nest
