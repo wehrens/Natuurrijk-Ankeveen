@@ -880,6 +880,35 @@
     }
 
 
+
+    // Boswachter in groen uniform met een bruine hoed op een zwarte fatbike (dikke banden)
+    function boswachter() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), huid = pick(HUID), sc = .7;
+        const w = document.createElement('div'); w.className = 'om-p'; w.dataset.groet = 'fiets';
+        const band = (cx) => `<g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="${cx}" cy="31" r="7.2" fill="none" stroke="#151515" stroke-width="4"/>
+            <circle cx="${cx}" cy="31" r="7.2" fill="none" stroke="#333" stroke-width="4" stroke-dasharray="1.2 1.6" opacity=".9"/>
+            <circle cx="${cx}" cy="31" r="4.6" fill="none" stroke="#4a4a4a" stroke-width=".9"/><path d="M${cx} 26.4v9.2M${cx - 4.6} 31h9.2" stroke="#555" stroke-width=".7"/><circle cx="${cx}" cy="31" r="1.1" fill="#222"/></g>`;
+        w.innerHTML = `<svg viewBox="0 0 52 40" width="${52 * sc}" height="${40 * sc}" aria-hidden="true" style="overflow:visible">
+            ${band(10)}${band(42)}
+            <path d="M10 31 l14 0 l-2 -12 M24 31 l12 -12 l6 12 M36 19 l0 -4 l3.4 -.4 M22 19 l-4 -1" fill="none" stroke="#111" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M24 31 L22 19 L36 19 Z" fill="none" stroke="#111" stroke-width="2.6" stroke-linejoin="round"/>
+            <circle cx="24" cy="31" r="2.3" fill="#222"/>
+            <path class="legB" d="" fill="none" stroke="#4a3a26" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="crank" d="" stroke="#222" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M19 21 q0 -10 5 -11 q6 0 6 10 l-1 1 l-9 1 z" fill="#3f5a35"/>
+            <path d="M20.6 14.6 l7.6 0" stroke="#2f4428" stroke-width=".8"/><rect x="24.6" y="11.6" width="2.6" height="1.8" rx=".4" fill="#c9b27a"/>
+            <path class="legA" d="" fill="none" stroke="#5a4632" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="zwaaiarm" d="M24 12 l11 3" stroke="#3f5a35" stroke-width="2.4" stroke-linecap="round" style="transform-box:view-box;transform-origin:24px 12px"/>
+            <circle cx="35.4" cy="15.1" r="1.1" fill="${huid}"/>
+            <circle cx="25" cy="6.4" r="4.2" fill="${huid}"/>
+            <path d="M18.6 4.2 q6.4 -1.8 12.8 0 q-.6 1 -2 1.1 l-8.8 0 q-1.4 -.1 -2 -1.1 z" fill="#6b4423"/>
+            <path d="M21.4 4.4 q-.2 -4.6 3.6 -4.8 q3.8 .2 3.6 4.8 z" fill="#7a4e2a"/><path d="M21.5 3.2 h7.1 v1.1 h-7.1 z" fill="#4a2e16"/>
+            <path d="M25 -0.4 l0 1.6" stroke="#5a381c" stroke-width=".8"/></svg>`;
+        strip.appendChild(w);
+        rideBike(w, fromLeft, 40 * sc);
+    }
+
     // Vogelaars: een of twee wandelaars met rugzakje en verrekijker. Ze blijven staan en volgen met de kijker
     // een groepje overvliegende ganzen, daarna lopen ze verder.
     function vogelaar(h) {
@@ -2049,6 +2078,7 @@
         { run: gitaarschool, dur: () => (W() + 120 + EX) * 20 },
         { run: zumba, dur: zumbaDur, groot: true },
         { run: ruiter, dur: () => (W() + 140 + EX) * 30 },
+        { run: boswachter, dur: () => (W() + 120 + EX) * 13 },
         { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
@@ -2121,7 +2151,7 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
     toon(); window.addEventListener('hashchange', toon);
