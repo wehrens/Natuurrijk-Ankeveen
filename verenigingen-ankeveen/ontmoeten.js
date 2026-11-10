@@ -1626,31 +1626,34 @@
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
+    // Terwijl een grote groep (koor, zumba, markt, fanfare...) bezig is, komt er minder los verkeer langs.
+    let grootTot = 0;
+    const rustig = () => grootTot > performance.now() && chance(W() < 600 ? .85 : .6);
     meeting();
-    const planMeeting = () => setTimeout(() => { const r = Math.random(); if (r < .12) vaderFiets(); else if (r < .24) moederFiets(); else if (active < 2) meeting(); planMeeting(); }, rand(10000, 16000));
+    const planMeeting = () => setTimeout(() => { if (!rustig()) { const r = Math.random(); if (r < .12) vaderFiets(); else if (r < .24) moederFiets(); else if (active < (grootTot > performance.now() ? 1 : 2)) meeting(); } planMeeting(); }, rand(10000, 16000));
     planMeeting();
     // af en toe een hondenuitlater (vaak twee die elkaar tegenkomen)
-    const planHond = () => setTimeout(() => { honden(); planHond(); }, rand(22000, 38000));
+    const planHond = () => setTimeout(() => { if (!rustig()) honden(); planHond(); }, rand(22000, 38000));
     setTimeout(() => { honden(); planHond(); }, 9000);
     const specials = [
         { run: peloton, dur: () => (W() + 300 + EX) * 4.5 },
-        { run: fanfare, dur: () => (W() + 200 + EX) * 24 },
+        { run: fanfare, dur: () => (W() + 200 + EX) * 24, groot: true },
         { run: skaters, dur: () => (W() + 200 + EX) * 7.5 },
-        { run: naturists, dur: () => (W() + 160 + EX) * 26 + 13000 },
-        { run: carnaval, dur: () => (W() + 260 + EX) * 22 },
-        { run: yogis, dur: () => (W() + 200 + EX) * 40 },
-        { run: klasje, dur: () => (W() + 220 + EX) * 22 },
+        { run: naturists, dur: () => (W() + 160 + EX) * 26 + 13000, groot: true },
+        { run: carnaval, dur: () => (W() + 260 + EX) * 22, groot: true },
+        { run: yogis, dur: () => (W() + 200 + EX) * 40, groot: true },
+        { run: klasje, dur: () => (W() + 220 + EX) * 22, groot: true },
         { run: voetballer, dur: () => (W() + 100) * 30 },
         { run: footballers, dur: () => (W() + 220 + EX) * 11 },
-        { run: markt, dur: marktDur },
+        { run: markt, dur: marktDur, groot: true },
         { run: bakfiets, dur: () => (W() + 100 + EX) * 16 + 12000, rare: true },
         { run: kermis, dur: () => 42000, rare: true },
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
         { run: vogelaars, dur: vogelaarsDur },
-        { run: jazz, dur: jazzDur },
-        { run: havenloos, dur: havenloosDur },
+        { run: jazz, dur: jazzDur, groot: true },
+        { run: havenloos, dur: havenloosDur, groot: true },
         { run: gitaarschool, dur: () => (W() + 120 + EX) * 20 },
-        { run: zumba, dur: zumbaDur },
+        { run: zumba, dur: zumbaDur, groot: true },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
@@ -1664,9 +1667,21 @@
         }
         let s = bag.shift();
         if (s.rare && chance(.4) && bag.length) { bag.push(s); s = bag.shift(); }   // zeldzame gasten slaan meestal een rondje over
+        // Niet te druk: nooit twee grote groepen tegelijk. Is er nog een grote bezig, dan komt eerst een kleine
+        // groep (of, als die er niet meer zijn in deze ronde, wachten we tot de grote klaar is).
+        const nu = performance.now();
+        if (s.groot && grootTot > nu) {
+            const i = bag.findIndex(x => !x.groot);
+            if (i >= 0) { bag.unshift(s); s = bag.splice(i + 1, 1)[0]; }
+            else { bag.unshift(s); setTimeout(nextSpecial, grootTot - nu + rand(1500, 4000)); return; }
+        }
         last = s; s.run();
-        // de volgende groep komt al als deze ruim halverwege is (mensen passeren elkaar gewoon)
-        setTimeout(nextSpecial, s.dur() * .55 + rand(3000, 7000));
+        const d = s.dur();
+        if (s.groot) grootTot = nu + d;
+        // de volgende groep komt als deze ruim halverwege is (mensen passeren elkaar gewoon);
+        // op een smal scherm (telefoon) pas als deze bijna weg is
+        const smal = W() < 600;
+        setTimeout(nextSpecial, d * (smal ? .9 : s.groot ? .7 : .55) + rand(3000, 7000));
     }
 
     // Groeten in het voorbijgaan: als twee wandelaars of fietsers elkaar tegemoet komen, zwaait af en toe
