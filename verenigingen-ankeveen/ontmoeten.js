@@ -1908,6 +1908,7 @@
     function lichtjesmarkt() {
         if (document.hidden) return;
         const lucht0 = maakNacht(), width = W();
+        marktTot = performance.now() + lichtjesDur();                         // zolang de markt duurt komt er verder niemand langs
         // de maan in de vrije ruimte tussen de naam en het menu (op een telefoon: net links van de menuknop)
         {
             const br = balk.getBoundingClientRect(), lr = balk.querySelector('a').getBoundingClientRect();
@@ -1971,8 +1972,36 @@
             });
             mensen.forEach(p => {
                 p.style.opacity = 1;
-                anims.push(animate(p.firstElementChild, [{ transform: `rotate(${-rand(2, 4)}deg)` }, { transform: `rotate(${rand(2, 4)}deg)` }], { duration: rand(700, 1300), direction: 'alternate', iterations: Infinity, delay: rand(0, 800), easing: 'ease-in-out' }));
+                p._wiebel = animate(p.firstElementChild, [{ transform: `rotate(${-rand(2, 4)}deg)` }, { transform: `rotate(${rand(2, 4)}deg)` }], { duration: rand(700, 1300), direction: 'alternate', iterations: Infinity, delay: rand(0, 800), easing: 'ease-in-out' });
+                anims.push(p._wiebel);
             });
+            // steeds komen er mensen bij die naar de markt lopen, en gaan er een paar weer naar huis
+            const komt = () => {
+                const h = rand(21, 25), p = wintermens(h), s = chance(.5) ? 1 : -1, xa = s > 0 ? -20 : width + 10;
+                const xb = cx + rand(-breedte / 2, breedte / 2) - h * .225, y = GROUND - h;
+                p.style.transform = `translate(${xa}px, ${y}px) scaleX(${s})`; p.style.zIndex = 2;
+                strip.appendChild(p); elementen.push(p);
+                const b = bob(p, rand(380, 460));
+                animate(p, [{ transform: `translate(${xa}px, ${y}px) scaleX(${s})` }, { transform: `translate(${xb}px, ${y}px) scaleX(${s})` }], { duration: Math.abs(xb - xa) * 15, easing: 'linear' })
+                    .finished.then(() => {
+                        b.cancel(); mensen.push(p);
+                        p._wiebel = animate(p.firstElementChild, [{ transform: `rotate(${-rand(2, 4)}deg)` }, { transform: `rotate(${rand(2, 4)}deg)` }], { duration: rand(700, 1300), direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+                        anims.push(p._wiebel);
+                    }).catch(() => {});
+            };
+            const gaat = () => {
+                const zicht = mensen.filter(p => p.style.opacity !== '0' && p.isConnected); if (zicht.length < 12) return;
+                const p = pick(zicht); mensen.splice(mensen.indexOf(p), 1);
+                const m = /translate\((-?[\d.]+)px, (-?[\d.]+)px\)/.exec(p.style.transform); if (!m) return;
+                const x = +m[1], y = +m[2], s = x > width / 2 ? 1 : -1, xe = s > 0 ? width + 20 : -30;
+                if (p._wiebel) p._wiebel.cancel();
+                const b = bob(p, rand(380, 460));
+                animate(p, [{ transform: `translate(${x}px, ${y + (p.style.zIndex === '1' ? 0 : 0)}px) scaleX(${s})` }, { transform: `translate(${xe}px, ${y}px) scaleX(${s})` }], { duration: Math.abs(xe - x) * 15, easing: 'linear' })
+                    .finished.then(() => { b.cancel(); p.remove(); }).catch(() => {});
+            };
+            const stroom = () => { if (performance.now() > eindStroom) return; if (!document.hidden) (chance(.6) ? komt : gaat)(); later(stroom, rand(1100, 2400)); };
+            const eindStroom = performance.now() + BRAND - 2500;
+            later(stroom, 600);
         }, AAN);
         // 4. ploep: licht uit, even donker, en dan wordt het weer dag
         later(() => {
@@ -1991,14 +2020,14 @@
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
     // Terwijl een grote groep (koor, zumba, markt, fanfare...) bezig is, komt er minder los verkeer langs.
-    let grootTot = 0;
-    const rustig = () => grootTot > performance.now() && chance(W() < 600 ? .85 : .6);
+    let grootTot = 0, marktTot = 0;
+    const rustig = () => marktTot > performance.now() || (grootTot > performance.now() && chance(W() < 600 ? .85 : .6));
     meeting();
     const planMeeting = () => setTimeout(() => { if (!rustig()) { const r = Math.random(); if (r < .12) vaderFiets(); else if (r < .24) moederFiets(); else if (active < (grootTot > performance.now() ? 1 : 2)) meeting(); } planMeeting(); }, rand(10000, 16000));
     planMeeting();
     // af en toe een hondenuitlater (vaak twee die elkaar tegenkomen)
     const planHond = () => setTimeout(() => { if (!rustig()) honden(); planHond(); }, rand(22000, 38000));
-    setTimeout(() => { honden(); planHond(); }, 9000);
+    setTimeout(() => { if (!rustig()) honden(); planHond(); }, 9000);
     const specials = [
         { run: peloton, dur: () => (W() + 300 + EX) * 4.5 },
         { run: fanfare, dur: () => (W() + 200 + EX) * 24, groot: true },
@@ -2027,6 +2056,8 @@
     let bag = [], last = null;
     function nextSpecial() {
         if (document.hidden) { setTimeout(nextSpecial, 5000); return; }
+        const nuM = performance.now();
+        if (marktTot > nuM) { setTimeout(nextSpecial, marktTot - nuM + rand(2000, 4000)); return; }   // lichtjesmarkt: niemand anders
         if (!bag.length) {
             bag = specials.slice().sort(() => Math.random() - 0.5);
             if (bag[0] === last && bag.length > 1) bag.push(bag.shift());
