@@ -1827,6 +1827,141 @@
         animate(w.querySelector('img'), [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-0.7px) rotate(-0.35deg)', offset: .5 }, { transform: 'translateY(0) rotate(0deg)' }],
             { duration: 2800, iterations: Infinity, easing: 'ease-in-out' });
     }
+
+    // Lichtjesmarkt: de kopbalk wordt nacht (donkerblauw, maan en sterren), de Snoek rijdt voorbij met de koplampen aan
+    // en zodra hij voorbij is knipt de lichtjesmarkt aan: kraampjes met knipperende lampjes en heel veel mensen met
+    // wintermutsen en sjaals die rond de kraampjes staan te wiebelen. Dan: ploep, licht uit. Even donker, en weer dag.
+    let nacht = null;
+    function maakNacht() {
+        if (nacht) return nacht;
+        const st = document.createElement('style');
+        st.textContent = `#topbar a,#topbar .top-menu-btn{transition:color 2.4s}
+            #topbar.nacht > div > a:not(.top-cta),#topbar.nacht .top-links a:not(.top-cta),#topbar.nacht .top-menu-btn{color:#dfe6f3 !important}
+            .om-lamp{position:absolute;width:3px;height:3px;border-radius:50%;margin:-1.5px 0 0 -1.5px}`;
+        document.head.appendChild(st);
+        const lucht0 = document.createElement('div');
+        lucht0.style.cssText = 'position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;background:linear-gradient(#0a1430,#16285a 70%,#1d3266)';
+        lucht0.setAttribute('aria-hidden', 'true');
+        let sterren = '';
+        for (let i = 0; i < 26; i++) sterren += `<div style="position:absolute;left:${rand(2, 98)}%;top:${rand(4, 55)}%;width:${chance(.3) ? 2 : 1.3}px;height:${chance(.3) ? 2 : 1.3}px;border-radius:50%;background:#fff;opacity:${rand(.4, .9)}" class="ster"></div>`;
+        lucht0.innerHTML = sterren + `<div class="maan" style="position:absolute;left:42%;top:7px;width:22px;height:22px;border-radius:50%;background:#f4f1dc;box-shadow:0 0 14px 4px rgba(244,241,220,.35)">
+            <div style="position:absolute;left:5px;top:5px;width:5px;height:5px;border-radius:50%;background:#e2dcc0"></div><div style="position:absolute;left:12px;top:12px;width:4px;height:4px;border-radius:50%;background:#e2dcc0"></div></div>`;
+        balk.appendChild(lucht0);
+        nacht = lucht0; return nacht;
+    }
+    const MUTS = ['#C0392B', '#1F6E43', '#2B4C8C', '#E67E22', '#6B3FA0', '#ECECEC', '#16A085', '#8E2B4F'];
+    function wintermens(h) {
+        const p = person(pick(['#2f3e55', '#5a3a2a', '#3b3b3b', '#7a1f2b', '#1f4e79', '#4a5d3a', '#6b6b6b']), h), svg = p.firstElementChild;
+        const m = pick(MUTS), m2 = pick(MUTS), sj = pick(MUTS);
+        svg.insertAdjacentHTML('beforeend', `<path d="M5 10.4 q4 2.2 8 0 l.4 2.2 q-4.4 2.4 -8.8 0 z" fill="${sj}"/><path d="M6 12 l-1.2 5.4 h2.2 l.8 -5 z" fill="${sj}"/>
+            <path d="M4.1 5 q0 -5.6 4.9 -5.6 q4.9 0 4.9 5.6 z" fill="${m}"/><path d="M3.9 3.8 h10.2 v1.8 h-10.2 z" fill="${m2}"/><circle cx="9" cy="-1" r="1.6" fill="${m2}"/>`);
+        delete p.dataset.groet;
+        return p;
+    }
+    const LAMPKLEUR = ['#ff5a4f', '#49e06b', '#4fb3ff', '#ffb02e', '#ffffff', '#c77dff'];
+    function kraampje(kleur) {
+        const k = document.createElement('div');
+        k.style.cssText = 'position:absolute;left:0;top:0;width:36px;height:32px;pointer-events:none';
+        const waren = [...Array(5)].map((_, i) => `<circle cx="${8 + i * 5}" cy="${20.6 - (i % 2)}" r="1.6" fill="${pick(['#c0392b', '#e67e22', '#27ae60', '#8e5a2b', '#f4efe6', '#2b4c8c'])}"/>`).join('');
+        k.innerHTML = `<div class="gloed" style="position:absolute;left:-14px;top:-6px;width:64px;height:44px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,196,110,.42),rgba(255,196,110,0));opacity:0"></div>
+          <svg viewBox="0 0 36 32" width="36" height="32" aria-hidden="true" style="position:absolute;left:0;top:0;overflow:visible">
+            <path d="M4 8 v24 M32 8 v24" stroke="#4a3322" stroke-width="1.6"/>
+            <path d="M1 9 L18 2 L35 9 Z" fill="${kleur}"/><path d="M6.6 6.7 L18 2 L12 9 Z M24 9 L18 2 L29.4 6.7 Z" fill="#f4efe6" opacity=".9"/>
+            <path d="M1 9 h34 v2.4 q-2.1 2 -4.25 0 q-2.1 2 -4.25 0 q-2.1 2 -4.25 0 q-2.1 2 -4.25 0 q-2.1 2 -4.25 0 q-2.1 2 -4.25 0 q-2.1 2 -4.25 0 q-2.1 2 -4.25 0 z" fill="${kleur}"/>
+            ${waren}<path d="M3 22 h30 v4 h-30 z" fill="#8b5a2b"/><path d="M3 22 h30" stroke="#a87444" stroke-width=".8"/>
+            <path d="M1.4 12.2 q8.4 3.6 16.6 0 q8.4 3.6 16.6 0" fill="none" stroke="#222" stroke-width=".4"/></svg>`;
+        // lampjes langs het snoer onder het dakje
+        const lampjes = [];
+        for (let i = 0; i < 9; i++) {
+            const t = i / 8, x = 1.4 + t * 33.2, tt = (t < .5 ? t * 2 : (t - .5) * 2), y = 12.2 + 3.6 * 4 * tt * (1 - tt) * .5;
+            const l = document.createElement('div'); l.className = 'om-lamp';
+            const c = LAMPKLEUR[(i + Math.floor(rand(0, 6))) % LAMPKLEUR.length];
+            l.style.left = x + 'px'; l.style.top = y + 'px'; l.style.background = c; l.style.boxShadow = `0 0 4px 1.5px ${c}`; l.style.opacity = 0;
+            k.appendChild(l); lampjes.push(l);
+        }
+        return { k, lampjes, gloed: k.querySelector('.gloed') };
+    }
+    function lichtjesmarkt() {
+        if (document.hidden) return;
+        const lucht0 = maakNacht(), width = W();
+        // de maan in de vrije ruimte tussen de naam en het menu (op een telefoon: net links van de menuknop)
+        {
+            const br = balk.getBoundingClientRect(), lr = balk.querySelector('a').getBoundingClientRect();
+            const menu = [...balk.querySelectorAll('.top-links, #topMenuBtn')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0 && r.left > lr.right);
+            const rechts = menu.length ? Math.min(...menu.map(r => r.left)) : br.right - 10, maan = lucht0.querySelector('.maan');
+            const gat = rechts - lr.right;
+            maan.style.left = (gat > 40 ? lr.right + gat / 2 - 11 : rechts - 30) - br.left + 'px';
+            maan.style.top = (gat > 40 ? 7 : 4) + 'px';
+        }
+        const N = Math.max(2, Math.min(6, Math.floor(width * .5 / 50))), gap = 50, breedte = N * gap;
+        const cx = plek(breedte + 40, .25, .75, lichtjesDur());
+        const elementen = [], anims = [];
+        // 1. nacht valt
+        balk.classList.add('nacht');
+        animate(lucht0, [{ opacity: 0 }, { opacity: 1 }], { duration: 2600, easing: 'ease-in-out' });
+        lucht0.querySelectorAll('.ster').forEach(s => anims.push(animate(s, [{ opacity: .2 }, { opacity: 1 }], { duration: rand(700, 1800), direction: 'alternate', iterations: Infinity, delay: rand(0, 1500) })));
+        // de kraampjes staan er al, maar je ziet ze nog nauwelijks in het donker
+        const kramen = [];
+        for (let i = 0; i < N; i++) {
+            const kr = kraampje(['#B03A2E', '#1F6E43', '#2B4C8C', '#6B3FA0'][i % 4]);
+            const x = cx - breedte / 2 + i * gap + (gap - 36) / 2;
+            kr.k.style.transform = `translate(${x}px, ${GROUND - 32}px)`; kr.k.style.opacity = 0; kr.k.style.zIndex = 1;
+            strip.appendChild(kr.k); elementen.push(kr.k); kramen.push(kr);
+            animate(kr.k, [{ opacity: 0 }, { opacity: .28 }], { duration: 2000, delay: 1200 });
+        }
+        // heel veel mensen met mutsen en sjaals rond de kraampjes (staan klaar in het donker)
+        const mensen = [];
+        kramen.forEach((kr, i) => {
+            const x0 = cx - breedte / 2 + i * gap + (gap - 36) / 2;
+            const n = Math.round(rand(4, 7));
+            for (let j = 0; j < n; j++) {
+                const diep = chance(.45), sc = diep ? .9 : 1, h = rand(21, 25) * sc, p = wintermens(h);
+                const x = x0 + rand(-8, 36) - h * .225, y = GROUND - h - (diep ? 3 : 0) + (diep ? 0 : rand(0, 1.5));
+                p.style.transform = `translate(${x}px, ${y}px) scaleX(${chance(.5) ? 1 : -1})`; p.style.opacity = 0; p.style.zIndex = diep ? 1 : 2;
+                strip.appendChild(p); elementen.push(p); mensen.push(p);
+            }
+        });
+        // 2. de Snoek rijdt voorbij met de koplampen aan
+        const fromLeft = chance(.5), f = fromLeft ? 1 : -1, wpx = 68, hpx = wpx * 96 / 307, cy = GROUND - hpx + .6, sp = 9;
+        const auto = document.createElement('div'); auto.className = 'om-p'; auto.style.zIndex = 3;
+        auto.style.width = wpx + 'px'; auto.style.height = hpx + 'px';
+        auto.innerHTML = `<div style="position:absolute;left:${wpx - 3}px;top:${hpx * .3}px;width:90px;height:${hpx * .9}px;background:linear-gradient(to right,rgba(255,214,80,.75),rgba(255,214,80,0));clip-path:polygon(0 38%,100% 0,100% 100%,0 62%)"></div>
+            <img src="${SNOEK}" alt="" width="${wpx}" height="${hpx.toFixed(1)}" style="display:block;position:relative">
+            <div style="position:absolute;left:${wpx - 4.5}px;top:${hpx * .48}px;width:4px;height:3px;border-radius:50%;background:#ffe27a;box-shadow:0 0 6px 3px rgba(255,214,80,.8)"></div>
+            <div style="position:absolute;left:-1px;top:${hpx * .45}px;width:3px;height:2.4px;border-radius:40%;background:#ff3b30;box-shadow:0 0 4px 1px rgba(255,59,48,.7)"></div>`;
+        const ax0 = fromLeft ? -170 : width + 100, ax1 = fromLeft ? width + 100 : -170;
+        const NACHT = 2800, rijd = Math.abs(ax1 - ax0) * sp;
+        later(() => {
+            strip.appendChild(auto);
+            auto.style.transform = `translate(${ax0}px, ${cy}px) scaleX(${f})`;
+            animate(auto, [{ transform: `translate(${ax0}px, ${cy}px) scaleX(${f})` }, { transform: `translate(${ax1}px, ${cy}px) scaleX(${f})` }], { duration: rijd, easing: 'linear' })
+                .finished.then(() => auto.remove()).catch(() => auto.remove());
+        }, NACHT);
+        // 3. zodra hij voorbij is: lichtjesmarkt aan
+        const voorbij = fromLeft ? (cx + breedte / 2 + 20 - ax0) * sp : (ax0 - (cx - breedte / 2 - 20) + wpx) * sp;
+        const AAN = NACHT + voorbij, BRAND = rand(15000, 18000);
+        later(() => {
+            kramen.forEach(kr => {
+                kr.k.getAnimations().forEach(a => a.cancel()); kr.k.style.opacity = 1; kr.gloed.style.opacity = 1;
+                kr.lampjes.forEach(l => { l.style.opacity = 1; anims.push(animate(l, [{ opacity: 1 }, { opacity: .15 }], { duration: rand(300, 900), direction: 'alternate', iterations: Infinity, delay: rand(0, 900), easing: 'steps(2, jump-none)' })); });
+            });
+            mensen.forEach(p => {
+                p.style.opacity = 1;
+                anims.push(animate(p.firstElementChild, [{ transform: `rotate(${-rand(2, 4)}deg)` }, { transform: `rotate(${rand(2, 4)}deg)` }], { duration: rand(700, 1300), direction: 'alternate', iterations: Infinity, delay: rand(0, 800), easing: 'ease-in-out' }));
+            });
+        }, AAN);
+        // 4. ploep: licht uit, even donker, en dan wordt het weer dag
+        later(() => {
+            anims.forEach(a => a.cancel());
+            elementen.forEach(e => e.remove());
+            later(() => {
+                balk.classList.remove('nacht');
+                animate(lucht0, [{ opacity: 1 }, { opacity: 0 }], { duration: 2600, easing: 'ease-in-out' });
+            }, 3000);
+        }, AAN + BRAND);
+    }
+    const lichtjesDur = () => 2800 + (W() + 270) * 9 * .8 + 17000 + 3000 + 2600;
+
     window.ontmoeten = { jazz, vogelaars, meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets, vaderFiets, moederFiets, kermis };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
@@ -1860,6 +1995,7 @@
         { run: gitaarschool, dur: () => (W() + 120 + EX) * 20 },
         { run: zumba, dur: zumbaDur, groot: true },
         { run: ruiter, dur: () => (W() + 140 + EX) * 30 },
+        { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
@@ -1923,7 +2059,7 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
     toon(); window.addEventListener('hashchange', toon);
