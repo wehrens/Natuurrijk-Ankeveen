@@ -1651,19 +1651,26 @@
                 const pos = (x, y, rot) => `translate(${x - 3.3}px, ${y - 3.3}px) rotate(${rot}deg)`;
                 // 1. hoog de lucht in en op de eerste letter
                 const TF = Math.abs(p[0].x - x0) * speed;                    // zo lang dat hij precies onder de eerste letter is als de bal landt
-                const top = Math.max(4, Math.min(y0, p[0].y) - 34), fr = [];
+                const top = Math.max(14, Math.min(y0, p[0].y) - 34), fr = [];
                 for (let i = 0; i <= 14; i++) {
                     const t = i / 14, x = x0 + (p[0].x - x0) * t;
                     const y = (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * (2 * top - (y0 + p[0].y) / 2) + t * t * p[0].y;
-                    fr.push({ transform: pos(x, y, f * 540 * t) });
+                    fr.push({ transform: pos(x, y, f * 300 * t) });
                 }
-                // 2. rollen over de letters, in het tempo van de voetballer
+                // 2. van letter naar letter stuiteren, in het tempo van de voetballer (rustig draaiend)
                 const span = Math.abs(p[p.length - 1].x - p[0].x), TR = span * speed, rol = [];
-                let afst = 0;
-                p.forEach((q, i) => { if (i) afst += Math.hypot(q.x - p[i - 1].x, q.y - p[i - 1].y); rol.push({ transform: pos(q.x, q.y, f * (540 + afst / 3.3 * 57.3)), offset: Math.abs(q.x - p[0].x) / span }); });
+                let draai = f * 300;
+                for (let i = 0; i < p.length - 1; i++) {
+                    const a = p[i], z = p[i + 1], hop = 7 + Math.abs(z.y - a.y) * .5;
+                    for (let k = i ? 1 : 0; k <= 8; k++) {
+                        const t = k / 8, x = a.x + (z.x - a.x) * t, y = a.y + (z.y - a.y) * t - hop * 4 * t * (1 - t);
+                        rol.push({ transform: pos(x, y, draai + f * 40 * t), offset: Math.abs(x - p[0].x) / span });
+                    }
+                    draai += f * 40;
+                }
                 // 3. eraf en terug op het hoofd
-                const last = p[p.length - 1], xl = last.x + f * TD / speed, eind = f * (540 + afst / 3.3 * 57.3), af = [];
-                for (let i = 0; i <= 10; i++) { const t = i / 10, x = last.x + (xl - last.x) * t, y = last.y + (y0 - last.y) * t * t - 5 * Math.sin(Math.PI * t); af.push({ transform: pos(x, y, eind + f * 200 * t) }); }
+                const last = p[p.length - 1], xl = last.x + f * TD / speed, af = [];
+                for (let i = 0; i <= 10; i++) { const t = i / 10, x = last.x + (xl - last.x) * t, y = last.y + (y0 - last.y) * t * t - 6 * Math.sin(Math.PI * t); af.push({ transform: pos(x, y, draai + f * 60 * t) }); }
                 animate(vb, fr, { duration: TF, easing: 'linear' }).finished.then(() =>
                     animate(vb, rol, { duration: TR, easing: 'linear' }).finished).then(() =>
                     animate(vb, af, { duration: TD, easing: 'linear' }).finished).then(() => {
