@@ -1343,6 +1343,67 @@
     const ooiRonde = () => { const was = ooiThuis; ooievaar(); setTimeout(ooiRonde, was ? rand(35000, 70000) : rand(30000, 50000)); };
     if (!REDUCE) setTimeout(ooiRonde, rand(8000, 18000));
 
+
+    // Ruiter: amazone met donkere cap, blonde paardenstaart en zwart leren jasje op een bruinbonte paint (wit met
+    // vosbruin, zwarte manen en staart, witte bles), in rustige stap. Viertakt: achter-links, voor-links, achter-rechts, voor-rechts.
+    function ruiter() {
+        if (document.hidden) return;
+        const BR = '#7a3d1c', WIT = '#f3efe6', ZW = '#1e1a18', RAND = '#9a8f80', T = 1150;
+        const been = (cls, x, y, kleur, sok) => `<g class="${cls}" style="transform-box:view-box;transform-origin:${x}px ${y}px">
+              <path d="M${x} ${y} l.2 9.4" stroke="${kleur}" stroke-width="2.6" stroke-linecap="round"/>
+              <g class="ond" style="transform-box:view-box;transform-origin:${x + .2}px ${y + 9.4}px">
+                <path d="M${x + .2} ${y + 9.4} l0 8.6" stroke="${sok ? WIT : kleur}" stroke-width="1.9" stroke-linecap="round"/>
+                <path d="M${x - .9} ${y + 18.3} h2.4" stroke="#2a2420" stroke-width="1.3" stroke-linecap="round"/></g></g>`;
+        const w = document.createElement('div'); w.className = 'om-p';
+        const sc = .92, vw = 60, vh = 52;
+        w.style.width = vw * sc + 'px'; w.style.height = vh * sc + 'px';
+        w.innerHTML = `<svg viewBox="0 -6 ${vw} ${vh}" width="${vw * sc}" height="${vh * sc}" aria-hidden="true" style="overflow:visible">
+          ${been('vR', 37.6, 25, BR, false)}${been('aR', 19.6, 24, BR, true)}
+          <g class="romp">
+            <path class="staart" d="M14.6 18.6 q-4.2 2 -3.4 9 q.4 4.6 -1 8 q2.6 -1.2 3.4 -5.6 q.8 -4.2 2.6 -9.4 z" fill="${ZW}" style="transform-box:view-box;transform-origin:14.6px 18.6px"/>
+            <ellipse cx="27" cy="21.6" rx="13.6" ry="6.4" fill="${BR}"/>
+            <path d="M21 16.2 q7 -1.6 12.4 .6 q1.8 5.4 -1.6 11.2 q-7.4 1.6 -11.6 -.8 q-2.6 -5.6 .8 -11 z" fill="${WIT}"/>
+            <path d="M14.4 20 q2.4 -3.6 5 -3.2 q-.8 4 -.2 9.4 q-3.4 -.6 -4.8 -6.2 z" fill="${WIT}" opacity=".95"/>
+            <g class="hals" style="transform-box:view-box;transform-origin:36px 19px">
+              <path d="M33.4 17.4 L40.6 5.4 L45.2 6.2 L41.4 23.6 Z" fill="${BR}"/>
+              <path d="M38.6 21.4 L42.6 12.4 L43.8 12.8 L41.4 23.6 Z" fill="${WIT}"/>
+              <path d="M33.6 16.6 q2.2 -6 6.6 -11.6 l1.4 .6 q-3.6 6 -5.6 12.2 z" fill="${ZW}"/>
+              <path d="M41.6 3.6 l1 -3 l1.2 3.4 z" fill="${BR}"/>
+              <path d="M40.6 4.2 Q43.8 2.8 45.8 4.6 L52 10.4 Q53.2 12.6 51 13.6 L49 13.6 Q45.8 12 41.8 9.8 Z" fill="${BR}"/>
+              <path d="M45.2 4.4 L52.1 10.7 Q52.6 11.8 52 12.4 L51.3 11.5 L44.9 5.5 Z" fill="${WIT}"/>
+              <circle cx="45.2" cy="6.8" r=".55" fill="${ZW}"/>
+              <path d="M44.2 4.4 L43.4 9.4 M43.8 7.2 L50.2 12.4" stroke="#2a1a12" stroke-width=".5" fill="none"/></g>
+            <path d="M22 14.6 q5.6 -1.8 10.4 0 l-.4 3 q-4.8 -1.4 -9.6 0 z" fill="${ZW}" stroke="#e8dcc4" stroke-width=".7"/>
+            <g class="amazone" style="transform-box:view-box;transform-origin:27px 15px">
+                            <path d="M26.6 14.2 l2.8 4.6 l-1.2 5.6" fill="none" stroke="${ZW}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M27.6 24.2 l1.8 .2" stroke="#6b4a2e" stroke-width="2" stroke-linecap="round"/>
+              <path d="M25.2 14.8 l1.2 -9.2 l3.6 .2 l.4 9 z" fill="#2b2b2b"/>
+              <path d="M28.4 6.6 l2.6 4.4 l3.2 .8" fill="none" stroke="#2b2b2b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="28.2" cy="2.6" r="2.4" fill="#F2C9B0"/>
+              <path d="M25.6 2.4 q.2 -3.4 2.8 -3.4 q2.6 0 2.8 3 q-2.8 -1 -5.6 .4 z M30.4 1.8 l1.6 .3" fill="#4a4a4a" stroke="#4a4a4a" stroke-width=".5"/>
+              <path d="M26.2 2.4 q-1.8 1.4 -1.4 5.6" fill="none" stroke="#d9b36a" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M34 11.8 Q42 10 50.4 12.8" fill="none" stroke="#3a2418" stroke-width=".45"/></g>
+          </g>
+          ${been('vL', 36, 25, BR, true)}${been('aL', 18, 24, BR, false)}</svg>`;
+        strip.appendChild(w);
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = 21, y = GROUND - 49.8 * sc;
+        const x0 = fromLeft ? -70 : width + 20, x1 = fromLeft ? width + 70 + EX : -110 - EX;
+        w.style.transform = `translate(${x0}px, ${y}px) scaleX(${f})`;
+        const svg = w.firstElementChild, anims = [];
+        // benen: steunfase (hoef van voor naar achter) en zwaaifase met gebogen knie
+        [['aL', 0], ['vL', .25], ['aR', .5], ['vR', .75]].forEach(([c, fase]) => {
+            const g = svg.querySelector('.' + c), o = { duration: T, iterations: Infinity, delay: -fase * T };
+            anims.push(animate(g, [{ transform: 'rotate(-13deg)', offset: 0 }, { transform: 'rotate(13deg)', offset: .62 }, { transform: 'rotate(-13deg)', offset: 1 }], Object.assign({ easing: 'linear' }, o)));
+            anims.push(animate(g.querySelector('.ond'), [{ transform: 'rotate(0deg)', offset: 0 }, { transform: 'rotate(0deg)', offset: .62 }, { transform: `rotate(${c[0] === 'v' ? 38 : 30}deg)`, offset: .8 }, { transform: 'rotate(0deg)', offset: 1 }], Object.assign({ easing: 'ease-in-out' }, o)));
+        });
+        anims.push(animate(svg.querySelector('.romp'), [{ transform: 'translateY(0)' }, { transform: 'translateY(.7px)' }], { duration: T / 2, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
+        anims.push(animate(svg.querySelector('.hals'), [{ transform: 'rotate(-2.5deg)' }, { transform: 'rotate(2.5deg)' }], { duration: T / 2, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
+        anims.push(animate(svg.querySelector('.amazone'), [{ transform: 'rotate(-1.5deg)' }, { transform: 'rotate(1.5deg)' }], { duration: T / 2, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: T / 8 }));
+        anims.push(animate(svg.querySelector('.staart'), [{ transform: 'rotate(-4deg)' }, { transform: 'rotate(5deg)' }], { duration: T, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
+        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(x1 - x0) * speed, easing: 'linear' })
+            .finished.then(() => { anims.forEach(a => a.cancel()); w.remove(); }).catch(() => w.remove());
+    }
+
     // Kermis: rechts van het logo verrijst een reuzenrad, draait een tijdje met bakjes, en zakt dan weer in
     function kermis() {
         if (document.hidden) return;
@@ -1708,6 +1769,7 @@
         { run: havenloos, dur: havenloosDur, groot: true },
         { run: gitaarschool, dur: () => (W() + 120 + EX) * 20 },
         { run: zumba, dur: zumbaDur, groot: true },
+        { run: ruiter, dur: () => (W() + 140 + EX) * 21 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
@@ -1771,7 +1833,7 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
     toon(); window.addEventListener('hashchange', toon);
