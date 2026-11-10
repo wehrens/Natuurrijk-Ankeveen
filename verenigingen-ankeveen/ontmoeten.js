@@ -1387,6 +1387,7 @@
               <circle cx="28.2" cy="2.6" r="2.4" fill="#F2C9B0"/>
               <path d="M25.6 2.4 q.2 -3.4 2.8 -3.4 q2.6 0 2.8 3 q-2.8 -1 -5.6 .4 z M30.4 1.8 l1.6 .3" fill="#4a4a4a" stroke="#4a4a4a" stroke-width=".5"/>
               <path d="M26.2 2.4 q-1.8 1.4 -1.4 5.6" fill="none" stroke="#d9b36a" stroke-width="1.5" stroke-linecap="round"/>
+              <g class="zwaaiR" style="opacity:0;transform-box:view-box;transform-origin:28.8px 6.6px"><path d="M28.8 6.6 L32.4 -1.6" stroke="#2b2b2b" stroke-width="1.5" stroke-linecap="round"/><circle cx="32.7" cy="-2.5" r="1" fill="#F2C9B0"/></g>
               <path d="M34 11.8 Q42 10 50.4 12.8" fill="none" stroke="#3a2418" stroke-width=".45"/></g>
           </g>
           ${been('vL', 36, 25, BR, true)}${been('aL', 18, 24, BR, false)}</svg>`;
@@ -1408,6 +1409,20 @@
         anims.push(animate(svg.querySelector('.staart'), [{ transform: 'rotate(-4deg)' }, { transform: 'rotate(5deg)' }], { duration: T, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
         animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(x1 - x0) * speed, easing: 'linear' })
             .finished.then(() => { anims.forEach(a => a.cancel()); w.remove(); }).catch(() => w.remove());
+        // de amazone zwaait naar iedereen die ze tegenkomt, en de meesten zwaaien terug
+        const arm = svg.querySelector('.zwaaiR'), gegroet = new WeakSet(); let bezig = 0;
+        const kijk = setInterval(() => {
+            if (!w.isConnected) { clearInterval(kijk); return; }
+            if (document.hidden || performance.now() < bezig) return;
+            const r = w.getBoundingClientRect(), mid = r.left + r.width / 2, sw = strip.getBoundingClientRect();
+            if (mid < sw.left + 10 || mid > sw.right - 10) return;
+            const wie = [...strip.querySelectorAll('[data-groet]')].find(el => { if (gegroet.has(el)) return false; const q = el.getBoundingClientRect(); return Math.abs(q.left + q.width / 2 - mid) < 75; });
+            if (!wie) return;
+            gegroet.add(wie); bezig = performance.now() + 2600;
+            arm.animate([{ opacity: 0, transform: 'rotate(0deg)' }, { opacity: 1, transform: 'rotate(-16deg)', offset: .12 }, { opacity: 1, transform: 'rotate(16deg)', offset: .3 }, { opacity: 1, transform: 'rotate(-16deg)', offset: .48 },
+                { opacity: 1, transform: 'rotate(16deg)', offset: .66 }, { opacity: 1, transform: 'rotate(-10deg)', offset: .84 }, { opacity: 0, transform: 'rotate(0deg)' }], { duration: 1800, easing: 'ease-in-out' });
+            if (chance(.75)) setTimeout(() => { if (wie.isConnected) { delete wie.dataset.gezwaaid; zwaai(wie); } }, 450);
+        }, 300);
     }
 
     // Kermis: rechts van het logo verrijst een reuzenrad, draait een tijdje met bakjes, en zakt dan weer in
@@ -1832,10 +1847,10 @@
                 const a = mov[i], b = mov[j];
                 if (a.v * b.v >= 0) continue;                                   // zelfde kant op: geen groet
                 const gap = b.x - a.x;
-                if (Math.abs(gap) > 70 || (a.v - b.v) * Math.sign(gap) <= 0) continue;   // te ver of al voorbij
+                if (Math.abs(gap) > 90 || (a.v - b.v) * Math.sign(gap) <= 0) continue;   // te ver of al voorbij
                 const sa = gezien.get(a.el) || new Set(); if (sa.has(b.el)) continue;
                 sa.add(b.el); gezien.set(a.el, sa);
-                if (chance(.22)) { const [x, y] = chance(.5) ? [a, b] : [b, a]; zwaai(x.el); if (chance(.6)) setTimeout(() => zwaai(y.el), 350); }
+                if (chance(.45)) { const [x, y] = chance(.5) ? [a, b] : [b, a]; zwaai(x.el); if (chance(.7)) setTimeout(() => zwaai(y.el), 350); }
             }
         }, 450);
     }
