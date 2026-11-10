@@ -1628,11 +1628,16 @@
                     { duration: 900, iterations: Infinity, delay: i * 250, easing: 'ease-in-out' });
             });
             // soms lopen ze daarna langs elkaar heen om aan elkaars achterwerk te snuffelen (zoals honden doen)
-            const kont = chance(.5), d = (lopers[0].dw + lopers[1].dw) / 4 + .5;
+            const kont = chance(.5);
+            // precies zover langs elkaar dat ieders neus bij de staartaanzet van de ander komt (neus ≈ voorkant, staartaanzet ≈ 16% van achteren)
+            const [rl, rr] = lopers.map(l => l.dog.getBoundingClientRect());
+            const neusL = rl.right, kontL = rl.left + rl.width * .16, neusR = rr.left, kontR = rr.right - rr.width * .16;
+            const d = Math.max(2, ((kontR - neusL) + (neusR - kontL)) / 4);
             if (kont) later(() => lopers.forEach((l, i) => {
                 l.sniff.cancel(); l.trot.play();
                 const sch = (l.lijnLen + d) / l.lijnLen;
-                animate(l.dog, [{ transform: 'translate(0, 0)' }, { transform: `translate(${d}px, ${i ? -1.2 : 0}px)` }], { duration: 700, easing: 'ease-in-out' });
+                // de achterste hond (eerst getekend) staat een fractie hoger, zodat je beide hondjes ziet
+                animate(l.dog, [{ transform: 'translate(0, 0)' }, { transform: `translate(${d}px, ${i ? .3 : -1.6}px)` }], { duration: 700, easing: 'ease-in-out' });
                 animate(l.lijn, [{ transform: 'scaleX(1)' }, { transform: `scaleX(${sch})` }], { duration: 700, easing: 'ease-in-out' });
                 later(() => {
                     l.trot.pause(); l.wag.updatePlaybackRate(3);
