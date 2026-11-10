@@ -1388,7 +1388,7 @@
               <circle cx="28.2" cy="2.6" r="2.4" fill="#F2C9B0"/>
               <path d="M25.6 2.4 q.2 -3.4 2.8 -3.4 q2.6 0 2.8 3 q-2.8 -1 -5.6 .4 z M30.4 1.8 l1.6 .3" fill="#4a4a4a" stroke="#4a4a4a" stroke-width=".5"/>
               <path d="M26.2 2.4 q-1.8 1.4 -1.4 5.6" fill="none" stroke="#d9b36a" stroke-width="1.5" stroke-linecap="round"/>
-              <g class="zwaaiR" style="opacity:0;transform-box:view-box;transform-origin:28.8px 6.6px"><path d="M28.8 6.6 L32.4 -1.6" stroke="#2b2b2b" stroke-width="1.5" stroke-linecap="round"/><circle cx="32.7" cy="-2.5" r="1" fill="#F2C9B0"/></g>
+              <g class="zwaaiR" style="opacity:0;transform-box:view-box;transform-origin:28.8px 6.6px"><path d="M28.8 6.6 L32.4 -1.6" stroke="#2b2b2b" stroke-width="2.5" stroke-linecap="round"/><circle cx="32.7" cy="-2.5" r="1.4" fill="#F2C9B0"/></g>
               <path d="M34 11.8 Q42 10 50.4 12.8" fill="none" stroke="#3a2418" stroke-width=".45"/></g>
           </g>
           ${been('vL', 36, 25, BR, true)}${been('aL', 18, 24, BR, false)}</svg>`;
@@ -2091,11 +2091,17 @@
             const arm = svg.querySelector('.zwaaiarm'); if (!arm) return;
             arm.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(-85deg)', offset: .2 }, { transform: 'rotate(-65deg)', offset: .4 },
                 { transform: 'rotate(-85deg)', offset: .6 }, { transform: 'rotate(-65deg)', offset: .8 }, { transform: 'rotate(0deg)' }], { duration: 1400, easing: 'ease-in-out' });
+            dik(arm, 1400);
         } else {
             const arm = svg.querySelector('.armA'); if (!arm) return;
             arm.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(-170deg)', offset: .2 }, { transform: 'rotate(-195deg)', offset: .35 },
                 { transform: 'rotate(-168deg)', offset: .5 }, { transform: 'rotate(-195deg)', offset: .65 }, { transform: 'rotate(-170deg)', offset: .8 }, { transform: 'rotate(0deg)' }], { duration: 1500, easing: 'ease-in-out' });
+            dik(arm, 1500);
         }
+    }
+    function dik(arm, d) {   // zwaaiende arm tijdelijk dikker, zodat het groeten opvalt
+        const w = parseFloat(arm.getAttribute('stroke-width')) || 2.4;
+        arm.animate([{ strokeWidth: w + 'px' }, { strokeWidth: w * 1.6 + 'px', offset: .15 }, { strokeWidth: w * 1.6 + 'px', offset: .85 }, { strokeWidth: w + 'px' }], { duration: d });
     }
     function groeten(root) {
         let prev = new Map(); const gezien = new WeakMap();
