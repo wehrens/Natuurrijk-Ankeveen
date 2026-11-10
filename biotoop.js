@@ -611,6 +611,33 @@
         later(done, dur + 100);
     }
 
+    // Boswachter in groen uniform met een bruine hoed op een zwarte fatbike (dikke banden)
+    function boswachter(done) {
+        const right = chance(.5), sc = 1.15, huid = pick(HUID);
+        const W0 = 52 * sc, H0 = 40 * sc, w = mensDiv(H0, W0); w.dataset.groet = 'fiets';
+        const band = (cx) => `<g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="${cx}" cy="31" r="7.2" fill="none" stroke="#151515" stroke-width="4"/>
+            <circle cx="${cx}" cy="31" r="7.2" fill="none" stroke="#333" stroke-width="4" stroke-dasharray="1.2 1.6" opacity=".9"/>
+            <circle cx="${cx}" cy="31" r="4.6" fill="none" stroke="#4a4a4a" stroke-width=".9"/><path d="M${cx} 26.4v9.2M${cx - 4.6} 31h9.2" stroke="#555" stroke-width=".7"/><circle cx="${cx}" cy="31" r="1.1" fill="#222"/></g>`;
+        w.innerHTML = `<svg viewBox="0 0 52 40" width="${W0}" height="${H0}" aria-hidden="true" style="overflow:visible">
+            ${band(10)}${band(42)}
+            <path d="M10 31 l14 0 l-2 -12 M24 31 l12 -12 l6 12 M36 19 l0 -4 l3.4 -.4 M22 19 l-4 -1" fill="none" stroke="#111" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M24 31 L22 19 L36 19 Z" fill="none" stroke="#111" stroke-width="2.6" stroke-linejoin="round"/>
+            <circle cx="24" cy="31" r="2.3" fill="#222"/>
+            <path class="legB" d="" fill="none" stroke="#4a3a26" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="crank" d="" stroke="#222" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M19 21 q0 -10 5 -11 q6 0 6 10 l-1 1 l-9 1 z" fill="#3f5a35"/>
+            <path d="M20.6 14.6 l7.6 0" stroke="#2f4428" stroke-width=".8"/><rect x="24.6" y="11.6" width="2.6" height="1.8" rx=".4" fill="#c9b27a"/>
+            <path class="legA" d="" fill="none" stroke="#5a4632" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="zwaaiarm" d="M24 12 l11 3" stroke="#3f5a35" stroke-width="2.4" stroke-linecap="round" style="transform-box:view-box;transform-origin:24px 12px"/>
+            <circle cx="35.4" cy="15.1" r="1.1" fill="${huid}"/>
+            <circle cx="25" cy="6.4" r="4.2" fill="${huid}"/><circle cx="26.3" cy="6.1" r=".5" fill="#2b2b2b"/><circle cx="28.1" cy="6.1" r=".5" fill="#2b2b2b"/>
+            <path d="M18.6 4.2 q6.4 -1.8 12.8 0 q-.6 1 -2 1.1 l-8.8 0 q-1.4 -.1 -2 -1.1 z" fill="#6b4423"/>
+            <path d="M21.4 4.4 q-.2 -4.6 3.6 -4.8 q3.8 .2 3.6 4.8 z" fill="#7a4e2a"/><path d="M21.5 3.2 h7.1 v1.1 h-7.1 z" fill="#4a2e16"/>
+            <path d="M25 -0.4 l0 1.6" stroke="#5a381c" stroke-width=".8"/></svg>`;
+        L.bioFront.appendChild(w);
+        later(done, rijd(w, right, H0, 0, 15) + 100);
+    }
+
     // Bakfiets: de oude houten bak voorop, man in blauwe overall erachter
     function bakfiets(done) {
         const right = chance(.5), width = W(), f = right ? 1 : -1, huid = '#F2C2A8';
@@ -1261,7 +1288,7 @@
         bergsepad: Object.assign({}, BASE, {            // wandelpad: riet, bomen die gesnoeid worden, wandelaars, ganzen
             flowersMax: 5, flowerEvery: 12000, flowers: byName('Lisdodde2', 'Klaproos.', 'Veldoeket'),
             slots: [6, 14, 40, 50, 70], eventEvery: 7500, maxActive: 4, flowerScale: .6,       // mensen zijn ~46px, dus bloemen kleiner
-            animals: [[wandelaar, 5], [fietsers, 3], [joggers, 2], [bakfiets, 1], [vogelaars, 3], [swallow, 3], [butterfly, 1]],
+            animals: [[wandelaar, 5], [fietsers, 3], [joggers, 2], [bakfiets, 1], [boswachter, 1], [vogelaars, 3], [swallow, 3], [butterfly, 1]],
             geeseAt: 5000, eagleAt: 90000,
             setup: () => {
                 (NARROW() ? [[10, 'Rietkraag.webp', 40, 1]] : [[33, 'Rietkraag.webp', 46, 1], [76, 'Rietkraag.webp', 42, -1]]).forEach(([p, s, h, f], i) => later(() => prop(L.bioPond, s, h, p, { flip: f }), 500 + i * 800));
@@ -1387,7 +1414,7 @@
         if (Math.abs(innerWidth - lastW) > 150) { lastW = innerWidth; clear(); start(); }
     });
 
-    window.biotoop = { wandelaar, fietsers, joggers, bakfiets, vogelaars, swallow, swallowGroup, klasje, schepnet, opruimen };   // handig om te testen
+    window.biotoop = { wandelaar, fietsers, boswachter, joggers, bakfiets, vogelaars, swallow, swallowGroup, klasje, schepnet, opruimen };   // handig om te testen
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => later(start, 800));
     else later(start, 800);
 })();
