@@ -1318,7 +1318,7 @@
             later(() => k.cancel(), dur * .65);                                    // het laatste stuk zweeft hij
             later(() => {
                 // in de strook zetten (achter de nestrand), op dezelfde plek
-                naarNest(); running.forEach(a => { if (a.effect && a.effect.target === ooi) a.cancel(); });
+                naarNest(); ooi.getAnimations().forEach(a => a.cancel());   // ook al afgelopen animaties (die met fill vasthouden)
                 ooi.style.transform = zet(nestX(), NESTY, r);
                 animate(vlieg, [{ opacity: 1 }, { opacity: 0 }], { duration: 200 }); animate(staan, [{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
                 // even rondkijken, dan nestelt hij zich (zakt in het nest) en klepperen: kop in de nek, snavel omhoog
@@ -1331,7 +1331,7 @@
             animate(staan, [{ transform: 'translateY(4px)' }, { transform: 'translateY(0)' }], { duration: 600, easing: 'ease-out' });
             later(() => {
                 const naarRechts = chance(.5), r = naarRechts ? 1 : -1, xb = naarRechts ? width + 50 : -50, dur = Math.abs(xb - xn) * 8;
-                running.forEach(a => { if (a.effect && a.effect.target === ooi) a.cancel(); });
+                ooi.getAnimations().forEach(a => a.cancel());   // ook al afgelopen animaties (die met fill vasthouden)
                 naarLucht(); ooi.style.transform = zet(xn, yn, r);
                 animate(staan, [{ opacity: 1 }, { opacity: 0 }], { duration: 200 }); animate(vlieg, [{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
                 const k = klap();
@@ -1340,6 +1340,8 @@
             }, 700);
         }
     }
+    // bij draaien of breder maken van het scherm schuift de paal mee (7%), dus de zittende ooievaar ook
+    addEventListener('resize', () => { if (ooiThuis && !ooiBezig) ooi.style.transform = zet(nestX(), NESTY, /scaleX\(-1\)/.test(ooi.style.transform) ? -1 : 1); });
     const ooiRonde = () => { const was = ooiThuis; ooievaar(); setTimeout(ooiRonde, was ? rand(35000, 70000) : rand(30000, 50000)); };
     if (!REDUCE) setTimeout(ooiRonde, rand(8000, 18000));
 
