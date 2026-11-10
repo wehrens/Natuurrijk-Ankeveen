@@ -1104,7 +1104,8 @@
                 animate(zij, [{ opacity: 1 }, { opacity: 0 }], { duration: 300, delay: i * 15 });
                 animate(voor, [{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: i * 15 });
                 anims.push(animate(voor.querySelector('.mond'), [{ transform: 'scaleY(.5)' }, { transform: 'scaleY(2.4)' }], { duration: 560, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: 600 + rand(0, 90) }));
-                anims.push(animate(svg, [{ transform: 'rotate(-2.5deg)' }, { transform: 'rotate(2.5deg)' }], { duration: 1680, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: 400 }));
+                svg.style.transformOrigin = '50% 100%';               // wiegen vanuit de voeten, ruim heen en weer
+                anims.push(animate(svg, [{ transform: 'translateX(-1.2px) rotate(-7deg)' }, { transform: 'translateX(1.2px) rotate(7deg)' }], { duration: 1680, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: 400 }));
                 if (m.acc) anims.push(animate(voor.querySelector('.balg'), [{ transform: 'scaleX(.6)' }, { transform: 'scaleX(1.15)' }], { duration: 840, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: 400 }));
             });
             const top = Math.min(...leden.map(m => m.y));
@@ -2015,7 +2016,7 @@
     }
     const lichtjesDur = () => 2800 + (W() + 270) * 9 * .8 + 17000 + 3000 + 2600;
 
-    window.ontmoeten = { jazz, vogelaars, meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets, vaderFiets, moederFiets, kermis };   // handig om te testen
+    window.ontmoeten = { jazz, vogelaars, meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets, vaderFiets, moederFiets, kermis, havenloos };   // handig om te testen
 
     // Rustig tempo: gewone ontmoetingen om de 10 tot 16 seconden (hooguit twee tegelijk),
     // en de bijzondere groepen één voor één, met een pauze ertussen en nooit twee dezelfde achter elkaar.
