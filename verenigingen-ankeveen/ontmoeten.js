@@ -1146,6 +1146,100 @@
         });
     }
 
+
+    // Zumba: twaalf dames in felle sportkleding komen binnen, dansen in twee rijen mee met de juf en gaan weer verder
+    const NEON = ['#2BD66B', '#FF8A1F', '#19C3D6', '#8E5CF0', '#E8452C', '#3B8FE0'];
+    function zumbaDame(h, kleur) {
+        const p = person(kleur, h), svg = p.firstElementChild;
+        svg.querySelectorAll('.legA, .legB').forEach(l => l.setAttribute('stroke', '#232323'));   // zwarte legging
+        const haar = pick(['#2b2b2b', '#5a3a2a', '#8b5a2b', '#d9b36a', '#c0392b']);
+        svg.insertAdjacentHTML('beforeend', `<path d="M5 3.4 q-3.6 .6 -3.2 6.4" fill="none" stroke="${haar}" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M4.5 3.8 q4.5 -2.2 9 0" fill="none" stroke="#fff" stroke-width="1.1"/>`);   // paardenstaart en zweetband
+        delete p.dataset.groet;
+        return p;
+    }
+    function zumba() {
+        if (document.hidden) return;
+        const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, speed = 15;
+        const ROWS = [{ n: 6, sc: .92, lift: 5, sp: 13, shift: 6.5 }, { n: 6, sc: 1, lift: 0, sp: 14, shift: 0 }];   // achter → voor
+        const maxW = 6 * 14 + 40, cx = plek(maxW + 20, .3, .7, zumbaDur());
+        const kleuren = NEON.concat(NEON).sort(() => Math.random() - .5);
+        const leden = [];
+        ROWS.forEach((r, ri) => {
+            for (let i = 0; i < r.n; i++) {
+                const h = 23 * r.sc * rand(.95, 1.05), w = zumbaDame(h, kleuren[ri * 6 + i]);
+                leden.push({ w, x: cx - 14 + (i - (r.n - 1) / 2) * r.sp + r.shift - h * .225, y: GROUND - h - r.lift, h, kijk: f });
+                strip.appendChild(w);
+            }
+        });
+        // de juf staat voor de groep, met het gezicht naar de dames
+        const jh = 25, juf = zumbaDame(jh, '#1b1b1b');
+        juf.querySelector('.armB').setAttribute('stroke', '#E8452C');
+        leden.push({ w: juf, x: cx + f * (maxW / 2 + 6) - jh * .225, y: GROUND - jh, h: jh, kijk: -f, juf: true });
+        strip.appendChild(juf);
+        // als groep binnen lopen
+        const D = fromLeft ? cx + maxW / 2 + 40 : width - cx + maxW / 2 + 40, inDur = D * speed;
+        leden.forEach(m => {
+            const xa = m.x - D * f;
+            m.w.style.transform = `translate(${xa}px, ${m.y}px) scaleX(${f})`;
+            m.b = bob(m.w, rand(400, 460));
+            animate(m.w, [{ transform: `translate(${xa}px, ${m.y}px) scaleX(${f})` }, { transform: `translate(${m.x}px, ${m.y}px) scaleX(${f})` }], { duration: inDur, easing: 'linear' })
+                .finished.then(() => m.b.pause()).catch(() => {});
+        });
+        // dansjes, allemaal tegelijk op de maat (T = één tel). Armen gaan via achteren omhoog, nooit recht naar voren.
+        const T = 460, PASSEN = ['pomp', 'stap', 'spring', 'heup', 'pomp', 'spring'];
+        let lopend = [];
+        const stop = () => { lopend.forEach(a => a.cancel()); lopend = []; };
+        const pas = (naam, keer) => {
+            stop();
+            leden.forEach(m => {
+                const svg = m.w.firstElementChild, aA = svg.querySelector('.armA'), aB = svg.querySelector('.armB');
+                const lA = svg.querySelector('.legA'), lB = svg.querySelector('.legB'), k = keer ? -1 : 1, kijk = m.kijk * k;
+                const A = (el, fr, o) => lopend.push(animate(el, fr, Object.assign({ direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }, o)));
+                lopend.push(animate(m.w, [{ transform: `translate(${m.x}px, ${m.y}px) scaleX(${kijk})` }], { duration: 1, fill: 'forwards' }));   // kijkrichting
+                if (naam === 'pomp') {          // armen om en om de lucht in, kleine sprongetjes
+                    A(aA, [{ transform: 'rotate(20deg)' }, { transform: 'rotate(170deg)' }], { duration: T });
+                    A(aB, [{ transform: 'rotate(170deg)' }, { transform: 'rotate(20deg)' }], { duration: T });
+                    A(svg, [{ transform: 'translateY(0)' }, { transform: 'translateY(-2px)' }], { duration: T / 2 });
+                } else if (naam === 'stap') {   // zijpasjes heen en weer, armen zwaaien mee
+                    lopend[lopend.length - 1].cancel();
+                    A(m.w, [{ transform: `translate(${m.x - 4}px, ${m.y}px) scaleX(${kijk})` }, { transform: `translate(${m.x + 4}px, ${m.y}px) scaleX(${kijk})` }], { duration: T * 2 });
+                    A(lA, [{ transform: 'rotate(-18deg)' }, { transform: 'rotate(18deg)' }], { duration: T });
+                    A(lB, [{ transform: 'rotate(18deg)' }, { transform: 'rotate(-18deg)' }], { duration: T });
+                    A(aA, [{ transform: 'rotate(10deg)' }, { transform: 'rotate(60deg)' }], { duration: T });
+                    A(aB, [{ transform: 'rotate(60deg)' }, { transform: 'rotate(10deg)' }], { duration: T });
+                } else if (naam === 'spring') { // springen met beide handen boven het hoofd, heen en weer zwaaiend
+                    A(svg, [{ transform: 'translateY(0)' }, { transform: 'translateY(-4px)' }], { duration: T / 2, easing: 'ease-out' });
+                    A(aA, [{ transform: 'rotate(150deg)' }, { transform: 'rotate(185deg)' }], { duration: T });
+                    A(aB, [{ transform: 'rotate(185deg)' }, { transform: 'rotate(150deg)' }], { duration: T });
+                    A(lA, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-14deg)' }], { duration: T / 2 });
+                    A(lB, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(14deg)' }], { duration: T / 2 });
+                } else {                        // heupen draaien, handen boven het hoofd
+                    A(svg, [{ transform: 'rotate(-7deg)' }, { transform: 'rotate(7deg)' }], { duration: T });
+                    A(aA, [{ transform: 'rotate(165deg)' }, { transform: 'rotate(175deg)' }], { duration: T });
+                    A(aB, [{ transform: 'rotate(175deg)' }, { transform: 'rotate(165deg)' }], { duration: T });
+                }
+            });
+        };
+        const DANS = PASSEN.length * T * 6;
+        later(() => {
+            leden.forEach(m => m.b.cancel());          // de loopbeweging uit, anders zet die de armen steeds terug
+            PASSEN.forEach((naam, i) => later(() => pas(naam, i % 2 === 1), i * T * 6));
+            const top = Math.min(...leden.map(m => m.y));
+            const noten = setInterval(() => { if (chance(.75)) note(cx + rand(-maxW / 2, maxW / 2), top - 4, pick(NEON)); }, 520);
+            later(() => {
+                clearInterval(noten); stop();
+                leden.forEach(m => {
+                    const x1 = m.x + (fromLeft ? width - cx + maxW / 2 + 60 + EX : -(cx + maxW / 2 + 60 + EX));
+                    later(() => { m.w.firstElementChild.querySelectorAll('.armA, .armB, .legA, .legB').forEach(n => n.getAnimations().forEach(a => a.cancel())); m.b = bob(m.w, rand(400, 460));
+                        animate(m.w, [{ transform: `translate(${m.x}px, ${m.y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${m.y}px) scaleX(${f})` }], { duration: Math.abs(x1 - m.x) * speed, easing: 'linear' })
+                            .finished.then(() => { m.b.cancel(); m.w.remove(); }).catch(() => m.w.remove()); }, 400);
+                });
+            }, DANS);
+        }, inDur + 400);
+    }
+    const zumbaDur = () => (W() + 220) * 15 + 400 + 6 * 460 * 6 + (W() + 220 + EX) * 15 * .5;
+
     // Kermis: rechts van het logo verrijst een reuzenrad, draait een tijdje met bakjes, en zakt dan weer in
     function kermis() {
         if (document.hidden) return;
@@ -1486,6 +1580,7 @@
         { run: jazz, dur: jazzDur },
         { run: havenloos, dur: havenloosDur },
         { run: gitaarschool, dur: () => (W() + 120 + EX) * 20 },
+        { run: zumba, dur: zumbaDur },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
@@ -1537,7 +1632,7 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
     toon(); window.addEventListener('hashchange', toon);
