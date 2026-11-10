@@ -1492,5 +1492,8 @@
         }, 450);
     }
     groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; }
+    // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
+    const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
+    toon(); window.addEventListener('hashchange', toon);
     setTimeout(nextSpecial, 4000);
 })();
