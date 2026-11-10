@@ -1736,7 +1736,10 @@
             <path class="tail" d="M3.2 5.5 q-2.6 -1.4 -2.6 -4.4" fill="none" stroke="${poot}" stroke-width="1.5" stroke-linecap="round"/>
             <ellipse cx="9" cy="6.6" rx="6.2" ry="3.2" fill="${vacht}" ${rand_}/>
             <ellipse cx="7" cy="6" rx="2.2" ry="1.6" fill="${vlek}" opacity=".7"/>
-            <path d="M4.6 8.5 v4.3 M7 8.8 v4 M11.4 8.8 v4 M13.6 8.5 v4.3" stroke="${poot}" stroke-width="1.5" stroke-linecap="round"/>
+            <path class="achterpoot" d="M4.6 8.5 v4.3" stroke="${poot}" stroke-width="1.5" stroke-linecap="round" style="transform-box:view-box;transform-origin:4.6px 8.5px"/>
+            <path d="M7 8.8 v4 M11.4 8.8 v4 M13.6 8.5 v4.3" stroke="${poot}" stroke-width="1.5" stroke-linecap="round"/>
+            <path class="plas" d="M3.4 9.4 q-2.6 .2 -4.6 3.4" fill="none" stroke="#e8c840" stroke-width=".7" stroke-linecap="round" stroke-dasharray="7" stroke-dashoffset="7" opacity="0"/>
+            <ellipse class="plasje" cx="-1.6" cy="12.9" rx="1.8" ry=".45" fill="#e8c840" opacity="0" style="transform-box:fill-box;transform-origin:50% 50%"/>
             <ellipse cx="18.4" cy="4.9" rx="1.6" ry="1.1" fill="${vacht}" ${rand_}/><circle cx="15.6" cy="4" r="2.9" fill="${vacht}" ${rand_}/><ellipse cx="18.2" cy="4.9" rx="1.3" ry=".8" fill="${vacht}"/>
             <circle cx="19.6" cy="4.6" r=".6" fill="#16233a"/><circle cx="16.4" cy="3.4" r=".45" fill="#16233a"/>
             <path d="M14.2 1.8 q-1.4 0.6 -1 3.2 q1 -0.6 1.8 -2.4 z" fill="${vlek}"/>
@@ -1746,18 +1749,18 @@
         const hx = 10.4, hy = h * .37, cx = 33 - dw + dw * .7, cy = h - dh + dh * .45;
         lijn.innerHTML = `<path d="M${hx} ${hy} Q${(hx + cx) / 2} ${Math.max(hy, cy) + 3} ${cx} ${cy}" fill="none" stroke="#3d4a5c" stroke-width=".8"/>`;
         w.append(pers, lijn, dog);
-        bob(pers, rand(380, 460));
+        pers._bob = bob(pers, rand(380, 460));
         const trot = animate(dog.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1.2px)' }], { duration: rand(150, 190), direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         const tail = dog.querySelector('.tail'); tail.style.transformBox = 'fill-box'; tail.style.transformOrigin = '100% 100%';
         const wag = animate(tail, [{ transform: 'rotate(-14deg)' }, { transform: 'rotate(14deg)' }], { duration: 260, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         lijn.style.transformOrigin = `${hx}px 0`;
-        return { w, h, pers, dog, dw, lijn, lijnLen: cx - hx, trot, wag, b: pers.getAnimations()[0] };
+        return { w, h, pers, dog, dw, lijn, lijnLen: cx - hx, trot, wag, b: pers.getAnimations()[0], bob: pers._bob };
     }
-    function honden() {
+    function honden(test) {                           // test: { kant: 1 of -1 } laat één hondje bij de paal plassen
         if (document.hidden) return;
-        const width = W(), speed = rand(17, 21), samen = chance(.7);
+        const width = W(), speed = rand(17, 21), samen = test ? false : chance(.7);
         const meet = vrij(.25, .75);
-        const kanten = samen ? [1, -1] : [pick([1, -1])];
+        const kanten = samen ? [1, -1] : [test && test.kant ? test.kant : pick([1, -1])];
         const lopers = kanten.map(f => {
             const b = baasMetHond(); strip.appendChild(b.w);
             const y = GROUND - b.h, x0 = f > 0 ? -50 : width + 16;
@@ -1767,7 +1770,28 @@
         });
         const lopen = (l, a, z) => animate(l.w, [{ transform: `translate(${a}px, ${l.y}px) scaleX(${l.f})` }, { transform: `translate(${z}px, ${l.y}px) scaleX(${l.f})` }],
             { duration: Math.abs(z - a) * speed, easing: 'linear' });
-        if (!samen) { const l = lopers[0]; lopen(l, l.x0, l.xEnd).finished.then(() => l.w.remove()).catch(() => l.w.remove()); return; }
+        if (!samen) {
+            const l = lopers[0];
+            // af en toe stopt het hondje bij de ooievaarspaal, tilt een achterpootje op en plast tegen de paal
+            const pk = nestX(), achter = .23 * l.dw;                                   // achterkant van het hondje in de hondenbox
+            const xs = l.f > 0 ? pk + 2.2 - (33 - l.dw) - achter : pk - 2.2 - 34 + (33 - l.dw) + achter;
+            if ((test || chance(.6)) && pk > 10 && pk < width - 10) {
+                lopen(l, l.x0, xs).finished.then(() => {
+                    l.bob && l.bob.pause(); l.trot.pause(); l.wag.updatePlaybackRate(.5);
+                    const svg = l.dog.firstElementChild, poot = svg.querySelector('.achterpoot'), straal = svg.querySelector('.plas'), plasje = svg.querySelector('.plasje');
+                    animate(poot, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(72deg)' }], { duration: 350, delay: 500, easing: 'ease-out' });
+                    animate(straal, [{ opacity: 0, strokeDashoffset: 7 }, { opacity: .95, strokeDashoffset: 0, offset: .15 }, { opacity: .95, strokeDashoffset: 0, offset: .85 }, { opacity: 0, strokeDashoffset: 0 }], { duration: 2200, delay: 900 });
+                    animate(plasje, [{ opacity: 0, transform: 'scaleX(.2)' }, { opacity: .8, transform: 'scaleX(1)', offset: .8 }, { opacity: .7, transform: 'scaleX(1.1)' }], { duration: 2200, delay: 1200 });
+                    later(() => animate(poot, [{ transform: 'rotate(72deg)' }, { transform: 'rotate(0deg)' }], { duration: 250 }), 3200);
+                    later(() => {
+                        l.bob && l.bob.play(); l.trot.play(); l.wag.updatePlaybackRate(1);
+                        lopen(l, xs, l.xEnd).finished.then(() => l.w.remove()).catch(() => l.w.remove());
+                    }, 3600);
+                }).catch(() => l.w.remove());
+                return;
+            }
+            lopen(l, l.x0, l.xEnd).finished.then(() => l.w.remove()).catch(() => l.w.remove()); return;
+        }
         const aan = lopers.map(l => lopen(l, l.x0, l.xm));
         Promise.all(aan.map(a => a.finished)).then(() => {
             lopers.forEach(l => { l.b && l.b.pause(); l.trot.pause(); });
@@ -2059,7 +2083,7 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
     toon(); window.addEventListener('hashchange', toon);
