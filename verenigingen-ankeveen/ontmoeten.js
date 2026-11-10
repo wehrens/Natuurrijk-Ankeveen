@@ -1242,12 +1242,13 @@
 
 
     // Ooievaarspaal: een vaste paal met nest; af en toe landt er een ooievaar die zich nestelt, klepperend, en later weer wegvliegt
+    const PH = Math.min(46, GROUND - 6);            // paalhoogte: ruim boven de mensen uit
     const paal = document.createElement('div'), rand0 = document.createElement('div');
     const TAK = '#7a5a36', TAK2 = '#9c7a4e';
-    paal.style.cssText = rand0.style.cssText = `position:absolute;top:${GROUND + 2 - 32}px;left:max(16px, 7%);width:26px;height:32px;margin-left:-13px;pointer-events:none`;
-    paal.innerHTML = `<svg viewBox="0 0 26 32" width="26" height="32" aria-hidden="true"><path d="M12 9 h2.2 v23 h-2.2 z" fill="#6b5a48"/><path d="M5 10.5 h16 v1.6 h-16 z" fill="#5a4a3a"/>
+    paal.style.cssText = rand0.style.cssText = `position:absolute;top:${GROUND + 2 - PH}px;left:max(16px, 7%);width:26px;height:${PH}px;margin-left:-13px;pointer-events:none`;
+    paal.innerHTML = `<svg viewBox="0 0 26 ${PH}" width="26" height="${PH}" aria-hidden="true"><path d="M12 9 h2.2 v${PH - 9} h-2.2 z" fill="#6b5a48"/><path d="M5 10.5 h16 v1.6 h-16 z" fill="#5a4a3a"/>
         <path d="M2 8 q11 -6.5 22 0 v1.6 q-11 -2.6 -22 0 z" fill="${TAK}"/></svg>`;
-    rand0.innerHTML = `<svg viewBox="0 0 26 32" width="26" height="32" aria-hidden="true">
+    rand0.innerHTML = `<svg viewBox="0 0 26 ${PH}" width="26" height="${PH}" aria-hidden="true">
         <path d="M1 8 q12 3.6 24 0 l-1.2 3 q-10.8 2.6 -21.6 0 z" fill="${TAK}"/>
         <path d="M2 8.6 l5 2.2 M6 8.2 l6 3 M12 9.6 l6 -1.6 M17 10.6 l7 -2.6 M4 10.4 l7 -1 M15 9 l6 2" stroke="${TAK2}" stroke-width=".7" stroke-linecap="round"/>
         <path d="M0 7.6 l3.6 1.4 M22.4 9 l3.6 -1.6" stroke="${TAK}" stroke-width=".9" stroke-linecap="round"/></svg>`;
@@ -1257,21 +1258,22 @@
     const POOT = '#E0472B';
     ooi.innerHTML = `<svg class="staan" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" style="position:absolute;left:5px;top:0;overflow:visible;opacity:0">
           <path d="M8.6 12.5 v7.5 M10.6 12.5 v7.5" stroke="${POOT}" stroke-width=".9"/>
-          <ellipse cx="9" cy="10.4" rx="6" ry="3.4" fill="#fff" stroke="#d6d6d6" stroke-width=".3" transform="rotate(-12 9 10.4)"/>
+          <ellipse cx="9" cy="10.4" rx="6" ry="3.4" fill="#fff" stroke="#6f757c" stroke-width=".7" transform="rotate(-12 9 10.4)"/>
           <path d="M2.6 11.6 q5 1.6 10 -.6 l-.6 2 q-5 1.6 -9.6 -.4 z" fill="#1d1d1d"/>
           <g class="kop" style="transform-box:view-box;transform-origin:13px 9px">
-            <path d="M12.6 9 q1.6 -3 2.4 -6.6" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/>
-            <circle cx="15.3" cy="2.2" r="1.6" fill="#fff"/><circle cx="15.8" cy="1.9" r=".35" fill="#222"/>
+            <path d="M12.6 9 q1.6 -3 2.4 -6.6" fill="none" stroke="#6f757c" stroke-width="3.2" stroke-linecap="round"/><circle cx="15.3" cy="2.2" r="2.15" fill="#6f757c"/>
+            <path d="M12.6 9 q1.6 -3 2.4 -6.6" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/><circle cx="15.3" cy="2.2" r="1.55" fill="#fff"/><circle cx="15.8" cy="1.9" r=".35" fill="#222"/>
             <path d="M16.6 2.3 l4.4 1.6" stroke="${POOT}" stroke-width="1.1" stroke-linecap="round"/></g></svg>
         <svg class="vlieg" viewBox="0 0 30 16" width="30" height="16" aria-hidden="true" style="position:absolute;left:0;top:2px;overflow:visible">
           <path d="M8.6 8.4 l-8.6 1.4" stroke="${POOT}" stroke-width=".8"/>
-          <ellipse cx="14" cy="8" rx="6" ry="2.2" fill="#fff" stroke="#d6d6d6" stroke-width=".3"/>
-          <path d="M19 7.6 l5.6 -.8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="25.2" cy="6.8" r="1.3" fill="#fff"/>
+          <path d="M19 7.6 l5.6 -.8" stroke="#6f757c" stroke-width="2.9" stroke-linecap="round"/><circle cx="25.2" cy="6.8" r="1.85" fill="#6f757c"/>
+          <ellipse cx="14" cy="8" rx="6" ry="2.2" fill="#fff" stroke="#6f757c" stroke-width=".7"/>
+          <path d="M19 7.6 l5.6 -.8" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><circle cx="25.2" cy="6.8" r="1.3" fill="#fff"/>
           <path d="M26.2 6.9 l3.8 1.1" stroke="${POOT}" stroke-width="1" stroke-linecap="round"/>
-          <g class="vleugel" style="transform-box:view-box;transform-origin:14px 7.6px"><path d="M10 7.6 L11.6 -.8 L19.6 .2 L17.4 7.6 z" fill="#fff" stroke="#d6d6d6" stroke-width=".3"/><path d="M11.6 -.8 L19.6 .2 L18.9 2.8 L11.2 1.4 z" fill="#1d1d1d"/></g></svg>`;
+          <g class="vleugel" style="transform-box:view-box;transform-origin:14px 7.6px"><path d="M10 7.6 L11.6 -.8 L19.6 .2 L17.4 7.6 z" fill="#fff" stroke="#6f757c" stroke-width=".7"/><path d="M11.6 -.8 L19.6 .2 L18.9 2.8 L11.2 1.4 z" fill="#1d1d1d"/></g></svg>`;
     strip.appendChild(paal); strip.appendChild(ooi); strip.appendChild(rand0);
     let ooiThuis = false, ooiBezig = false;
-    const nestX = () => paal.offsetLeft + 13, NESTY = GROUND + 2 - 32 + 8;       // midden bovenop het nest
+    const nestX = () => paal.offsetLeft + 13, NESTY = GROUND + 2 - PH + 8;       // midden bovenop het nest
     const zet = (x, y, r) => `translate(${x - 15}px, ${y - 20}px) scaleX(${r})`;   // x,y = voeten van de ooievaar
     function ooievaar() {
         if (ooiBezig || document.hidden) return;
@@ -1282,10 +1284,10 @@
         if (!ooiThuis) {
             // aanvliegen vanaf een kant, laag zwevend naar het nest
             const vanRechts = chance(.6), r = vanRechts ? -1 : 1, xa = vanRechts ? width + 40 : -40, dur = Math.abs(xn - xa) * 9;
-            ooi.style.transform = zet(xa, 22, r); ooi.style.opacity = 1;
+            ooi.style.transform = zet(xa, NESTY + 9, r); ooi.style.opacity = 1;
             staan.style.opacity = 0; vlieg.style.opacity = 1;
             const k = klap();
-            animate(ooi, [{ transform: zet(xa, 22, r) }, { transform: zet(xa + (xn - xa) * .55, 19, r), offset: .55 }, { transform: zet(xn - r * 6, NESTY - 6, r), offset: .92 }, { transform: zet(xn, NESTY, r) }], { duration: dur, easing: 'ease-out' });
+            animate(ooi, [{ transform: zet(xa, NESTY + 9, r) }, { transform: zet(xa + (xn - xa) * .55, NESTY + 5, r), offset: .55 }, { transform: zet(xn - r * 6, NESTY - 6, r), offset: .92 }, { transform: zet(xn, NESTY, r) }], { duration: dur, easing: 'ease-out' });
             later(() => k.cancel(), dur * .7);                                     // het laatste stuk zweeft hij
             later(() => {
                 animate(vlieg, [{ opacity: 1 }, { opacity: 0 }], { duration: 200 }); animate(staan, [{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
@@ -1302,7 +1304,7 @@
                 const kijk = r;
                 animate(staan, [{ opacity: 1 }, { opacity: 0 }], { duration: 200 }); animate(vlieg, [{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
                 const k = klap();
-                animate(ooi, [{ transform: zet(xn, NESTY, kijk) }, { transform: zet(xn + r * 30, 19, kijk), offset: .12 }, { transform: zet(xb, 21, kijk) }], { duration: dur, easing: 'ease-in' })
+                animate(ooi, [{ transform: zet(xn, NESTY, kijk) }, { transform: zet(xn + r * 30, NESTY + 3, kijk), offset: .12 }, { transform: zet(xb, NESTY + 7, kijk) }], { duration: dur, easing: 'ease-in' })
                     .finished.then(() => { k.cancel(); ooi.style.opacity = 0; ooiThuis = false; ooiBezig = false; }).catch(() => { ooiBezig = false; });
             }, 700);
         }
