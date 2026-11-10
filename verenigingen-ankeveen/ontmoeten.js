@@ -9,6 +9,23 @@
     const H = strip.clientHeight, GROUND = H - 8;
     const W = () => strip.clientWidth;
     const EX = 220;   // extra loopafstand: ook de achterste van een groep loopt helemaal uit beeld
+    // Plekken reserveren: groepen die ergens blijven staan (koor, jazz, markt, naturisten, vogelaars) kiezen een plek
+    // waar nog niemand staat, zodat ze niet voor elkaar gaan liggen of staan.
+    const zones = [];
+    function plek(breedte, lo, hi, duur) {
+        const nu = performance.now(), w = W();
+        for (let i = zones.length - 1; i >= 0; i--) if (zones[i].t < nu) zones.splice(i, 1);
+        const a = Math.max(breedte / 2 + 8, w * lo), b = Math.min(w - breedte / 2 - 8, w * hi);
+        const overlap = c => zones.reduce((s, z) => s + Math.max(0, Math.min(z.b, c + breedte / 2 + 15) - Math.max(z.a, c - breedte / 2 - 15)), 0);
+        let best = null, bestO = Infinity;
+        for (let i = 0; i < 40; i++) {
+            const c = b > a ? a + Math.random() * (b - a) : w / 2, o = overlap(c);
+            if (o < bestO) { best = c; bestO = o; } if (o === 0) break;
+        }
+        if (bestO > 0) for (let c = breedte / 2 + 8; c < w - breedte / 2 - 8; c += 10) { const o = overlap(c); if (o < bestO) { best = c; bestO = o; } }   // desnoods buiten het voorkeursgebied
+        zones.push({ a: best - breedte / 2, b: best + breedte / 2, t: nu + duur });
+        return best;
+    }
     const rand = (a, b) => a + Math.random() * (b - a);
     const pick = a => a[Math.floor(Math.random() * a.length)];
     const chance = p => Math.random() < p;
@@ -329,7 +346,8 @@
         const adults = hs.map((h, i) => i).filter(i => i !== tallest && hs[i] >= 20);
         const woman = adults.length ? pick(adults) : -1;
         // halverwege leggen ze een grote handdoek neer en gaan er even op liggen zonnen
-        const stopX = rand(width * .3, width * .6), GAP = 27, LIG = rand(7000, 9500);
+        const GAP = 27, LIG = rand(7000, 9500);
+        const midden = plek((n - 1) * GAP + 70, .25, .7, (width + 160 + EX) * 26 + LIG + 4000), stopX = midden - (n - 1) * GAP * (fromLeft ? 1 : -1) / 2;
         const inDur = (stopX + 60) * speed, outDur = (width + 100 + EX) * speed;
         for (let i = 0; i < n; i++) {
             const h = hs[i], w = naturist(h, i === tallest, i === woman); strip.appendChild(w);
@@ -613,7 +631,7 @@
     }
     function markt() {
         if (document.hidden) return;
-        const width = W(), cx = width / 2, N = 5, gap = 40, xs = Array.from({ length: N }, (_, i) => cx + (i - (N - 1) / 2) * gap - 15);
+        const width = W(), N = 5, gap = 40, cx = plek(N * gap + 70, .35, .65, marktDur()), xs = Array.from({ length: N }, (_, i) => cx + (i - (N - 1) / 2) * gap - 15);
         const speed = 12;
         const walkTo = (p, x0, x1, h, cb) => {
             const y = GROUND - h, f = x1 > x0 ? 1 : -1;
@@ -885,7 +903,7 @@
     function vogelaars() {
         if (document.hidden) return;
         const n = chance(.5) ? 1 : 2, fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = rand(15, 19);
-        const stopX = width * rand(.3, .6) + (fromLeft ? 0 : width * .1);
+        const stopX = plek(n * 16 + 40, .25, .75, vogelaarsDur()) + (n - 1) * 8 * f;
         const x0 = fromLeft ? -40 : width + 20, x1 = fromLeft ? width + 40 + EX : -60 - EX;
         const group = []; let inDur = 0;
         for (let i = 0; i < n; i++) {
@@ -966,7 +984,7 @@
     function jazz() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, h = 24, y = GROUND - h, speed = 20;
-        const kinds = ['sax', 'bas', 'trompet'], stopX = width * rand(.35, .55), SPEEL = rand(9000, 12000);
+        const kinds = ['sax', 'bas', 'trompet'], SPEEL = rand(9000, 12000), stopX = plek(100, .3, .7, jazzDur()) + 20 * f;
         const x0 = fromLeft ? -40 : width + 20, x1 = fromLeft ? width + 40 + EX : -60 - EX;
         let inDur = 0;
         kinds.forEach((kind, i) => {
@@ -1050,7 +1068,7 @@
         if (document.hidden) return;
         const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, speed = 16;
         const ROWS = [{ n: 9, sc: .84, lift: 11, sp: 10.5 }, { n: 8, sc: .92, lift: 5.5, sp: 11.5 }, { n: 8, sc: 1, lift: 0, sp: 12.5 }];   // achter → voor
-        const maxW = 9 * 10 + 20, cx = Math.max(maxW / 2 + 10, Math.min(width - maxW / 2 - 10, width * rand(.35, .6)));
+        const maxW = 9 * 10.5 + 20, cx = plek(maxW + 20, .3, .7, havenloosDur());
         const leden = [];
         ROWS.forEach((r, ri) => {
             for (let i = 0; i < r.n; i++) {
