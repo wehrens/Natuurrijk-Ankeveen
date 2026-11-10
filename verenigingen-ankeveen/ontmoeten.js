@@ -991,6 +991,116 @@
     }
     const jazzDur = () => (W() + 120 + EX) * 20 + 500 + 12000 + 1500;
 
+
+    // Havenloos: het mannenkoor in Bretonse streepjestruien, rode halsdoek, pet of kapiteinspet en gele klompen.
+    // Ze komen als groep aanlopen, stellen zich op in drie rijen met de accordeonist in het midden voorop,
+    // draaien zich naar het publiek en zingen (monden open en dicht, wiegen mee). Daarna lopen ze verder.
+    let hvId = 0;
+    const KLOMP = '#F2C318', KLOMPRAND = '#b8860b', MARINE = '#1c2a4a', JEANS = ['#3b4f73', '#2f3e55', '#4a5f86'];
+    function zanger(h, acc) {
+        const w = document.createElement('div'); w.className = 'om-p';
+        w.style.height = h + 'px'; w.style.width = h * .45 + 'px';
+        const id = 'hv' + (hvId++), huid = pick(HUID), jeans = pick(JEANS);
+        const haar = pick(['#d9d9d9', '#bdbdbd', '#9a9a9a', '#ececec', '#5a4a3a']);
+        const kapitein = chance(.45), baard = chance(.3);
+        const strepen = y0 => [0, 1, 2, 3, 4].map(i => `<rect x="0" y="${y0 + i * 2.4}" width="18" height="1.1" fill="${MARINE}"/>`).join('');
+        // pet: witte kapiteinspet met klep en goudband, of zwarte vissers-/schipperspet
+        const petZij = kapitein
+            ? `<path d="M4.2 3.2 q4.6 -3 9.6 -.6 l.2 1.6 h-9.8 z" fill="#fff" stroke="#bbb" stroke-width=".3"/><path d="M4.3 3.6 h9.6" stroke="#C9A227" stroke-width=".7"/><path d="M12.6 4.2 l3.2 .6" stroke="#111" stroke-width="1" stroke-linecap="round"/>`
+            : `<path d="M4 3.8 q4.8 -3.6 10 -.4 v1 h-10 z" fill="#1a1a1a"/><path d="M12.6 4.3 l3 .5" stroke="#111" stroke-width="1" stroke-linecap="round"/>`;
+        const petVoor = kapitein
+            ? `<path d="M3.6 3.4 q5.4 -3.8 10.8 0 v1.2 h-10.8 z" fill="#fff" stroke="#bbb" stroke-width=".3"/><path d="M3.8 4 h10.4" stroke="#C9A227" stroke-width=".7"/><circle cx="9" cy="2.6" r=".7" fill="#C9A227"/><path d="M4.6 4.7 q4.4 1.2 8.8 0" fill="none" stroke="#111" stroke-width="1"/>`
+            : `<path d="M3.6 3.8 q5.4 -4.2 10.8 0 v1 h-10.8 z" fill="#1a1a1a"/><path d="M4.6 4.9 q4.4 1 8.8 0" fill="none" stroke="#111" stroke-width=".9"/>`;
+        const been = (cls, d) => `<g class="${cls}" style="transform-box:view-box;transform-origin:9px 24px"><path d="${d}" fill="none" stroke="${jeans}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+        // klomp als laatste stuk van het been: in zijaanzicht een bootje met opgekrulde neus
+        const klompZij = x => `<path d="M${x - 2} 37.2 h4.6 q1.6 0 1.8 -1.4 l.4 1.4 q-.2 1.6 -2 1.6 h-4.6 q-.8 0 -.6 -1.6 z" fill="${KLOMP}" stroke="${KLOMPRAND}" stroke-width=".4"/>`;
+        w.innerHTML = `<svg viewBox="0 0 18 40" width="${h * .45}" height="${h}" aria-hidden="true" style="overflow:visible">
+            <defs><clipPath id="${id}z"><path d="M3 13 q6 -4 12 0 l1.5 12 h-15 z"/></clipPath><clipPath id="${id}v"><path d="M2.6 13 q6.4 -3.6 12.8 0 l.8 11.6 h-14.4 z"/></clipPath></defs>
+            <g class="zij">
+              <g class="legB" style="transform-box:view-box;transform-origin:9px 24px"><path d="M9.5 24 l1.2 7 l-0.4 6" fill="none" stroke="${jeans}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>${klompZij(10.4)}</g>
+              <path class="armB" d="M13.5 14 l0.8 6 l-1 4" fill="none" stroke="#f4f4f4" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:13px 14px"/>
+              <g class="legA" style="transform-box:view-box;transform-origin:9px 24px"><path d="M8.5 24 l-1.2 7 l0.4 6" fill="none" stroke="${jeans}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>${klompZij(7.8)}</g>
+              <path d="M3 13 q6 -4 12 0 l1.5 12 h-15 z" fill="#fff"/><g clip-path="url(#${id}z)">${strepen(14)}</g>
+              <path d="M11.5 10.6 l3.2 1.6 l-2 2.4 z" fill="#D64541"/>
+              <path d="M4.5 22.5 h9 l0.3 3 h-9.6 z" fill="${jeans}"/>
+              <path class="armA" d="M4.5 14 l-0.8 6 l1 4" fill="none" stroke="#f4f4f4" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:5px 14px"/>
+              <circle cx="9" cy="6" r="4.6" fill="${huid}"/><path d="M4.5 6.5 q.4 -2.6 2.4 -3 l-.4 3.6 z" fill="${haar}"/>
+              ${baard ? `<path d="M10.5 8.4 q2.6 .4 3.4 -1.2 q.2 3 -2 3.8 q-1.4 .2 -1.4 -2.6 z" fill="${haar}"/>` : ''}
+              <g transform="translate(0 1)">${petZij}</g>
+            </g>
+            <g class="voor" opacity="0">
+              <path d="M7 24 v12.4 M11 24 v12.4" stroke="${jeans}" stroke-width="3.4" stroke-linecap="round"/>
+              <ellipse cx="6.6" cy="37.6" rx="2.3" ry="1.4" fill="${KLOMP}" stroke="${KLOMPRAND}" stroke-width=".4"/><ellipse cx="11.4" cy="37.6" rx="2.3" ry="1.4" fill="${KLOMP}" stroke="${KLOMPRAND}" stroke-width=".4"/>
+              <path d="M2.6 13 q6.4 -3.6 12.8 0 l.8 11.6 h-14.4 z" fill="#fff"/><g clip-path="url(#${id}v)">${strepen(14)}</g>
+              <path d="M3.4 22.6 h11.2 l.2 2.4 h-11.6 z" fill="${jeans}"/>
+              <path d="M3 13.8 l-.9 10 M15 13.8 l.9 10" stroke="#f4f4f4" stroke-width="2.4" stroke-linecap="round"/><path d="M2.1 23.8 v.1 M15.9 23.8 v.1" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/>
+              <path d="M6.4 10.6 l2.6 4.2 l2.6 -4.2 z" fill="#D64541"/><circle cx="9" cy="13.4" r=".7" fill="#E8BE45"/>
+              ${acc ? `<g class="acc"><rect x="3.2" y="15.2" width="2.8" height="7" rx=".5" fill="#f4f4f4" stroke="#999" stroke-width=".3"/><path d="M3.6 16.4 h2 M3.6 17.6 h2 M3.6 18.8 h2 M3.6 20 h2 M3.6 21.2 h2" stroke="#222" stroke-width=".4"/>
+                <g class="balg" style="transform-box:fill-box;transform-origin:0% 50%"><rect x="6" y="15.4" width="6.4" height="6.6" fill="#B3262E"/><path d="M7.2 15.4 v6.6 M8.4 15.4 v6.6 M9.6 15.4 v6.6 M10.8 15.4 v6.6" stroke="#6e1218" stroke-width=".35"/></g>
+                <rect x="12.2" y="15.2" width="2.8" height="7" rx=".5" fill="#B3262E" stroke="#6e1218" stroke-width=".3"/><circle cx="13.6" cy="17" r=".35" fill="#fff"/><circle cx="13.6" cy="18.4" r=".35" fill="#fff"/><circle cx="13.6" cy="19.8" r=".35" fill="#fff"/></g>` : ''}
+              <circle cx="9" cy="6" r="4.6" fill="${huid}"/>
+              <path d="M4.4 6.6 q-.2 -2 1 -3 M13.6 6.6 q.2 -2 -1 -3" fill="none" stroke="${haar}" stroke-width="1.1"/>
+              ${baard ? `<path d="M5.6 7.6 q3.4 5 6.8 0 q-.4 3.4 -3.4 3.6 q-3 -.2 -3.4 -3.6 z" fill="${haar}"/>` : ''}
+              <ellipse class="mond" cx="9" cy="8.4" rx="1.15" ry=".6" fill="#5a1a14" style="transform-box:fill-box;transform-origin:50% 0%"/>
+              <g transform="translate(0 1)">${petVoor}</g>
+            </g></svg>`;
+        return w;
+    }
+    function havenloos() {
+        if (document.hidden) return;
+        const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, speed = 16;
+        const ROWS = [{ n: 9, sc: .84, lift: 11, sp: 10.5 }, { n: 8, sc: .92, lift: 5.5, sp: 11.5 }, { n: 8, sc: 1, lift: 0, sp: 12.5 }];   // achter → voor
+        const maxW = 9 * 10 + 20, cx = Math.max(maxW / 2 + 10, Math.min(width - maxW / 2 - 10, width * rand(.35, .6)));
+        const leden = [];
+        ROWS.forEach((r, ri) => {
+            for (let i = 0; i < r.n; i++) {
+                const acc = ri === 2 && i === Math.floor(r.n / 2);
+                const h = 24 * r.sc * rand(.96, 1.04), w = zanger(h, acc);
+                const x = cx + (i - (r.n - 1) / 2) * r.sp + (ri === 1 ? r.sp * .3 : 0) - h * .225, y = GROUND - h - r.lift;
+                strip.appendChild(w);
+                leden.push({ w, x, y, h, acc });
+            }
+        });
+        // als blok binnen marcheren: iedereen dezelfde afstand, dus ze blijven in formatie
+        const D = fromLeft ? cx + maxW / 2 + 40 : width - cx + maxW / 2 + 40;
+        const inDur = D * speed, ZING = rand(13000, 16000);
+        leden.forEach(m => {
+            const xa = m.x - D * f;
+            m.w.style.transform = `translate(${xa}px, ${m.y}px) scaleX(${f})`;
+            m.b = bob(m.w, rand(430, 500));
+            animate(m.w, [{ transform: `translate(${xa}px, ${m.y}px) scaleX(${f})` }, { transform: `translate(${m.x}px, ${m.y}px) scaleX(${f})` }], { duration: inDur, easing: 'linear' })
+                .finished.then(() => m.b.pause()).catch(() => {});
+        });
+        later(() => {
+            // omdraaien naar het publiek en zingen
+            const anims = [];
+            leden.forEach((m, i) => {
+                const svg = m.w.firstElementChild, zij = svg.querySelector('.zij'), voor = svg.querySelector('.voor');
+                animate(zij, [{ opacity: 1 }, { opacity: 0 }], { duration: 300, delay: i * 15 });
+                animate(voor, [{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: i * 15 });
+                anims.push(animate(voor.querySelector('.mond'), [{ transform: 'scaleY(.5)' }, { transform: 'scaleY(2.4)' }], { duration: 560, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: 600 + rand(0, 90) }));
+                anims.push(animate(svg, [{ transform: 'rotate(-2.5deg)' }, { transform: 'rotate(2.5deg)' }], { duration: 1680, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: 400 }));
+                if (m.acc) anims.push(animate(voor.querySelector('.balg'), [{ transform: 'scaleX(.6)' }, { transform: 'scaleX(1.15)' }], { duration: 840, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: 400 }));
+            });
+            const top = Math.min(...leden.map(m => m.y));
+            const noten = setInterval(() => { if (chance(.7)) note(cx + rand(-maxW / 2, maxW / 2), top - 2, '#1c2a4a'); }, 650);
+            later(() => {
+                clearInterval(noten);
+                anims.forEach(a => a.cancel());
+                leden.forEach((m, i) => {
+                    const svg = m.w.firstElementChild;
+                    animate(svg.querySelector('.voor'), [{ opacity: 1 }, { opacity: 0 }], { duration: 300 });
+                    animate(svg.querySelector('.zij'), [{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
+                    const x1 = m.x + (fromLeft ? width - cx + maxW / 2 + 60 + EX : -(cx + maxW / 2 + 60 + EX));
+                    later(() => { m.b.play();
+                        animate(m.w, [{ transform: `translate(${m.x}px, ${m.y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${m.y}px) scaleX(${f})` }], { duration: Math.abs(x1 - m.x) * speed, easing: 'linear' })
+                            .finished.then(() => { m.b.cancel(); m.w.remove(); }).catch(() => m.w.remove()); }, 500);
+                });
+            }, ZING);
+        }, inDur + 500);
+    }
+    const havenloosDur = () => (W() + 220) * 16 + 500 + 16000 + (W() + 220 + EX) * 16 * .5;
+
     // Kermis: rechts van het logo verrijst een reuzenrad, draait een tijdje met bakjes, en zakt dan weer in
     function kermis() {
         if (document.hidden) return;
@@ -1329,6 +1439,7 @@
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
         { run: vogelaars, dur: vogelaarsDur },
         { run: jazz, dur: jazzDur },
+        { run: havenloos, dur: havenloosDur },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
@@ -1380,6 +1491,6 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) window.ontmoeten.zwaai = zwaai;
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; }
     setTimeout(nextSpecial, 4000);
 })();
