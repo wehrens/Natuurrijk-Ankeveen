@@ -832,7 +832,7 @@
 
     // Stadsfiets met rechtop zittende fietser; optioneel een kindje achterop. scale = grootte (1 = volwassene)
     function cityBike(opts) {
-        const { color, huid, haar, kind, scale = 1, ponytail = false } = opts;
+        const { color, huid, haar, kind, scale = 1, ponytail = false, mandje = false } = opts;
         const w = document.createElement('div'); w.className = 'om-p'; w.dataset.groet = 'fiets';
         const W0 = 52 * scale, H0 = 40 * scale;
         w.innerHTML = `<svg viewBox="0 0 52 40" width="${W0}" height="${H0}" aria-hidden="true" style="overflow:visible">
@@ -840,6 +840,9 @@
             <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="42" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M42 23.5v15M34.5 31h15M36.7 25.7l10.6 10.6M47.3 25.7L36.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
             <path d="M10 31 l14 0 l-2 -12 M24 31 l12 -12 l6 12 M36 19 l0 -4 l3 0 M22 19 l-4 -1" fill="none" stroke="#3d4a5c" stroke-width="2" stroke-linejoin="round"/>
             <circle cx="24" cy="31" r="2.2" fill="#3d4a5c"/>
+            ${mandje ? `<path d="M37.4 14.6 h8.4 l-1 6.4 h-6.4 z" fill="#C8955A" stroke="#8a5a2b" stroke-width=".6" stroke-linejoin="round"/>
+              <path d="M37.8 16.7 h7.6 M38.1 18.8 h7" stroke="#8a5a2b" stroke-width=".45"/><path d="M39.6 14.6 l.3 6.4 M41.6 14.6 v6.4 M43.6 14.6 l-.3 6.4" stroke="#a87444" stroke-width=".45"/>
+              <path d="M37.4 14.6 h8.4" stroke="#7a4e24" stroke-width="1"/>` : ''}
             ${kind ? `<path d="M12 22 h6 l0 -6 h-5 z" fill="#5a6a7e"/><circle cx="15" cy="12" r="3" fill="${kind.huid}"/><path d="M12.2 11.8 q2.8 -3.4 5.6 0 q-1 -1.4 -2.8 -1.4 q-1.8 0 -2.8 1.4z" fill="${kind.haar}"/><path d="M12.5 16 q2.5 -2 5 0 l0.5 6 h-6 z" fill="${kind.color}"/><path d="M13.5 22 l-1 5 M16.5 22 l1 5" stroke="#2f3e55" stroke-width="2" stroke-linecap="round"/>` : ''}
             <path class="legB" d="" fill="none" stroke="#1f2d40" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
             <path class="crank" d="" stroke="#3d4a5c" stroke-width="1.2" stroke-linecap="round"/>
@@ -871,8 +874,8 @@
     // Moeder op de fiets, met een meisje op een klein fietsje dat voor haar uit rijdt
     function moederFiets() {
         if (document.hidden) return;
-        const fromLeft = chance(.5), haar = pick(HAAR);
-        const m = cityBike({ color: pick(KLEUR), huid: pick(HUID), haar, ponytail: true, scale: .68 });
+        const fromLeft = chance(.5), haar = pick(['#E9C46A', '#F1D27B', '#E2BC5C']);      // blond
+        const m = cityBike({ color: pick(KLEUR), huid: pick(HUID), haar, ponytail: true, scale: .68, mandje: true });   // met een rieten mandje voor het stuur
         const k = cityBike({ color: pick(['#FF4F9A', '#F39A2B', '#7B5CC4', '#2BB39A']), huid: pick(HUID), haar: pick(['#d9b36a', '#8b5a2b', '#2b2b2b']), ponytail: true, scale: .42 });
         strip.appendChild(k); strip.appendChild(m);
         rideBike(k, fromLeft, 40 * .42, -30);     // het meisje voorop
