@@ -27,6 +27,12 @@
         return best;
     }
     const rand = (a, b) => a + Math.random() * (b - a);
+    // een plek om even stil te staan (praten, snuffelen) waar geen koor, markt of andere groep staat
+    function vrij(lo, hi) {
+        const w = W(), nu = performance.now();
+        for (let i = 0; i < 30; i++) { const c = rand(w * lo, w * hi); if (!zones.some(z => z.t > nu && c > z.a - 45 && c < z.b + 45)) return c; }
+        return rand(w * lo, w * hi);
+    }
     const pick = a => a[Math.floor(Math.random() * a.length)];
     const chance = p => Math.random() < p;
     const later = (fn, ms) => setTimeout(fn, ms);
@@ -181,7 +187,7 @@
     function meeting() {
         if (document.hidden || active >= 3) return;
         active++;
-        const width = W(), meet = rand(width * .2, width * .8), speed = rand(15, 21);
+        const width = W(), meet = vrij(.2, .8), speed = rand(15, 21);
         const cl = pick(KLEUR), cr = chance(.5) ? cl : pick(KLEUR);
         const L = party(true, meet, cl, speed), R = party(false, meet, cr, speed);
         const all = L.concat(R), arrive = Math.max(...all.map(m => m.dur));
@@ -1074,6 +1080,7 @@
             for (let i = 0; i < r.n; i++) {
                 const acc = ri === 2 && i === Math.floor(r.n / 2);
                 const h = 24 * r.sc * rand(.96, 1.04), w = zanger(h, acc);
+                w.style.zIndex = 2;                         // voorbijgangers lopen achter het koor langs
                 const x = cx + (i - (r.n - 1) / 2) * r.sp + (ri === 1 ? r.sp * .3 : 0) - h * .225, y = GROUND - h - r.lift;
                 strip.appendChild(w);
                 leden.push({ w, x, y, h, acc });
@@ -1168,12 +1175,13 @@
         ROWS.forEach((r, ri) => {
             for (let i = 0; i < r.n; i++) {
                 const h = 23 * r.sc * rand(.95, 1.05), w = zumbaDame(h, kleuren[ri * 6 + i]);
+                w.style.zIndex = 2;
                 leden.push({ w, x: cx - 14 + (i - (r.n - 1) / 2) * r.sp + r.shift - h * .225, y: GROUND - h - r.lift, h, kijk: f });
                 strip.appendChild(w);
             }
         });
         // de juf staat voor de groep, met het gezicht naar de dames
-        const jh = 25, juf = zumbaDame(jh, '#1b1b1b');
+        const jh = 25, juf = zumbaDame(jh, '#1b1b1b'); juf.style.zIndex = 2;
         juf.querySelector('.armB').setAttribute('stroke', '#E8452C');
         leden.push({ w: juf, x: cx + f * (maxW / 2 + 6) - jh * .225, y: GROUND - jh, h: jh, kijk: -f, juf: true });
         strip.appendChild(juf);
@@ -1278,7 +1286,7 @@
             <path d="M10.6 7.7 L4.6 .2 L4.4 -1.4 L5.8 -1 L6 -2.6 L7.4 -1.9 L8 -3.2 L9.3 -2 L17.2 7.5 Z" fill="#1d1d1d"/>
             <path d="M13 7.6 L9.2 -1.2 L10.6 -.4 L17.2 7.5 Z" fill="#fff" stroke="${GR}" stroke-width=".5" stroke-linejoin="round"/></g></svg>`;
     strip.appendChild(paal); strip.appendChild(ooi); strip.appendChild(rand0);
-    let ooiThuis = false, ooiBezig = false;
+    let ooiThuis = false, ooiBezig = false, ooiSinds = 0;
     const nestX = () => paal.offsetLeft + 13, NESTY = GROUND + 2 - PH + 8;       // midden bovenop het nest
     const zet = (x, y, r) => `translate(${x - 15}px, ${y - 20}px) scaleX(${r})`;   // x,y = voeten van de ooievaar
     // Vliegen doet hij in de hele kopbalk (ook over de letters heen); op het nest zit hij in de strook, achter de nestrand.
@@ -1293,6 +1301,7 @@
     const naarNest = () => { strip.insertBefore(ooi, rand0); };
     function ooievaar() {
         if (ooiBezig || document.hidden) return;
+        if (ooiThuis && performance.now() - ooiSinds < 25000) return;           // net geland: eerst even blijven zitten
         ooiBezig = true;
         const staan = ooi.querySelector('.staan'), vlieg = ooi.querySelector('.vlieg'), vl = ooi.querySelector('.vleugel');
         const klap = () => animate(vl, [{ transform: 'scaleY(1)' }, { transform: 'scaleY(-.7)' }], { duration: 260, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
@@ -1315,7 +1324,7 @@
                 // even rondkijken, dan nestelt hij zich (zakt in het nest) en klepperen: kop in de nek, snavel omhoog
                 later(() => animate(staan, [{ transform: 'translateY(0)' }, { transform: 'translateY(4px)' }], { duration: 900, easing: 'ease-in-out' }), 1400);
                 later(() => animate(staan.querySelector('.kop'), [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-55deg)', offset: .15 }, { transform: 'rotate(-48deg)', offset: .3 }, { transform: 'rotate(-55deg)', offset: .45 }, { transform: 'rotate(-48deg)', offset: .6 }, { transform: 'rotate(-55deg)', offset: .75 }, { transform: 'rotate(0deg)' }], { duration: 1600, easing: 'ease-in-out' }), 3000);
-                ooiThuis = true; ooiBezig = false;
+                ooiThuis = true; ooiBezig = false; ooiSinds = performance.now();
             }, dur);
         } else {
             // opstaan, opvliegen en hoog over de kopbalk weg
@@ -1590,12 +1599,13 @@
         const trot = animate(dog.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1.2px)' }], { duration: rand(150, 190), direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         const tail = dog.querySelector('.tail'); tail.style.transformBox = 'fill-box'; tail.style.transformOrigin = '100% 100%';
         const wag = animate(tail, [{ transform: 'rotate(-14deg)' }, { transform: 'rotate(14deg)' }], { duration: 260, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
-        return { w, h, pers, dog, trot, wag, b: pers.getAnimations()[0] };
+        lijn.style.transformOrigin = `${hx}px 0`;
+        return { w, h, pers, dog, dw, lijn, lijnLen: cx - hx, trot, wag, b: pers.getAnimations()[0] };
     }
     function honden() {
         if (document.hidden) return;
         const width = W(), speed = rand(17, 21), samen = chance(.7);
-        const meet = rand(width * .25, width * .75);
+        const meet = vrij(.25, .75);
         const kanten = samen ? [1, -1] : [pick([1, -1])];
         const lopers = kanten.map(f => {
             const b = baasMetHond(); strip.appendChild(b.w);
@@ -1617,6 +1627,19 @@
                 l.sniff = animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(7deg) translateX(0.6px)' }, { transform: 'rotate(2deg)' }, { transform: 'rotate(8deg) translateX(0.8px)' }, { transform: 'rotate(0deg)' }],
                     { duration: 900, iterations: Infinity, delay: i * 250, easing: 'ease-in-out' });
             });
+            // soms lopen ze daarna langs elkaar heen om aan elkaars achterwerk te snuffelen (zoals honden doen)
+            const kont = chance(.5), d = (lopers[0].dw + lopers[1].dw) / 4 + .5;
+            if (kont) later(() => lopers.forEach((l, i) => {
+                l.sniff.cancel(); l.trot.play();
+                const sch = (l.lijnLen + d) / l.lijnLen;
+                animate(l.dog, [{ transform: 'translate(0, 0)' }, { transform: `translate(${d}px, ${i ? -1.2 : 0}px)` }], { duration: 700, easing: 'ease-in-out' });
+                animate(l.lijn, [{ transform: 'scaleX(1)' }, { transform: `scaleX(${sch})` }], { duration: 700, easing: 'ease-in-out' });
+                later(() => {
+                    l.trot.pause(); l.wag.updatePlaybackRate(3);
+                    l.sniff = animate(l.dog.firstElementChild, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(9deg) translateX(0.6px)' }, { transform: 'rotate(4deg)' }, { transform: 'rotate(10deg) translateX(0.8px)' }, { transform: 'rotate(0deg)' }],
+                        { duration: 800, iterations: Infinity, delay: i * 200, easing: 'ease-in-out' });
+                }, 720);
+            }), 1700);
             const top = GROUND - Math.max(...lopers.map(l => l.h)) - 16;
             const bb = bubble(meet - 18, top, lopers[0].pers.querySelector('path:nth-of-type(2)') ? '#3d4a5c' : '#3d4a5c');
             const chat = { x: meet - 10, top, bb }; chatting.push(chat);
@@ -1625,9 +1648,11 @@
                 animate(bb, [{ opacity: 1 }, { opacity: 0 }], { duration: 400 }).finished.then(() => bb.remove()).catch(() => bb.remove());
                 lopers.forEach(l => {
                     l.sniff.cancel(); l.wag.updatePlaybackRate(1); l.b && l.b.play(); l.trot.play();
+                    if (kont) { animate(l.dog, [{ transform: getComputedStyle(l.dog).transform }, { transform: 'translate(0, 0)' }], { duration: 500, easing: 'ease-in-out' });
+                        animate(l.lijn, [{ transform: getComputedStyle(l.lijn).transform }, { transform: 'scaleX(1)' }], { duration: 500, easing: 'ease-in-out' }); }
                     lopen(l, l.xm, l.xEnd).finished.then(() => l.w.remove()).catch(() => l.w.remove());
                 });
-            }, rand(4000, 6500));
+            }, kont ? rand(5500, 7000) : rand(4000, 6500));
         }).catch(() => lopers.forEach(l => l.w.remove()));
     }
     // Rons donkerblauwe Snoek (DS, 1973) met rode bekleding en een bestuurder; silhouet getekend door Ron.
