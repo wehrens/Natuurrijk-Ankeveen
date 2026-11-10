@@ -1275,21 +1275,36 @@
     let ooiThuis = false, ooiBezig = false;
     const nestX = () => paal.offsetLeft + 13, NESTY = GROUND + 2 - PH + 8;       // midden bovenop het nest
     const zet = (x, y, r) => `translate(${x - 15}px, ${y - 20}px) scaleX(${r})`;   // x,y = voeten van de ooievaar
+    // Vliegen doet hij in de hele kopbalk (ook over de letters heen); op het nest zit hij in de strook, achter de nestrand.
+    const balk = document.getElementById('topbar') || strip.parentElement;
+    const lucht = document.createElement('div');
+    lucht.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:3;overflow:hidden';
+    lucht.setAttribute('aria-hidden', 'true');
+    balk.appendChild(lucht);
+    const dy = () => strip.getBoundingClientRect().top - balk.getBoundingClientRect().top;   // strook t.o.v. de kopbalk
+    const dx = () => strip.getBoundingClientRect().left - balk.getBoundingClientRect().left;
+    const naarLucht = () => { lucht.appendChild(ooi); };
+    const naarNest = () => { strip.insertBefore(ooi, rand0); };
     function ooievaar() {
         if (ooiBezig || document.hidden) return;
         ooiBezig = true;
         const staan = ooi.querySelector('.staan'), vlieg = ooi.querySelector('.vlieg'), vl = ooi.querySelector('.vleugel');
         const klap = () => animate(vl, [{ transform: 'scaleY(1)' }, { transform: 'scaleY(-.7)' }], { duration: 260, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
-        const xn = nestX(), width = W();
+        const oy = dy(), ox = dx(), xn = nestX() + ox, yn = NESTY + oy, width = balk.clientWidth;
+        const hoog = () => rand(16, Math.max(18, oy - 4));                      // vlieghoogte: ter hoogte van de letters
         if (!ooiThuis) {
-            // aanvliegen vanaf een kant, laag zwevend naar het nest
-            const vanRechts = chance(.6), r = vanRechts ? -1 : 1, xa = vanRechts ? width + 40 : -40, dur = Math.abs(xn - xa) * 9;
-            ooi.style.transform = zet(xa, NESTY + 9, r); ooi.style.opacity = 1;
+            // hoog over de kopbalk aanvliegen en dan zwevend naar het nest dalen
+            const vanRechts = chance(.6), r = vanRechts ? -1 : 1, xa = vanRechts ? width + 40 : -40, dur = Math.abs(xn - xa) * 9, y0 = hoog();
+            naarLucht();
+            ooi.style.transform = zet(xa, y0, r); ooi.style.opacity = 1;
             staan.style.opacity = 0; vlieg.style.opacity = 1;
             const k = klap();
-            animate(ooi, [{ transform: zet(xa, NESTY + 9, r) }, { transform: zet(xa + (xn - xa) * .55, NESTY + 5, r), offset: .55 }, { transform: zet(xn - r * 6, NESTY - 6, r), offset: .92 }, { transform: zet(xn, NESTY, r) }], { duration: dur, easing: 'ease-out' });
-            later(() => k.cancel(), dur * .7);                                     // het laatste stuk zweeft hij
+            animate(ooi, [{ transform: zet(xa, y0, r) }, { transform: zet(xa + (xn - xa) * .5, hoog(), r), offset: .5 }, { transform: zet(xn - r * 26, yn - 14, r), offset: .85 }, { transform: zet(xn, yn, r) }], { duration: dur, easing: 'ease-out' });
+            later(() => k.cancel(), dur * .65);                                    // het laatste stuk zweeft hij
             later(() => {
+                // in de strook zetten (achter de nestrand), op dezelfde plek
+                naarNest(); running.forEach(a => { if (a.effect && a.effect.target === ooi) a.cancel(); });
+                ooi.style.transform = zet(nestX(), NESTY, r);
                 animate(vlieg, [{ opacity: 1 }, { opacity: 0 }], { duration: 200 }); animate(staan, [{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
                 // even rondkijken, dan nestelt hij zich (zakt in het nest) en klepperen: kop in de nek, snavel omhoog
                 later(() => animate(staan, [{ transform: 'translateY(0)' }, { transform: 'translateY(4px)' }], { duration: 900, easing: 'ease-in-out' }), 1400);
@@ -1297,14 +1312,15 @@
                 ooiThuis = true; ooiBezig = false;
             }, dur);
         } else {
-            // opstaan en wegvliegen naar een kant
+            // opstaan, opvliegen en hoog over de kopbalk weg
             animate(staan, [{ transform: 'translateY(4px)' }, { transform: 'translateY(0)' }], { duration: 600, easing: 'ease-out' });
             later(() => {
                 const naarRechts = chance(.5), r = naarRechts ? 1 : -1, xb = naarRechts ? width + 50 : -50, dur = Math.abs(xb - xn) * 8;
-                const kijk = r;
+                running.forEach(a => { if (a.effect && a.effect.target === ooi) a.cancel(); });
+                naarLucht(); ooi.style.transform = zet(xn, yn, r);
                 animate(staan, [{ opacity: 1 }, { opacity: 0 }], { duration: 200 }); animate(vlieg, [{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
                 const k = klap();
-                animate(ooi, [{ transform: zet(xn, NESTY, kijk) }, { transform: zet(xn + r * 30, NESTY + 3, kijk), offset: .12 }, { transform: zet(xb, NESTY + 7, kijk) }], { duration: dur, easing: 'ease-in' })
+                animate(ooi, [{ transform: zet(xn, yn, r) }, { transform: zet(xn + r * 40, yn - 16, r), offset: .15 }, { transform: zet(xn + (xb - xn) * .5, hoog(), r), offset: .55 }, { transform: zet(xb, hoog(), r) }], { duration: dur, easing: 'ease-in' })
                     .finished.then(() => { k.cancel(); ooi.style.opacity = 0; ooiThuis = false; ooiBezig = false; }).catch(() => { ooiBezig = false; });
             }, 700);
         }
