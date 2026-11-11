@@ -1249,8 +1249,22 @@
             });
             const top = Math.min(...leden.map(m => m.y));
             const noten = setInterval(() => { if (chance(.7)) note(cx + rand(-maxW / 2, maxW / 2), top - 2, '#1c2a4a'); }, 650);
+            // de titel van het lied dat ze zingen stijgt op uit het koor
+            const titel = () => {
+                if (document.hidden) return;
+                const sb = strip.getBoundingClientRect(), bb = balk.getBoundingClientRect();
+                const d = document.createElement('div'); d.textContent = '♪ Het kleine café aan de haven ♪';
+                d.style.cssText = "position:absolute;left:0;top:0;font:italic 700 13px 'Bricolage Grotesque',Inter,sans-serif;color:#1c2a4a;white-space:nowrap;pointer-events:none;text-shadow:0 0 3px rgba(255,255,255,.9)";
+                lucht.appendChild(d);
+                const bw = d.getBoundingClientRect().width, y = top + sb.top - bb.top;
+                const x = Math.max(4, Math.min(bb.width - bw - 4, cx + sb.left - bb.left - bw / 2));
+                animate(d, [{ transform: `translate(${x}px, ${y}px) scale(.85)`, opacity: 0 }, { transform: `translate(${x}px, ${y - 10}px) scale(1)`, opacity: 1, offset: .2 },
+                    { transform: `translate(${x}px, ${y - 28}px)`, opacity: 1, offset: .75 }, { transform: `translate(${x}px, ${y - 36}px)`, opacity: 0 }], { duration: 5000, easing: 'ease-out' })
+                    .finished.then(() => d.remove()).catch(() => d.remove());
+            };
+            later(titel, 900); const titels = setInterval(titel, 6000);
             later(() => {
-                clearInterval(noten);
+                clearInterval(noten); clearInterval(titels);
                 anims.forEach(a => a.cancel());
                 leden.forEach((m, i) => {
                     const svg = m.w.firstElementChild;
