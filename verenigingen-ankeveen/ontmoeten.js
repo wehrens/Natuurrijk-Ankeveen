@@ -253,6 +253,7 @@
             const ax = g.cx + R * Math.cos(th), ay = g.cy + R * Math.sin(th), bx = g.cx - R * Math.cos(th), by = g.cy - R * Math.sin(th);
             r.a.setAttribute('d', been(g.hx, g.hy, ax, ay, g.L1, g.L2)); r.b.setAttribute('d', been(g.hx, g.hy, bx, by, g.L1, g.L2));
             r.c.setAttribute('d', `M${ax.toFixed(2)} ${ay.toFixed(2)} L${bx.toFixed(2)} ${by.toFixed(2)}`);
+            if (r.ka) { r.ka.setAttribute('transform', `translate(${ax.toFixed(2)} ${ay.toFixed(2)})`); r.kb.setAttribute('transform', `translate(${bx.toFixed(2)} ${by.toFixed(2)})`); }
         });
         trapLoop = requestAnimationFrame(trap);
     }
@@ -860,7 +861,8 @@
             .finished.then(() => w.remove()).catch(() => w.remove());
         w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1100, iterations: Infinity, easing: 'linear' }));
         trappers.add({ w, a: w.querySelector('.legA'), b: w.querySelector('.legB'), c: w.querySelector('.crank'), phase: rand(0, 6.28),
-            g: { cx: 24, cy: 31, R: 3.4, hx: 22, hy: 19.5, rate: 1.1, L1: 8.6, L2: 8.2 } }); startTrappen();
+            ka: w.querySelector('.klompA'), kb: w.querySelector('.klompB'),
+            g: w._g || { cx: 24, cy: 31, R: 3.4, hx: 22, hy: 19.5, rate: 1.1, L1: 8.6, L2: 8.2 } }); startTrappen();
         animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-0.7px)' }], { duration: 550, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
     }
     // Vader op de fiets met een kindje achterop (naar school of de opvang)
@@ -910,6 +912,59 @@
             <path d="M25 -0.4 l0 1.6" stroke="#5a381c" stroke-width=".8"/></svg>`;
         strip.appendChild(w);
         rideBike(w, fromLeft, 40 * sc);
+    }
+
+
+    // Lange man met een bruinleren hoed en een sigaar (rookwolkjes), op klompen, op een zwarte fiets met een laag
+    // karretje erachter vol gereedschap: zeis, hark en bezem
+    function klompenman() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), huid = pick(HUID), sc = .7;
+        const w = document.createElement('div'); w.className = 'om-p'; w.dataset.groet = 'fiets';
+        const wiel = (cx, cy, r) => `<g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#1b1b1b" stroke-width="1.5"/>
+            <path d="M${cx} ${cy - r + .8}v${2 * r - 1.6}M${cx - r + .8} ${cy}h${2 * r - 1.6}M${cx - r * .6} ${cy - r * .6}l${r * 1.2} ${r * 1.2}M${cx + r * .6} ${cy - r * .6}l${-r * 1.2} ${r * 1.2}" stroke="#9aa5b1" stroke-width=".4"/><circle cx="${cx}" cy="${cy}" r=".9" fill="#222"/></g>`;
+        const klomp = c => `<path class="${c}" d="M-1.4 -.9 h3.4 q2.4 0 2.8 1.6 l-.2 .8 h-6.2 z" fill="#D9B26A" stroke="#8a6a2a" stroke-width=".35"/>`;
+        w.innerHTML = `<svg viewBox="-36 -12 88 52" width="${88 * sc}" height="${52 * sc}" aria-hidden="true" style="overflow:visible">
+            <!-- karretje met gereedschap -->
+            <path d="M3 31 L-6 29" stroke="#2b2b2b" stroke-width=".9"/>
+            <path d="M-21 27 l-9 -27" stroke="#8b5a2b" stroke-width="1"/><path d="M-30 0 q-6 1 -8 5" fill="none" stroke="#b8c0cc" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M-14 27 l-4 -24" stroke="#a87444" stroke-width=".9"/><path d="M-21 3 l6 -1 M-20.6 3 v1.6 M-19.2 2.8 v1.6 M-17.8 2.6 v1.6 M-16.4 2.4 v1.6 M-15 2.2 v1.6" stroke="#555" stroke-width=".5"/>
+            <path d="M-8 27 l2 -22" stroke="#9c7a4e" stroke-width=".9"/><path d="M-7.6 5 q-2.6 -1 -2.4 -3.6 h5 q.2 2.6 -2.6 3.6 z" fill="#c9a86a"/><path d="M-9.6 1.4 l-.4 -1.2 M-8.2 1.4 l-.2 -1.4 M-6.8 1.4 v-1.4 M-5.4 1.4 l.2 -1.2" stroke="#a88a50" stroke-width=".4"/>
+            <path d="M-30 25 h25 l-1 7 h-23 z" fill="#8b5a2b" stroke="#5a3a1a" stroke-width=".5"/><path d="M-29.5 28.4 h24" stroke="#6b4423" stroke-width=".4"/>
+            ${wiel(-17.5, 35, 4)}
+            <!-- fiets -->
+            ${wiel(10, 31, 8)}${wiel(42, 31, 8)}
+            <path class="legB" d="" fill="none" stroke="#5a4632" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>${klomp('klompB')}
+            <path d="M10 31 L24 31 L21 17.5 L36.5 17.5 L24 31 M36.5 17.5 L42 31 M36.5 17.5 l-.6 -4.4 l-3 -.6" fill="none" stroke="#151515" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M18.6 16.4 h5.4" stroke="#2b2b2b" stroke-width="1.6" stroke-linecap="round"/>
+            <path class="crank" d="" stroke="#222" stroke-width="1.2" stroke-linecap="round"/><circle cx="24" cy="31" r="1.8" fill="#222"/>
+            <!-- lange man -->
+            <path d="M19 18 q-.4 -14 5 -15 q6.4 0 6.2 14 l-1 1.4 l-9.4 .6 z" fill="#2f4a6b"/>
+            <path class="legA" d="" fill="none" stroke="#6b5137" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>${klomp('klompA')}
+            <path class="zwaaiarm" d="M24.6 5 l8 8.4" stroke="#2f4a6b" stroke-width="2.3" stroke-linecap="round" style="transform-box:view-box;transform-origin:24.6px 5px"/>
+            <circle cx="33" cy="13.6" r="1" fill="${huid}"/>
+            <path d="M23.4 3.2 v-1.6" stroke="${huid}" stroke-width="2"/>
+            <circle cx="25" cy="-1.6" r="3.6" fill="${huid}"/><circle cx="26.9" cy="-2.2" r=".45" fill="#2b2b2b"/>
+            <path class="sigaar" d="M27.8 .2 l3.4 -.6" stroke="#5a3a1e" stroke-width="1.1" stroke-linecap="round"/><circle cx="31.4" cy="-.4" r=".55" fill="#ff7a2e"/>
+            <path d="M19 -4.4 q6 -2 12.4 0 q-.8 1.2 -2.4 1.2 l-7.8 0 q-1.4 0 -2.2 -1.2 z" fill="#5a3418"/>
+            <path d="M21.4 -4.6 q-.2 -4.6 3.8 -4.8 q3.6 .2 3.6 4.8 z" fill="#6b4423"/><path d="M21.5 -5.8 h7.2" stroke="#3a2010" stroke-width=".9"/><path d="M25 -9.2 v1.6" stroke="#4a2a14" stroke-width=".7"/></svg>`;
+        w._g = { cx: 24, cy: 31, R: 3.4, hx: 22, hy: 17.5, rate: 1, L1: 9.4, L2: 9 };
+        strip.appendChild(w);
+        rideBike(w, fromLeft, 52 * sc);
+        // rookwolkjes: blijven in de lucht hangen waar hij langskwam en stijgen langzaam op
+        const tip = w.querySelector('.sigaar');
+        const rook = setInterval(() => {
+            if (!w.isConnected) { clearInterval(rook); return; }
+            if (document.hidden) return;
+            const r = tip.getBoundingClientRect(), sr = strip.getBoundingClientRect();
+            const x = (fromLeft ? r.right : r.left) - sr.left, y = r.top - sr.top;
+            if (x < -10 || x > sr.width + 10) return;
+            const d = document.createElement('div'), sz = rand(3, 5);
+            d.style.cssText = `position:absolute;left:0;top:0;width:${sz}px;height:${sz}px;border-radius:50%;background:rgba(170,170,175,.75);pointer-events:none;z-index:2`;
+            strip.appendChild(d);
+            animate(d, [{ transform: `translate(${x - sz / 2}px, ${y - sz / 2}px) scale(.6)`, opacity: .85 }, { transform: `translate(${x - sz / 2 + rand(-4, 4)}px, ${y - 12}px) scale(1.8)`, opacity: 0 }], { duration: rand(1400, 2000), easing: 'ease-out' })
+                .finished.then(() => d.remove()).catch(() => d.remove());
+        }, 420);
     }
 
     // Vogelaars: een of twee wandelaars met rugzakje en verrekijker. Ze blijven staan en volgen met de kijker
@@ -2111,6 +2166,7 @@
         { run: zumba, dur: zumbaDur, groot: true },
         { run: ruiter, dur: () => (W() + 140 + EX) * 30 },
         { run: boswachter, dur: () => (W() + 120 + EX) * 13 },
+        { run: klompenman, dur: () => (W() + 160 + EX) * 13 },
         { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
@@ -2183,7 +2239,7 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
     toon(); window.addEventListener('hashchange', toon);
