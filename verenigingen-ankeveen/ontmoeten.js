@@ -435,8 +435,9 @@
     function carnaval() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = 22, dur = (width + 260 + EX) * speed;
+        const stoet = [];
         for (let i = 0; i < 12; i++) {
-            const w = i === 0 ? prince() : reveler(i - 1); strip.appendChild(w);
+            const w = i === 0 ? prince() : reveler(i - 1); strip.appendChild(w); stoet.push(w);
             const off = i * 13 + (i ? 4 : 0), h = 22, y = GROUND - h;
             const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 60 + EX - off : -80 - EX + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
@@ -454,6 +455,27 @@
             animate(c, [{ transform: `translate(${x}px, ${GROUND - 44}px) rotate(0deg)`, opacity: 0 }, { transform: `translate(${x + rand(-3, 3)}px, ${GROUND - 36}px) rotate(90deg)`, opacity: 1, offset: .15 }, { transform: `translate(${x - f * rand(4, 14)}px, ${GROUND - 4}px) rotate(${rand(360, 720)}deg)`, opacity: .3 }], { duration: rand(1500, 2300), easing: 'ease-in' })
                 .finished.then(() => c.remove()).catch(() => c.remove());
         }, 160);
+        // "Alááf!", drie keer kort na elkaar, telkens van een andere plek in de stoet
+        const alaaf = () => {
+            if (document.hidden) return;
+            const bb = balk.getBoundingClientRect(), sb = strip.getBoundingClientRect();
+            const zicht = stoet.filter(e => { if (!e.isConnected) return false; const r = e.getBoundingClientRect(); return r.right > sb.left + 30 && r.left < sb.right - 30; });
+            if (!zicht.length) return;
+            const kl = CARN.slice().sort(() => Math.random() - .5);
+            for (let k = 0; k < 3; k++) later(() => {
+                const e = pick(zicht.filter(z => z.isConnected)); if (!e) return;
+                const r = e.getBoundingClientRect(), d = document.createElement('div'); d.textContent = 'Alááf!';
+                d.style.cssText = `position:absolute;left:0;top:0;font:800 ${14 + k * 1.5}px 'Bricolage Grotesque',Inter,sans-serif;color:${kl[k % kl.length]};white-space:nowrap;pointer-events:none;text-shadow:0 1px 0 rgba(0,0,0,.2)`;
+                lucht.appendChild(d);
+                const bw = d.getBoundingClientRect().width, y = r.top - bb.top - 4;
+                const x = Math.max(4, Math.min(bb.width - bw - 4, r.left + r.width / 2 - bb.left - bw / 2 + rand(-10, 10)));
+                animate(d, [{ transform: `translate(${x}px, ${y}px) scale(.3) rotate(${rand(-15, 15)}deg)`, opacity: 0 }, { transform: `translate(${x}px, ${y - 14}px) scale(1.15) rotate(0deg)`, opacity: 1, offset: .2 },
+                    { transform: `translate(${x}px, ${y - 26}px) scale(1) rotate(${rand(-6, 6)}deg)`, opacity: 1, offset: .7 }, { transform: `translate(${x}px, ${y - 34}px) scale(.95)`, opacity: 0 }], { duration: 2000, easing: 'ease-out' })
+                    .finished.then(() => d.remove()).catch(() => d.remove());
+            }, k * 520);
+        };
+        later(alaaf, 2000);
+        const alaafs = setInterval(() => { if (!stoet.some(e => e.isConnected)) { clearInterval(alaafs); return; } alaaf(); }, 5200);
     }
 
     // Schaatsers: drie in een treintje in de klassieke houding: diep door de knieen, platte rug,
