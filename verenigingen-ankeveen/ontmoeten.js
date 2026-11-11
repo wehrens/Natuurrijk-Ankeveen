@@ -1791,7 +1791,7 @@
     }
     function honden(test) {                           // test: { kant: 1 of -1 } laat één hondje bij de paal plassen
         if (document.hidden) return;
-        const width = W(), speed = rand(17, 21), samen = test ? false : chance(.7);
+        const width = W(), speed = rand(17, 21), samen = test ? false : chance(.5);
         const meet = vrij(.25, .75);
         const kanten = samen ? [1, -1] : [test && test.kant ? test.kant : pick([1, -1])];
         const lopers = kanten.map(f => {
@@ -1808,7 +1808,7 @@
             // af en toe stopt het hondje bij de ooievaarspaal, tilt een achterpootje op en plast tegen de paal
             const pk = nestX(), achter = .23 * l.dw;                                   // achterkant van het hondje in de hondenbox
             const xs = l.f > 0 ? pk + 2.2 - (33 - l.dw) - achter : pk - 2.2 - 34 + (33 - l.dw) + achter;
-            if ((test || chance(.6)) && pk > 10 && pk < width - 10) {
+            if ((test || chance(.85)) && pk > 10 && pk < width - 10) {
                 lopen(l, l.x0, xs).finished.then(() => {
                     l.bob && l.bob.pause(); l.trot.pause(); l.wag.updatePlaybackRate(.5);
                     const svg = l.dog.firstElementChild, poot = svg.querySelector('.achterpoot'), straal = svg.querySelector('.plas'), plasje = svg.querySelector('.plasje');
@@ -2154,7 +2154,7 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]) }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
     toon(); window.addEventListener('hashchange', toon);
