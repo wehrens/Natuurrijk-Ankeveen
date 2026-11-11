@@ -1412,6 +1412,8 @@
         let lopend = [];
         const stop = () => { lopend.forEach(a => a.cancel()); lopend = []; };
         const pas = (naam, keer) => {
+            // de plek ook als gewone stijl vastzetten: anders staan ze tussen twee passen heel even op hun startpunt buiten beeld
+            leden.forEach(m => { m.w.style.transform = `translate(${m.x}px, ${m.y}px) scaleX(${m.kijk * (keer ? -1 : 1)})`; });
             stop();
             leden.forEach(m => {
                 const svg = m.w.firstElementChild, aA = svg.querySelector('.armA'), aB = svg.querySelector('.armB');
@@ -1469,7 +1471,11 @@
             };
             roep(); const roepen = setInterval(roep, 3600);
             later(() => {
-                clearInterval(noten); clearInterval(roepen); stop();
+                clearInterval(noten); clearInterval(roepen);
+                // eerst de plek vastzetten: de inloop-animatie is door de dansanimaties al vervangen, dus zonder dit
+                // springen ze na stop() even terug naar hun startpunt buiten beeld
+                leden.forEach(m => { m.w.style.transform = `translate(${m.x}px, ${m.y}px) scaleX(${f})`; });
+                stop();
                 leden.forEach(m => {
                     const x1 = m.x + (fromLeft ? width - cx + maxW / 2 + 60 + EX : -(cx + maxW / 2 + 60 + EX));
                     later(() => { m.w.firstElementChild.querySelectorAll('.armA, .armB, .legA, .legB').forEach(n => n.getAnimations().forEach(a => a.cancel())); m.b = bob(m.w, rand(400, 460));
