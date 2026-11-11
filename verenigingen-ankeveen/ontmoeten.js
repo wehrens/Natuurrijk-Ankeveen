@@ -2153,17 +2153,35 @@
             const eindStroom = performance.now() + BRAND - 2500;
             later(stroom, 600);
         }, AAN);
-        // 4. ploep: licht uit, even donker, en dan wordt het weer dag
+        // 4. de markt loopt leeg: mensen gaan naar huis, de lampjes gaan een voor een uit, de kraampjes vervagen,
+        //    en dan wordt het weer dag. Daarna komt de strook meteen weer op gang.
         later(() => {
-            anims.forEach(a => a.cancel());
-            elementen.forEach(e => e.remove());
+            mensen.filter(p => p.isConnected && p.style.opacity !== '0').forEach(p => later(() => {
+                const m = /translate\((-?[\d.]+)px, (-?[\d.]+)px\)/.exec(p.style.transform); if (!m || !p.isConnected) return;
+                const x = +m[1], y = +m[2], s = x > cx ? 1 : -1, xe = x + s * rand(70, 130);
+                if (p._wiebel) p._wiebel.cancel();
+                const b = bob(p, rand(380, 460));
+                animate(p, [{ transform: `translate(${x}px, ${y}px) scaleX(${s})`, opacity: 1 }, { transform: `translate(${xe}px, ${y}px) scaleX(${s})`, opacity: 0 }], { duration: Math.abs(xe - x) * 16, easing: 'linear' })
+                    .finished.then(() => { b.cancel(); p.remove(); }).catch(() => {});
+            }, rand(0, 3500)));
+            kramen.forEach(kr => {
+                kr.lampjes.forEach(l => later(() => { l.getAnimations().forEach(a => a.cancel()); animate(l, [{ opacity: 1 }, { opacity: 0 }], { duration: 250 }); }, rand(2800, 5200)));
+                later(() => animate(kr.gloed, [{ opacity: 1 }, { opacity: 0 }], { duration: 1200 }), 4200);
+                later(() => animate(kr.k, [{ opacity: 1 }, { opacity: 0 }], { duration: 1500 }), 5600);
+            });
             later(() => {
                 balk.classList.remove('nacht');
                 animate(lucht0, [{ opacity: 1 }, { opacity: 0 }], { duration: 2600, easing: 'ease-in-out' });
-            }, 3000);
+            }, 6200);
+            later(() => {
+                anims.forEach(a => a.cancel());
+                elementen.forEach(e => e.remove());
+                marktTot = grootTot = performance.now();                        // vrij baan: de volgende groep mag meteen
+                meeting();
+            }, 8000);
         }, AAN + BRAND);
     }
-    const lichtjesDur = () => 2800 + (W() + 270) * 9 * .8 + 17000 + 3000 + 2600;
+    const lichtjesDur = () => 2800 + (W() + 270) * 9 * .8 + 17000 + 8000;
 
     window.ontmoeten = { jazz, vogelaars, meeting, peloton, fanfare, naturists, carnaval, skaters, yogis, klasje, voetballer, footballers, hardloopsters, honden, oldtimer, oudje, markt, bakfiets, vaderFiets, moederFiets, kermis, havenloos };   // handig om te testen
 
@@ -2210,7 +2228,7 @@
     function nextSpecial() {
         if (document.hidden) { setTimeout(nextSpecial, 5000); return; }
         const nuM = performance.now();
-        if (marktTot > nuM) { setTimeout(nextSpecial, marktTot - nuM + rand(2000, 4000)); return; }   // lichtjesmarkt: niemand anders
+        if (marktTot > nuM) { setTimeout(nextSpecial, 1500); return; }   // lichtjesmarkt: niemand anders, daarna meteen weer verder
         if (!bag.length) {
             bag = specials.slice().sort(() => Math.random() - 0.5);
             if (bag[0] === last && bag.length > 1) bag.push(bag.shift());
