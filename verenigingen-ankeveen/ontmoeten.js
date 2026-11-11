@@ -1163,11 +1163,21 @@
     // Gitaarschool (VSK): twee mensen met een gitaar op de rug lopen naar hun les
     function gitarist(h, soort) {
         const p = person(pick(KLEUR), h), svg = p.firstElementChild;
+        // gitaar schuin op de rug: kop met stemmechanieken steekt boven de schouder uit, de klankkast achter de rug
+        const vorm = 'M0 12.6 q-3.6 0 -3.6 4.4 q0 2.2 1.4 3.4 q-2.6 1.4 -2.6 4.6 q0 4.6 4.8 4.6 q4.8 0 4.8 -4.6 q0 -3.2 -2.6 -4.6 q1.4 -1.2 1.4 -3.4 q0 -4.4 -3.6 -4.4 z';
         const gitaar = soort === 'hout'
-            ? `<g transform="rotate(-14 4 20)"><path d="M3.9 14.8 l.5 -11.4" stroke="#5a3a1e" stroke-width="1.3"/><rect x="3.3" y="1.2" width="2" height="3" rx=".5" fill="#3a2a1a"/>
-               <circle cx="3.9" cy="17.4" r="2.6" fill="#C98B4B" stroke="#7a4a22" stroke-width=".4"/><circle cx="3.7" cy="22" r="3.4" fill="#C98B4B" stroke="#7a4a22" stroke-width=".4"/><circle cx="3.8" cy="19.6" r=".9" fill="#3a2a1a"/></g>`
-            : `<g transform="rotate(-14 4 20)"><path d="M3.9 15 l.5 -11.6" stroke="#222" stroke-width="2"/><rect x="3" y="1" width="2.6" height="3.4" rx=".8" fill="#222"/>
-               <path d="M1.4 16.6 q2.6 -3 5 0 q1.4 3 .4 4.6 q1.4 3.6 -1.8 5.4 q-2.6 .6 -4 -1.2 q-1.4 -2.6 .2 -4.4 q-1 -1.8 .2 -4.4 z" fill="#2b2b2b"/><path d="M3.6 17 v8" stroke="#555" stroke-width=".4"/></g>`;
+            ? `<g transform="translate(1.6 0) rotate(-20 0 21)">
+                 <path d="M-.8 13 v-14.6 h1.6 v14.6 z" fill="#5a3418"/><path d="M-.3 -1 v13.6 M.3 -1 v13.6" stroke="#d9c9a0" stroke-width=".18"/>
+                 <path d="M-1.4 -1.6 l-.2 -5 q1.6 -1 3.2 0 l-.2 5 z" fill="#3a2414"/>
+                 <circle cx="-1.9" cy="-5.6" r=".55" fill="#d8d0c0"/><circle cx="-1.9" cy="-3.6" r=".55" fill="#d8d0c0"/><circle cx="1.9" cy="-5.6" r=".55" fill="#d8d0c0"/><circle cx="1.9" cy="-3.6" r=".55" fill="#d8d0c0"/>
+                 <path d="${vorm}" fill="#E0A458" stroke="#7a4518" stroke-width=".7"/>
+                 <circle cx="0" cy="19.4" r="1.6" fill="#2a1a10"/><circle cx="0" cy="19.4" r="2.1" fill="none" stroke="#7a4518" stroke-width=".3"/>
+                 <rect x="-1.8" y="25.2" width="3.6" height=".9" rx=".3" fill="#3a2414"/></g>`
+            : `<g transform="translate(1.6 0) rotate(-20 0 21)">
+                 <path d="M-1.3 13 v-14.6 h2.6 v14.6 z" fill="#1d1d1d"/><path d="M-2 -1.2 l-.2 -5.6 q2.2 -1.2 4.4 0 l-.2 5.6 z" fill="#1d1d1d"/>
+                 <path d="${vorm}" fill="#262626" stroke="#000" stroke-width=".5" transform="scale(1.12) translate(0 -2.2)"/>
+                 <path d="M-3.4 16 q3.4 -1.6 6.8 0" fill="none" stroke="#666" stroke-width=".35"/><path d="M0 0 v28" stroke="#555" stroke-width=".3" stroke-dasharray=".8 .5"/>
+                 <path d="M-1.2 21 q1.2 -1.6 2.4 0" fill="none" stroke="#888" stroke-width=".5"/></g>`;
         svg.insertAdjacentHTML('afterbegin', gitaar);                                    // achter het lijf, dus op de rug
         svg.querySelector('path[d^="M3 13 q6"]').insertAdjacentHTML('afterend', '<path d="M14 13.4 l-9 9" stroke="#3a2a1a" stroke-width=".8" opacity=".8"/>');   // draagband
         delete p.dataset.groet;
