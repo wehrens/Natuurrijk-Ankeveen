@@ -967,6 +967,40 @@
         }, 420);
     }
 
+
+    // Familie: een lange vader (zo'n twee koppen langer dan moeder) met een donkerbruine labrador aan de lijn,
+    // moeder, en een tweeling die net kan lopen en waggelend meedribbelt. Ze lopen op peutertempo.
+    function familie() {
+        if (document.hidden) return;
+        const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, speed = 27;
+        const vader = baasMetHond({ h: 29, vacht: '#4A2A18', vlek: '#3A2012', dw: 17 });
+        const moeder = person(pick(KLEUR), 22.5);
+        const kleurT = pick(['#F39A2B', '#3B8FE0', '#2BB39A', '#E8452C']);
+        const peuter = () => { const p = person(kleurT, 12); delete p.dataset.groet; return p; };
+        const t1 = peuter(), t2 = peuter();
+        // wie (front → achter), afstand achter de voorste, hoogte, diepte (achterste iets hoger en erachter)
+        const leden = [
+            { w: vader.w, off: 0, h: vader.h, lift: 0, z: 1 },
+            { w: t1, off: 26, h: 12, lift: 0, z: 2 },
+            { w: moeder, off: 38, h: 22.5, lift: 0, z: 1 },
+            { w: t2, off: 50, h: 12, lift: 0, z: 2 },
+        ];
+        const x0 = fromLeft ? -60 : width + 30, x1 = fromLeft ? width + 90 + EX : -150 - EX;
+        leden.forEach(m => {
+            const y = GROUND - m.h - m.lift, xa = x0 - m.off * f, xb = x1 - m.off * f;
+            m.w.style.zIndex = m.z; m.w.style.transform = `translate(${xa}px, ${y}px) scaleX(${f})`;
+            strip.appendChild(m.w);
+            const b = m.w === vader.w ? vader.bob : bob(m.w, m.h < 15 ? rand(210, 250) : rand(400, 450));
+            let wag = null;
+            if (m.h < 15) {                                                    // peuters: waggelen van links naar rechts
+                const svg = m.w.firstElementChild; svg.style.transformOrigin = '50% 100%';
+                wag = animate(svg, [{ transform: 'rotate(-7deg)' }, { transform: 'rotate(7deg)' }], { duration: rand(420, 520), direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+            }
+            animate(m.w, [{ transform: `translate(${xa}px, ${y}px) scaleX(${f})` }, { transform: `translate(${xb}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(xb - xa) * speed, easing: 'linear' })
+                .finished.then(() => { b && b.cancel(); wag && wag.cancel(); m.w.remove(); }).catch(() => m.w.remove());
+        });
+    }
+
     // Vogelaars: een of twee wandelaars met rugzakje en verrekijker. Ze blijven staan en volgen met de kijker
     // een groepje overvliegende ganzen, daarna lopen ze verder.
     function vogelaar(h) {
@@ -1821,11 +1855,11 @@
     // Hondenuitlaters: een baasje met een hondje aan de lijn. Komen er twee elkaar tegen, dan snuffelen
     // de hondjes aan elkaar en kletsen de baasjes even, daarna loopt ieder door.
     const VACHT = ['#8b5a2b', '#2b2b2b', '#d9b36a', '#f4efe6', '#a0522d', '#6b6b6b'];
-    function baasMetHond() {
-        const h = rand(21, 24.5), w = document.createElement('div'); w.className = 'om-p';
+    function baasMetHond(o = {}) {
+        const h = o.h || rand(21, 24.5), w = document.createElement('div'); w.className = 'om-p';
         w.style.width = '34px'; w.style.height = h + 'px';
         const pers = person(pick(KLEUR), h); pers.style.position = 'absolute'; pers.style.left = '0'; pers.style.top = '0';
-        const vacht = pick(VACHT), vlek = pick(VACHT), klein = chance(.5), dw = klein ? 12 : 15, dh = dw * .65;
+        const vacht = o.vacht || pick(VACHT), vlek = o.vlek || pick(VACHT), klein = chance(.5), dw = o.dw || (klein ? 12 : 15), dh = dw * .65;
         const licht = vacht === '#f4efe6' || vacht === '#d9b36a';                // lichte vacht krijgt een randje
         const rand_ = licht ? 'stroke="#8a7560" stroke-width=".6"' : '', poot = licht ? '#c9bca8' : vacht;
         const dog = document.createElement('div');
@@ -2167,6 +2201,7 @@
         { run: ruiter, dur: () => (W() + 140 + EX) * 30 },
         { run: boswachter, dur: () => (W() + 120 + EX) * 13 },
         { run: klompenman, dur: () => (W() + 160 + EX) * 13 },
+        { run: familie, dur: () => (W() + 200 + EX) * 27 },
         { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
     ];
@@ -2239,7 +2274,7 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
     toon(); window.addEventListener('hashchange', toon);
