@@ -1249,11 +1249,13 @@
             });
             const top = Math.min(...leden.map(m => m.y));
             const noten = setInterval(() => { if (chance(.7)) note(cx + rand(-maxW / 2, maxW / 2), top - 2, '#1c2a4a'); }, 650);
-            // de titel van het lied dat ze zingen stijgt op uit het koor
+            // de titels van de liederen die ze zingen stijgen om de beurt op uit het koor
+            const LIEDEREN = ['♪ Het kleine café aan de haven ♪', '♪ Meisje, ik ben een zeeman ♪'];
+            let lied = Math.floor(rand(0, LIEDEREN.length));
             const titel = () => {
                 if (document.hidden) return;
                 const sb = strip.getBoundingClientRect(), bb = balk.getBoundingClientRect();
-                const d = document.createElement('div'); d.textContent = '♪ Het kleine café aan de haven ♪';
+                const d = document.createElement('div'); d.textContent = LIEDEREN[lied++ % LIEDEREN.length];
                 d.style.cssText = "position:absolute;left:0;top:0;font:italic 700 13px 'Bricolage Grotesque',Inter,sans-serif;color:#1c2a4a;white-space:nowrap;pointer-events:none;text-shadow:0 0 3px rgba(255,255,255,.9)";
                 lucht.appendChild(d);
                 const bw = d.getBoundingClientRect().width, y = top + sb.top - bb.top;
