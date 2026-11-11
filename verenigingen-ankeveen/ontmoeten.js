@@ -1366,8 +1366,28 @@
             PASSEN.forEach((naam, i) => later(() => pas(naam, i % 2 === 1), i * T * 6));
             const top = Math.min(...leden.map(m => m.y));
             const noten = setInterval(() => { if (chance(.75)) note(cx + rand(-maxW / 2, maxW / 2), top - 4, pick(NEON)); }, 520);
+            // "Zumba!" stijgt letter voor letter op uit de groep, tot hoog in de kopbalk
+            const roep = () => {
+                if (document.hidden) return;
+                const sb = strip.getBoundingClientRect(), bb = balk.getBoundingClientRect();
+                const x = cx + sb.left - bb.left + rand(-maxW / 4, maxW / 4), y = top + sb.top - bb.top;
+                const kl = NEON.slice().sort(() => Math.random() - .5);
+                [...'Zumba!'].forEach((ch, i) => {
+                    const d = document.createElement('div'); d.textContent = ch;
+                    d.style.cssText = `position:absolute;left:0;top:0;font:800 15px 'Bricolage Grotesque',Inter,sans-serif;color:${kl[i % kl.length]};text-shadow:0 1px 0 rgba(0,0,0,.18);pointer-events:none;white-space:pre`;
+                    lucht.appendChild(d);
+                    const lx = x - 26 + i * 9.5, hoog = Math.min(y - 6, rand(34, 46));
+                    animate(d, [{ transform: `translate(${lx}px, ${y}px) scale(.4) rotate(${rand(-20, 20)}deg)`, opacity: 0 },
+                        { transform: `translate(${lx}px, ${y - 12}px) scale(1.1) rotate(0deg)`, opacity: 1, offset: .25 },
+                        { transform: `translate(${lx + rand(-3, 3)}px, ${y - hoog}px) scale(1) rotate(${rand(-8, 8)}deg)`, opacity: 1, offset: .75 },
+                        { transform: `translate(${lx + rand(-5, 5)}px, ${y - hoog - 10}px) scale(.9)`, opacity: 0 }],
+                        { duration: 2600, delay: i * 110, easing: 'ease-out', fill: 'backwards' })
+                        .finished.then(() => d.remove()).catch(() => d.remove());
+                });
+            };
+            roep(); const roepen = setInterval(roep, 3600);
             later(() => {
-                clearInterval(noten); stop();
+                clearInterval(noten); clearInterval(roepen); stop();
                 leden.forEach(m => {
                     const x1 = m.x + (fromLeft ? width - cx + maxW / 2 + 60 + EX : -(cx + maxW / 2 + 60 + EX));
                     later(() => { m.w.firstElementChild.querySelectorAll('.armA, .armB, .legA, .legB').forEach(n => n.getAnimations().forEach(a => a.cancel())); m.b = bob(m.w, rand(400, 460));
@@ -2293,7 +2313,13 @@
     }
     groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
-    const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
+    const toon = () => {
+        const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
+        if (!n || typeof fn !== 'function' || n === 'zwaai') return;
+        // een grote groep via de link telt ook mee, zodat er niet tegelijk nog een grote groep start
+        const sp = specials.find(x => x.run === fn);
+        setTimeout(() => { if (sp && sp.groot) grootTot = Math.max(grootTot, performance.now() + sp.dur()); fn(); }, 800);
+    };
     toon(); window.addEventListener('hashchange', toon);
     setTimeout(nextSpecial, 4000);
 })();
