@@ -154,8 +154,7 @@
     // Een ontmoeting: een groepje van links en een van rechts lopen naar hetzelfde punt,
     // staan even te kletsen, en gaan dan samen verder of ieder hun eigen kant op
     let active = 0; const chatting = [];
-    function party(fromLeft, meet, color, speed) {
-        const oud = chance(.2);                                  // af en toe twee bejaarden: langzamer
+    function party(fromLeft, meet, color, speed, oud) {      // oud: twee bejaarden, langzamer, met stok of rollator
         const n = oud ? 2 : pick([1, 2, 2, 3]), width = W(), members = [];
         for (let i = 0; i < n; i++) {
             const h = oud ? rand(20.5, 23) : chance(.25) ? rand(13, 16) : rand(20, 25);
@@ -184,15 +183,41 @@
                 .finished.then(() => { m.b.cancel(); m.p.remove(); }).catch(() => m.p.remove());
         });
     }
-    function meeting() {
+    // Een woord dat boven iemand verschijnt en rustig opstijgt (in de kopbalk, zodat het boven de strook uit mag)
+    function zegOp(xs, ys, tekst, kleur = '#7a4a22', grootte = 15) {
+        if (document.hidden) return;
+        const sb = strip.getBoundingClientRect(), bb = balk.getBoundingClientRect();
+        const d = document.createElement('div'); d.textContent = tekst;
+        d.style.cssText = `position:absolute;left:0;top:0;font:800 ${grootte}px 'Bricolage Grotesque',Inter,sans-serif;color:${kleur};white-space:nowrap;pointer-events:none;text-shadow:0 0 3px rgba(255,255,255,.9)`;
+        lucht.appendChild(d);
+        const bw = d.getBoundingClientRect().width, y = ys + sb.top - bb.top;
+        const x = Math.max(4, Math.min(bb.width - bw - 4, xs + sb.left - bb.left - bw / 2));
+        animate(d, [{ transform: `translate(${x}px, ${y}px) scale(.5)`, opacity: 0 }, { transform: `translate(${x}px, ${y - 10}px) scale(1.1)`, opacity: 1, offset: .15 },
+            { transform: `translate(${x}px, ${y - 16}px) scale(1)`, opacity: 1, offset: .75 }, { transform: `translate(${x}px, ${y - 24}px)`, opacity: 0 }], { duration: 2600, easing: 'ease-out' })
+            .finished.then(() => d.remove()).catch(() => d.remove());
+    }
+    function meeting(koffie) {
         if (document.hidden || active >= 3) return;
         active++;
         const width = W(), meet = vrij(.2, .8), speed = rand(15, 21);
         const cl = pick(KLEUR), cr = chance(.5) ? cl : pick(KLEUR);
-        const L = party(true, meet, cl, speed), R = party(false, meet, cr, speed);
+        const oud = koffie === true || chance(.25);                // af en toe twee oudere stellen
+        const L = party(true, meet, cl, speed, oud), R = party(false, meet, cr, speed, oud);
         const all = L.concat(R), arrive = Math.max(...all.map(m => m.dur));
         setTimeout(() => {
             all.forEach(m => m.b.pause());
+            if (oud) {
+                // twee oudere stellen: "Koffie?" ... "Koffie!", en dan gaan ze samen dezelfde kant op (naar het Koffie Uurtje)
+                const top = GROUND - Math.max(...all.map(m => m.h)) - 4;
+                later(() => zegOp(meet - 26, top, 'Koffie?'), 500);
+                later(() => zegOp(meet + 26, top, 'Koffie!'), 2100);
+                later(() => {
+                    const dir = chance(.5) ? 1 : -1;
+                    leave(all.sort((a, b) => dir * (b.x1 - a.x1)), dir, speed);
+                    setTimeout(() => { active--; }, 1500);
+                }, 4200);
+                return;
+            }
             const top = GROUND - Math.max(...all.map(m => m.h)) - 16;
             const bb = bubble(meet - 10, top, cl);
             const chat = { x: meet, top, bb }; chatting.push(chat);
@@ -2368,7 +2393,7 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
