@@ -1805,21 +1805,40 @@
             { duration: Math.abs(z - a) * speed, easing: 'linear' });
         if (!samen) {
             const l = lopers[0];
-            // af en toe stopt het hondje bij de ooievaarspaal, tilt een achterpootje op en plast tegen de paal
-            const pk = nestX(), achter = .23 * l.dw;                                   // achterkant van het hondje in de hondenbox
+            // bij de ooievaarspaal stopt het hondje bijna altijd om te snuffelen; een deel zet daarna nog een stapje,
+            // tilt een achterpootje op en plast tegen de paal
+            const pk = nestX(), voor = l.dw * .98, achter = .23 * l.dw;               // neus en achterkant in de hondenbox
+            const xNeus = l.f > 0 ? pk - 1.2 - (33 - l.dw) - voor : pk + 1.2 - 34 + (33 - l.dw) + voor;
             const xs = l.f > 0 ? pk + 2.2 - (33 - l.dw) - achter : pk - 2.2 - 34 + (33 - l.dw) + achter;
             if ((test || chance(.85)) && pk > 10 && pk < width - 10) {
-                lopen(l, l.x0, xs).finished.then(() => {
-                    l.bob && l.bob.pause(); l.trot.pause(); l.wag.updatePlaybackRate(.5);
-                    const svg = l.dog.firstElementChild, poot = svg.querySelector('.achterpoot'), straal = svg.querySelector('.plas'), plasje = svg.querySelector('.plasje');
-                    animate(poot, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(72deg)' }], { duration: 350, delay: 500, easing: 'ease-out' });
-                    animate(straal, [{ opacity: 0, strokeDashoffset: 7 }, { opacity: .95, strokeDashoffset: 0, offset: .15 }, { opacity: .95, strokeDashoffset: 0, offset: .85 }, { opacity: 0, strokeDashoffset: 0 }], { duration: 2200, delay: 900 });
-                    animate(plasje, [{ opacity: 0, transform: 'scaleX(.2)' }, { opacity: .8, transform: 'scaleX(1)', offset: .8 }, { opacity: .7, transform: 'scaleX(1.1)' }], { duration: 2200, delay: 1200 });
-                    later(() => animate(poot, [{ transform: 'rotate(72deg)' }, { transform: 'rotate(0deg)' }], { duration: 250 }), 3200);
+                const svg = l.dog.firstElementChild, door = () => {
+                    l.bob && l.bob.play(); l.trot.play(); l.wag.updatePlaybackRate(1);
+                    lopen(l, l.w._x, l.xEnd).finished.then(() => l.w.remove()).catch(() => l.w.remove());
+                };
+                lopen(l, l.x0, xNeus).finished.then(() => {
+                    l.w._x = xNeus;
+                    l.bob && l.bob.pause(); l.trot.pause(); l.wag.updatePlaybackRate(1.8);
+                    svg.style.transformOrigin = '30% 100%';
+                    const snuf = animate(svg, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(9deg) translateX(0.6px)' }, { transform: 'rotate(5deg)' }, { transform: 'rotate(10deg) translateX(0.8px)' }, { transform: 'rotate(0deg)' }],
+                        { duration: 800, iterations: 3, easing: 'ease-in-out' });
+                    const plast = test ? test.plas !== false : chance(.6);
                     later(() => {
-                        l.bob && l.bob.play(); l.trot.play(); l.wag.updatePlaybackRate(1);
-                        lopen(l, xs, l.xEnd).finished.then(() => l.w.remove()).catch(() => l.w.remove());
-                    }, 3600);
+                        snuf.cancel();
+                        if (!plast) { door(); return; }
+                        // nog een stapje, zodat de achterkant bij de paal is
+                        l.trot.play(); l.bob && l.bob.play();
+                        animate(l.w, [{ transform: `translate(${xNeus}px, ${l.y}px) scaleX(${l.f})` }, { transform: `translate(${xs}px, ${l.y}px) scaleX(${l.f})` }], { duration: Math.abs(xs - xNeus) * speed * 1.4, easing: 'ease-in-out' })
+                            .finished.then(() => {
+                                l.w._x = xs;
+                                l.bob && l.bob.pause(); l.trot.pause(); l.wag.updatePlaybackRate(.5);
+                                const poot = svg.querySelector('.achterpoot'), straal = svg.querySelector('.plas'), plasje = svg.querySelector('.plasje');
+                                animate(poot, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(72deg)' }], { duration: 350, delay: 300, easing: 'ease-out' });
+                                animate(straal, [{ opacity: 0, strokeDashoffset: 7 }, { opacity: .95, strokeDashoffset: 0, offset: .15 }, { opacity: .95, strokeDashoffset: 0, offset: .85 }, { opacity: 0, strokeDashoffset: 0 }], { duration: 2200, delay: 700 });
+                                animate(plasje, [{ opacity: 0, transform: 'scaleX(.2)' }, { opacity: .8, transform: 'scaleX(1)', offset: .8 }, { opacity: .7, transform: 'scaleX(1.1)' }], { duration: 2200, delay: 1000 });
+                                later(() => animate(poot, [{ transform: 'rotate(72deg)' }, { transform: 'rotate(0deg)' }], { duration: 250 }), 3000);
+                                later(door, 3400);
+                            }).catch(() => {});
+                    }, 2400);
                 }).catch(() => l.w.remove());
                 return;
             }
@@ -2154,7 +2173,7 @@
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]) }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => { const n = decodeURIComponent(location.hash.slice(1)); if (n && window.ontmoeten && typeof window.ontmoeten[n] === 'function' && n !== 'zwaai') setTimeout(() => window.ontmoeten[n](), 800); };
     toon(); window.addEventListener('hashchange', toon);
