@@ -1288,7 +1288,7 @@
         bergsepad: Object.assign({}, BASE, {            // wandelpad: riet, bomen die gesnoeid worden, wandelaars, ganzen
             flowersMax: 5, flowerEvery: 12000, flowers: byName('Lisdodde2', 'Klaproos.', 'Veldoeket'),
             slots: [6, 14, 40, 50, 70], eventEvery: 7500, maxActive: 4, flowerScale: .6,       // mensen zijn ~46px, dus bloemen kleiner
-            animals: [[wandelaar, 5], [fietsers, 3], [joggers, 2], [bakfiets, 1], [boswachter, 1], [vogelaars, 3], [swallow, 3], [butterfly, 1]],
+            animals: [[wandelaar, 5], [fietsers, 3], [joggers, 2], [boswachter, 1], [vogelaars, 3], [swallow, 3], [butterfly, 1]],
             geeseAt: 5000, eagleAt: 90000,
             setup: () => {
                 (NARROW() ? [[10, 'Rietkraag.webp', 40, 1]] : [[33, 'Rietkraag.webp', 46, 1], [76, 'Rietkraag.webp', 42, -1]]).forEach(([p, s, h, f], i) => later(() => prop(L.bioPond, s, h, p, { flip: f }), 500 + i * 800));
