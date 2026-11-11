@@ -833,7 +833,7 @@
 
     // Stadsfiets met rechtop zittende fietser; optioneel een kindje achterop. scale = grootte (1 = volwassene)
     function cityBike(opts) {
-        const { color, huid, haar, kind, scale = 1, ponytail = false, mandje = false } = opts;
+        const { color, huid, haar, kind, scale = 1, ponytail = false, mandje = false, tassen = false } = opts;
         const w = document.createElement('div'); w.className = 'om-p'; w.dataset.groet = 'fiets';
         const W0 = 52 * scale, H0 = 40 * scale;
         w.innerHTML = `<svg viewBox="0 0 52 40" width="${W0}" height="${H0}" aria-hidden="true" style="overflow:visible">
@@ -841,6 +841,7 @@
             <g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="42" cy="31" r="7.5" fill="none" stroke="#3d4a5c" stroke-width="1.8"/><path d="M42 23.5v15M34.5 31h15M36.7 25.7l10.6 10.6M47.3 25.7L36.7 36.3" stroke="#3d4a5c" stroke-width=".8"/></g>
             <path d="M10 31 l14 0 l-2 -12 M24 31 l12 -12 l6 12 M36 19 l0 -4 l3 0 M22 19 l-4 -1" fill="none" stroke="#3d4a5c" stroke-width="2" stroke-linejoin="round"/>
             <circle cx="24" cy="31" r="2.2" fill="#3d4a5c"/>
+            ${tassen ? `<path d="M3.2 21.4 h14.4 M5 21.4 l4.6 9.6 M15.4 21.4 l-5.4 9.6" stroke="#3d4a5c" stroke-width="1" fill="none"/><path d="M3.6 21.8 h12.6 v8 q0 .9 -.9 .9 h-10.8 q-.9 0 -.9 -.9 z" fill="#FBFAF6" stroke="#9aa0a6" stroke-width=".5"/><path d="M3.6 21.8 h12.6 v2.2 q-6.3 1 -12.6 0 z" fill="#F2EFE8" stroke="#9aa0a6" stroke-width=".4"/><path d="M6.4 29.4 q.2 -1.8 0 -3.2" stroke="#3f8a3a" stroke-width=".5" fill="none"/><path d="M6.4 28.599999999999998 q-1 -.6 -1.2 .3 M6.4 28.8 q1 -.8 1.3 .1" stroke="#3f8a3a" stroke-width=".45" fill="none"/><path d="M6.4 26.2 q-1.3 -.2 -1.3 -1.8 l.65 .55 l.65 -1 l.65 1 l.65 -.55 q0 1.6 -1.3 1.8 z" fill="#D7263D"/><path d="M9.9 28.599999999999998 q.2 -1.8 0 -3.2" stroke="#3f8a3a" stroke-width=".5" fill="none"/><path d="M9.9 27.799999999999997 q-1 -.6 -1.2 .3 M9.9 28.0 q1 -.8 1.3 .1" stroke="#3f8a3a" stroke-width=".45" fill="none"/><path d="M9.9 25.4 q-1.3 -.2 -1.3 -1.8 l.65 .55 l.65 -1 l.65 1 l.65 -.55 q0 1.6 -1.3 1.8 z" fill="#D7263D"/><path d="M13.4 29.4 q.2 -1.8 0 -3.2" stroke="#3f8a3a" stroke-width=".5" fill="none"/><path d="M13.4 28.599999999999998 q-1 -.6 -1.2 .3 M13.4 28.8 q1 -.8 1.3 .1" stroke="#3f8a3a" stroke-width=".45" fill="none"/><path d="M13.4 26.2 q-1.3 -.2 -1.3 -1.8 l.65 .55 l.65 -1 l.65 1 l.65 -.55 q0 1.6 -1.3 1.8 z" fill="#D7263D"/>` : ''}
             ${mandje ? `<path d="M37.4 14.6 h8.4 l-1 6.4 h-6.4 z" fill="#C8955A" stroke="#8a5a2b" stroke-width=".6" stroke-linejoin="round"/>
               <path d="M37.8 16.7 h7.6 M38.1 18.8 h7" stroke="#8a5a2b" stroke-width=".45"/><path d="M39.6 14.6 l.3 6.4 M41.6 14.6 v6.4 M43.6 14.6 l-.3 6.4" stroke="#a87444" stroke-width=".45"/>
               <path d="M37.4 14.6 h8.4" stroke="#7a4e24" stroke-width="1"/>` : ''}
@@ -873,15 +874,13 @@
         w.firstElementChild.setAttribute('width', 52 * .68); w.firstElementChild.setAttribute('height', 40 * .68);
         strip.appendChild(w); rideBike(w, fromLeft, 40 * .68);
     }
-    // Moeder op de fiets, met een meisje op een klein fietsje dat voor haar uit rijdt
+    // Blonde vrouw op de fiets met een rieten mandje voor het stuur en witte fietstassen met rode tulpen
     function moederFiets() {
         if (document.hidden) return;
         const fromLeft = chance(.5), haar = pick(['#E9C46A', '#F1D27B', '#E2BC5C']);      // blond
-        const m = cityBike({ color: pick(KLEUR), huid: pick(HUID), haar, ponytail: true, scale: .68, mandje: true });   // met een rieten mandje voor het stuur
-        const k = cityBike({ color: pick(['#FF4F9A', '#F39A2B', '#7B5CC4', '#2BB39A']), huid: pick(HUID), haar: pick(['#d9b36a', '#8b5a2b', '#2b2b2b']), ponytail: true, scale: .42 });
-        strip.appendChild(k); strip.appendChild(m);
-        rideBike(k, fromLeft, 40 * .42, -30);     // het meisje voorop
-        rideBike(m, fromLeft, 40 * .68, 16);
+        const m = cityBike({ color: pick(KLEUR), huid: pick(HUID), haar, ponytail: true, scale: .68, mandje: true, tassen: true });
+        strip.appendChild(m);
+        rideBike(m, fromLeft, 40 * .68);
     }
 
 
