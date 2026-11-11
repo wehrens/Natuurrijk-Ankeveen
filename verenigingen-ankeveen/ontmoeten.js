@@ -524,8 +524,9 @@
     function yogis() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, dur = (width + 200 + EX) * 40;
+        const yogi3 = [];
         for (let i = 0; i < 3; i++) {
-            const w = yogi(); strip.appendChild(w);
+            const w = yogi(); strip.appendChild(w); yogi3.push(w);
             const off = i * 30, y = GROUND - 18 + 1;
             const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off : -60 - EX + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
@@ -541,6 +542,24 @@
             animate(c, [{ transform: `translate(${x}px, ${GROUND - 26}px) scale(.4)`, opacity: .6 }, { transform: `translate(${x}px, ${GROUND - 46}px) scale(1.2)`, opacity: 0 }], { duration: 2600, easing: 'ease-out' })
                 .finished.then(() => c.remove()).catch(() => c.remove());
         }, 1800);
+        // en uit een van de yogi's stijgt rustig "Ooooooohmmm" op, letter voor letter
+        const ohm = () => {
+            const w = pick(yogi3.filter(e => e.isConnected));
+            if (!w || document.hidden) return;
+            const r = w.getBoundingClientRect(), bb = balk.getBoundingClientRect(), sb = strip.getBoundingClientRect();
+            const x = r.left + r.width / 2 - bb.left, y = r.top - bb.top;
+            if (r.right < sb.left + 20 || r.left > sb.right - 20) return;
+            const d = document.createElement('div');
+            d.style.cssText = "position:absolute;left:0;top:0;font:italic 500 13px Inter,sans-serif;letter-spacing:.5px;color:#7B5CC4;white-space:nowrap;pointer-events:none";
+            d.innerHTML = [...'Ooooooohmmm'].map((ch, i) => `<span style="opacity:0;display:inline-block">${ch}</span>`).join('');
+            lucht.appendChild(d);
+            const bw = d.getBoundingClientRect().width, x0 = Math.max(4, Math.min(bb.width - bw - 4, x - bw / 2));
+            d.querySelectorAll('span').forEach((sp, i) => animate(sp, [{ opacity: 0, transform: 'translateY(3px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 400, delay: i * 140, easing: 'ease-out' }));
+            animate(d, [{ transform: `translate(${x0}px, ${y - 6}px)`, opacity: 1 }, { transform: `translate(${x0}px, ${y - 26}px)`, opacity: 1, offset: .7 }, { transform: `translate(${x0}px, ${y - 34}px)`, opacity: 0 }], { duration: 5200, easing: 'ease-out' })
+                .finished.then(() => d.remove()).catch(() => d.remove());
+        };
+        const ohms = setInterval(() => { if (!yogi3.some(e => e.isConnected)) { clearInterval(ohms); return; } ohm(); }, 6500);
+        later(ohm, 2500);
     }
 
     // Voetballers van ASV '65: groen-witte shirts, witte broek, groene kousen. Drie spelers joggen voorbij
