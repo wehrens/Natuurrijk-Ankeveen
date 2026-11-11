@@ -1272,7 +1272,7 @@
             const top = Math.min(...leden.map(m => m.y));
             const noten = setInterval(() => { if (chance(.7)) note(cx + rand(-maxW / 2, maxW / 2), top - 2, '#1c2a4a'); }, 650);
             // de titels van de liederen die ze zingen stijgen om de beurt op uit het koor
-            const LIEDEREN = ['♪ Het kleine café aan de haven ♪', '♪ Meisje, ik ben een zeeman ♪'];
+            const LIEDEREN = ['♪ Het kleine café aan de haven ♪', '♪ Meisje, ik ben een zeeman ♪', '♪ What Shall We Do with the Drunken Sailor ♪'];
             let lied = Math.floor(rand(0, LIEDEREN.length));
             const titel = () => {
                 if (document.hidden) return;
