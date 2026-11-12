@@ -27,6 +27,16 @@
         zones.push({ a: best - breedte / 2, b: best + breedte / 2, t: nu + duur });
         return best;
     }
+    // Het marktplein: de open ruimte tussen het linker huis en het café. Daar staan de markt en de lichtjesmarkt.
+    const pleinRand = { huizen: [], cafe: null, bord: null };
+    function pleinPlek(breedte, duur) {
+        const w = W(), sr = strip.getBoundingClientRect();
+        const zicht = pleinRand.huizen.filter(e => e.offsetParent !== null).map(e => e.getBoundingClientRect().right - sr.left);
+        const a = zicht.length ? Math.max(...zicht) : w * .2, b = pleinRand.cafe ? pleinRand.cafe.getBoundingClientRect().left - sr.left : w * .55;
+        const c = Math.max(breedte / 2 + 8, Math.min(w - breedte / 2 - 8, (a + b) / 2));
+        zones.push({ a: c - breedte / 2, b: c + breedte / 2, t: performance.now() + duur });
+        return c;
+    }
     const rand = (a, b) => a + Math.random() * (b - a);
     // een plek om even stil te staan (praten, snuffelen) waar geen koor, markt of andere groep staat
     function vrij(lo, hi) {
@@ -722,7 +732,7 @@
     }
     function markt() {
         if (document.hidden) return;
-        const width = W(), N = 5, gap = 40, cx = plek(N * gap + 70, .35, .65, marktDur()), xs = Array.from({ length: N }, (_, i) => cx + (i - (N - 1) / 2) * gap - 15);
+        const width = W(), N = 5, gap = 40, cx = pleinPlek(N * gap + 70, marktDur()), xs = Array.from({ length: N }, (_, i) => cx + (i - (N - 1) / 2) * gap - 15);
         const speed = 12;
         const walkTo = (p, x0, x1, h, cb) => {
             const y = GROUND - h, f = x1 > x0 ? 1 : -1;
@@ -1600,14 +1610,15 @@ ${pot(47.4)}${pot(61.6)}
         bg.setAttribute('aria-hidden', 'true');
         bg.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:0';
         // [positie %, svg, alleen op bredere schermen]
-        const stukken = [[17, huis(ROOD, 26), false], [22, huis2(BLAUW, 30), true],  [58, huis(ROOD, 27), true],
+        const stukken = [[17, huis(ROOD, 26), false], [22, huis2(BLAUW, 30), true],  [68, huis(ROOD, 27), true],
             [73, huis2(ROOD, 29), false], [78.5, huis(BLAUW, 25), true]];
-        stukken.push(['calc(51% - 70px)', cafe(34), false, .4]);                 // het café staat een stukje links van het kerkje
+        stukken.push(['calc(62% - 70px)', cafe(34), false, .4]);                 // het café staat een stukje links van het kerkje
         stukken.forEach(([pct, svg, breed, op]) => {
             const d = document.createElement('div');
             d.style.cssText = `position:absolute;left:${typeof pct === 'number' ? pct + '%' : pct};bottom:${H - GROUND}px;transform:translateX(-50%);opacity:${op || vaag};line-height:0`;
             d.innerHTML = svg; if (breed) d.className = 'om-breed';
             bg.appendChild(d); obstakels.push(d);
+            if (typeof pct === 'number' && pct < 40) pleinRand.huizen.push(d); else if (typeof pct !== 'number') pleinRand.cafe = d;
         });
         // plaatsnaambord Ankeveen (blauw met witte rand), rechts
         const bord = document.createElement('div');
@@ -1616,7 +1627,7 @@ ${pot(47.4)}${pot(61.6)}
             <path d="M14 14 V30 M40 14 V30" stroke="#8a8f96" stroke-width="1.6"/>
             <rect x="1" y="1" width="52" height="15" rx="3" fill="#0F4C92"/><rect x="2.6" y="2.6" width="48.8" height="11.8" rx="2" fill="none" stroke="#fff" stroke-width="1"/>
             <text x="27" y="11.4" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="8" fill="#fff" letter-spacing=".3">Ankeveen</text></svg>`;
-        bg.appendChild(bord); obstakels.push(bord);
+        bg.appendChild(bord); obstakels.push(bord); pleinRand.bord = bord;
         const st = document.createElement('style');
         st.textContent = '@media (max-width: 640px){ #ontmoeten .om-breed{display:none} }';
         document.head.appendChild(st);
@@ -1629,7 +1640,7 @@ ${pot(47.4)}${pot(61.6)}
         tb.appendChild(dw); obstakels.push(dw);
         const zetKerk = () => {
             const sr = strip.getBoundingClientRect(), br = tb.getBoundingClientRect();
-            dw.style.cssText = `position:absolute;z-index:-1;pointer-events:none;line-height:0;opacity:.26;left:${sr.left - br.left + sr.width * .51}px;top:${sr.top - br.top + GROUND - 74}px;transform:translateX(-50%)`;
+            dw.style.cssText = `position:absolute;z-index:-1;pointer-events:none;line-height:0;opacity:.26;left:${sr.left - br.left + sr.width * .62}px;top:${sr.top - br.top + GROUND - 74}px;transform:translateX(-50%)`;
         };
         zetKerk(); addEventListener('resize', zetKerk);
     }
@@ -2157,7 +2168,13 @@ ${pot(47.4)}${pot(61.6)}
             const l = lopers[0];
             // bij de ooievaarspaal stopt het hondje bijna altijd om te snuffelen; een deel zet daarna nog een stapje,
             // tilt een achterpootje op en plast tegen de paal
-            const pk = nestX(), voor = l.dw * .98, achter = .23 * l.dw;               // neus en achterkant in de hondenbox
+            // hetzelfde doet het soms bij een paal van het plaatsnaambord Ankeveen (de paal waar het het eerst langs komt)
+            let pk = nestX();
+            if (pleinRand.bord && (test ? test.bord : chance(.4))) {
+                const br = pleinRand.bord.getBoundingClientRect();
+                pk = br.left - strip.getBoundingClientRect().left + (l.f > 0 ? 14 : 40);
+            }
+            const voor = l.dw * .98, achter = .23 * l.dw;               // neus en achterkant in de hondenbox
             const xNeus = l.f > 0 ? pk - 1.2 - (33 - l.dw) - voor : pk + 1.2 - 34 + (33 - l.dw) + voor;
             const xs = l.f > 0 ? pk + 2.2 - (33 - l.dw) - achter : pk - 2.2 - 34 + (33 - l.dw) + achter;
             if ((test || chance(.85)) && pk > 10 && pk < width - 10) {
@@ -2321,7 +2338,7 @@ ${pot(47.4)}${pot(61.6)}
             maan.style.top = (gat > 40 ? 7 : 4) + 'px';
         }
         const N = Math.max(2, Math.min(6, Math.floor(width * .5 / 50))), gap = 50, breedte = N * gap;
-        const cx = plek(breedte + 40, .25, .75, lichtjesDur());
+        const cx = pleinPlek(breedte + 40, lichtjesDur());
         const elementen = [], anims = [];
         // 1. nacht valt
         balk.classList.add('nacht');
@@ -2543,7 +2560,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: chance(.5) }); window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: chance(.5) }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
