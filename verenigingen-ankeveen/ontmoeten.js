@@ -1569,7 +1569,7 @@
             const bakje = x => `<path d="M${x - 1.8} 47.2 h1.8 v1.6" fill="none" stroke="${ZW}" stroke-width=".35"/><path d="M${x - 1.5} 50.4 h3 l-.5 1.9 h-2 Z" fill="${ZW}"/><circle cx="${x - 1.1}" cy="50" r="1" fill="#C8417E"/><circle cx="${x + 1.1}" cy="50" r="1" fill="#8A4FA8"/><circle cx="${x}" cy="49.3" r="1.1" fill="#D9558F"/><circle cx="${x - .4}" cy="50.5" r=".6" fill="#5C8A4A"/>`;
             // vlag aan een schuine stok vanaf de goot; kant = -1 hangt naar links, 1 naar rechts
             const vlag = (x, kant, lang, doek) => `<g transform="translate(${x} 44.4) scale(${kant} 1) rotate(20)"><path d="M0 0 V-${lang}" stroke="#8A8F96" stroke-width=".55" stroke-linecap="round"/><g transform="translate(.3 -${lang})">${doek}</g></g>`;
-            const vRood = '<rect width="5.6" height="3.8" fill="#D22630"/><circle cx="2.8" cy="1.9" r="1" fill="#fff"/>';
+            const vRood = '<rect width="5.6" height="3.8" fill="#D22630"/>';
             const vNL = '<rect width="9" height="2" fill="#AE1C28"/><rect y="2" width="9" height="2" fill="#fff"/><rect y="4" width="9" height="2" fill="#21468B"/><rect width="9" height="6" fill="none" stroke="#B5AEA2" stroke-width=".2"/>';
             // wit doek met de blauwe vogel in het groene gras uit het dorpswapen
             const vWapen = '<rect width="9.6" height="7" fill="#fff" stroke="#B5AEA2" stroke-width=".25"/>'
@@ -1588,7 +1588,7 @@
 ${ramen}
 <rect x="11.5" y="69.6" width="86" height="4.9" fill="#D3CEC4"/><path d="M11.5 69.6 H97.5" stroke="#B3ADA2" stroke-width=".4"/>
 <path d="M7.6 44.6 H101.4" stroke="${ZW}" stroke-width="1.3"/>
-<rect x="38.2" y="36.4" width="5.6" height="6" fill="#141414"/><rect x="39.9" y="37.2" width="2.2" height="2.2" fill="#B88A3A"/><path d="M38.9 40.4 h4.2 M38.9 41.4 h4.2" stroke="#B88A3A" stroke-width=".25"/>
+<rect x="51.7" y="38.2" width="5.6" height="6" fill="#141414"/><rect x="53.4" y="39" width="2.2" height="2.2" fill="#B88A3A"/><path d="M52.4 42.2 h4.2 M52.4 43.2 h4.2" stroke="#B88A3A" stroke-width=".25"/>
 ${lantaarn(29, 45.2)}${lantaarn(45, 45.2)}${lantaarn(64, 45.2)}${lantaarn(80, 45.2)}
 ${bakje(14.2)}${bakje(94.8)}
 ${vlag(22, -1, 10, vRood)}${vlag(66, 1, 15, vWapen)}${vlag(85, 1, 14, vNL)}
