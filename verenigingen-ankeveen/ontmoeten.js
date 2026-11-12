@@ -1000,7 +1000,7 @@
     }
     // Arda, onze ooievaarsspecialiste: blond, op de fiets met een rieten mandje voor het stuur en witte fietstassen
     // met rode tulpen. Ze komt terug van de kant waar ze de vorige keer het beeld uit reed. Komt ze bij het nest
-    // terwijl de ooievaar erop zit, dan vliegen er drie rode hartjes van haar naar de ooievaar en drie terug.
+    // terwijl de ooievaar erop zit, dan vliegt er een rood hartje van haar naar de ooievaar en een terug.
     const arda = { weg: null, kleur: null, huid: null, haar: null };
     function hartje(x0, y0, x1, y1, wacht) {
         const d = document.createElement('div');
@@ -1034,11 +1034,8 @@
                 if (!ooiThuis || ooiBezig) return;
                 const v = (x - vorige.x) / (nu - vorige.t), or = ooi.getBoundingClientRect();
                 const ox = or.left + or.width / 2 - bb.left, oy = or.top + 6 - bb.top, ay = r.top - bb.top + 3;
-                for (let i = 0; i < 3; i++) {
-                    const w1 = i * 320, w2 = 700 + i * 320;
-                    hartje(x + v * w1, ay, ox + (i - 1) * 3, oy, w1);                                 // van Arda naar de ooievaar
-                    hartje(ox + (i - 1) * 3, oy, x + v * (w2 + 1500), ay, w2);                       // en van de ooievaar naar Arda
-                }
+                hartje(x, ay, ox, oy, 0);                                    // één hartje van Arda naar de ooievaar
+                hartje(ox, oy, x + v * (900 + 1500), ay, 900);               // en één van de ooievaar terug naar Arda
                 return;
             }
             vorige = { x, t: nu };
@@ -1735,6 +1732,7 @@ ${pot(47.4)}${pot(61.6)}
             for (let i = 0; i < r.length - 1; i++) {
                 const x0 = r[i][1] - 3, x1 = r[i + 1][0] + 3, w = x1 - x0;
                 if (w < 22) continue;
+                if (i !== 0 && i !== r.length - 2) continue;            // alleen bij het ooievaarsnest en bij het bord Ankeveen
                 let kruinen = 'M0 6 V3.4';
                 for (let x = 0; x < w; x += 5) kruinen += ` q2.5 ${-(1.4 + ((x + i * 3) * 7 % 5) * .45).toFixed(2)} 5 0`;
                 html += `<div style="position:absolute;left:${x0}px;bottom:${H - GROUND}px;width:${w}px;height:6px;opacity:.5;line-height:0;-webkit-mask-image:${fade};mask-image:${fade}"><svg viewBox="0 0 ${w} 6" width="${w}" height="6" preserveAspectRatio="none" aria-hidden="true"><path d="${kruinen} V6 H0 Z" fill="#5E8467"/></svg></div>`;
@@ -1763,7 +1761,7 @@ ${pot(47.4)}${pot(61.6)}
         };
         zetToren(); addEventListener('resize', zetToren);
     }
-    const PH = Math.min(46, GROUND - 6);            // paalhoogte: ruim boven de mensen uit
+    const PH = Math.min(50, GROUND - 6);            // paalhoogte: ruim boven de mensen uit
     const paal = document.createElement('div'), rand0 = document.createElement('div');
     const TAK = '#7a5a36', TAK2 = '#9c7a4e';
     paal.style.cssText = rand0.style.cssText = `position:absolute;top:${GROUND + 2 - PH}px;left:max(16px, 7%);width:26px;height:${PH}px;margin-left:-13px;pointer-events:none`;
@@ -2746,6 +2744,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: familie, dur: () => (W() + 200 + EX) * 27 },
         { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
+        { run: oldtimer, dur: () => (W() + 180) * 14 },   // de Snoek staat er twee keer in: hij komt elke ronde twee keer langs
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
     // geweest is), elkaar deels overlappend. De eerste komt al na een paar seconden.
@@ -2756,7 +2755,9 @@ ${pot(47.4)}${pot(61.6)}
         if (marktTot > nuM) { setTimeout(nextSpecial, 1500); return; }   // lichtjesmarkt: niemand anders, daarna meteen weer verder
         if (!bag.length) {
             bag = specials.slice().sort(() => Math.random() - 0.5);
-            if (bag[0] === last && bag.length > 1) bag.push(bag.shift());
+            const dubbel = bag.findIndex((x, i) => i && x.run === bag[i - 1].run);       // niet twee keer dezelfde direct na elkaar
+            if (dubbel > 0) bag.splice((dubbel + Math.ceil(bag.length / 2)) % bag.length, 0, bag.splice(dubbel, 1)[0]);
+            if (last && bag[0].run === last.run && bag.length > 1) bag.push(bag.shift());
         }
         let s = bag.shift();
         if (s.rare && chance(.4) && bag.length) { bag.push(s); s = bag.shift(); }   // zeldzame gasten slaan meestal een rondje over
