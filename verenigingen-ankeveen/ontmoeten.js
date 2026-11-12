@@ -1660,6 +1660,11 @@ ${pot(47.4)}${pot(61.6)}
         const tekenGroen = () => {
             const sr = strip.getBoundingClientRect();
             const r = gebouwen.filter(e => e.offsetParent !== null).map(e => e.getBoundingClientRect()).map(q => [q.left - sr.left, q.right - sr.left]).sort((p, q) => p[0] - q[0]);
+            // ook bij het ooievaarsnest en het bord Ankeveen: het groen loopt daar onderdoor tot iets voorbij de paal en het bord
+            let pl = null; try { pl = paal.getBoundingClientRect(); } catch (e) { }
+            if (pl && pl.width) { const x = Math.max(0, pl.left - sr.left - 26); r.unshift([x, x + 3]); }
+            if (pleinRand.bord) { const x = Math.min(sr.width, pleinRand.bord.getBoundingClientRect().right - sr.left + 22); r.push([x - 3, x]); }
+            r.sort((p, q) => p[0] - q[0]);
             const fade = 'linear-gradient(90deg, transparent 0%, #000 26%, #000 74%, transparent 100%)';
             let html = '';
             for (let i = 0; i < r.length - 1; i++) {
@@ -1671,7 +1676,7 @@ ${pot(47.4)}${pot(61.6)}
             }
             groen.innerHTML = html;
         };
-        tekenGroen(); addEventListener('resize', tekenGroen);
+        tekenGroen(); setTimeout(tekenGroen, 0); addEventListener('resize', tekenGroen);
         // De omroeptoren van Hilversum, ver weg: klein, hoog boven de bomenrand en onderaan in de nevel vervagend.
         // Hij staat (net als het kerkje) in de kopbalk, achter de tekst. Vogels en de ooievaar vliegen ervoor langs;
         // de zon hangt in een laag daarachter (zie `verte`).
