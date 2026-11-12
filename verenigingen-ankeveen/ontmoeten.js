@@ -1504,15 +1504,18 @@
             <path d="M18.4 31 v5 M21.6 31 v5" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
             <path d="M8 46 h4 v-3 h4 v-4 h8 v4 h4 v3 h4 v4 q4 0 4 4 V80 H4 V54 q0 -4 4 -4 z" fill="${ROOD}"/>
             <path d="M15.4 56 v10 M20 54 v12 M24.6 56 v10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M16 80 v-7 q4 -3 8 0 v7 z" fill="#fff"/></svg>`;
+        // dorpscafé 't Wapen van Ankeveen, van voren: wit gepleisterd, groot donker dak met dakkapel, puntgevel, vlag
+        const cafe = h => `<svg viewBox="-6 -3 78 51" width="${h * 78 / 51}" height="${h}" aria-hidden="true"><path d="M0 27 L9 9 H41 L46 27 Z" fill="#5A3A2A"/><path d="M15 21 V14 H29 V21 Z" fill="#F4F1EA"/><path d="M14 14 L22 10.4 L30 14 Z" fill="#4A2E20"/><rect x="17.2" y="15.4" width="4.4" height="4.6" fill="#2F3A40"/><rect x="22.6" y="15.4" width="4.4" height="4.6" fill="#2F3A40"/><rect x="34" y="4" width="3" height="7" fill="#7A4E3A"/><rect x="1.5" y="27" width="44.5" height="20" fill="#F4F1EA"/><rect x="1.5" y="42.6" width="44.5" height="4.4" fill="#C9C3B8"/><path d="M1.5 44.8 H46" stroke="#AFA89C" stroke-width=".4"/><g fill="#2F3A40" stroke="#C9C3B8" stroke-width="1.2"><rect x="4.5" y="30" width="8" height="10.5"/><rect x="15.5" y="30" width="8" height="10.5"/><rect x="35.5" y="30" width="8" height="10.5"/></g><path d="M8.5 30 V40.5 M19.5 30 V40.5 M39.5 30 V40.5" stroke="#C9C3B8" stroke-width=".5"/><rect x="26.5" y="29.5" width="6.4" height="17.5" fill="#3A2A22" stroke="#C9C3B8" stroke-width="1"/><rect x="27.8" y="31" width="3.8" height="6" fill="#2F3A40"/><path d="M1.5 29 H-3" stroke="#3a3a3a" stroke-width=".8"/><circle cx="-3" cy="32.4" r="2.8" fill="#1F6E43" stroke="#F4F1EA" stroke-width=".6"/><path d="M23 47 L24.6 40 H27.4 L29 47" fill="none" stroke="#5A3A2A" stroke-width=".8"/><rect x="24" y="40.2" width="4" height="4.6" fill="#222"/><path d="M46 47 V17 L58 4 L70 17 V47 Z" fill="#F4F1EA"/><path d="M44.6 18.4 L58 3.2 L71.4 18.4" fill="none" stroke="#5A3A2A" stroke-width="2.2" stroke-linejoin="round"/><path d="M58 3.2 V-2" stroke="#4A2E20" stroke-width=".7"/><rect x="55.6" y="9" width="4.8" height="5" fill="#2F3A40" stroke="#C9C3B8" stroke-width=".8"/><rect x="53.4" y="19" width="9.2" height="9" fill="#2F3A40" stroke="#C9C3B8" stroke-width="1"/><path d="M58 19 V28" stroke="#C9C3B8" stroke-width=".5"/><rect x="52.6" y="31" width="10.8" height="16" fill="#2F3A40" stroke="#C9C3B8" stroke-width="1"/><path d="M58 31 V47" stroke="#C9C3B8" stroke-width=".6"/><path d="M46.4 25 L40 13.6" stroke="#6b6b6b" stroke-width=".7"/><path d="M40.3 14.1 L43.4 19.6 L41.2 25.2 L38.4 19.4 Z" fill="#fff" stroke="#ccc" stroke-width=".2"/><path d="M40.3 14.1 L41.35 15.95 L39.2 21.3 L38.4 19.4 Z" fill="#AE1C28"/><path d="M42.35 17.75 L43.4 19.6 L41.2 25.2 L40.2 23.2 Z" fill="#21468B"/></svg>`;
         const bg = document.createElement('div');
         bg.setAttribute('aria-hidden', 'true');
         bg.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:0';
         // [positie %, svg, alleen op bredere schermen]
-        const stukken = [[17, huis(ROOD, 26), false], [22, huis2(BLAUW, 30), true], [44, huis(BLAUW, 24), true], [51, kerk(52), false], [58, huis(ROOD, 27), true],
+        const stukken = [[17, huis(ROOD, 26), false], [22, huis2(BLAUW, 30), true], [51, kerk(52), false], [58, huis(ROOD, 27), true],
             [73, huis2(ROOD, 29), false], [78.5, huis(BLAUW, 25), true]];
-        stukken.forEach(([pct, svg, breed]) => {
+        stukken.push(['calc(51% - 44px)', cafe(36), false, .4]);                 // het café staat een stukje links van het kerkje
+        stukken.forEach(([pct, svg, breed, op]) => {
             const d = document.createElement('div');
-            d.style.cssText = `position:absolute;left:${pct}%;bottom:${H - GROUND}px;transform:translateX(-50%);opacity:${vaag};line-height:0`;
+            d.style.cssText = `position:absolute;left:${typeof pct === 'number' ? pct + '%' : pct};bottom:${H - GROUND}px;transform:translateX(-50%);opacity:${op || vaag};line-height:0`;
             d.innerHTML = svg; if (breed) d.className = 'om-breed';
             bg.appendChild(d);
         });
