@@ -642,24 +642,6 @@
             animate(c, [{ transform: `translate(${x}px, ${GROUND - 26}px) scale(.4)`, opacity: .6 }, { transform: `translate(${x}px, ${GROUND - 46}px) scale(1.2)`, opacity: 0 }], { duration: 2600, easing: 'ease-out' })
                 .finished.then(() => c.remove()).catch(() => c.remove());
         }, 1800);
-        // en uit een van de yogi's stijgt rustig "Ooooooohmmm" op, letter voor letter
-        const ohm = () => {
-            const w = pick(yogi3.filter(e => e.isConnected));
-            if (!w || document.hidden) return;
-            const r = w.getBoundingClientRect(), bb = balk.getBoundingClientRect(), sb = strip.getBoundingClientRect();
-            const x = r.left + r.width / 2 - bb.left, y = r.top - bb.top;
-            if (r.right < sb.left + 20 || r.left > sb.right - 20) return;
-            const d = document.createElement('div');
-            d.style.cssText = "position:absolute;left:0;top:0;font:italic 500 13px Inter,sans-serif;letter-spacing:.5px;color:#7B5CC4;white-space:nowrap;pointer-events:none";
-            d.innerHTML = [...'Ooooooohmmm'].map((ch, i) => `<span style="opacity:0;display:inline-block">${ch}</span>`).join('');
-            lucht.appendChild(d);
-            const bw = d.getBoundingClientRect().width, x0 = Math.max(4, Math.min(bb.width - bw - 4, x - bw / 2));
-            d.querySelectorAll('span').forEach((sp, i) => animate(sp, [{ opacity: 0, transform: 'translateY(3px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 400, delay: i * 140, easing: 'ease-out' }));
-            animate(d, [{ transform: `translate(${x0}px, ${y - 6}px)`, opacity: 1 }, { transform: `translate(${x0}px, ${y - 26}px)`, opacity: 1, offset: .7 }, { transform: `translate(${x0}px, ${y - 34}px)`, opacity: 0 }], { duration: 5200, easing: 'ease-out' })
-                .finished.then(() => d.remove()).catch(() => d.remove());
-        };
-        const ohms = setInterval(() => { if (!yogi3.some(e => e.isConnected)) { clearInterval(ohms); return; } ohm(); }, 6500);
-        later(ohm, 2500);
     }
 
     // Voetballers van ASV '65: groen-witte shirts, witte broek, groene kousen. Drie spelers joggen voorbij
@@ -2226,23 +2208,26 @@ ${pot(47.4)}${pot(61.6)}
             { duration: Math.abs(z - a) * speed, easing: 'linear' });
         if (!samen) {
             const l = lopers[0];
-            // bij de ooievaarspaal stopt het hondje bijna altijd om te snuffelen; een deel zet daarna nog een stapje,
-            // tilt een achterpootje op en plast tegen de paal
-            // hetzelfde doet het soms bij een paal van het plaatsnaambord Ankeveen (de paal waar het het eerst langs komt)
-            let pk = nestX();
-            if (pleinRand.bord && (test ? test.bord : chance(.4))) {
+            // Onderweg komt het hondje langs de ooievaarspaal en langs de palen van het plaatsnaambord Ankeveen.
+            // Bij elk daarvan stopt het meestal om te snuffelen; vaak zet het daarna nog een stapje, tilt een
+            // achterpootje op en plast ertegen. Daarna loopt het door naar de volgende.
+            const voor = l.dw * .98, achter = .23 * l.dw;                              // neus en achterkant in de hondenbox
+            const palen = [];
+            if (test ? !test.bord : chance(.75)) palen.push(nestX());
+            if (pleinRand.bord && pleinRand.bord.offsetParent !== null && (test ? test.bord !== false : chance(.75))) {
                 const br = pleinRand.bord.getBoundingClientRect();
-                pk = br.left - strip.getBoundingClientRect().left + (l.f > 0 ? 14 : 40);
+                palen.push(br.left - strip.getBoundingClientRect().left + (l.f > 0 ? 14 : 40));   // de paal waar het het eerst langs komt
             }
-            const voor = l.dw * .98, achter = .23 * l.dw;               // neus en achterkant in de hondenbox
-            const xNeus = l.f > 0 ? pk - 1.2 - (33 - l.dw) - voor : pk + 1.2 - 34 + (33 - l.dw) + voor;
-            const xs = l.f > 0 ? pk + 2.2 - (33 - l.dw) - achter : pk - 2.2 - 34 + (33 - l.dw) + achter;
-            if ((test || chance(.85)) && pk > 10 && pk < width - 10) {
-                const svg = l.dog.firstElementChild, door = () => {
-                    l.bob && l.bob.play(); l.trot.play(); l.wag.updatePlaybackRate(1);
-                    lopen(l, l.w._x, l.xEnd).finished.then(() => l.w.remove()).catch(() => l.w.remove());
-                };
-                lopen(l, l.x0, xNeus).finished.then(() => {
+            const stops = palen.filter(pk => pk > 10 && pk < width - 10).sort((p, q) => (p - q) * l.f);
+            const svg = l.dog.firstElementChild;
+            l.w._x = l.x0;
+            const verder = () => {
+                const pk = stops.shift();
+                if (pk === undefined) { lopen(l, l.w._x, l.xEnd).finished.then(() => l.w.remove()).catch(() => l.w.remove()); return; }
+                const xNeus = l.f > 0 ? pk - 1.2 - (33 - l.dw) - voor : pk + 1.2 - 34 + (33 - l.dw) + voor;
+                const xs = l.f > 0 ? pk + 2.2 - (33 - l.dw) - achter : pk - 2.2 - 34 + (33 - l.dw) + achter;
+                const door = () => { l.bob && l.bob.play(); l.trot.play(); l.wag.updatePlaybackRate(1); verder(); };
+                lopen(l, l.w._x, xNeus).finished.then(() => {
                     l.w._x = xNeus;
                     l.bob && l.bob.pause(); l.trot.pause(); l.wag.updatePlaybackRate(1.8);
                     svg.style.transformOrigin = '30% 100%';
@@ -2261,15 +2246,14 @@ ${pot(47.4)}${pot(61.6)}
                                 const poot = svg.querySelector('.achterpoot'), straal = svg.querySelector('.plas'), plasje = svg.querySelector('.plasje');
                                 animate(poot, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(72deg)' }], { duration: 350, delay: 300, easing: 'ease-out' });
                                 animate(straal, [{ opacity: 0, strokeDashoffset: 7 }, { opacity: .95, strokeDashoffset: 0, offset: .15 }, { opacity: .95, strokeDashoffset: 0, offset: .85 }, { opacity: 0, strokeDashoffset: 0 }], { duration: 2200, delay: 700 });
-                                animate(plasje, [{ opacity: 0, transform: 'scaleX(.2)' }, { opacity: .8, transform: 'scaleX(1)', offset: .8 }, { opacity: .7, transform: 'scaleX(1.1)' }], { duration: 2200, delay: 1000 });
+                                animate(plasje, [{ opacity: 0, transform: 'scaleX(.2)' }, { opacity: .8, transform: 'scaleX(1)', offset: .7 }, { opacity: .7, transform: 'scaleX(1.1)', offset: .88 }, { opacity: 0, transform: 'scaleX(1.1)' }], { duration: 2400, delay: 1000 });
                                 later(() => animate(poot, [{ transform: 'rotate(72deg)' }, { transform: 'rotate(0deg)' }], { duration: 250 }), 3000);
                                 later(door, 3400);
                             }).catch(() => {});
                     }, 2400);
                 }).catch(() => l.w.remove());
-                return;
-            }
-            lopen(l, l.x0, l.xEnd).finished.then(() => l.w.remove()).catch(() => l.w.remove()); return;
+            };
+            verder(); return;
         }
         const aan = lopers.map(l => lopen(l, l.x0, l.xm));
         Promise.all(aan.map(a => a.finished)).then(() => {
@@ -2620,7 +2604,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: chance(.5) }); window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: chance(.5) }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
