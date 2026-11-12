@@ -1,5 +1,26 @@
 /* Ontmoetingsstrook voor de verenigingenpagina: groepjes mensen komen elkaar tegen.
-   Web Animations API, alleen transform/opacity. Stil bij prefers-reduced-motion. */
+   Web Animations API, alleen transform/opacity. Stil bij prefers-reduced-motion.
+
+   INDELING VAN DIT BESTAND (van boven naar beneden)
+   1. Gereedschap: plekken zoeken (plek, vrij, pleinPlek, voorKerk, plekken), later() (uitgestelde stappen die
+      meepauzeren met het tabblad), animate(), poppetjes (person, oudje) en de loopbeweging (bob).
+   2. De groepen en figuren, elk in een eigen functie (meeting, carnaval, schaatsers, yoga, voetbal, markt, ...).
+   3. De achtergrond: huizen, café, De Dillewijn, omroeptoren, groen, bord Ankeveen.
+   4. De ooievaar: paal en nest, vliegen, landen, houdingen.
+   5. Honden, Snoek, lichtjesmarkt, kermis en de overige figuren.
+   6. De planning onderaan: de lijst `specials` (met seizoenen) en nextSpecial() bepalen wie wanneer komt.
+
+   LAGEN (van achter naar voor). De eerste vier staan in de kopbalk (#topbar), achter de tekst:
+     z-index -4  verte        de zon
+     z-index -3               de omroeptoren van Hilversum
+     z-index -2  ganzenlaag   de ganzen (vóór de omroeptoren, achter De Dillewijn)
+     z-index -1               De Dillewijn (kerkje) en de nachtlucht van de lichtjesmarkt
+     de strook (#ontmoeten):  achtergrond (bg: groen, huizen, café, bord) en daarvoor alle poppetjes;
+                              de nestpaal en de zittende ooievaar hebben z-index 1
+     z-index 3   lucht        alles wat over de hele kopbalk vliegt of opstijgt: ooievaar, teksten, hartjes, bal
+
+   SEIZOENEN: een groep met `maanden` in de lijst `specials` komt alleen in die maanden vanzelf langs.
+   Met #naam achter het adres (bijvoorbeeld #naturists) is elke groep het hele jaar te bekijken. */
 (function () {
     'use strict';
     const strip = document.getElementById('ontmoeten');
@@ -37,10 +58,20 @@
         zones.push({ a: c - breedte / 2, b: c + breedte / 2, t: performance.now() + duur });
         return c;
     }
+    // Vaste plekken in de strook (x in strookcoördinaten), op één plaats bij elkaar. Geeft null als de plek er niet is.
+    const plekken = {
+        // de paal van het bord Ankeveen waar je in looprichting f (1 = naar rechts) het eerst langs komt
+        bordPaal(f) {
+            const b = pleinRand.bord; if (!b || b.offsetParent === null) return null;
+            const x = b.getBoundingClientRect().left - strip.getBoundingClientRect().left + (f > 0 ? 14 : 40);
+            return x > 10 && x < W() - 10 ? x : null;
+        },
+        cafeDeur() { const c = pleinRand.cafe; if (!c) return null; const r = c.getBoundingClientRect(); return r.left + r.width / 2 - strip.getBoundingClientRect().left; },
+        kerk() { const k = pleinRand.kerk; if (!k) return null; const r = k.getBoundingClientRect(); return r.left + r.width / 2 - strip.getBoundingClientRect().left; },
+    };
     // De plek pal voor De Dillewijn (het kerkje): daar speelt de jazz
     function voorKerk(breedte, duur) {
-        const sr = strip.getBoundingClientRect(), k = pleinRand.kerk && pleinRand.kerk.getBoundingClientRect();
-        const c = k ? k.left + k.width / 2 - sr.left : W() * .62;
+        const k = plekken.kerk(), c = k === null ? W() * .62 : k;
         zones.push({ a: c - breedte / 2, b: c + breedte / 2, t: performance.now() + duur });
         return c;
     }
@@ -514,8 +545,7 @@
         const uit = kies === 'uit' ? true : kies === 'in' ? false : carnBinnen;
         carnBinnen = !uit;
         const width = W(), speed = 22, h = 22, y = GROUND - h, KLEIN = .42, GROEI = 34;
-        const cr = pleinRand.cafe ? pleinRand.cafe.getBoundingClientRect() : null, sr = strip.getBoundingClientRect();
-        const deur = cr ? cr.left + cr.width / 2 - sr.left : width * .5;
+        const cd = plekken.cafeDeur(), deur = cd === null ? width * .5 : cd;
         // naar buiten: de kant met de meeste ruimte op; naar binnen: van de kant die het verst weg is
         const f = uit ? (chance(.5) ? 1 : -1) : (deur > width / 2 ? 1 : -1);
         const stoet = [];
@@ -2491,13 +2521,11 @@ ${pot(47.4)}${pot(61.6)}
         l.wag = animate(staart, [{ transform: 'rotate(-12deg)' }, { transform: 'rotate(12deg)' }], { duration: 320, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         const x0 = fromLeft ? -50 : width + 20, x1 = fromLeft ? width + 40 + EX : -70 - EX;
         const weg = () => animate(l.w, [{ transform: zet(x0) }, { transform: zet(x1) }], { duration: Math.abs(x1 - x0) * speed, easing: 'linear' }).finished.then(() => l.w.remove()).catch(() => l.w.remove());
-        const bord = pleinRand.bord && pleinRand.bord.offsetParent !== null ? pleinRand.bord.getBoundingClientRect() : null;
-        if (!bord) { weg(); return; }
-        const pk = bord.left - strip.getBoundingClientRect().left + (f > 0 ? 14 : 40);            // de paal waar ze het eerst langs komen
+        const pk = plekken.bordPaal(f);                                                           // de paal waar ze het eerst langs komen
+        if (pk === null) { weg(); return; }
         const achter = BW - 1 - DW + DW * .1, D = pk - f * 4;                                       // de drol komt net vóór de paal te liggen
         const xs = f > 0 ? D - achter : D - BW + achter;
         const stap = achter - 9, xp = xs + f * stap;                                             // zoveel loopt zij door tot ze bij de drol staat
-        if (pk < 20 || pk > width - 10) { weg(); return; }
         animate(l.w, [{ transform: zet(x0) }, { transform: zet(xs) }], { duration: Math.abs(xs - x0) * speed, easing: 'linear' }).finished.then(() => {
             l.bob && l.bob.pause(); l.trot.pause(); l.wag.updatePlaybackRate(.3);
             // de hond gaat in de poephouding staan, perst even en komt weer overeind
@@ -2557,10 +2585,8 @@ ${pot(47.4)}${pot(61.6)}
             const voor = l.dw * .98, achter = .23 * l.dw;                              // neus en achterkant in de hondenbox
             const palen = [];
             if (test ? !test.bord : chance(.75)) palen.push(nestX());
-            if (pleinRand.bord && pleinRand.bord.offsetParent !== null && (test ? test.bord !== false : chance(.75))) {
-                const br = pleinRand.bord.getBoundingClientRect();
-                palen.push(br.left - strip.getBoundingClientRect().left + (l.f > 0 ? 14 : 40));   // de paal waar het het eerst langs komt
-            }
+            const bp = plekken.bordPaal(l.f);                                          // de paal waar het het eerst langs komt
+            if (bp !== null && (test ? test.bord !== false : chance(.75))) palen.push(bp);
             const stops = palen.filter(pk => pk > 10 && pk < width - 10).sort((p, q) => (p - q) * l.f);
             const svg = l.dog.firstElementChild;
             l.w._x = l.x0;
@@ -2896,16 +2922,16 @@ ${pot(47.4)}${pot(61.6)}
     const specials = [
         { run: peloton, dur: () => (W() + 300 + EX) * 4.5 },
         { run: fanfare, dur: () => (W() + 200 + EX) * 24, groot: true },
-        { run: skaters, dur: () => (W() + 200 + EX) * 7.5 },
-        { run: naturists, dur: () => (W() + 160 + EX) * 26 + 13000, groot: true },
-        { run: carnaval, dur: () => (W() + 260 + EX) * 22, groot: true },
+        { run: skaters, dur: () => (W() + 200 + EX) * 7.5, maanden: [12, 1, 2] },
+        { run: naturists, dur: () => (W() + 160 + EX) * 26 + 13000, groot: true, maanden: [5, 6, 7, 8, 9] },
+        { run: carnaval, dur: () => (W() + 260 + EX) * 22, groot: true, maanden: [11, 12, 1, 2, 3] },
         { run: yogis, dur: () => (W() + 200 + EX) * 40, groot: true },
         { run: klasje, dur: () => (W() + 220 + EX) * 22, groot: true },
         { run: voetballer, dur: () => (W() + 100) * 30 },
         { run: footballers, dur: () => (W() + 220 + EX) * 11 },
         { run: markt, dur: marktDur, groot: true },
         { run: bakfiets, dur: () => (W() + 100 + EX) * 16 + 12000, rare: true },
-        { run: kermis, dur: () => 42000, rare: true },
+        { run: kermis, dur: () => 42000, rare: true, maanden: [4, 5, 6, 7, 8, 9] },
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
         { run: vogelaars, dur: vogelaarsDur },
         { run: jazz, dur: jazzDur, groot: true },
@@ -2916,7 +2942,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: boswachter, dur: () => (W() + 120 + EX) * 13 },
         { run: klompenman, dur: () => (W() + 160 + EX) * 13 },
         { run: familie, dur: () => (W() + 200 + EX) * 27 },
-        { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true },
+        { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true, maanden: [11, 12, 1] },
         { run: newfoundlander, dur: () => (W() + 120) * 24 + 6500 },
         { run: tennissers, dur: () => (W() + 120 + EX) * 24 },
         { run: biljarters, dur: () => (W() + 120 + EX) * 30 },
@@ -2931,7 +2957,10 @@ ${pot(47.4)}${pot(61.6)}
         const nuM = performance.now();
         if (marktTot > nuM) { setTimeout(nextSpecial, 1500); return; }   // lichtjesmarkt: niemand anders, daarna meteen weer verder
         if (!bag.length) {
-            bag = specials.slice().sort(() => Math.random() - 0.5);
+            // seizoenen: schaatsers alleen in de winter, naturisten en kermis in de zomer, carnaval van 11 november
+            // tot en met maart, de lichtjesmarkt rond de feestdagen
+            const maand = new Date().getMonth() + 1;
+            bag = specials.filter(x => !x.maanden || x.maanden.includes(maand)).sort(() => Math.random() - 0.5);
             const dubbel = bag.findIndex((x, i) => i && x.run === bag[i - 1].run);       // niet twee keer dezelfde direct na elkaar
             if (dubbel > 0) bag.splice((dubbel + Math.ceil(bag.length / 2)) % bag.length, 0, bag.splice(dubbel, 1)[0]);
             if (last && bag[0].run === last.run && bag.length > 1) bag.push(bag.shift());
