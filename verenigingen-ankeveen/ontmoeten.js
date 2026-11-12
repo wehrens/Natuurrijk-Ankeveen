@@ -1529,11 +1529,11 @@
         // lantaarntjes en een lichte plint
         const cafe = h => {
             const ZW = '#1C1C1C', DAK = '#3E3E41', MUUR = '#F4F1EA';
-            const links = y => 25 - (y - 12) * 16.5 / 32.5, rechts = y => 103 + (y - 12) * 4 / 32.5;
+            const links = y => 13 - (y - 12) * 4.5 / 32.5, rechts = y => 103 + (y - 12) * 4 / 32.5;
             let pannen = '';
             for (let y = 15; y < 44; y += 2.6) pannen += `M${links(y).toFixed(2)} ${y} H${rechts(y).toFixed(2)} `;
             // [x, y-boven, breedte, hoogte, deur?]
-            const open = [[17, 46.6, 8, 20.6, 0], [33, 46.6, 8, 20.6, 0], [51, 45.6, 7, 24.4, 1], [68, 46.6, 8, 20.6, 0], [84, 46.6, 8, 20.6, 0]];   // symmetrisch rond de deur
+            const open = [[17, 46.6, 8, 20.6, 0], [33, 46.6, 8, 20.6, 0], [49.75, 45.6, 9.5, 24.4, 1], [68, 46.6, 8, 20.6, 0], [84, 46.6, 8, 20.6, 0]];   // symmetrisch rond de deur
             let reliëf = '';
             for (let y = 46, rij = 0; y < 69; y += 2.6, rij++) {
                 // vrije stukken muur in deze rij (tussen de kozijnen), elk vol verspringende blokjes
@@ -1565,23 +1565,36 @@
             const lantaarn = (x, y) => `<path d="M${x} ${y} v1.2" stroke="${ZW}" stroke-width=".4"/><path d="M${x - 1.1} ${y + 1.2} h2.2 l-.3 3 h-1.6 Z" fill="${ZW}"/><rect x="${x - .55}" y="${y + 1.8}" width="1.1" height="1.6" fill="#E8D9A8"/>`;
             const pot = x => `<path d="M${x - 1.4} ${y0(66.6)} h2.8 l-.4 3.4 h-2 Z" fill="#8E9294"/><circle cx="${x - .7}" cy="66.2" r="1" fill="#C8417E"/><circle cx="${x + .7}" cy="66" r="1" fill="#D9558F"/><circle cx="${x}" cy="65.4" r=".8" fill="#C8417E"/>`;
             function y0(v) { return v; }
+            // hangend bloembakje aan een smeedijzeren haak
+            const bakje = x => `<path d="M${x - 1.8} 47.2 h1.8 v1.6" fill="none" stroke="${ZW}" stroke-width=".35"/><path d="M${x - 1.5} 50.4 h3 l-.5 1.9 h-2 Z" fill="${ZW}"/><circle cx="${x - 1.1}" cy="50" r="1" fill="#C8417E"/><circle cx="${x + 1.1}" cy="50" r="1" fill="#8A4FA8"/><circle cx="${x}" cy="49.3" r="1.1" fill="#D9558F"/><circle cx="${x - .4}" cy="50.5" r=".6" fill="#5C8A4A"/>`;
+            // vlag aan een schuine stok vanaf de goot; kant = -1 hangt naar links, 1 naar rechts
+            const vlag = (x, kant, lang, doek) => `<g transform="translate(${x} 44.4) scale(${kant} 1) rotate(20)"><path d="M0 0 V-${lang}" stroke="#8A8F96" stroke-width=".55" stroke-linecap="round"/><g transform="translate(.3 -${lang})">${doek}</g></g>`;
+            const vRood = '<rect width="5.6" height="3.8" fill="#D22630"/><circle cx="2.8" cy="1.9" r="1" fill="#fff"/>';
+            const vNL = '<rect width="9" height="2" fill="#AE1C28"/><rect y="2" width="9" height="2" fill="#fff"/><rect y="4" width="9" height="2" fill="#21468B"/><rect width="9" height="6" fill="none" stroke="#B5AEA2" stroke-width=".2"/>';
+            // wit doek met de blauwe vogel in het groene gras uit het dorpswapen
+            const vWapen = '<rect width="9.6" height="7" fill="#fff" stroke="#B5AEA2" stroke-width=".25"/>'
+                + '<path d="M4.3 5.9 V4.3 M5.1 5.9 V4.3" stroke="#3F5FD0" stroke-width=".35"/><ellipse cx="5" cy="3.6" rx="1.7" ry="1.05" fill="#3F5FD0" transform="rotate(18 5 3.6)"/>'
+                + '<path d="M3.9 3.2 Q3.3 2.2 4.5 1.5" fill="none" stroke="#3F5FD0" stroke-width=".6" stroke-linecap="round"/><circle cx="4.7" cy="1.35" r=".5" fill="#3F5FD0"/><path d="M4.4 1.4 L2.2 2.5" stroke="#3F5FD0" stroke-width=".35" stroke-linecap="round"/>'
+                + '<path d="M2 6.6 L2.5 5.2 L3 6.3 L3.6 5 L4.2 6.3 L4.8 5.3 L5.4 6.3 L6 5 L6.6 6.3 L7.2 5.3 L7.7 6.6 Z" fill="#3E8A5C"/>';
             return `<svg viewBox="7 2.5 102 72.5" width="${h * 102 / 72.5}" height="${h}" aria-hidden="true">
-<path d="M25 12 V4.5 M103.5 12 V3.5" stroke="${ZW}" stroke-width=".8"/><circle cx="25" cy="4.2" r=".6" fill="${ZW}"/><circle cx="103.5" cy="3.2" r=".6" fill="${ZW}"/>
+<path d="M12.5 12 V3.5 M103.5 12 V3.5" stroke="${ZW}" stroke-width=".8"/><circle cx="12.5" cy="3.2" r=".6" fill="${ZW}"/><circle cx="103.5" cy="3.2" r=".6" fill="${ZW}"/>
 <rect x="97" y="40" width="8" height="34.5" fill="#E8E4DB"/><path d="M98 44 V72" stroke="#5A5A5A" stroke-width=".5"/>
-<path d="M8.5 44.5 L25 12 H103 L107.5 44.5 Z" fill="${DAK}"/>
+<path d="M8.5 44.5 L13 12 H103 L107.5 44.5 Z" fill="${DAK}"/>
 <path d="${pannen}" stroke="#2C2C2F" stroke-width=".45"/>
-<rect x="43" y="23.6" width="23" height="18.4" fill="#22302C"/><rect x="41.8" y="21.6" width="25.4" height="2.4" fill="${ZW}"/>
-<g fill="#6E4C34" stroke="#121212" stroke-width=".8"><rect x="45.2" y="26.2" width="5" height="12.4"/><rect x="52" y="26.2" width="5" height="12.4"/><rect x="58.8" y="26.2" width="5" height="12.4"/></g>
-<path d="M46.4 27.4 l2.4 6 M53.2 27.4 l2.4 6 M60 27.4 l2.4 6" stroke="#A9825E" stroke-width=".5"/>
+<rect x="37" y="23.6" width="23" height="18.4" fill="#22302C"/><rect x="35.8" y="21.6" width="25.4" height="2.4" fill="${ZW}"/>
+<g fill="#6E4C34" stroke="#121212" stroke-width=".8"><rect x="39.2" y="26.2" width="5" height="12.4"/><rect x="46" y="26.2" width="5" height="12.4"/><rect x="52.8" y="26.2" width="5" height="12.4"/></g>
+<path d="M40.4 27.4 l2.4 6 M47.2 27.4 l2.4 6 M54 27.4 l2.4 6" stroke="#A9825E" stroke-width=".5"/>
 <rect x="11.5" y="44.6" width="86" height="30" fill="${MUUR}"/>
 <g fill="#E9E5DC" stroke="#BDB6AA" stroke-width=".3">${reliëf}</g>
 ${ramen}
 <rect x="11.5" y="69.6" width="86" height="4.9" fill="#D3CEC4"/><path d="M11.5 69.6 H97.5" stroke="#B3ADA2" stroke-width=".4"/>
 <path d="M7.6 44.6 H108.2" stroke="${ZW}" stroke-width="1.3"/>
-<rect x="44.2" y="36.4" width="5.6" height="6" fill="#141414"/><rect x="45.9" y="37.2" width="2.2" height="2.2" fill="#B88A3A"/><path d="M44.9 40.4 h4.2 M44.9 41.4 h4.2" stroke="#B88A3A" stroke-width=".25"/>
-${lantaarn(29, 45.2)}${lantaarn(46, 45.2)}${lantaarn(63, 45.2)}${lantaarn(80, 45.2)}
-${pot(48.6)}${pot(60.4)}
-<g fill="none" stroke="#262626" stroke-width="1" stroke-linejoin="round"><path d="M8.5 44.5 L25 12 H103 L107.5 44.5"/><path d="M11.5 45 V74.5 H97.5 V45"/><path d="M6.5 74.5 H109"/><path d="M41.8 21.6 H67.2 M43 24 V42 M66 24 V42"/></g>
+<rect x="38.2" y="36.4" width="5.6" height="6" fill="#141414"/><rect x="39.9" y="37.2" width="2.2" height="2.2" fill="#B88A3A"/><path d="M38.9 40.4 h4.2 M38.9 41.4 h4.2" stroke="#B88A3A" stroke-width=".25"/>
+${lantaarn(29, 45.2)}${lantaarn(45, 45.2)}${lantaarn(64, 45.2)}${lantaarn(80, 45.2)}
+${bakje(14.2)}${bakje(94.8)}
+${vlag(22, -1, 10, vRood)}${vlag(66, 1, 15, vWapen)}${vlag(90, 1, 14, vNL)}
+${pot(47.4)}${pot(61.6)}
+<g fill="none" stroke="#262626" stroke-width="1" stroke-linejoin="round"><path d="M8.5 44.5 L13 12 H103 L107.5 44.5"/><path d="M11.5 45 V74.5 H97.5 V45"/><path d="M6.5 74.5 H109"/><path d="M35.8 21.6 H61.2 M37 24 V42 M60 24 V42"/></g>
 </svg>`;
         };
         const bg = document.createElement('div');
