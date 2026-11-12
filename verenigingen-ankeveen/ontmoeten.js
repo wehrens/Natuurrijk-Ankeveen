@@ -1747,10 +1747,13 @@ ${pot(47.4)}${pot(61.6)}
           <g class="kop" style="transform-box:view-box;transform-origin:13px 9px">
             <path d="M12.8 9.4 q1.4 -2.4 1.6 -6.4" fill="none" stroke="${GR}" stroke-width="2.6" stroke-linecap="round"/><ellipse cx="14.7" cy="2.6" rx="1.95" ry="1.6" fill="${GR}"/>
             <path d="M12.8 9.4 q1.4 -2.4 1.6 -6.4" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><ellipse cx="14.7" cy="2.6" rx="1.4" ry="1.05" fill="#fff"/>
-            <path d="M15.7 1.9 L22.4 4.6 L15.8 3.3 Z" fill="${SNAVEL}" stroke="#b83a1c" stroke-width=".25" stroke-linejoin="round"/>
+            <path class="onder" d="M15.75 2.6 L22.4 4.6 L15.8 3.4 Z" fill="${SNAVEL}" stroke="#b83a1c" stroke-width=".25" stroke-linejoin="round" style="transform-box:view-box;transform-origin:15.8px 3px"/>
+            <path d="M15.7 1.9 L22.4 4.6 L15.75 2.75 Z" fill="${SNAVEL}" stroke="#b83a1c" stroke-width=".25" stroke-linejoin="round"/>
+            <path class="tak" d="M20.4 7 L24.6 2.4 M22.9 4.3 l2.1 .6 M21.6 5.7 l-1.9 -.5" fill="none" stroke="#7A5230" stroke-width=".8" stroke-linecap="round" style="opacity:0"/>
             <circle cx="15" cy="2.3" r=".42" fill="#1d1d1d"/></g></svg>
         <svg class="vlieg" viewBox="0 0 30 16" width="30" height="16" aria-hidden="true" style="position:absolute;left:0;top:2px;overflow:visible">
-          <path d="M8.8 8.5 l-9.6 1.2" stroke="${POOT}" stroke-width=".75"/>
+          <g class="poten" style="transform-box:view-box;transform-origin:11.5px 8.6px"><path d="M11.5 8.6 l-12.3 1.1" stroke="${POOT}" stroke-width=".75" stroke-linecap="round"/><path d="M0.2 9.6 l-1.6 -.5 M0.2 9.6 l-1.5 .9" stroke="${POOT}" stroke-width=".5" stroke-linecap="round"/></g>
+          <path class="tak" d="M29.8 10.6 L33.6 5.8 M32 7.8 l2.1 .5 M30.9 9.2 l-1.9 -.4" fill="none" stroke="#7A5230" stroke-width=".8" stroke-linecap="round" style="opacity:0"/>
           <path d="M18.4 7.7 l5.6 -.5" stroke="${GR}" stroke-width="2.3" stroke-linecap="round"/><ellipse cx="24.5" cy="7.1" rx="1.75" ry="1.4" fill="${GR}"/>
           <ellipse cx="13.5" cy="8" rx="5.6" ry="1.9" fill="#fff" stroke="${GR}" stroke-width=".7"/>
           <path d="M18.4 7.7 l5.6 -.5" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/><ellipse cx="24.5" cy="7.1" rx="1.2" ry=".9" fill="#fff"/>
@@ -1784,6 +1787,13 @@ ${pot(47.4)}${pot(61.6)}
     const dx = () => strip.getBoundingClientRect().left - balk.getBoundingClientRect().left;
     const naarLucht = () => { lucht.appendChild(ooi); };
     const naarNest = () => { strip.insertBefore(ooi, rand0); };
+    const landing = [];
+    // klepperen: kop helemaal achterover in de nek, snavel omhoog, en de ondersnavel ratelt open en dicht
+    function klepper(doe) {
+        const staan = ooi.querySelector('.staan'), kop = staan.querySelector('.kop'), onder = staan.querySelector('.onder');
+        doe(kop, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-78deg)', offset: .14 }, { transform: 'rotate(-72deg)', offset: .3 }, { transform: 'rotate(-80deg)', offset: .5 }, { transform: 'rotate(-72deg)', offset: .7 }, { transform: 'rotate(-78deg)', offset: .86 }, { transform: 'rotate(0deg)' }], { duration: 2400, easing: 'ease-in-out' });
+        doe(onder, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(17deg)' }], { duration: 75, direction: 'alternate', iterations: 22, delay: 380, easing: 'linear' });
+    }
     function ooievaar() {
         if (ooiBezig || document.hidden) return;
         if (ooiThuis && performance.now() - ooiSinds < 25000) return;           // net geland: eerst even blijven zitten
@@ -1798,22 +1808,43 @@ ${pot(47.4)}${pot(61.6)}
             naarLucht();
             ooi.style.transform = zet(xa, y0, r); ooi.style.opacity = 1;
             staan.style.opacity = 0; vlieg.style.opacity = 1;
+            landing.splice(0).forEach(a => a.cancel());
+            // elke keer brengt hij een takje mee voor het nest
+            const takV = vlieg.querySelector('.tak'), takS = staan.querySelector('.tak'), poten = vlieg.querySelector('.poten');
+            takV.style.opacity = 1; takS.style.opacity = 1;
+            vlieg.style.transformOrigin = '50% 55%';
             const k = klap();
             animate(ooi, [{ transform: zet(xa, y0, r) }, { transform: zet(xa + (xn - xa) * .5, hoog(), r), offset: .5 }, { transform: zet(xn - r * 26, yn - 14, r), offset: .85 }, { transform: zet(xn, yn, r) }], { duration: dur, easing: 'ease-out' });
-            later(() => k.cancel(), dur * .65);                                    // het laatste stuk zweeft hij
+            later(() => k.cancel(), dur * .65);                                    // even zweven...
+            // ...en vlak voor het nest: poten uitklappen en vooruit steken, lijf achterover, afremmen met de vleugels
+            const REM = Math.min(1100, dur * .22);
+            later(() => {
+                landing.push(animate(poten, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-118deg)' }], { duration: REM * .6, easing: 'ease-out' }));
+                landing.push(animate(vlieg, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-24deg)' }], { duration: REM * .7, easing: 'ease-out' }));
+                landing.push(animate(vl, [{ transform: 'scaleY(1)' }, { transform: 'scaleY(-.5)' }], { duration: 150, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
+            }, dur - REM);
             later(() => {
                 // in de strook zetten (achter de nestrand), op dezelfde plek
                 naarNest(); ooi.getAnimations().forEach(a => a.cancel());   // ook al afgelopen animaties (die met fill vasthouden)
                 ooi.style.transform = zet(nestX(), NESTY, r);
+                landing.splice(2).forEach(a => a.cancel());                  // klaar met afremmen
                 animate(vlieg, [{ opacity: 1 }, { opacity: 0 }], { duration: 200 }); animate(staan, [{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
-                // even rondkijken, dan nestelt hij zich (zakt in het nest) en klepperen: kop in de nek, snavel omhoog
-                later(() => animate(staan, [{ transform: 'translateY(0)' }, { transform: 'translateY(4px)' }], { duration: 900, easing: 'ease-in-out' }), 1400);
-                later(() => animate(staan.querySelector('.kop'), [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-55deg)', offset: .15 }, { transform: 'rotate(-48deg)', offset: .3 }, { transform: 'rotate(-55deg)', offset: .45 }, { transform: 'rotate(-48deg)', offset: .6 }, { transform: 'rotate(-55deg)', offset: .75 }, { transform: 'rotate(0deg)' }], { duration: 1600, easing: 'ease-in-out' }), 3000);
+                // hij staat op het nest: even rondkijken, dan buigt hij voorover en legt het takje in het nest,
+                // gooit zijn kop in de nek en klappert met zijn snavel, en nestelt zich (zakt in het nest)
+                const kop = staan.querySelector('.kop');
+                later(() => {
+                    animate(kop, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(62deg)', offset: .35 }, { transform: 'rotate(62deg)', offset: .6 }, { transform: 'rotate(0deg)' }], { duration: 1700, easing: 'ease-in-out' });
+                    later(() => { takS.style.opacity = 0; takV.style.opacity = 0; }, 900);
+                }, 1100);
+                later(() => klepper((el, fr, o) => animate(el, fr, o)), 3100);
+                later(() => animate(staan, [{ transform: 'translateY(0)' }, { transform: 'translateY(4px)' }], { duration: 900, easing: 'ease-in-out' }), 5700);
                 ooiThuis = true; ooiBezig = false; ooiSinds = performance.now();
             }, dur);
         } else {
             // opstaan, opvliegen en hoog over de kopbalk weg
             houdingen.splice(0).forEach(a => a.cancel());
+            landing.splice(0).forEach(a => a.cancel());
+            ooi.querySelectorAll('.tak').forEach(t => { t.style.opacity = 0; });
             animate(staan, [{ transform: 'translateY(4px)' }, { transform: 'translateY(0)' }], { duration: 600, easing: 'ease-out' });
             later(() => {
                 const naarRechts = chance(.5), r = naarRechts ? 1 : -1, xb = naarRechts ? width + 50 : -50, dur = Math.abs(xb - xn) * 8;
@@ -1830,7 +1861,7 @@ ${pot(47.4)}${pot(61.6)}
     // zich omdraaien, de andere kant op kijken of klepperen. Elke beweging begint en eindigt in de zithouding.
     const houdingen = [];
     function ooiHouding(kies) {
-        if (!ooiThuis || ooiBezig || document.hidden || performance.now() - ooiSinds < 6000) return;
+        if (!ooiThuis || ooiBezig || document.hidden || performance.now() - ooiSinds < 9000) return;
         const staan = ooi.querySelector('.staan'), kop = staan.querySelector('.kop');
         const doe = (el, frames, opts) => { const a = el.animate(frames, opts); houdingen.push(a); a.finished.catch(() => {}).then(() => { const i = houdingen.indexOf(a); if (i >= 0) houdingen.splice(i, 1); }); return a; };
         const ZIT = 'translateY(4px)';
@@ -1855,7 +1886,7 @@ ${pot(47.4)}${pot(61.6)}
             // de andere kant op kijken: kop en snavel draaien om en weer terug
             doe(kop, [{ transform: 'scaleX(1)' }, { transform: 'scaleX(-1)', offset: .1 }, { transform: 'scaleX(-1) rotate(8deg)', offset: .45 }, { transform: 'scaleX(-1)', offset: .88 }, { transform: 'scaleX(1)' }], { duration: rand(3200, 5200), easing: 'ease-in-out' });
         } else {
-            doe(kop, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-55deg)', offset: .15 }, { transform: 'rotate(-48deg)', offset: .3 }, { transform: 'rotate(-55deg)', offset: .45 }, { transform: 'rotate(-48deg)', offset: .6 }, { transform: 'rotate(-55deg)', offset: .75 }, { transform: 'rotate(0deg)' }], { duration: 1600, easing: 'ease-in-out' });
+            klepper(doe);
         }
     }
     const houdingRonde = () => { if (!houdingen.length) ooiHouding(); setTimeout(houdingRonde, rand(7000, 14000)); };
