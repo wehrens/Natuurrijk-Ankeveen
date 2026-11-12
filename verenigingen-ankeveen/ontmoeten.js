@@ -539,18 +539,15 @@
             <path d="M20 19 l5 -6" stroke="#F2C318" stroke-width="2" stroke-linecap="round"/><circle cx="25" cy="12" r="1.6" fill="#F2C318"/></svg>`;
         return w;
     }
-    // Carnaval hoort bij de kroeg: de ene keer komt de polonaise één voor één uit de deur van het café en host het
-    // beeld uit, de volgende keer komt ze van opzij aangehost en verdwijnt ze één voor één het café in.
-    // In de deur zijn de feestvierders klein (ze moeten erdoor passen); buiten groeien ze naar hun gewone formaat.
-    let carnBinnen = Math.random() < .5;        // de eerste keer willekeurig: het café uit of het café in; daarna om en om
-    function carnaval(kies) {
+    // Carnaval hoort bij de kroeg, in één doorlopende scène: de polonaise komt van opzij aangehost en verdwijnt één
+    // voor één het café in. Daar gaat het feest door (het café deint een paar tellen mee op de muziek), en dan komt
+    // iedereen één voor één weer naar buiten en host het beeld uit. In de deur zijn de feestvierders klein (ze
+    // moeten erdoor passen); buiten hebben ze hun gewone formaat.
+    function carnaval() {
         if (document.hidden) return;
-        const uit = kies === 'uit' ? true : kies === 'in' ? false : carnBinnen;
-        carnBinnen = !uit;
-        const width = W(), speed = 22, h = 22, y = GROUND - h, KLEIN = .42, GROEI = 34;
+        const width = W(), speed = 22, h = 22, y = GROUND - h, KLEIN = .42, GROEI = 34, BINNEN = 4400;
         const cd = plekken.cafeDeur(), deur = cd === null ? width * .5 : cd;
-        // naar buiten: de kant met de meeste ruimte op; naar binnen: van de kant die het verst weg is
-        const f = uit ? (chance(.5) ? 1 : -1) : (deur > width / 2 ? 1 : -1);
+        const f = chance(.5) ? 1 : -1;                                     // looprichting: ze trekken door naar de andere kant
         // het café deint mee op de muziek (n maten), met muzieknootjes boven het dak
         const deinen = n => {
             if (!pleinRand.cafe) return;
@@ -559,34 +556,30 @@
                 { transform: 'scale(1.04, .95) rotate(1.6deg)', offset: .75 }, { transform: 'scale(1, 1) rotate(0deg)' }], { duration: 1040, iterations: n, easing: 'ease-in-out' });
             for (let k = 0; k < n; k++) later(() => zegOp(deur + (k % 2 ? 12 : -12), GROUND - 34, k % 2 ? '♫' : '♪', pick(CARN), 11), k * 1040);
         };
-        // komen ze naar buiten, dan deint het café eerst al even: het feest is binnen in volle gang
-        const VOOR = uit ? 3200 : 0;
-        if (uit) deinen(4);
-        const stoet = []; let binnenNa = 0;
+        const stoet = [], leden = []; let binnenNa = 0;
         for (let i = 0; i < 12; i++) {
             const w = i === 0 ? prince() : reveler(i - 1); strip.appendChild(w); stoet.push(w);
             w.style.transformOrigin = '50% 100%';
             const ww = w.offsetWidth || 14, xd = deur - ww / 2, off = i * 13 + (i ? 4 : 0);
             const zet = (x, s) => `translate(${x}px, ${y}px) scale(${f * s}, ${s})`;
-            let a;
-            if (uit) {
-                const x1 = f > 0 ? width + 60 + EX : -80 - EX, d = Math.abs(x1 - xd) * speed, g = GROEI / Math.abs(x1 - xd);
-                w.style.opacity = 0; w.style.transform = zet(xd, KLEIN);
-                a = animate(w, [{ transform: zet(xd, KLEIN), opacity: 0 }, { transform: zet(xd + f * 3, KLEIN), opacity: 1, offset: g * .12 }, { transform: zet(xd + f * GROEI, 1), opacity: 1, offset: g }, { transform: zet(x1, 1), opacity: 1 }],
-                    { duration: d, delay: VOOR + 400 + i * 330, easing: 'linear' });
-            } else {
-                const x0 = f > 0 ? -40 - off : width + 20 + off, d = Math.abs(xd - x0) * speed, g = 1 - GROEI / Math.abs(xd - x0);
-                a = animate(w, [{ transform: zet(x0, 1), opacity: 1 }, { transform: zet(xd - f * GROEI, 1), opacity: 1, offset: g }, { transform: zet(xd - f * 2, KLEIN), opacity: 1, offset: g + (1 - g) * .9 }, { transform: zet(xd, KLEIN), opacity: 0 }],
-                    { duration: d, easing: 'linear' });
-                binnenNa = Math.max(binnenNa, d);
-            }
-            a.finished.then(() => w.remove()).catch(() => w.remove());
+            // 1. van opzij naar de deur en naar binnen
+            const x0 = f > 0 ? -40 - off : width + 20 + off, d = Math.abs(xd - x0) * speed, g = 1 - GROEI / Math.abs(xd - x0);
+            animate(w, [{ transform: zet(x0, 1), opacity: 1 }, { transform: zet(xd - f * GROEI, 1), opacity: 1, offset: g }, { transform: zet(xd - f * 2, KLEIN), opacity: 1, offset: g + (1 - g) * .9 }, { transform: zet(xd, KLEIN), opacity: 0 }],
+                { duration: d, easing: 'linear' });
+            binnenNa = Math.max(binnenNa, d);
+            leden.push({ w, xd, zet, i });
             // polonaise: hossen in de maat, om en om naar links en rechts
             animate(w.firstElementChild, [{ transform: 'translate(-2px, 0) rotate(-6deg)' }, { transform: 'translate(0, -2.5px) rotate(0deg)' }, { transform: 'translate(2px, 0) rotate(6deg)' }],
                 { duration: 520, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: -(i % 2) * 520 });
         }
-        // is iedereen binnen, dan gaat het feest daar door: het café deint een paar tellen mee op de muziek
-        if (!uit) later(() => deinen(6), binnenNa + 150);
+        // 2. iedereen is binnen: het café deint mee
+        later(() => deinen(4), binnenNa + 150);
+        // 3. en na een paar tellen komen ze één voor één weer naar buiten en trekken verder
+        later(() => leden.forEach(({ w, xd, zet, i }) => {
+            const x1 = f > 0 ? width + 60 + EX : -80 - EX, d = Math.abs(x1 - xd) * speed, g = GROEI / Math.abs(x1 - xd);
+            animate(w, [{ transform: zet(xd, KLEIN), opacity: 0 }, { transform: zet(xd + f * 3, KLEIN), opacity: 1, offset: g * .12 }, { transform: zet(xd + f * GROEI, 1), opacity: 1, offset: g }, { transform: zet(x1, 1), opacity: 1 }],
+                { duration: d, delay: i * 330, easing: 'linear' }).finished.then(() => w.remove()).catch(() => w.remove());
+        }), binnenNa + BINNEN);
         // confetti boven wie er buiten loopt
         const tick = setInterval(() => {
             const buiten = stoet.filter(e => e.isConnected);
@@ -2997,7 +2990,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: fanfare, dur: () => (W() + 200 + EX) * 24, groot: true },
         { run: skaters, dur: () => (W() + 200 + EX) * 7.5, maanden: [12, 1, 2] },
         { run: naturists, dur: () => (W() + 160 + EX) * 26 + 17500, groot: true, maanden: [5, 6, 7, 8, 9] },
-        { run: carnaval, dur: () => (W() + 260 + EX) * 22, groot: true, maanden: [11, 12, 1, 2, 3] },
+        { run: carnaval, dur: () => (W() + 300 + EX) * 22 + 9000, groot: true, maanden: [11, 12, 1, 2, 3] },
         { run: yogis, dur: () => (W() + 200 + EX) * 40, groot: true },
         { run: klasje, dur: () => (W() + 220 + EX) * 22, groot: true },
         { run: voetballer, dur: () => (W() + 100) * 30 },
