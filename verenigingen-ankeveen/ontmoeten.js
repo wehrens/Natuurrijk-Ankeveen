@@ -88,17 +88,17 @@
     const HUID = ['#F2C9B0', '#E3B093', '#C68A5C', '#8D5A3C', '#F6D6C2'];
     const HAAR = ['#2b2b2b', '#5a3a2a', '#8b5a2b', '#d9b36a', '#b0b0b0', '#c0392b'];
     const BROEK = ['#2f3e55', '#4a5568', '#6b7b8c', '#3b3b3b', '#7a5c3e', '#1f4e79', '#9aa5b1'];
-    function person(color, h) {
+    function person(color, h, stijl) {
         const w = document.createElement('div');
         w.className = 'om-p';
         w.style.height = h + 'px'; w.style.width = h * .45 + 'px';
         const huid = pick(HUID), haar = pick(HAAR), broek = pick(BROEK);
-        const hairStyle = pick([
+        const kapsels = [
             `<path d="M4.4 5 q0 -5.5 4.6 -5.5 q4.6 0 4.6 5.5 q-1.5 -2.5 -4.6 -2.5 q-3.1 0 -4.6 2.5z" fill="${haar}"/>`,        // kort
             `<path d="M4.4 6 q0 -6.5 4.6 -6.5 q4.6 0 4.6 6.5 l0 6 l-2 0 l0 -4 q-2.6 -1.5 -5.2 0 l0 4 l-2 0 z" fill="${haar}"/>`, // lang
             `<path d="M4.6 4 q1 -4.6 4.4 -4.6 q3.4 0 4.4 4.6 q-2 -1.6 -4.4 -1.6 q-2.4 0 -4.4 1.6z" fill="${haar}"/>`,         // pet-achtig kort
             `<path d="M9 0.2 q5 0 4.8 5.6 q-1.8 -2.8 -4.8 -2.8 q-3 0 -4.8 2.8 q-0.2 -5.6 4.8 -5.6z M4 5 l10 0" fill="${haar}"/>` // bob
-        ]);
+        ], hairStyle = stijl === undefined ? pick(kapsels) : kapsels[stijl];
         w.innerHTML = `<svg viewBox="0 0 18 40" width="${h * .45}" height="${h}" aria-hidden="true" style="overflow:visible">
             <path class="legB" d="M9.5 24 l1.2 7 l-0.4 7" fill="none" stroke="${broek}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transform-box:view-box;transform-origin:9px 24px"/>
             <path class="armB" d="M13.5 14 l0.8 6 l-1 4" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" style="transform-box:view-box;transform-origin:13px 14px"/>
@@ -2336,7 +2336,7 @@ ${pot(47.4)}${pot(61.6)}
     function baasMetHond(o = {}) {
         const h = o.h || rand(21, 24.5), w = document.createElement('div'); w.className = 'om-p';
         w.style.width = '34px'; w.style.height = h + 'px';
-        const pers = person(pick(KLEUR), h); pers.style.position = 'absolute'; pers.style.left = '0'; pers.style.top = '0';
+        const pers = person(o.jas || pick(KLEUR), h, o.kapsel); pers.style.position = 'absolute'; pers.style.left = '0'; pers.style.top = '0';
         const vacht = o.vacht || pick(VACHT), vlek = o.vlek || pick(VACHT), klein = chance(.5), dw = o.dw || (klein ? 12 : 15), dh = dw * .65;
         const licht = vacht === '#f4efe6' || vacht === '#d9b36a';                // lichte vacht krijgt een randje
         const rand_ = licht ? 'stroke="#8a7560" stroke-width=".6"' : '', poot = licht ? '#c9bca8' : vacht;
@@ -2365,6 +2365,73 @@ ${pot(47.4)}${pot(61.6)}
         const wag = animate(tail, [{ transform: 'rotate(-14deg)' }, { transform: 'rotate(14deg)' }], { duration: 260, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         lijn.style.transformOrigin = `${hx}px 0`;
         return { w, h, pers, dog, dw, lijn, lijnLen: cx - hx, trot, wag, b: pers.getAnimations()[0], bob: pers._bob };
+    }
+    // Vrouw (lang haar) met een flinke zwarte newfoundlander. Bij het bord Ankeveen gaat de hond zitten poepen.
+    // Zij bukt, ruimt de drol op met een groen zakje en loopt daarna met hond en zakje verder.
+    function newfoundlander() {
+        if (document.hidden) return;
+        const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, speed = 24, DW = 25;
+        const l = baasMetHond({ h: 23.5, dw: DW, vacht: '#1b1b1d', vlek: '#2c2c30', kapsel: 1 });
+        const y = GROUND - l.h, zet = x => `translate(${x}px, ${y}px) scaleX(${f})`;
+        strip.appendChild(l.w);
+        // Eigen tekening van de newfoundlander, in twee houdingen: lopend/staand en poepend (rug bol, achterlijf laag,
+        // achterpoten ver naar voren onder het lijf, staart omhoog, kop strak vooruit).
+        const Z = '#1b1b1d', Z2 = '#2e2e33', dh = DW * .65;
+        const kop = (x, y) => `<circle cx="${x}" cy="${y}" r="4.3" fill="${Z}"/><ellipse cx="${x + 3.9}" cy="${y + 1.5}" rx="2.6" ry="1.9" fill="${Z}"/><circle cx="${x + 6}" cy="${y + .9}" r=".8" fill="#000"/>
+            <path d="M${x - 2.2} ${y - 2.4} q-2.6 1.4 -1.6 6 q2.4 -1 3 -4.6 z" fill="${Z2}"/><circle cx="${x + 1.6}" cy="${y - .9}" r=".55" fill="#f2f2f2"/><circle cx="${x + 1.75}" cy="${y - .9}" r=".3" fill="#000"/>`;
+        l.dog.innerHTML = `<svg viewBox="0 0 31 20" width="${DW}" height="${dh}" aria-hidden="true" style="overflow:visible">
+            <g class="sta">
+              <path class="tail" d="M5.4 8 q-3.4 -1 -4 -5.4" fill="none" stroke="${Z}" stroke-width="3.2" stroke-linecap="round"/>
+              <path d="M6 12 v7.2 M9.6 12.6 v6.6 M17.6 12.6 v6.6 M20.6 12 v7.2" stroke="${Z}" stroke-width="2.8" stroke-linecap="round"/>
+              <ellipse cx="13" cy="9.6" rx="9.4" ry="5.4" fill="${Z}"/><path d="M6 6.6 q6 -3 13 -.6" fill="none" stroke="${Z2}" stroke-width="1.4" stroke-linecap="round"/>
+              <path d="M18 12.6 q2.4 2.6 4.4 .2" fill="none" stroke="${Z}" stroke-width="2.6" stroke-linecap="round"/>
+              ${kop(23.4, 6.2)}<path d="M19.6 8.6 l3.4 2.2" stroke="#D64541" stroke-width="1.2" stroke-linecap="round"/></g>
+            <g class="poep" style="opacity:0">
+              <path d="M4.6 12.4 L1.8 5" fill="none" stroke="${Z}" stroke-width="3" stroke-linecap="round"/>
+              <path d="M6.6 16.6 L13.4 17 L12.8 19.3 M5.6 17 L10.6 18 L10.2 19.3" fill="none" stroke="${Z}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M18.4 12 L17.2 19.3 M21 11.6 L20.2 19.3" stroke="${Z}" stroke-width="2.8" stroke-linecap="round"/>
+              <path d="M3.2 17.2 q-2.2 -9.8 6.6 -13 q7.6 -2.6 12.6 2 q2.2 3.4 .2 6.2 q-4.4 .2 -8.2 -1 q-3.4 1.4 -4.8 4.6 q-3 1.6 -6.4 1.2 z" fill="${Z}"/>
+              <path d="M6.4 8.4 q5.4 -4 12.4 -1.6" fill="none" stroke="${Z2}" stroke-width="1.4" stroke-linecap="round"/>
+              ${kop(23.8, 5.2)}<path d="M20 7.6 l3.4 2.2" stroke="#D64541" stroke-width="1.2" stroke-linecap="round"/></g></svg>`;
+        l.dog.style.width = DW + 'px';
+        const dsvg = l.dog.firstElementChild, sta = dsvg.querySelector('.sta'), poep = dsvg.querySelector('.poep');
+        l.trot.cancel(); l.wag.cancel();
+        l.trot = animate(sta, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1px)' }], { duration: 230, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        const staart = sta.querySelector('.tail'); staart.style.transformBox = 'fill-box'; staart.style.transformOrigin = '100% 100%';
+        l.wag = animate(staart, [{ transform: 'rotate(-12deg)' }, { transform: 'rotate(12deg)' }], { duration: 320, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        const x0 = fromLeft ? -50 : width + 20, x1 = fromLeft ? width + 40 + EX : -70 - EX;
+        const weg = () => animate(l.w, [{ transform: zet(x0) }, { transform: zet(x1) }], { duration: Math.abs(x1 - x0) * speed, easing: 'linear' }).finished.then(() => l.w.remove()).catch(() => l.w.remove());
+        const bord = pleinRand.bord && pleinRand.bord.offsetParent !== null ? pleinRand.bord.getBoundingClientRect() : null;
+        if (!bord) { weg(); return; }
+        const pk = bord.left - strip.getBoundingClientRect().left + (f > 0 ? 14 : 40);            // de paal waar ze het eerst langs komen
+        const achter = 33 - DW + DW * .1, D = pk - f * 4;                                       // de drol komt net vóór de paal te liggen
+        const xs = f > 0 ? D - achter : D - 34 + achter;
+        if (pk < 20 || pk > width - 10) { weg(); return; }
+        animate(l.w, [{ transform: zet(x0) }, { transform: zet(xs) }], { duration: Math.abs(xs - x0) * speed, easing: 'linear' }).finished.then(() => {
+            l.bob && l.bob.pause(); l.trot.pause(); l.wag.updatePlaybackRate(.3);
+            // de hond gaat in de poephouding staan, perst even en komt weer overeind
+            animate(sta, [{ opacity: 1 }, { opacity: 0 }], { duration: 300 });
+            animate(poep, [{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
+            const pers = poep.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(.5px)' }], { duration: 260, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+            later(() => { pers.cancel(); animate(poep, [{ opacity: 1 }, { opacity: 0 }], { duration: 300 }); animate(sta, [{ opacity: 0 }, { opacity: 1 }], { duration: 300 }); }, 2900);
+            const drol = document.createElement('div');
+            drol.style.cssText = 'position:absolute;left:0;top:0;width:5px;height:4px;line-height:0;pointer-events:none;z-index:1';
+            drol.innerHTML = '<svg viewBox="0 0 10 8" width="5" height="4" aria-hidden="true"><path d="M1 7.4 q-1 -2.4 2 -2.6 q-.8 -2 1.8 -2.2 q.2 -1.6 1.6 -2 q-.2 1.4 1 2.2 q2 .6 1 2.2 q2.4 .6 1.4 2.4 z" fill="#5A3A1C" stroke="#3E2710" stroke-width=".5"/></svg>';
+            drol.style.transform = `translate(${D - 2.5}px, ${GROUND - 4.6}px)`;
+            later(() => { strip.appendChild(drol); animate(drol, [{ opacity: 0, transform: drol.style.transform + ' scaleY(.3)' }, { opacity: 1, transform: drol.style.transform + ' scaleY(1)' }], { duration: 500 }); }, 1500);
+            // zij bukt, pakt de drol in een groen zakje en komt weer overeind met het zakje in haar hand
+            const psvg = l.pers.firstElementChild; psvg.style.transformOrigin = '50% 78%';
+            const zak = document.createElement('div');
+            zak.style.cssText = `position:absolute;left:${l.h * .45 * .72}px;top:${l.h * .62}px;width:4.4px;height:5px;line-height:0;opacity:0`;
+            zak.innerHTML = '<svg viewBox="0 0 9 10" width="4.4" height="5" aria-hidden="true"><path d="M4.5 .6 v2.2" stroke="#2E8A3C" stroke-width="1"/><path d="M1.2 5.6 q0 -3 3.3 -3 q3.3 0 3.3 3 q0 3.8 -3.3 3.8 q-3.3 0 -3.3 -3.8 z" fill="#3DAA4B" stroke="#2E8A3C" stroke-width=".6"/></svg>';
+            l.pers.appendChild(zak);
+            later(() => animate(psvg, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(52deg) translate(1.5px, 2px)', offset: .3 }, { transform: 'rotate(52deg) translate(1.5px, 2px)', offset: .68 }, { transform: 'rotate(0deg)' }], { duration: 1900, easing: 'ease-in-out' }), 3200);
+            later(() => { drol.remove(); zak.style.opacity = 1; }, 4200);
+            later(() => {
+                l.bob && l.bob.play(); l.trot.play(); l.wag.updatePlaybackRate(1);
+                animate(l.w, [{ transform: zet(xs) }, { transform: zet(x1) }], { duration: Math.abs(x1 - xs) * speed, easing: 'linear' }).finished.then(() => l.w.remove()).catch(() => l.w.remove());
+            }, 5300);
+        }).catch(() => l.w.remove());
     }
     function honden(test) {                           // test: { kant: 1 of -1 } laat één hondje bij de paal plassen
         if (document.hidden) return;
@@ -2748,6 +2815,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: klompenman, dur: () => (W() + 160 + EX) * 13 },
         { run: familie, dur: () => (W() + 200 + EX) * 27 },
         { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true },
+        { run: newfoundlander, dur: () => (W() + 120) * 24 + 5500 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },   // de Snoek staat er twee keer in: hij komt elke ronde twee keer langs
     ];
@@ -2822,7 +2890,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
