@@ -1627,6 +1627,18 @@ ${pot(47.4)}${pot(61.6)}
             bg.appendChild(d); obstakels.push(d);
             if (typeof pct === 'number' && pct < 40) pleinRand.huizen.push(d); else if (typeof pct !== 'number') pleinRand.cafe = d;
         });
+        // In de verte, boven een bomenrand: de omroeptoren van Hilversum (vanuit Ankeveen op veel plekken te zien)
+        const toren = document.createElement('div');
+        toren.style.cssText = `position:absolute;left:30%;bottom:${H - GROUND}px;transform:translateX(-50%);opacity:.62;line-height:0`;
+        toren.innerHTML = `<svg viewBox="0 0 44 60" width="${46 * 44 / 60}" height="46" aria-hidden="true">
+            <path d="M21.4 26 V6 M22.6 26 V6" stroke="#8FA6BA" stroke-width=".7"/><path d="M22 6 V1.5" stroke="#8FA6BA" stroke-width=".6"/>
+            <path d="M20.9 10 h2.2 M20.9 13 h2.2 M20.9 16 h2.2 M20.9 19 h2.2 M20.9 22 h2.2" stroke="#8FA6BA" stroke-width=".5"/>
+            <rect x="20.3" y="25" width="3.4" height="11" fill="#D9DDE0"/><path d="M22 26 V35" stroke="#B4BCC2" stroke-width=".5"/>
+            <rect x="20.7" y="36" width="2.6" height="20" fill="#C3CAD0"/>
+            <g fill="#6F93B3"><rect x="18.2" y="36" width="7.6" height="1.5"/><rect x="18" y="38.4" width="8" height="1.3"/><rect x="18.2" y="40.6" width="7.6" height="1.3"/>
+              <rect x="18.4" y="42.8" width="7.2" height="1.2"/><rect x="18.6" y="44.9" width="6.8" height="1.2"/><rect x="18.9" y="47" width="6.2" height="1.1"/></g>
+            <path d="M0 60 V56 q2 -3 4.5 -1 q1.5 -4 4.5 -1.5 q2 -3.5 5 -.5 q2.5 -4.5 5.5 -1 q2 -3 4.5 0 q2.5 -4 5.5 -.5 q2.5 -3 5 .5 q2 -3 4.5 0 q2 -1.5 5 1 V60 Z" fill="#5E8467"/></svg>`;
+        bg.appendChild(toren);
         // plaatsnaambord Ankeveen (blauw met witte rand), rechts
         const bord = document.createElement('div');
         bord.style.cssText = `position:absolute;right:max(14px, 4%);bottom:${H - GROUND}px;line-height:0;opacity:.85`;
