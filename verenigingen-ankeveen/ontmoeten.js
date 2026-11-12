@@ -1510,9 +1510,9 @@
         bg.setAttribute('aria-hidden', 'true');
         bg.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:0';
         // [positie %, svg, alleen op bredere schermen]
-        const stukken = [[17, huis(ROOD, 26), false], [22, huis2(BLAUW, 30), true], [51, kerk(52), false], [58, huis(ROOD, 27), true],
+        const stukken = [[17, huis(ROOD, 26), false], [22, huis2(BLAUW, 30), true],  [58, huis(ROOD, 27), true],
             [73, huis2(ROOD, 29), false], [78.5, huis(BLAUW, 25), true]];
-        stukken.push(['calc(51% - 44px)', cafe(36), false, .4]);                 // het café staat een stukje links van het kerkje
+        stukken.push(['calc(51% - 68px)', cafe(36), false, .4]);                 // het café staat een stukje links van het kerkje
         stukken.forEach(([pct, svg, breed, op]) => {
             const d = document.createElement('div');
             d.style.cssText = `position:absolute;left:${typeof pct === 'number' ? pct + '%' : pct};bottom:${H - GROUND}px;transform:translateX(-50%);opacity:${op || vaag};line-height:0`;
@@ -1531,6 +1531,17 @@
         st.textContent = '@media (max-width: 640px){ #ontmoeten .om-breed{display:none} }';
         document.head.appendChild(st);
         strip.appendChild(bg);
+        // De Dillewijn (het kerkje) is groter dan de strook hoog is: die staat in de kopbalk zelf, achter de tekst,
+        // met zijn voet op de grondlijn van de strook
+        const tb = document.getElementById('topbar') || strip.parentElement;
+        const dw = document.createElement('div'); dw.setAttribute('aria-hidden', 'true');
+        dw.innerHTML = kerk(74);
+        tb.appendChild(dw);
+        const zetKerk = () => {
+            const sr = strip.getBoundingClientRect(), br = tb.getBoundingClientRect();
+            dw.style.cssText = `position:absolute;z-index:-1;pointer-events:none;line-height:0;opacity:.26;left:${sr.left - br.left + sr.width * .51}px;top:${sr.top - br.top + GROUND - 74}px;transform:translateX(-50%)`;
+        };
+        zetKerk(); addEventListener('resize', zetKerk);
     }
     const PH = Math.min(46, GROUND - 6);            // paalhoogte: ruim boven de mensen uit
     const paal = document.createElement('div'), rand0 = document.createElement('div');
