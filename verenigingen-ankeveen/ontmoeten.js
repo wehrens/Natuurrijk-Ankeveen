@@ -53,7 +53,20 @@
     }
     const pick = a => a[Math.floor(Math.random() * a.length)];
     const chance = p => Math.random() < p;
-    const later = (fn, ms) => setTimeout(fn, ms);
+    // Uitgestelde stappen ("over 2 seconden de volgende beweging"). De klok telt alleen als het tabblad zichtbaar is:
+    // staat de pagina op de achtergrond, dan staan de bewegingen stil en wachten deze stappen mee. Zo loopt een
+    // scène niet door elkaar als je later terugkomt.
+    const wachtrij = new Set();
+    const later = (fn, ms) => {
+        const t = { rest: Math.max(0, ms || 0), start: 0, id: 0 };
+        t.go = () => { t.start = performance.now(); t.id = setTimeout(() => { wachtrij.delete(t); fn(); }, t.rest); };
+        wachtrij.add(t); if (!document.hidden) t.go();
+        return t;
+    };
+    document.addEventListener('visibilitychange', () => wachtrij.forEach(t => {
+        if (document.hidden) { if (t.id) { clearTimeout(t.id); t.id = 0; t.rest = Math.max(0, t.rest - (performance.now() - t.start)); } }
+        else if (!t.id) t.go();
+    }));
     const running = new Set();
     // Looptochten (rechtlijnig van A naar B) onthouden we, zodat ze bij het kantelen van een telefoon
     // (strook wordt breder) gewoon doorlopen tot de nieuwe rand in plaats van halverwege te verdwijnen.
@@ -1128,6 +1141,64 @@
 
     // Familie: een lange vader (zo'n twee koppen langer dan moeder) met een donkerbruine labrador aan de lijn,
     // moeder, en een tweeling die net kan lopen en waggelend meedribbelt. Ze lopen op peutertempo.
+    // ARTV tennis: twee tennissers met een racket lopen voorbij en slaan onderweg een geel balletje naar elkaar over.
+    // De voorste loopt daarvoor achteruit.
+    function tennissers() {
+        if (document.hidden) return;
+        const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, speed = 24, h = 23, GAT = 44, BW = GAT + 12;
+        const w = document.createElement('div'); w.className = 'om-p'; w.style.width = BW + 'px'; w.style.height = h + 'px';
+        const NS = 'http://www.w3.org/2000/svg', kl = KLEUR.slice().sort(() => Math.random() - .5);
+        const speler = (x, binnen) => {                        // binnen: de kant van de ander (1 = rechts, -1 = links)
+            const p = person(kl.pop(), h); delete p.dataset.groet; p.style.left = x + 'px'; p.style.top = '0';
+            const svg = p.firstElementChild, g = document.createElementNS(NS, 'g'), mx = v => binnen > 0 ? v : 18 - v;
+            g.setAttribute('class', 'racket'); g.style.cssText = `transform-box:view-box;transform-origin:${mx(13)}px 14px`;
+            g.innerHTML = `<path d="M${mx(13.6)} 23.4 L${mx(17.2)} 18.2" stroke="#3b3b3b" stroke-width="1.2" stroke-linecap="round"/>
+                <ellipse cx="${mx(19.4)}" cy="15" rx="2.7" ry="3.6" fill="rgba(255,255,255,.55)" stroke="#D64541" stroke-width="1" transform="rotate(${binnen * 34} ${mx(19.4)} 15)"/>`;
+            svg.appendChild(g);
+            svg.insertAdjacentHTML('beforeend', '<path d="M4.6 3.4 h8.8" stroke="#fff" stroke-width="1.5"/>');      // zweetbandje
+            w.appendChild(p); bob(p, rand(400, 450));
+            return { p, svg, g, arm: svg.querySelector(binnen > 0 ? '.armB' : '.armA'), binnen };
+        };
+        const A = speler(0, 1), B = speler(GAT, -1);
+        const bal = document.createElement('div');
+        bal.style.cssText = 'position:absolute;left:0;top:0;width:3.4px;height:3.4px;border-radius:50%;background:#D9EC3F;box-shadow:0 0 0 .5px #7f8f1e';
+        w.appendChild(bal); strip.appendChild(w);
+        // de bal gaat in een boogje heen en weer; bij elke slag zwaaien arm en racket
+        const xa = 12, xb = GAT - 3, yh = h * .36, T = 1000, fr = [];
+        for (let i = 0; i <= 10; i++) { const t = i / 10; fr.push({ transform: `translate(${xa + (xb - xa) * t}px, ${yh - 9 * 4 * t * (1 - t)}px)` }); }
+        animate(bal, fr, { duration: T, direction: 'alternate', iterations: Infinity, easing: 'linear' });
+        const sla = s => { const k = [{ transform: 'rotate(0deg)' }, { transform: `rotate(${s.binnen * 34}deg)`, offset: .3 }, { transform: `rotate(${-s.binnen * 46}deg)`, offset: .6 }, { transform: 'rotate(0deg)' }];
+            s.g.animate(k, { duration: 420, easing: 'ease-out' }); s.arm && s.arm.animate(k, { duration: 420, easing: 'ease-out' }); };
+        let beurt = 0;
+        const slag = setInterval(() => { if (!w.isConnected) { clearInterval(slag); return; } if (!document.hidden) sla(beurt++ % 2 ? A : B); }, T);
+        later(() => sla(A), 0);
+        const x0 = fromLeft ? -BW - 10 : width + 10, x1 = fromLeft ? width + 30 + EX : -BW - 30 - EX, y = GROUND - h;
+        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(x1 - x0) * speed, easing: 'linear' })
+            .finished.then(() => w.remove()).catch(() => w.remove());
+    }
+    // Biljart ('t Centrum en De Tram): twee mannen dragen samen een biljarttafel voorbij. Het groene laken wiebelt,
+    // de drie ballen (wit, geel, rood) rollen heen en weer en de keus liggen erbovenop.
+    function biljarters() {
+        if (document.hidden) return;
+        const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, speed = 30, h = 23.5, GAT = 46, BW = GAT + 11;
+        const w = document.createElement('div'); w.className = 'om-p'; w.style.width = BW + 'px'; w.style.height = h + 'px';
+        [0, GAT].forEach(x => { const p = person(pick(['#2f3e55', '#5a3a2a', '#1f4e79', '#4a5d3a', '#7a1f2b']), h, 0); delete p.dataset.groet; p.style.left = x + 'px'; p.style.top = '0'; w.appendChild(p); bob(p, rand(430, 480)); });
+        const tafel = document.createElement('div');
+        const tw = GAT - 5, ty = h * .5;
+        tafel.style.cssText = `position:absolute;left:8px;top:${ty - 6}px;width:${tw}px;height:14px;line-height:0;transform-origin:50% 60%`;
+        tafel.innerHTML = `<svg viewBox="0 0 ${tw} 14" width="${tw}" height="14" aria-hidden="true" style="overflow:visible">
+            <path d="M-3 4.6 L${tw * .55} 3.4 M${tw + 4} 4.2 L${tw * .4} 3" stroke="#B98A4E" stroke-width=".9" stroke-linecap="round"/>
+            <path d="M4 9 v4.4 M${tw - 4} 9 v4.4" stroke="#5A3A22" stroke-width="2.2" stroke-linecap="round"/>
+            <rect x="0" y="5.2" width="${tw}" height="4.4" rx="1" fill="#6B4226"/><rect x="1.2" y="5.2" width="${tw - 2.4}" height="1.7" fill="#1F8A52"/>
+            <g class="ballen"><circle cx="${tw * .36}" cy="3.9" r="1.35" fill="#fff" stroke="#8a8f96" stroke-width=".3"/><circle cx="${tw * .5}" cy="3.9" r="1.35" fill="#F2C318"/><circle cx="${tw * .66}" cy="3.9" r="1.35" fill="#D22630"/></g></svg>`;
+        w.appendChild(tafel); strip.appendChild(w);
+        const o = { duration: 950, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' };
+        animate(tafel, [{ transform: 'rotate(-2.2deg)' }, { transform: 'rotate(2.2deg)' }], o);
+        animate(tafel.querySelector('.ballen'), [{ transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }], Object.assign({ delay: 180 }, o));
+        const x0 = fromLeft ? -BW - 10 : width + 10, x1 = fromLeft ? width + 30 + EX : -BW - 30 - EX, y = GROUND - h;
+        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(x1 - x0) * speed, easing: 'linear' })
+            .finished.then(() => w.remove()).catch(() => w.remove());
+    }
     function familie() {
         if (document.hidden) return;
         const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, speed = 27;
@@ -2847,6 +2918,8 @@ ${pot(47.4)}${pot(61.6)}
         { run: familie, dur: () => (W() + 200 + EX) * 27 },
         { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true },
         { run: newfoundlander, dur: () => (W() + 120) * 24 + 6500 },
+        { run: tennissers, dur: () => (W() + 120 + EX) * 24 },
+        { run: biljarters, dur: () => (W() + 120 + EX) * 30 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },   // de Snoek staat er twee keer in: hij komt elke ronde twee keer langs
     ];
@@ -2921,7 +2994,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
