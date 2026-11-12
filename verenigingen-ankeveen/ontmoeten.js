@@ -1489,6 +1489,46 @@
 
 
     // Ooievaarspaal: een vaste paal met nest; af en toe landt er een ooievaar die zich nestelt, klepperend, en later weer wegvliegt
+    // Achtergrond uit het Dorpsgenoten-logo: vage huisjes (rood en blauw) en het kerkje, en een plaatsnaambord
+    // "Ankeveen", zodat je meteen ziet dat dit ons dorp is. Ze staan zacht op de achtergrond, achter alle mensen.
+    {
+        const ROOD = '#B5401F', BLAUW = '#3B7BC8', vaag = .2;
+        const huis = (kleur, h) => `<svg viewBox="0 0 30 34" width="${h * 30 / 34}" height="${h}" aria-hidden="true">
+            <path d="M0 13 L15 0 L30 13 V34 H0 Z" fill="${kleur}"/><rect x="5" y="15" width="5.4" height="5.4" rx="1" fill="#fff"/><rect x="19.6" y="15" width="5.4" height="5.4" rx="1" fill="#fff"/>
+            <path d="M12 34 V26 q3 -3.4 6 0 V34 Z" fill="#fff"/></svg>`;
+        const huis2 = (kleur, h) => `<svg viewBox="0 0 30 40" width="${h * 30 / 40}" height="${h}" aria-hidden="true">
+            <path d="M0 12 L15 0 L30 12 V40 H0 Z" fill="${kleur}"/><rect x="5" y="14" width="5.4" height="5.4" rx="1" fill="#fff"/><rect x="12.3" y="14" width="5.4" height="5.4" rx="1" fill="#fff"/><rect x="19.6" y="14" width="5.4" height="5.4" rx="1" fill="#fff"/>
+            <rect x="5" y="24" width="5.4" height="5.4" rx="1" fill="#fff"/><rect x="19.6" y="24" width="5.4" height="5.4" rx="1" fill="#fff"/></svg>`;
+        const kerk = h => `<svg viewBox="0 0 40 80" width="${h / 2}" height="${h}" aria-hidden="true">
+            <path d="M20 0 L23 22 H17 Z" fill="${ROOD}"/><path d="M16 22 h8 v6 q2 0 2 3 v8 h-12 v-8 q0 -3 2 -3 z" fill="${ROOD}"/>
+            <path d="M18.4 31 v5 M21.6 31 v5" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M8 46 h4 v-3 h4 v-4 h8 v4 h4 v3 h4 v4 q4 0 4 4 V80 H4 V54 q0 -4 4 -4 z" fill="${ROOD}"/>
+            <path d="M15.4 56 v10 M20 54 v12 M24.6 56 v10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M16 80 v-7 q4 -3 8 0 v7 z" fill="#fff"/></svg>`;
+        const bg = document.createElement('div');
+        bg.setAttribute('aria-hidden', 'true');
+        bg.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:0';
+        // [positie %, svg, alleen op bredere schermen]
+        const stukken = [[17, huis(ROOD, 26), false], [22, huis2(BLAUW, 30), true], [44, huis(BLAUW, 24), true], [51, kerk(52), false], [58, huis(ROOD, 27), true],
+            [73, huis2(ROOD, 29), false], [78.5, huis(BLAUW, 25), true]];
+        stukken.forEach(([pct, svg, breed]) => {
+            const d = document.createElement('div');
+            d.style.cssText = `position:absolute;left:${pct}%;bottom:${H - GROUND}px;transform:translateX(-50%);opacity:${vaag};line-height:0`;
+            d.innerHTML = svg; if (breed) d.className = 'om-breed';
+            bg.appendChild(d);
+        });
+        // plaatsnaambord Ankeveen (blauw met witte rand), rechts
+        const bord = document.createElement('div');
+        bord.style.cssText = `position:absolute;right:max(14px, 4%);bottom:${H - GROUND}px;line-height:0;opacity:.85`;
+        bord.innerHTML = `<svg viewBox="0 0 54 30" width="54" height="30" aria-hidden="true">
+            <path d="M14 14 V30 M40 14 V30" stroke="#8a8f96" stroke-width="1.6"/>
+            <rect x="1" y="1" width="52" height="15" rx="3" fill="#0F4C92"/><rect x="2.6" y="2.6" width="48.8" height="11.8" rx="2" fill="none" stroke="#fff" stroke-width="1"/>
+            <text x="27" y="11.4" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="8" fill="#fff" letter-spacing=".3">Ankeveen</text></svg>`;
+        bg.appendChild(bord);
+        const st = document.createElement('style');
+        st.textContent = '@media (max-width: 640px){ #ontmoeten .om-breed{display:none} }';
+        document.head.appendChild(st);
+        strip.appendChild(bg);
+    }
     const PH = Math.min(46, GROUND - 6);            // paalhoogte: ruim boven de mensen uit
     const paal = document.createElement('div'), rand0 = document.createElement('div');
     const TAK = '#7a5a36', TAK2 = '#9c7a4e';
