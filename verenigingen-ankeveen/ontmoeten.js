@@ -492,27 +492,50 @@
             <path d="M20 19 l5 -6" stroke="#F2C318" stroke-width="2" stroke-linecap="round"/><circle cx="25" cy="12" r="1.6" fill="#F2C318"/></svg>`;
         return w;
     }
-    function carnaval() {
+    // Carnaval hoort bij de kroeg: de ene keer komt de polonaise één voor één uit de deur van het café en host het
+    // beeld uit, de volgende keer komt ze van opzij aangehost en verdwijnt ze één voor één het café in.
+    // In de deur zijn de feestvierders klein (ze moeten erdoor passen); buiten groeien ze naar hun gewone formaat.
+    let carnBinnen = true;
+    function carnaval(kies) {
         if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, speed = 22, dur = (width + 260 + EX) * speed;
+        const uit = kies === 'uit' ? true : kies === 'in' ? false : carnBinnen;
+        carnBinnen = !uit;
+        const width = W(), speed = 22, h = 22, y = GROUND - h, KLEIN = .42, GROEI = 34;
+        const cr = pleinRand.cafe ? pleinRand.cafe.getBoundingClientRect() : null, sr = strip.getBoundingClientRect();
+        const deur = cr ? cr.left + cr.width / 2 - sr.left : width * .5;
+        // naar buiten: de kant met de meeste ruimte op; naar binnen: van de kant die het verst weg is
+        const f = uit ? (chance(.5) ? 1 : -1) : (deur > width / 2 ? 1 : -1);
         const stoet = [];
         for (let i = 0; i < 12; i++) {
             const w = i === 0 ? prince() : reveler(i - 1); strip.appendChild(w); stoet.push(w);
-            const off = i * 13 + (i ? 4 : 0), h = 22, y = GROUND - h;
-            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 60 + EX - off : -80 - EX + off;
-            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
-                .finished.then(() => w.remove()).catch(() => w.remove());
+            w.style.transformOrigin = '50% 100%';
+            const ww = w.offsetWidth || 14, xd = deur - ww / 2, off = i * 13 + (i ? 4 : 0);
+            const zet = (x, s) => `translate(${x}px, ${y}px) scale(${f * s}, ${s})`;
+            let a;
+            if (uit) {
+                const x1 = f > 0 ? width + 60 + EX : -80 - EX, d = Math.abs(x1 - xd) * speed, g = GROEI / Math.abs(x1 - xd);
+                w.style.opacity = 0; w.style.transform = zet(xd, KLEIN);
+                a = animate(w, [{ transform: zet(xd, KLEIN), opacity: 0 }, { transform: zet(xd + f * 3, KLEIN), opacity: 1, offset: g * .12 }, { transform: zet(xd + f * GROEI, 1), opacity: 1, offset: g }, { transform: zet(x1, 1), opacity: 1 }],
+                    { duration: d, delay: 400 + i * 330, easing: 'linear' });
+            } else {
+                const x0 = f > 0 ? -40 - off : width + 20 + off, d = Math.abs(xd - x0) * speed, g = 1 - GROEI / Math.abs(xd - x0);
+                a = animate(w, [{ transform: zet(x0, 1), opacity: 1 }, { transform: zet(xd - f * GROEI, 1), opacity: 1, offset: g }, { transform: zet(xd - f * 2, KLEIN), opacity: 1, offset: g + (1 - g) * .9 }, { transform: zet(xd, KLEIN), opacity: 0 }],
+                    { duration: d, easing: 'linear' });
+            }
+            a.finished.then(() => w.remove()).catch(() => w.remove());
             // polonaise: hossen in de maat, om en om naar links en rechts
             animate(w.firstElementChild, [{ transform: 'translate(-2px, 0) rotate(-6deg)' }, { transform: 'translate(0, -2.5px) rotate(0deg)' }, { transform: 'translate(2px, 0) rotate(6deg)' }],
                 { duration: 520, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: -(i % 2) * 520 });
         }
-        // confetti boven de stoet
-        const t0 = performance.now();
+        // confetti boven wie er buiten loopt
         const tick = setInterval(() => {
-            const p = (performance.now() - t0) / dur; if (p >= 1) { clearInterval(tick); return; }
-            const x = (fromLeft ? -40 : width + 20) + f * (width + 100) * p - f * rand(-6, 165);   // boven de stoet, van prins tot staart
+            const buiten = stoet.filter(e => e.isConnected);
+            if (!buiten.length) { clearInterval(tick); return; }
+            const e = pick(buiten), r = e.getBoundingClientRect(), sb = strip.getBoundingClientRect();
+            if (r.height < h * .8 || r.right < sb.left || r.left > sb.right) return;       // nog (of al) in de deur, of buiten beeld
+            const x = r.left + r.width / 2 - sb.left + rand(-8, 8);
             const c = document.createElement('div'); c.className = 'om-conf'; c.style.background = pick(CARN.concat(PRUIK)); strip.appendChild(c);
-            animate(c, [{ transform: `translate(${x}px, ${GROUND - 44}px) rotate(0deg)`, opacity: 0 }, { transform: `translate(${x + rand(-3, 3)}px, ${GROUND - 36}px) rotate(90deg)`, opacity: 1, offset: .15 }, { transform: `translate(${x - f * rand(4, 14)}px, ${GROUND - 4}px) rotate(${rand(360, 720)}deg)`, opacity: .3 }], { duration: rand(1500, 2300), easing: 'ease-in' })
+            animate(c, [{ transform: `translate(${x}px, ${GROUND - 44}px) rotate(0deg)`, opacity: 0 }, { transform: `translate(${x + rand(-3, 3)}px, ${GROUND - 36}px) rotate(90deg)`, opacity: 1, offset: .15 }, { transform: `translate(${x - f * rand(4, 14)}px, ${GROUND - 4}px) rotate(${rand(360, 720)}deg)`, opacity: .3 }], { duration: rand(1400, 2200), easing: 'ease-in' })
                 .finished.then(() => c.remove()).catch(() => c.remove());
         }, 160);
         // "Alááf!", drie keer kort na elkaar, telkens van een andere plek in de stoet
