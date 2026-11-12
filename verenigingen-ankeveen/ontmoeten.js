@@ -446,7 +446,7 @@
         // zonnetje boven de handdoek
         later(() => { const z = document.createElement('div'); z.style.cssText = 'position:absolute;left:0;top:0;font-size:12px;line-height:1;pointer-events:none';
             const zp = luchtPlek(stopX + (n - 1) * GAP * f / 2, 14, 14);
-            z.textContent = '☀️'; z.style.transform = `translate(${zp.x}px, ${zp.y}px)`; lucht.appendChild(z);
+            z.textContent = '☀️'; z.style.transform = `translate(${zp.x}px, ${zp.y}px)`; verte.appendChild(z);
             animate(z, [{ opacity: 0, transform: z.style.transform + ' scale(.5)' }, { opacity: 1, transform: z.style.transform + ' scale(1)' }], { duration: 600, easing: 'ease-out' });
             later(() => animate(z, [{ opacity: 1 }, { opacity: 0 }], { duration: 500 }).finished.then(() => z.remove()).catch(() => z.remove()), LIG - 1800); }, inDur + 1800);
         // omstanders schrikken: hun tekstballon wordt een uitroepteken
@@ -1627,19 +1627,14 @@ ${pot(47.4)}${pot(61.6)}
             bg.appendChild(d); obstakels.push(d);
             if (typeof pct === 'number' && pct < 40) pleinRand.huizen.push(d); else if (typeof pct !== 'number') pleinRand.cafe = d;
         });
-        // In de verte, boven een bomenrand: de omroeptoren van Hilversum (vanuit Ankeveen op veel plekken te zien)
-        const toren = document.createElement('div');
-        toren.style.cssText = `position:absolute;left:30%;bottom:${H - GROUND}px;transform:translateX(-50%);opacity:.62;line-height:0`;
-        toren.innerHTML = `<svg viewBox="0 0 44 60" width="${46 * 44 / 60}" height="46" aria-hidden="true">
-            <path d="M22 5 V2" stroke="#9AA3A8" stroke-width=".5"/>
-            <path d="M21.3 19.5 V5.5 M22.7 19.5 V5.5" stroke="#4E5A60" stroke-width=".55"/>
-            <path d="M21.3 7 L22.7 9 L21.3 11 L22.7 13 L21.3 15 L22.7 17 L21.3 19" fill="none" stroke="#4E5A60" stroke-width=".4"/>
-            <rect x="20.3" y="19.5" width="3.4" height="38.5" fill="#A9B0B4"/><path d="M22 20 V58" stroke="#8C959A" stroke-width=".5"/>
-            <g fill="#5F706A"><rect x="18.6" y="29" width="6.8" height="1.6"/><rect x="18.6" y="31" width="6.8" height="1.6"/><rect x="18.6" y="33" width="6.8" height="1.6"/></g>
-            <g fill="#8A9692"><rect x="18.7" y="35.6" width="6.6" height=".9"/><rect x="18.7" y="37.6" width="6.6" height=".9"/><rect x="18.9" y="39.6" width="6.2" height=".8"/><rect x="18.7" y="41.4" width="6.6" height=".9"/></g>
-            <circle cx="19.3" cy="41" r=".7" fill="#F2F2F2"/><circle cx="24.7" cy="36.9" r=".6" fill="#F2F2F2"/>
-            <path d="M0 60 V56 q2 -3 4.5 -1 q1.5 -4 4.5 -1.5 q2 -3.5 5 -.5 q2.5 -4.5 5.5 -1 q2 -3 4.5 0 q2.5 -4 5.5 -.5 q2.5 -3 5 .5 q2 -3 4.5 0 q2 -1.5 5 1 V60 Z" fill="#5E8467"/></svg>`;
-        bg.appendChild(toren);
+        // In de verte een lage, brede bomenrand die links en rechts vervaagt; daarboven de omroeptoren (zie verderop)
+        const bos = document.createElement('div');
+        const fade = 'linear-gradient(90deg, transparent 0%, #000 28%, #000 72%, transparent 100%)';
+        bos.style.cssText = `position:absolute;left:30%;bottom:${H - GROUND}px;width:min(170px, 40vw);height:6px;transform:translateX(-50%);opacity:.5;line-height:0;-webkit-mask-image:${fade};mask-image:${fade}`;
+        let kruinen = 'M0 6 V3.4';
+        for (let x = 0; x < 170; x += 5) kruinen += ` q2.5 ${-(1.4 + (x * 7 % 5) * .45).toFixed(2)} 5 0`;
+        bos.innerHTML = `<svg viewBox="0 0 170 6" width="100%" height="6" preserveAspectRatio="none" aria-hidden="true"><path d="${kruinen} V6 Z" fill="#5E8467"/></svg>`;
+        bg.appendChild(bos);
         // plaatsnaambord Ankeveen (blauw met witte rand), rechts
         const bord = document.createElement('div');
         bord.style.cssText = `position:absolute;right:max(14px, 4%);bottom:${H - GROUND}px;line-height:0;opacity:.85`;
@@ -1663,6 +1658,26 @@ ${pot(47.4)}${pot(61.6)}
             dw.style.cssText = `position:absolute;z-index:-1;pointer-events:none;line-height:0;opacity:.26;left:${sr.left - br.left + sr.width * .62}px;top:${sr.top - br.top + GROUND - 74}px;transform:translateX(-50%)`;
         };
         zetKerk(); addEventListener('resize', zetKerk);
+        // De omroeptoren van Hilversum, ver weg: klein, hoog boven de bomenrand en onderaan in de nevel vervagend.
+        // Hij staat (net als het kerkje) in de kopbalk, achter de tekst. Vogels en de ooievaar vliegen ervoor langs;
+        // de zon hangt in een laag daarachter (zie `verte`).
+        const toren = document.createElement('div'); toren.setAttribute('aria-hidden', 'true');
+        toren.innerHTML = `<svg viewBox="17.5 1 9 57" width="${34 * 9 / 57}" height="34">
+            <path d="M22 5 V2" stroke="#9AA3A8" stroke-width=".5"/>
+            <path d="M21.3 19.5 V5.5 M22.7 19.5 V5.5" stroke="#4E5A60" stroke-width=".55"/>
+            <path d="M21.3 7 L22.7 9 L21.3 11 L22.7 13 L21.3 15 L22.7 17 L21.3 19" fill="none" stroke="#4E5A60" stroke-width=".4"/>
+            <rect x="20.3" y="19.5" width="3.4" height="38.5" fill="#A9B0B4"/><path d="M22 20 V58" stroke="#8C959A" stroke-width=".5"/>
+            <g fill="#5F706A"><rect x="18.6" y="29" width="6.8" height="1.6"/><rect x="18.6" y="31" width="6.8" height="1.6"/><rect x="18.6" y="33" width="6.8" height="1.6"/></g>
+            <g fill="#8A9692"><rect x="18.7" y="35.6" width="6.6" height=".9"/><rect x="18.7" y="37.6" width="6.6" height=".9"/><rect x="18.9" y="39.6" width="6.2" height=".8"/><rect x="18.7" y="41.4" width="6.6" height=".9"/></g>
+            <circle cx="19.3" cy="41" r=".7" fill="#F2F2F2"/><circle cx="24.7" cy="36.9" r=".6" fill="#F2F2F2"/>
+</svg>`;
+        tb.appendChild(toren);
+        const nevel = 'linear-gradient(180deg, #000 0%, #000 62%, transparent 100%)';
+        const zetToren = () => {
+            const sr = strip.getBoundingClientRect(), br = tb.getBoundingClientRect();
+            toren.style.cssText = `position:absolute;z-index:-1;pointer-events:none;line-height:0;opacity:.6;left:${sr.left - br.left + sr.width * .3}px;top:${sr.top - br.top + GROUND - 5 - 34}px;transform:translateX(-50%);-webkit-mask-image:${nevel};mask-image:${nevel}`;
+        };
+        zetToren(); addEventListener('resize', zetToren);
     }
     const PH = Math.min(46, GROUND - 6);            // paalhoogte: ruim boven de mensen uit
     const paal = document.createElement('div'), rand0 = document.createElement('div');
@@ -1709,6 +1724,11 @@ ${pot(47.4)}${pot(61.6)}
     lucht.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:3;overflow:hidden';
     lucht.setAttribute('aria-hidden', 'true');
     balk.appendChild(lucht);
+    // de verre lucht: achter de omroeptoren, het kerkje en de tekst. Hier hangt de zon.
+    const verte = document.createElement('div');
+    verte.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:-2;overflow:hidden';
+    verte.setAttribute('aria-hidden', 'true');
+    balk.appendChild(verte);
     const dy = () => strip.getBoundingClientRect().top - balk.getBoundingClientRect().top;   // strook t.o.v. de kopbalk
     const dx = () => strip.getBoundingClientRect().left - balk.getBoundingClientRect().left;
     const naarLucht = () => { lucht.appendChild(ooi); };
