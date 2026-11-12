@@ -1751,11 +1751,12 @@
         const huis2 = (kleur, h) => `<svg viewBox="0 0 30 40" width="${h * 30 / 40}" height="${h}" aria-hidden="true">
             <path d="M0 12 L15 0 L30 12 V40 H0 Z" fill="${kleur}"/><rect x="5" y="14" width="5.4" height="5.4" rx="1" fill="#fff"/><rect x="12.3" y="14" width="5.4" height="5.4" rx="1" fill="#fff"/><rect x="19.6" y="14" width="5.4" height="5.4" rx="1" fill="#fff"/>
             <rect x="5" y="24" width="5.4" height="5.4" rx="1" fill="#fff"/><rect x="19.6" y="24" width="5.4" height="5.4" rx="1" fill="#fff"/></svg>`;
-        const kerk = h => `<svg viewBox="0 0 40 80" width="${h / 2}" height="${h}" aria-hidden="true">
-            <path d="M20 0 L23 22 H17 Z" fill="${ROOD}"/><path d="M16 22 h8 v6 q2 0 2 3 v8 h-12 v-8 q0 -3 2 -3 z" fill="${ROOD}"/>
-            <path d="M18.4 31 v5 M21.6 31 v5" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
-            <path d="M8 46 h4 v-3 h4 v-4 h8 v4 h4 v3 h4 v4 q4 0 4 4 V80 H4 V54 q0 -4 4 -4 z" fill="${ROOD}"/>
-            <path d="M15.4 56 v10 M20 54 v12 M24.6 56 v10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M16 80 v-7 q4 -3 8 0 v7 z" fill="#fff"/></svg>`;
+        // De Dillewijn volgens het eigen beeldmerk van het theater (silhouet van de ontwerper, overgetrokken van het
+        // logo): spitse toren met open klokkenstoel, trapsgewijs verbredend dak, drie hoge ramen en de deur.
+        const DILLE = '#A64A2B';
+        const kerk = h => `<svg viewBox="0 0 39 80" width="${h * 39 / 80}" height="${h}" aria-hidden="true">
+            <path d="M19.4 0.0 L19.0 0.9 L14.3 18.0 L13.4 20.2 L13.5 20.8 L15.0 21.0 L15.4 21.5 L15.4 27.4 L14.9 28.2 L15.2 30.4 L14.2 36.8 L13.0 38.2 L11.6 38.7 L11.2 39.1 L8.7 43.3 L7.4 44.6 L6.4 47.3 L3.2 52.3 L2.5 52.8 L0.6 52.9 L0.1 53.6 L0.0 55.6 L0.5 57.1 L0.5 79.4 L0.9 80.0 L38.1 80.0 L38.5 79.4 L38.5 57.1 L39.0 55.6 L39.0 53.6 L38.5 52.9 L36.9 52.9 L35.8 52.0 L33.2 47.7 L32.2 46.7 L31.6 44.6 L30.2 43.3 L27.9 39.0 L26.1 38.2 L24.9 36.9 L24.0 30.9 L24.0 29.7 L24.3 28.2 L23.8 27.3 L23.8 21.5 L24.6 20.8 L25.5 20.8 L25.7 20.2 L24.8 18.1 L20.1 0.8 L19.7 0.1 Z" fill="${DILLE}"/>
+            <path d="M15.4 67.3 L17.5 66.8 L21.7 66.8 L23.3 67.2 L24.0 67.7 L23.9 78.4 L23.4 78.9 L15.7 78.8 L15.2 78.5 L14.9 68.3 Z M23.3 48.9 L23.6 48.9 L24.1 49.3 L24.4 50.2 L24.4 61.2 L23.7 62.0 L23.0 62.0 L22.4 61.0 L22.4 50.6 Z M15.5 48.8 L16.0 48.9 L16.3 49.2 L16.7 50.4 L16.7 61.4 L16.1 62.0 L15.0 61.9 L14.6 61.1 L14.7 50.5 Z M19.3 46.2 L19.6 46.2 L20.2 46.7 L20.6 48.5 L20.6 61.2 L19.8 62.0 L19.1 62.0 L18.5 61.2 L18.6 47.6 Z M21.1 21.0 L22.3 21.4 L22.9 22.8 L22.9 27.1 L22.4 27.9 L20.6 28.0 L19.9 27.4 L19.9 26.8 L20.8 26.0 L20.7 25.3 L20.0 22.9 L20.0 22.4 Z M17.5 21.0 L18.2 21.1 L19.0 22.2 L19.0 22.7 L18.3 25.1 L18.3 25.6 L19.0 27.0 L19.0 27.4 L18.4 28.0 L16.9 28.0 L16.2 27.2 L16.2 22.6 L16.7 21.5 Z" fill="#fff"/></svg>`;
         // dorpscafé 't Wapen van Ankeveen, van voren: wit gepleisterd, groot donker dak met dakkapel, puntgevel, vlag
         // Café 't Wapen van Ankeveen (Stichts End 43), recht van voren: een hoog donker pannendak met links een
         // schuin dakschild en twee makelaarspunten, een donkere dakkapel met drie ramen, een lage witte gevel vol
@@ -1869,7 +1870,7 @@ ${pot(47.4)}${pot(61.6)}
         // Het kerkje is licht doorschijnend getekend. Eronder ligt hetzelfde silhouet in de kleur van de kopbalk,
         // zodat wat erachter langs vliegt (de ganzen) ook echt achter de toren verdwijnt.
         const ksvg = kerk(74), kmask = `url('data:image/svg+xml,${encodeURIComponent(ksvg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')).replace(/'/g, '%27')}') center / 100% 100% no-repeat`;
-        dw.innerHTML = `<div style="position:absolute;inset:0;background:${getComputedStyle(tb).backgroundColor};-webkit-mask:${kmask};mask:${kmask}"></div><div style="position:relative;opacity:.26">${ksvg}</div>`;
+        dw.innerHTML = `<div style="position:absolute;inset:0;background:${getComputedStyle(tb).backgroundColor};-webkit-mask:${kmask};mask:${kmask}"></div><div style="position:relative;opacity:.36">${ksvg}</div>`;
         tb.appendChild(dw); obstakels.push(dw); pleinRand.kerk = dw;
         const zetKerk = () => {
             const sr = strip.getBoundingClientRect(), br = tb.getBoundingClientRect();
