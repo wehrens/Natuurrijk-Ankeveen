@@ -2378,13 +2378,15 @@ ${pot(47.4)}${pot(61.6)}
         // achterpoten ver naar voren onder het lijf, staart omhoog, kop strak vooruit).
         const Z = '#1b1b1d', Z2 = '#2e2e33', dh = DW * .65;
         const kop = (x, y) => `<circle cx="${x}" cy="${y}" r="4.3" fill="${Z}"/><ellipse cx="${x + 3.9}" cy="${y + 1.5}" rx="2.6" ry="1.9" fill="${Z}"/><circle cx="${x + 6}" cy="${y + .9}" r=".8" fill="#000"/>
-            <path d="M${x - 2.2} ${y - 2.4} q-2.6 1.4 -1.6 6 q2.4 -1 3 -4.6 z" fill="${Z2}"/><circle cx="${x + 1.6}" cy="${y - .9}" r=".55" fill="#f2f2f2"/><circle cx="${x + 1.75}" cy="${y - .9}" r=".3" fill="#000"/>`;
+            <path d="M${x - 2.2} ${y - 2.4} q-2.6 1.4 -1.6 6 q2.4 -1 3 -4.6 z" fill="#5A3A22"/><path d="M${x + 2.6} ${y + 2.6} q1.6 .9 3.2 .2" fill="none" stroke="#f4f1ea" stroke-width=".9" stroke-linecap="round"/><circle cx="${x + 1.6}" cy="${y - .9}" r=".55" fill="#f2f2f2"/><circle cx="${x + 1.75}" cy="${y - .9}" r=".3" fill="#000"/>`;
         l.dog.innerHTML = `<svg viewBox="0 0 31 20" width="${DW}" height="${dh}" aria-hidden="true" style="overflow:visible">
             <g class="sta">
               <path class="tail" d="M5.4 8 q-3.4 -1 -4 -5.4" fill="none" stroke="${Z}" stroke-width="3.2" stroke-linecap="round"/>
               <path d="M6 12 v7.2 M9.6 12.6 v6.6 M17.6 12.6 v6.6 M20.6 12 v7.2" stroke="${Z}" stroke-width="2.8" stroke-linecap="round"/>
               <ellipse cx="13" cy="9.6" rx="9.4" ry="5.4" fill="${Z}"/><path d="M6 6.6 q6 -3 13 -.6" fill="none" stroke="${Z2}" stroke-width="1.4" stroke-linecap="round"/>
               <path d="M18 12.6 q2.4 2.6 4.4 .2" fill="none" stroke="${Z}" stroke-width="2.6" stroke-linecap="round"/>
+              <ellipse cx="10.6" cy="8" rx="3.2" ry="2.1" fill="#6B4226"/><ellipse cx="5.6" cy="10.6" rx="1.7" ry="1.3" fill="#6B4226"/>
+              <path d="M18.6 11.2 q1.8 3.4 4 .6 q-1.6 -1.4 -4 -.6 z" fill="#f4f1ea"/><path d="M6 18.6 v.7 M20.6 18.6 v.7 M17.6 18.8 v.5" stroke="#f4f1ea" stroke-width="2.8" stroke-linecap="round"/>
               ${kop(23.4, 6.2)}<path d="M19.6 8.6 l3.4 2.2" stroke="#D64541" stroke-width="1.2" stroke-linecap="round"/></g>
             <g class="poep" style="opacity:0">
               <path d="M4.6 12.4 L1.8 5" fill="none" stroke="${Z}" stroke-width="3" stroke-linecap="round"/>
@@ -2392,8 +2394,25 @@ ${pot(47.4)}${pot(61.6)}
               <path d="M18.4 12 L17.2 19.3 M21 11.6 L20.2 19.3" stroke="${Z}" stroke-width="2.8" stroke-linecap="round"/>
               <path d="M3.2 17.2 q-2.2 -9.8 6.6 -13 q7.6 -2.6 12.6 2 q2.2 3.4 .2 6.2 q-4.4 .2 -8.2 -1 q-3.4 1.4 -4.8 4.6 q-3 1.6 -6.4 1.2 z" fill="${Z}"/>
               <path d="M6.4 8.4 q5.4 -4 12.4 -1.6" fill="none" stroke="${Z2}" stroke-width="1.4" stroke-linecap="round"/>
+              <ellipse cx="11" cy="6.6" rx="3.2" ry="2" fill="#6B4226" transform="rotate(-14 11 6.6)"/><ellipse cx="5.2" cy="12.4" rx="1.6" ry="1.4" fill="#6B4226"/>
+              <path d="M19.4 10.4 q1.6 3 3.6 .6 q-1.4 -1.4 -3.6 -.6 z" fill="#f4f1ea"/><path d="M17.2 18.7 v.6 M20.2 18.7 v.6 M12.8 18.8 v.5" stroke="#f4f1ea" stroke-width="2.6" stroke-linecap="round"/>
               ${kop(23.8, 5.2)}<path d="M20 7.6 l3.4 2.2" stroke="#D64541" stroke-width="1.2" stroke-linecap="round"/></g></svg>`;
         l.dog.style.width = DW + 'px';
+        // langer lijntje: het vak wordt breder en de hond loopt verder voor haar uit
+        const BW = 48; l.w.style.width = BW + 'px'; l.dog.style.left = (BW - 1 - DW) + 'px';
+        const hx = 10.4, hy = l.h * .37, lx = BW - 1 - DW + DW * .68, ly = l.h - dh + dh * .5;
+        l.lijn.setAttribute('width', BW);
+        l.lijn.innerHTML = `<path d="M${hx} ${hy} Q${(hx + lx) / 2} ${Math.max(hy, ly) + 5} ${lx} ${ly}" fill="none" stroke="#3d4a5c" stroke-width=".8"/>`;
+        // zij is altijd blond
+        const psvg = l.pers.firstElementChild;
+        psvg.lastElementChild.setAttribute('fill', '#E9C46A');
+        // voor het hurken: alles boven de benen in één groep (die zakt), plus een paar gebogen benen
+        const NS = 'http://www.w3.org/2000/svg', boven = document.createElementNS(NS, 'g'), hurk = document.createElementNS(NS, 'g');
+        const bA = psvg.querySelector('.legA'), bB = psvg.querySelector('.legB'), broek = bA.getAttribute('stroke');
+        [...psvg.children].filter(e => e !== bA && e !== bB).forEach(e => boven.appendChild(e));
+        hurk.innerHTML = `<path d="M8 31.6 L3.4 31 L6.4 38.4 M10 31.6 L14.6 31 L11.6 38.4" fill="none" stroke="${broek}" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>`;
+        hurk.style.opacity = 0;
+        psvg.appendChild(hurk); psvg.appendChild(boven);
         const dsvg = l.dog.firstElementChild, sta = dsvg.querySelector('.sta'), poep = dsvg.querySelector('.poep');
         l.trot.cancel(); l.wag.cancel();
         l.trot = animate(sta, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1px)' }], { duration: 230, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
@@ -2404,8 +2423,9 @@ ${pot(47.4)}${pot(61.6)}
         const bord = pleinRand.bord && pleinRand.bord.offsetParent !== null ? pleinRand.bord.getBoundingClientRect() : null;
         if (!bord) { weg(); return; }
         const pk = bord.left - strip.getBoundingClientRect().left + (f > 0 ? 14 : 40);            // de paal waar ze het eerst langs komen
-        const achter = 33 - DW + DW * .1, D = pk - f * 4;                                       // de drol komt net vóór de paal te liggen
-        const xs = f > 0 ? D - achter : D - 34 + achter;
+        const achter = BW - 1 - DW + DW * .1, D = pk - f * 4;                                       // de drol komt net vóór de paal te liggen
+        const xs = f > 0 ? D - achter : D - BW + achter;
+        const stap = achter - 9, xp = xs + f * stap;                                             // zoveel loopt zij door tot ze bij de drol staat
         if (pk < 20 || pk > width - 10) { weg(); return; }
         animate(l.w, [{ transform: zet(x0) }, { transform: zet(xs) }], { duration: Math.abs(xs - x0) * speed, easing: 'linear' }).finished.then(() => {
             l.bob && l.bob.pause(); l.trot.pause(); l.wag.updatePlaybackRate(.3);
@@ -2419,18 +2439,29 @@ ${pot(47.4)}${pot(61.6)}
             drol.innerHTML = '<svg viewBox="0 0 10 8" width="5" height="4" aria-hidden="true"><path d="M1 7.4 q-1 -2.4 2 -2.6 q-.8 -2 1.8 -2.2 q.2 -1.6 1.6 -2 q-.2 1.4 1 2.2 q2 .6 1 2.2 q2.4 .6 1.4 2.4 z" fill="#5A3A1C" stroke="#3E2710" stroke-width=".5"/></svg>';
             drol.style.transform = `translate(${D - 2.5}px, ${GROUND - 4.6}px)`;
             later(() => { strip.appendChild(drol); animate(drol, [{ opacity: 0, transform: drol.style.transform + ' scaleY(.3)' }, { opacity: 1, transform: drol.style.transform + ' scaleY(1)' }], { duration: 500 }); }, 1500);
-            // zij bukt, pakt de drol in een groen zakje en komt weer overeind met het zakje in haar hand
-            const psvg = l.pers.firstElementChild; psvg.style.transformOrigin = '50% 78%';
+            // zodra de hond klaar is lopen ze een paar stappen door, tot zij bij de drol staat. Daar gaat ze door haar
+            // knieën, pakt de drol in een groen zakje en komt weer overeind met het zakje in haar hand
             const zak = document.createElement('div');
             zak.style.cssText = `position:absolute;left:${l.h * .45 * .72}px;top:${l.h * .62}px;width:4.4px;height:5px;line-height:0;opacity:0`;
             zak.innerHTML = '<svg viewBox="0 0 9 10" width="4.4" height="5" aria-hidden="true"><path d="M4.5 .6 v2.2" stroke="#2E8A3C" stroke-width="1"/><path d="M1.2 5.6 q0 -3 3.3 -3 q3.3 0 3.3 3 q0 3.8 -3.3 3.8 q-3.3 0 -3.3 -3.8 z" fill="#3DAA4B" stroke="#2E8A3C" stroke-width=".6"/></svg>';
             l.pers.appendChild(zak);
-            later(() => animate(psvg, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(52deg) translate(1.5px, 2px)', offset: .3 }, { transform: 'rotate(52deg) translate(1.5px, 2px)', offset: .68 }, { transform: 'rotate(0deg)' }], { duration: 1900, easing: 'ease-in-out' }), 3200);
-            later(() => { drol.remove(); zak.style.opacity = 1; }, 4200);
+            const T1 = 3300, TL = Math.abs(stap) * speed * 1.3, T2 = T1 + TL + 150;
+            later(() => { l.bob && l.bob.play(); l.trot.play(); animate(l.w, [{ transform: zet(xs) }, { transform: zet(xp) }], { duration: TL, easing: 'ease-in-out' }); }, T1);
+            later(() => {
+                l.bob && l.bob.pause(); l.trot.pause();
+                bA.style.opacity = 0; bB.style.opacity = 0; hurk.style.opacity = 1;
+                animate(boven, [{ transform: 'translateY(0)' }, { transform: 'translate(.6px, 7.6px)' }], { duration: 380, easing: 'ease-out' });
+            }, T2);
+            later(() => { drol.remove(); zak.style.opacity = 1; zak.style.top = l.h * .78 + 'px'; }, T2 + 900);
+            later(() => {
+                animate(boven, [{ transform: 'translate(.6px, 7.6px)' }, { transform: 'translateY(0)' }], { duration: 380, easing: 'ease-in-out' });
+                zak.style.top = l.h * .62 + 'px';
+                later(() => { hurk.style.opacity = 0; bA.style.opacity = 1; bB.style.opacity = 1; }, 300);
+            }, T2 + 1500);
             later(() => {
                 l.bob && l.bob.play(); l.trot.play(); l.wag.updatePlaybackRate(1);
-                animate(l.w, [{ transform: zet(xs) }, { transform: zet(x1) }], { duration: Math.abs(x1 - xs) * speed, easing: 'linear' }).finished.then(() => l.w.remove()).catch(() => l.w.remove());
-            }, 5300);
+                animate(l.w, [{ transform: zet(xp) }, { transform: zet(x1) }], { duration: Math.abs(x1 - xp) * speed, easing: 'linear' }).finished.then(() => l.w.remove()).catch(() => l.w.remove());
+            }, T2 + 2100);
         }).catch(() => l.w.remove());
     }
     function honden(test) {                           // test: { kant: 1 of -1 } laat één hondje bij de paal plassen
@@ -2815,7 +2846,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: klompenman, dur: () => (W() + 160 + EX) * 13 },
         { run: familie, dur: () => (W() + 200 + EX) * 27 },
         { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true },
-        { run: newfoundlander, dur: () => (W() + 120) * 24 + 5500 },
+        { run: newfoundlander, dur: () => (W() + 120) * 24 + 6500 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },   // de Snoek staat er twee keer in: hij komt elke ronde twee keer langs
     ];
