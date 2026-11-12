@@ -2475,6 +2475,18 @@ ${pot(47.4)}${pot(61.6)}
     }
     // Hondenuitlaters: een baasje met een hondje aan de lijn. Komen er twee elkaar tegen, dan snuffelen
     // de hondjes aan elkaar en kletsen de baasjes even, daarna loopt ieder door.
+    // Lopende hondenpoten: de poten met klasse .pt zwaaien om en om (schuin tegenover elkaar tegelijk, zoals in draf),
+    // samen met het wippen van het lijf. Eén handvat voor pause/play/cancel; bij stilstaan staan de poten recht.
+    function draf(lijf, poten, dur, hoek) {
+        const T = dur * 2, o = { duration: T, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' };
+        const wip = animate(lijf, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1.2px)' }], Object.assign({}, o, { duration: dur }));
+        const stap = poten.map(n => { const s = +n.dataset.fase ? -1 : 1; return animate(n, [{ transform: `rotate(${-hoek * s}deg)` }, { transform: `rotate(${hoek * s}deg)` }], o); });
+        return {
+            pause() { wip.pause(); stap.forEach(a => { a.pause(); a.currentTime = T / 2; }); },     // halverwege de zwaai staat de poot recht
+            play() { wip.play(); stap.forEach(a => a.play()); },
+            cancel() { wip.cancel(); stap.forEach(a => a.cancel()); },
+        };
+    }
     const VACHT = ['#8b5a2b', '#2b2b2b', '#d9b36a', '#f4efe6', '#a0522d', '#6b6b6b'];
     function baasMetHond(o = {}) {
         const h = o.h || rand(21, 24.5), w = document.createElement('div'); w.className = 'om-p';
@@ -2489,8 +2501,10 @@ ${pot(47.4)}${pot(61.6)}
             <path class="tail" d="M3.2 5.5 q-2.6 -1.4 -2.6 -4.4" fill="none" stroke="${poot}" stroke-width="1.5" stroke-linecap="round"/>
             <ellipse cx="9" cy="6.6" rx="6.2" ry="3.2" fill="${vacht}" ${rand_}/>
             <ellipse cx="7" cy="6" rx="2.2" ry="1.6" fill="${vlek}" opacity=".7"/>
-            <path class="achterpoot" d="M4.6 8.5 v4.3" stroke="${poot}" stroke-width="1.5" stroke-linecap="round" style="transform-box:view-box;transform-origin:4.6px 8.5px"/>
-            <path d="M7 8.8 v4 M11.4 8.8 v4 M13.6 8.5 v4.3" stroke="${poot}" stroke-width="1.5" stroke-linecap="round"/>
+            <g class="pt" data-fase="0" style="transform-box:view-box;transform-origin:4.6px 8.5px"><path class="achterpoot" d="M4.6 8.5 v4.3" stroke="${poot}" stroke-width="1.5" stroke-linecap="round" style="transform-box:view-box;transform-origin:4.6px 8.5px"/></g>
+            <path class="pt" data-fase="1" d="M7 8.8 v4" stroke="${poot}" stroke-width="1.5" stroke-linecap="round" style="transform-box:view-box;transform-origin:7px 8.8px"/>
+            <path class="pt" data-fase="1" d="M11.4 8.8 v4" stroke="${poot}" stroke-width="1.5" stroke-linecap="round" style="transform-box:view-box;transform-origin:11.4px 8.8px"/>
+            <path class="pt" data-fase="0" d="M13.6 8.5 v4.3" stroke="${poot}" stroke-width="1.5" stroke-linecap="round" style="transform-box:view-box;transform-origin:13.6px 8.5px"/>
             <path class="plas" d="M3.4 9.4 q-2.6 .2 -4.6 3.4" fill="none" stroke="#e8c840" stroke-width=".7" stroke-linecap="round" stroke-dasharray="7" stroke-dashoffset="7" opacity="0"/>
             <ellipse class="plasje" cx="-1.6" cy="12.9" rx="1.8" ry=".45" fill="#e8c840" opacity="0" style="transform-box:fill-box;transform-origin:50% 50%"/>
             <ellipse cx="18.4" cy="4.9" rx="1.6" ry="1.1" fill="${vacht}" ${rand_}/><circle cx="15.6" cy="4" r="2.9" fill="${vacht}" ${rand_}/><ellipse cx="18.2" cy="4.9" rx="1.3" ry=".8" fill="${vacht}"/>
@@ -2503,7 +2517,7 @@ ${pot(47.4)}${pot(61.6)}
         lijn.innerHTML = `<path d="M${hx} ${hy} Q${(hx + cx) / 2} ${Math.max(hy, cy) + 3} ${cx} ${cy}" fill="none" stroke="#3d4a5c" stroke-width=".8"/>`;
         w.append(pers, lijn, dog);
         pers._bob = bob(pers, rand(380, 460));
-        const trot = animate(dog.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1.2px)' }], { duration: rand(150, 190), direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        const trot = draf(dog.firstElementChild, [...dog.querySelectorAll('.pt')], rand(150, 190), 24);
         const tail = dog.querySelector('.tail'); tail.style.transformBox = 'fill-box'; tail.style.transformOrigin = '100% 100%';
         const wag = animate(tail, [{ transform: 'rotate(-14deg)' }, { transform: 'rotate(14deg)' }], { duration: 260, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         lijn.style.transformOrigin = `${hx}px 0`;
@@ -2525,11 +2539,11 @@ ${pot(47.4)}${pot(61.6)}
         l.dog.innerHTML = `<svg viewBox="0 0 31 20" width="${DW}" height="${dh}" aria-hidden="true" style="overflow:visible">
             <g class="sta">
               <path class="tail" d="M5.4 8 q-3.4 -1 -4 -5.4" fill="none" stroke="${Z}" stroke-width="3.2" stroke-linecap="round"/>
-              <path d="M6 12 v7.2 M9.6 12.6 v6.6 M17.6 12.6 v6.6 M20.6 12 v7.2" stroke="${Z}" stroke-width="2.8" stroke-linecap="round"/>
+              ${[[6, 12, 0, 1], [9.6, 12.6, 1, 0], [17.6, 12.6, 1, 1], [20.6, 12, 0, 1]].map(([x, y0, fase, sok]) => `<g class="pt" data-fase="${fase}" style="transform-box:view-box;transform-origin:${x}px ${y0}px"><path d="M${x} ${y0} V19.2" stroke="${Z}" stroke-width="2.8" stroke-linecap="round"/>${sok ? `<path d="M${x} 18.4 v.9" stroke="#6f757c" stroke-width="3.5" stroke-linecap="round"/><path d="M${x} 18.4 v.9" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>` : ''}</g>`).join('')}
               <ellipse cx="13" cy="9.6" rx="9.4" ry="5.4" fill="${Z}"/><path d="M6 6.6 q6 -3 13 -.6" fill="none" stroke="${Z2}" stroke-width="1.4" stroke-linecap="round"/>
               <path d="M18 12.6 q2.4 2.6 4.4 .2" fill="none" stroke="${Z}" stroke-width="2.6" stroke-linecap="round"/>
               <ellipse cx="10.6" cy="8" rx="3.2" ry="2.1" fill="#6B4226"/><ellipse cx="5.6" cy="10.6" rx="1.7" ry="1.3" fill="#6B4226"/>
-              <path d="M18.6 11.2 q1.8 3.4 4 .6 q-1.6 -1.4 -4 -.6 z" fill="#f4f1ea"/><path d="M6 18.4 v.9 M20.6 18.4 v.9 M17.6 18.6 v.7" stroke="#6f757c" stroke-width="3.5" stroke-linecap="round"/><path d="M6 18.4 v.9 M20.6 18.4 v.9 M17.6 18.6 v.7" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M18.6 11.2 q1.8 3.4 4 .6 q-1.6 -1.4 -4 -.6 z" fill="#f4f1ea"/>
               ${kop(23.4, 6.2)}<path d="M19.6 8.6 l3.4 2.2" stroke="#D64541" stroke-width="1.2" stroke-linecap="round"/></g>
             <g class="poep" style="opacity:0">
               <path d="M4.6 12.4 L1.8 5" fill="none" stroke="${Z}" stroke-width="3" stroke-linecap="round"/>
@@ -2558,7 +2572,7 @@ ${pot(47.4)}${pot(61.6)}
         psvg.appendChild(hurk); psvg.appendChild(boven);
         const dsvg = l.dog.firstElementChild, sta = dsvg.querySelector('.sta'), poep = dsvg.querySelector('.poep');
         l.trot.cancel(); l.wag.cancel();
-        l.trot = animate(sta, [{ transform: 'translateY(0)' }, { transform: 'translateY(-1px)' }], { duration: 230, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        l.trot = draf(sta, [...sta.querySelectorAll('.pt')], 230, 20);
         const staart = sta.querySelector('.tail'); staart.style.transformBox = 'fill-box'; staart.style.transformOrigin = '100% 100%';
         l.wag = animate(staart, [{ transform: 'rotate(-12deg)' }, { transform: 'rotate(12deg)' }], { duration: 320, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         const x0 = fromLeft ? -50 : width + 20, x1 = fromLeft ? width + 40 + EX : -70 - EX;
