@@ -1616,6 +1616,7 @@ ${pot(47.4)}${pot(61.6)}
         const bg = document.createElement('div');
         bg.setAttribute('aria-hidden', 'true');
         bg.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:0';
+        const gebouwen = [];
         // [positie %, svg, alleen op bredere schermen]
         const stukken = [[17, huis(ROOD, 26), false], [22, huis2(BLAUW, 30), true],  [68, huis(ROOD, 27), true],
             [73, huis2(ROOD, 29), false], [78.5, huis(BLAUW, 25), true]];
@@ -1624,17 +1625,14 @@ ${pot(47.4)}${pot(61.6)}
             const d = document.createElement('div');
             d.style.cssText = `position:absolute;left:${typeof pct === 'number' ? pct + '%' : pct};bottom:${H - GROUND}px;transform:translateX(-50%);opacity:${op || vaag};line-height:0`;
             d.innerHTML = svg; if (breed) d.className = 'om-breed';
-            bg.appendChild(d); obstakels.push(d);
+            bg.appendChild(d); obstakels.push(d); gebouwen.push(d);
             if (typeof pct === 'number' && pct < 40) pleinRand.huizen.push(d); else if (typeof pct !== 'number') pleinRand.cafe = d;
         });
-        // In de verte een lage, brede bomenrand die links en rechts vervaagt; daarboven de omroeptoren (zie verderop)
-        const bos = document.createElement('div');
-        const fade = 'linear-gradient(90deg, transparent 0%, #000 28%, #000 72%, transparent 100%)';
-        bos.style.cssText = `position:absolute;left:30%;bottom:${H - GROUND}px;width:min(170px, 40vw);height:6px;transform:translateX(-50%);opacity:.5;line-height:0;-webkit-mask-image:${fade};mask-image:${fade}`;
-        let kruinen = 'M0 6 V3.4';
-        for (let x = 0; x < 170; x += 5) kruinen += ` q2.5 ${-(1.4 + (x * 7 % 5) * .45).toFixed(2)} 5 0`;
-        bos.innerHTML = `<svg viewBox="0 0 170 6" width="100%" height="6" preserveAspectRatio="none" aria-hidden="true"><path d="${kruinen} V6 Z" fill="#5E8467"/></svg>`;
-        bg.appendChild(bos);
+        // Laag groen (een bomenrand in de verte) in de open stukken tússen de huizen, het café en De Dillewijn.
+        // Het ligt in de achtergrondlaag, dus achter alle poppetjes; elk stuk vervaagt naar links en rechts.
+        const groen = document.createElement('div');
+        groen.style.cssText = 'position:absolute;inset:0;pointer-events:none';
+        bg.insertBefore(groen, bg.firstChild);
         // plaatsnaambord Ankeveen (blauw met witte rand), rechts
         const bord = document.createElement('div');
         bord.style.cssText = `position:absolute;right:max(14px, 4%);bottom:${H - GROUND}px;line-height:0;opacity:.85`;
@@ -1658,6 +1656,22 @@ ${pot(47.4)}${pot(61.6)}
             dw.style.cssText = `position:absolute;z-index:-1;pointer-events:none;line-height:0;opacity:.26;left:${sr.left - br.left + sr.width * .62}px;top:${sr.top - br.top + GROUND - 74}px;transform:translateX(-50%)`;
         };
         zetKerk(); addEventListener('resize', zetKerk);
+        gebouwen.push(dw);
+        const tekenGroen = () => {
+            const sr = strip.getBoundingClientRect();
+            const r = gebouwen.filter(e => e.offsetParent !== null).map(e => e.getBoundingClientRect()).map(q => [q.left - sr.left, q.right - sr.left]).sort((p, q) => p[0] - q[0]);
+            const fade = 'linear-gradient(90deg, transparent 0%, #000 26%, #000 74%, transparent 100%)';
+            let html = '';
+            for (let i = 0; i < r.length - 1; i++) {
+                const x0 = r[i][1] - 3, x1 = r[i + 1][0] + 3, w = x1 - x0;
+                if (w < 22) continue;
+                let kruinen = 'M0 6 V3.4';
+                for (let x = 0; x < w; x += 5) kruinen += ` q2.5 ${-(1.4 + ((x + i * 3) * 7 % 5) * .45).toFixed(2)} 5 0`;
+                html += `<div style="position:absolute;left:${x0}px;bottom:${H - GROUND}px;width:${w}px;height:6px;opacity:.5;line-height:0;-webkit-mask-image:${fade};mask-image:${fade}"><svg viewBox="0 0 ${w} 6" width="${w}" height="6" preserveAspectRatio="none" aria-hidden="true"><path d="${kruinen} V6 H0 Z" fill="#5E8467"/></svg></div>`;
+            }
+            groen.innerHTML = html;
+        };
+        tekenGroen(); addEventListener('resize', tekenGroen);
         // De omroeptoren van Hilversum, ver weg: klein, hoog boven de bomenrand en onderaan in de nevel vervagend.
         // Hij staat (net als het kerkje) in de kopbalk, achter de tekst. Vogels en de ooievaar vliegen ervoor langs;
         // de zon hangt in een laag daarachter (zie `verte`).
