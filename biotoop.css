@@ -32,6 +32,9 @@ body.scene-vleermuizen .bio-flower { filter: brightness(.6) saturate(.7); }
 .bio-ground     { height: var(--bio-height); z-index: 1025; overflow: hidden; }
 .bio-garden     { height: var(--bio-height); z-index: 1035; overflow: hidden; }
 .bio-front      { height: var(--bio-height); z-index: 1040; overflow: hidden; }
+/* Plaatsnaambord Ankeveen: rechts, met de palen in het gras (net boven de menubalk, onder de dieren) */
+.bio-bord { position: fixed; right: max(10px, 3%); top: calc(var(--header-total) - 26px); z-index: 1021; line-height: 0; pointer-events: none; }
+body.scene-vleermuizen .bio-bord { filter: brightness(.7); }
 
 /* Gras: één afbeelding, herhaald */
 .bio-grass::after {

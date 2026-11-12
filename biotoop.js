@@ -16,6 +16,17 @@
     const script = document.currentScript;
     const SCENE = (script && script.dataset.scene) || 'home';
     const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Plaatsnaambord Ankeveen (blauw met witte rand): staat op elke pagina rechts in het gras
+    (function () {
+        const bord = document.createElement('div');
+        bord.className = 'bio-bord'; bord.setAttribute('aria-hidden', 'true');
+        bord.innerHTML = `<svg viewBox="0 0 54 30" width="46" height="25.5">
+            <path d="M14 14 V30 M40 14 V30" stroke="#8a8f96" stroke-width="1.6"/>
+            <rect x="1" y="1" width="52" height="15" rx="3" fill="#0F4C92"/><rect x="2.6" y="2.6" width="48.8" height="11.8" rx="2" fill="none" stroke="#fff" stroke-width="1"/>
+            <text x="27" y="11.4" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="8" fill="#fff" letter-spacing=".3">Ankeveen</text></svg>`;
+        document.body.appendChild(bord);
+    })();
     const NARROW = () => innerWidth < 720;
     const IMG = 'images/';
 
