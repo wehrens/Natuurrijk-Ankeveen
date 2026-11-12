@@ -2386,7 +2386,7 @@ ${pot(47.4)}${pot(61.6)}
               <ellipse cx="13" cy="9.6" rx="9.4" ry="5.4" fill="${Z}"/><path d="M6 6.6 q6 -3 13 -.6" fill="none" stroke="${Z2}" stroke-width="1.4" stroke-linecap="round"/>
               <path d="M18 12.6 q2.4 2.6 4.4 .2" fill="none" stroke="${Z}" stroke-width="2.6" stroke-linecap="round"/>
               <ellipse cx="10.6" cy="8" rx="3.2" ry="2.1" fill="#6B4226"/><ellipse cx="5.6" cy="10.6" rx="1.7" ry="1.3" fill="#6B4226"/>
-              <path d="M18.6 11.2 q1.8 3.4 4 .6 q-1.6 -1.4 -4 -.6 z" fill="#f4f1ea"/><path d="M6 18.6 v.7 M20.6 18.6 v.7 M17.6 18.8 v.5" stroke="#f4f1ea" stroke-width="2.8" stroke-linecap="round"/>
+              <path d="M18.6 11.2 q1.8 3.4 4 .6 q-1.6 -1.4 -4 -.6 z" fill="#f4f1ea"/><path d="M6 18.4 v.9 M20.6 18.4 v.9 M17.6 18.6 v.7" stroke="#6f757c" stroke-width="3.5" stroke-linecap="round"/><path d="M6 18.4 v.9 M20.6 18.4 v.9 M17.6 18.6 v.7" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
               ${kop(23.4, 6.2)}<path d="M19.6 8.6 l3.4 2.2" stroke="#D64541" stroke-width="1.2" stroke-linecap="round"/></g>
             <g class="poep" style="opacity:0">
               <path d="M4.6 12.4 L1.8 5" fill="none" stroke="${Z}" stroke-width="3" stroke-linecap="round"/>
@@ -2395,7 +2395,7 @@ ${pot(47.4)}${pot(61.6)}
               <path d="M3.2 17.2 q-2.2 -9.8 6.6 -13 q7.6 -2.6 12.6 2 q2.2 3.4 .2 6.2 q-4.4 .2 -8.2 -1 q-3.4 1.4 -4.8 4.6 q-3 1.6 -6.4 1.2 z" fill="${Z}"/>
               <path d="M6.4 8.4 q5.4 -4 12.4 -1.6" fill="none" stroke="${Z2}" stroke-width="1.4" stroke-linecap="round"/>
               <ellipse cx="11" cy="6.6" rx="3.2" ry="2" fill="#6B4226" transform="rotate(-14 11 6.6)"/><ellipse cx="5.2" cy="12.4" rx="1.6" ry="1.4" fill="#6B4226"/>
-              <path d="M19.4 10.4 q1.6 3 3.6 .6 q-1.4 -1.4 -3.6 -.6 z" fill="#f4f1ea"/><path d="M17.2 18.7 v.6 M20.2 18.7 v.6 M12.8 18.8 v.5" stroke="#f4f1ea" stroke-width="2.6" stroke-linecap="round"/>
+              <path d="M19.4 10.4 q1.6 3 3.6 .6 q-1.4 -1.4 -3.6 -.6 z" fill="#f4f1ea"/><path d="M17.2 18.5 v.8 M20.2 18.5 v.8 M12.8 18.6 v.7" stroke="#6f757c" stroke-width="3.4" stroke-linecap="round"/><path d="M17.2 18.5 v.8 M20.2 18.5 v.8 M12.8 18.6 v.7" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
               ${kop(23.8, 5.2)}<path d="M20 7.6 l3.4 2.2" stroke="#D64541" stroke-width="1.2" stroke-linecap="round"/></g></svg>`;
         l.dog.style.width = DW + 'px';
         // langer lijntje: het vak wordt breder en de hond loopt verder voor haar uit
