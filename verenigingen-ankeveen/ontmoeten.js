@@ -718,12 +718,13 @@
     function footballer() {
         const w = document.createElement('div'); w.className = 'om-p';
         const huid = pick(HUID), haar = pick(HAAR);
-        const leg = cls => `<g class="${cls}" style="transform-box:view-box;transform-origin:9px 24px"><path d="M9 24 l-0.5 6" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round"/><path d="M8.5 30 l-0.3 7" stroke="#1E9E3E" stroke-width="2.8" stroke-linecap="round"/><path d="M6.8 37.5 h4" stroke="#222" stroke-width="2" stroke-linecap="round"/></g>`;
+        const leg = cls => `<g class="${cls}" style="transform-box:view-box;transform-origin:9px 24px"><path d="M9 24 l-0.5 6" stroke="#8f99a3" stroke-width="4.6" stroke-linecap="round"/><path d="M9 24 l-0.5 6" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round"/><path d="M8.5 30 l-0.3 7" stroke="#1E9E3E" stroke-width="2.8" stroke-linecap="round"/><path d="M6.8 37.5 h4" stroke="#222" stroke-width="2" stroke-linecap="round"/></g>`;
         w.innerHTML = `<svg viewBox="0 0 18 40" width="11" height="24" aria-hidden="true">
             ${leg('legA')}${leg('legB')}
-            <path d="M3 13 q6 -4 12 0 l1.5 12 h-15 z" fill="#ffffff"/>
+            <path d="M3.5 14 l-1.5 8 M14.5 14 l1.5 8" stroke="#8f99a3" stroke-width="3.8" stroke-linecap="round"/>
+            <path d="M3 13 q6 -4 12 0 l1.5 12 h-15 z" fill="#ffffff" stroke="#8f99a3" stroke-width=".7" stroke-linejoin="round"/>
             <path d="M6.2 11.2 h5.6 l1 13.8 h-7.6 z" fill="#1E9E3E"/>
-            <path d="M2.8 25 h12.4 l-0.6 4 h-11.2 z" fill="#ffffff"/>
+            <path d="M2.8 25 h12.4 l-0.6 4 h-11.2 z" fill="#ffffff" stroke="#8f99a3" stroke-width=".7" stroke-linejoin="round"/>
             <path d="M3.5 14 l-1.5 8 M14.5 14 l1.5 8" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
             <circle cx="9" cy="5" r="4.6" fill="${huid}"/>
             <path d="M4.4 5 q0 -5.5 4.6 -5.5 q4.6 0 4.6 5.5 q-1.5 -2.5 -4.6 -2.5 q-3.1 0 -4.6 2.5z" fill="${haar}"/></svg>`;
@@ -2323,10 +2324,10 @@ ${pot(47.4)}${pot(61.6)}
         w.style.height = h + 'px'; w.style.width = h * .45 + 'px';
         w.innerHTML = `<svg viewBox="0 0 18 40" width="${h * .45}" height="${h}" aria-hidden="true" style="overflow:visible">
             <circle cx="9" cy="5" r="4.6" fill="${huid}"/><path d="M4.4 5 q0 -5.5 4.6 -5.5 q4.6 0 4.6 5.5 q-1.5 -2.5 -4.6 -2.5 q-3.1 0 -4.6 2.5z" fill="${haar}"/>
-            <path d="M3 13 q6 -4 12 0 l1.5 9 h-3 l-0.3 -2 h-8.4 l-0.3 2 h-3 z" fill="#ffffff"/>
+            <path d="M3 13 q6 -4 12 0 l1.5 9 h-3 l-0.3 -2 h-8.4 l-0.3 2 h-3 z" fill="#ffffff" stroke="#8f99a3" stroke-width=".7" stroke-linejoin="round"/>
             <path d="M6.3 11.3 h5.4 l0.9 8.7 h-7.2 z" fill="${shirt}"/>
             <path d="M3 13 l1.5 9 h-3 z M15 13 l1.5 9 h-3 z" fill="${shirt}"/>
-            <path d="M4.8 20 h8.4 l0.5 6 h-3.8 l-0.9 -2.6 l-0.9 2.6 h-3.8 z" fill="#ffffff"/>
+            <path d="M4.8 20 h8.4 l0.5 6 h-3.8 l-0.9 -2.6 l-0.9 2.6 h-3.8 z" fill="#ffffff" stroke="#8f99a3" stroke-width=".7" stroke-linejoin="round"/>
             <g class="beenL" style="transform-box:view-box;transform-origin:6.7px 26px"><path d="M5.4 26 h2.7 l-0.2 8.5 h-2.5 z" fill="${huid}"/><path d="M5.4 33 h2.5 v3.5 h-2.5 z" fill="${shirt}"/><path d="M4.6 36.5 h3.4 l0.6 3.5 h-4.8 z" fill="#1d1d1d"/></g>
             <g class="beenR" style="transform-box:view-box;transform-origin:11.2px 26px"><path d="M9.9 26 h2.7 l0.2 8.5 h-2.5 z" fill="${huid}"/><path d="M10.1 33 h2.5 v3.5 h-2.5 z" fill="${shirt}"/><path d="M10 36.5 h3.4 l1.6 3.5 h-5.2 z" fill="#1d1d1d"/></g></svg>`;
         const bal = document.createElement('div');
