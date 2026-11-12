@@ -8,6 +8,7 @@
     const KLEUR = ['#7B5CC4', '#F39A2B', '#2BB39A', '#D64541', '#3B8FE0', '#C9A227'];
     const H = strip.clientHeight, GROUND = H - 8;
     const W = () => strip.clientWidth;
+    const obstakels = [];   // huizen, café, kerkje, bord en paal: een zon of maan komt altijd daarboven, nooit ervoor
     const EX = 220;   // extra loopafstand: ook de achterste van een groep loopt helemaal uit beeld
     // Plekken reserveren: groepen die ergens blijven staan (koor, jazz, markt, naturisten, vogelaars) kiezen een plek
     // waar nog niemand staat, zodat ze niet voor elkaar gaan liggen of staan.
@@ -195,6 +196,22 @@
         animate(d, [{ transform: `translate(${x}px, ${y}px) scale(.5)`, opacity: 0 }, { transform: `translate(${x}px, ${y - 10}px) scale(1.1)`, opacity: 1, offset: .15 },
             { transform: `translate(${x}px, ${y - 16}px) scale(1)`, opacity: 1, offset: .75 }, { transform: `translate(${x}px, ${y - 24}px)`, opacity: 0 }], { duration: 2600, easing: 'ease-out' })
             .finished.then(() => d.remove()).catch(() => d.remove());
+    }
+    // Vrije plek in de lucht (coördinaten van de kopbalk) voor iets van w×h rond strookpositie xs:
+    // net boven het hoogste huis, dak of kerkje eronder; is het daar te krap, dan een stukje opzij
+    function luchtPlek(xs, w, h) {
+        const sb = strip.getBoundingClientRect(), bb = balk.getBoundingClientRect();
+        const rects = obstakels.filter(o => o.isConnected && o.offsetParent !== null).map(o => o.getBoundingClientRect());
+        let best = null;
+        for (const dx of [0, 24, -24, 48, -48, 72, -72, 96, -96, 130, -130]) {
+            const L = Math.max(2, Math.min(bb.width - w - 2, xs + dx + sb.left - bb.left - w / 2)) + bb.left;
+            let top = sb.top + GROUND - 26;                    // boven de hoofden van de mensen
+            rects.forEach(r => { if (r.right > L - 3 && r.left < L + w + 3) top = Math.min(top, r.top); });
+            const y = top - h - 4 - bb.top;
+            if (y >= 2) return { x: L - bb.left, y: Math.min(y, sb.top - bb.top + GROUND - 34 - h + 12) };
+            if (!best || y > best.y) best = { x: L - bb.left, y };
+        }
+        return { x: best.x, y: Math.max(2, best.y) };
     }
     function meeting(koffie) {
         if (document.hidden || active >= 3) return;
@@ -410,8 +427,9 @@
             animate(towel, [{ transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(0)` }, { transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(1)` }], { duration: 500, easing: 'ease-out' }); }, inDur + 100);
         later(() => { animate(towel, [{ transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(1)` }, { transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(0)` }], { duration: 400, easing: 'ease-in' }).finished.then(() => towel.remove()).catch(() => towel.remove()); }, inDur + 1400 + LIG + 1000);
         // zonnetje boven de handdoek
-        later(() => { const z = document.createElement('div'); z.className = 'om-p'; z.style.cssText = 'font-size:12px;line-height:1;pointer-events:none';
-            z.textContent = '☀️'; z.style.transform = `translate(${stopX + (n - 1) * GAP * f / 2 - 6}px, ${GROUND - 34}px)`; strip.appendChild(z);
+        later(() => { const z = document.createElement('div'); z.style.cssText = 'position:absolute;left:0;top:0;font-size:12px;line-height:1;pointer-events:none';
+            const zp = luchtPlek(stopX + (n - 1) * GAP * f / 2, 14, 14);
+            z.textContent = '☀️'; z.style.transform = `translate(${zp.x}px, ${zp.y}px)`; lucht.appendChild(z);
             animate(z, [{ opacity: 0, transform: z.style.transform + ' scale(.5)' }, { opacity: 1, transform: z.style.transform + ' scale(1)' }], { duration: 600, easing: 'ease-out' });
             later(() => animate(z, [{ opacity: 1 }, { opacity: 0 }], { duration: 500 }).finished.then(() => z.remove()).catch(() => z.remove()), LIG - 1800); }, inDur + 1800);
         // omstanders schrikken: hun tekstballon wordt een uitroepteken
@@ -1505,19 +1523,61 @@
             <path d="M8 46 h4 v-3 h4 v-4 h8 v4 h4 v3 h4 v4 q4 0 4 4 V80 H4 V54 q0 -4 4 -4 z" fill="${ROOD}"/>
             <path d="M15.4 56 v10 M20 54 v12 M24.6 56 v10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M16 80 v-7 q4 -3 8 0 v7 z" fill="#fff"/></svg>`;
         // dorpscafé 't Wapen van Ankeveen, van voren: wit gepleisterd, groot donker dak met dakkapel, puntgevel, vlag
-        const cafe = h => `<svg viewBox="-6 2 54 46" width="${h * 54 / 46}" height="${h}" aria-hidden="true"><path d="M0 27 L9 9 H41 L46 27 Z" fill="#5A3A2A"/><path d="M15 21 V14 H29 V21 Z" fill="#F4F1EA"/><path d="M14 14 L22 10.4 L30 14 Z" fill="#4A2E20"/><rect x="17.2" y="15.4" width="4.4" height="4.6" fill="#2F3A40"/><rect x="22.6" y="15.4" width="4.4" height="4.6" fill="#2F3A40"/><rect x="34" y="4" width="3" height="7" fill="#7A4E3A"/><rect x="1.5" y="27" width="44.5" height="20" fill="#F4F1EA"/><rect x="1.5" y="42.6" width="44.5" height="4.4" fill="#C9C3B8"/><path d="M1.5 44.8 H46" stroke="#AFA89C" stroke-width=".4"/><g fill="#2F3A40" stroke="#C9C3B8" stroke-width="1.2"><rect x="4.5" y="30" width="8" height="10.5"/><rect x="15.5" y="30" width="8" height="10.5"/><rect x="35.5" y="30" width="8" height="10.5"/></g><path d="M8.5 30 V40.5 M19.5 30 V40.5 M39.5 30 V40.5" stroke="#C9C3B8" stroke-width=".5"/><rect x="26.5" y="29.5" width="6.4" height="17.5" fill="#3A2A22" stroke="#C9C3B8" stroke-width="1"/><rect x="27.8" y="31" width="3.8" height="6" fill="#2F3A40"/><path d="M1.5 29 H-3" stroke="#3a3a3a" stroke-width=".8"/><circle cx="-3" cy="32.4" r="2.8" fill="#1F6E43" stroke="#F4F1EA" stroke-width=".6"/><path d="M23 47 L24.6 40 H27.4 L29 47" fill="none" stroke="#5A3A2A" stroke-width=".8"/><rect x="24" y="40.2" width="4" height="4.6" fill="#222"/><g fill="none" stroke="#3A2A22" stroke-width="1.1" stroke-linejoin="round"><path d="M0 27 L9 9 H41 L46 27"/><path d="M15 21 V14 L22 10.4 L30 14 V21"/><rect x="34" y="4" width="3" height="5"/><rect x="1.5" y="27" width="44.5" height="20"/><path d="M-1 47 H47"/></g><path d="M46.4 25 L40 13.6" stroke="#6b6b6b" stroke-width=".7"/><path d="M40.3 14.1 L43.4 19.6 L41.2 25.2 L38.4 19.4 Z" fill="#fff" stroke="#ccc" stroke-width=".2"/><path d="M40.3 14.1 L41.35 15.95 L39.2 21.3 L38.4 19.4 Z" fill="#AE1C28"/><path d="M42.35 17.75 L43.4 19.6 L41.2 25.2 L40.2 23.2 Z" fill="#21468B"/></svg>`;
+        // Café 't Wapen van Ankeveen (Stichts End): lang en laag wit pand, donkergroene goot en kozijnen,
+        // hoge smalle ramen met glas-in-lood bovenlichten en het typische blokjesrelief naast elk raam
+        const cafe = h => {
+            const GR = '#24483A';
+            const open = [[4.5, 5, 0], [12.5, 5, 0], [21, 5.5, 1], [30, 6, 0], [40, 7.5, 0]];   // [x, breedte, deur?]
+            let reliëf = '', ramen = '';
+            const blokken = x0 => {                             // verspringende blokjes langs een kozijn
+                let s = '';
+                for (let y = 25, n = 0; y < 44.5; y += 2.1, n++) {
+                    const w = n % 2 ? 1.6 : 2.6;
+                    s += `<rect x="${(x0 - w / 2).toFixed(2)}" y="${y.toFixed(2)}" width="${w}" height="1.5" rx=".2"/>`;
+                }
+                return s;
+            };
+            open.forEach(([x, w, deur]) => {
+                reliëf += blokken(x - 1.6) + blokken(x + w + 1.6);
+                ramen += `<rect x="${x}" y="24.5" width="${w}" height="21" fill="${GR}"/>`;
+                ramen += `<rect x="${x + .7}" y="25.2" width="${w - 1.4}" height="4.6" fill="#6E7B7F"/>`
+                    + `<path d="M${x + .7} 27.5 H${x + w - .7} M${x + w / 2} 25.2 V29.8 M${x + 1.4} 25.6 L${x + w - 1.4} 29.4 M${x + w - 1.4} 25.6 L${x + 1.4} 29.4" stroke="#A9B3B6" stroke-width=".25"/>`;
+                ramen += deur
+                    ? `<rect x="${x + .7}" y="30.6" width="${w - 1.4}" height="14.9" fill="#2A211C"/><rect x="${x + 1.5}" y="32" width="${w - 3}" height="5" fill="#2F3A40"/>`
+                    : `<rect x="${x + .7}" y="30.6" width="${w - 1.4}" height="14.2" fill="#2F3A40"/><path d="M${x + w / 2} 30.6 V44.8" stroke="${GR}" stroke-width=".5"/>`;
+            });
+            return `<svg viewBox="-1 3 58 44" width="${h * 58 / 44}" height="${h}" aria-hidden="true">
+<path d="M0.5 20.5 L9 6.5 H47 L55.5 20.5 Z" fill="#5A3A2A"/>
+<path d="M5 13.5 H51 M7.5 9.5 H48.5 M2.6 17 H53.4" stroke="#4A2E20" stroke-width=".35"/>
+<rect x="18" y="8.2" width="21" height="9" fill="${GR}"/><rect x="17.4" y="7.6" width="22.2" height="1.2" fill="#1A3329"/>
+<g fill="#2F3A40" stroke="#5E7A6E" stroke-width=".4"><rect x="19.5" y="9.8" width="5.4" height="6"/><rect x="25.8" y="9.8" width="5.4" height="6"/><rect x="32.1" y="9.8" width="5.4" height="6"/></g>
+<rect x="1.5" y="21" width="53" height="25" fill="#F4F1EA"/>
+<g fill="#E4DFD5" stroke="#B5AEA2" stroke-width=".3">${reliëf}${blokken(53.2)}</g>
+${ramen}
+<rect x="1.5" y="45.2" width="53" height=".8" fill="#9A9488"/>
+<rect x="0" y="19.2" width="56" height="2.6" fill="${GR}"/><path d="M0 21.8 H56" stroke="#14281F" stroke-width=".4"/>
+<g fill="#F2D488">${[...Array(13)].map((_, k) => `<circle cx="${3 + k * 4.2}" cy="${22.7 + (k % 2) * .3}" r=".45"/>`).join('')}</g>
+<path d="M2 22.4 Q7 23.4 12 22.6 T22 22.7 T32 22.6 T42 22.8 T54 22.5" fill="none" stroke="#333" stroke-width=".2"/>
+<path d="M11.5 19.2 V12.5 M11.5 13 H4" stroke="#222" stroke-width=".5"/><rect x="3.5" y="13" width="7.4" height="5.6" fill="#141414"/><rect x="5.8" y="13.8" width="2.8" height="2.4" fill="#B88A3A"/><path d="M4.6 17.4 H9.8" stroke="#B88A3A" stroke-width=".4"/>
+<path d="M27.8 22 V23.3" stroke="#222" stroke-width=".4"/><path d="M25.2 23.3 H30.4 V27.4 Q30.4 29.6 27.8 30.6 Q25.2 29.6 25.2 27.4 Z" fill="#F4F1EA" stroke="#1F1F1F" stroke-width=".55"/><path d="M26 27.6 H29.6" stroke="#5C8A4A" stroke-width=".9"/>
+<path d="M37.4 22 V23.6 H39.2" stroke="#222" stroke-width=".4"/><path d="M38.2 23.6 h2 l.5 3.4 h-3 Z" fill="#141414"/><rect x="38.8" y="24.6" width="1" height="1.4" fill="#F2D488"/>
+<path d="M10.4 21.8 L11 26" stroke="#555" stroke-width=".2"/><circle cx="11" cy="27" r="1.6" fill="#C2307A"/><circle cx="10.4" cy="26.4" r=".6" fill="#E6E1EA"/><circle cx="11.8" cy="27.6" r=".5" fill="#6A9A4A"/>
+<path d="M35.6 21.8 L35.6 26.2" stroke="#555" stroke-width=".2"/><circle cx="35.6" cy="27.4" r="1.9" fill="#C2307A"/><circle cx="34.8" cy="26.8" r=".6" fill="#E6E1EA"/><circle cx="36.6" cy="28.2" r=".6" fill="#6A9A4A"/>
+<g fill="none" stroke="#3A2A22" stroke-width="1" stroke-linejoin="round"><path d="M0.5 20.5 L9 6.5 H47 L55.5 20.5"/><path d="M1.5 21.8 V46 H54.5 V21.8"/><path d="M-1 46 H57"/></g>
+</svg>`;
+        };
         const bg = document.createElement('div');
         bg.setAttribute('aria-hidden', 'true');
         bg.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:0';
         // [positie %, svg, alleen op bredere schermen]
         const stukken = [[17, huis(ROOD, 26), false], [22, huis2(BLAUW, 30), true],  [58, huis(ROOD, 27), true],
             [73, huis2(ROOD, 29), false], [78.5, huis(BLAUW, 25), true]];
-        stukken.push(['calc(51% - 60px)', cafe(33), false, .4]);                 // het café staat een stukje links van het kerkje
+        stukken.push(['calc(51% - 66px)', cafe(30), false, .4]);                 // het café staat een stukje links van het kerkje
         stukken.forEach(([pct, svg, breed, op]) => {
             const d = document.createElement('div');
             d.style.cssText = `position:absolute;left:${typeof pct === 'number' ? pct + '%' : pct};bottom:${H - GROUND}px;transform:translateX(-50%);opacity:${op || vaag};line-height:0`;
             d.innerHTML = svg; if (breed) d.className = 'om-breed';
-            bg.appendChild(d);
+            bg.appendChild(d); obstakels.push(d);
         });
         // plaatsnaambord Ankeveen (blauw met witte rand), rechts
         const bord = document.createElement('div');
@@ -1526,7 +1586,7 @@
             <path d="M14 14 V30 M40 14 V30" stroke="#8a8f96" stroke-width="1.6"/>
             <rect x="1" y="1" width="52" height="15" rx="3" fill="#0F4C92"/><rect x="2.6" y="2.6" width="48.8" height="11.8" rx="2" fill="none" stroke="#fff" stroke-width="1"/>
             <text x="27" y="11.4" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="8" fill="#fff" letter-spacing=".3">Ankeveen</text></svg>`;
-        bg.appendChild(bord);
+        bg.appendChild(bord); obstakels.push(bord);
         const st = document.createElement('style');
         st.textContent = '@media (max-width: 640px){ #ontmoeten .om-breed{display:none} }';
         document.head.appendChild(st);
@@ -1536,7 +1596,7 @@
         const tb = document.getElementById('topbar') || strip.parentElement;
         const dw = document.createElement('div'); dw.setAttribute('aria-hidden', 'true');
         dw.innerHTML = kerk(74);
-        tb.appendChild(dw);
+        tb.appendChild(dw); obstakels.push(dw);
         const zetKerk = () => {
             const sr = strip.getBoundingClientRect(), br = tb.getBoundingClientRect();
             dw.style.cssText = `position:absolute;z-index:-1;pointer-events:none;line-height:0;opacity:.26;left:${sr.left - br.left + sr.width * .51}px;top:${sr.top - br.top + GROUND - 74}px;transform:translateX(-50%)`;
@@ -1578,7 +1638,7 @@
             <path d="M10.6 7.7 L4.6 .2 L4.4 -1.4 L5.8 -1 L6 -2.6 L7.4 -1.9 L8 -3.2 L9.3 -2 L17.2 7.5 Z" fill="#1d1d1d"/>
             <path d="M13 7.6 L9.2 -1.2 L10.6 -.4 L17.2 7.5 Z" fill="#fff" stroke="${GR}" stroke-width=".5" stroke-linejoin="round"/></g></svg>`;
     paal.style.zIndex = rand0.style.zIndex = ooi.style.zIndex = 1;      // ganzen (z-index 0) vliegen achter de paal langs
-    strip.appendChild(paal); strip.appendChild(ooi); strip.appendChild(rand0);
+    strip.appendChild(paal); strip.appendChild(ooi); strip.appendChild(rand0); obstakels.push(paal);
     let ooiThuis = false, ooiBezig = false, ooiSinds = 0;
     const nestX = () => paal.offsetLeft + 13, NESTY = GROUND + 2 - PH + 8;       // midden bovenop het nest
     const zet = (x, y, r) => `translate(${x - 15}px, ${y - 20}px) scaleX(${r})`;   // x,y = voeten van de ooievaar
