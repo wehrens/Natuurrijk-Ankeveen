@@ -28,12 +28,19 @@
         return best;
     }
     // Het marktplein: de open ruimte tussen het linker huis en het café. Daar staan de markt en de lichtjesmarkt.
-    const pleinRand = { huizen: [], cafe: null, bord: null };
+    const pleinRand = { huizen: [], cafe: null, bord: null, kerk: null };
     function pleinPlek(breedte, duur) {
         const w = W(), sr = strip.getBoundingClientRect();
         const zicht = pleinRand.huizen.filter(e => e.offsetParent !== null).map(e => e.getBoundingClientRect().right - sr.left);
         const a = zicht.length ? Math.max(...zicht) : w * .2, b = pleinRand.cafe ? pleinRand.cafe.getBoundingClientRect().left - sr.left : w * .55;
         const c = Math.max(breedte / 2 + 8, Math.min(w - breedte / 2 - 8, (a + b) / 2));
+        zones.push({ a: c - breedte / 2, b: c + breedte / 2, t: performance.now() + duur });
+        return c;
+    }
+    // De plek pal voor De Dillewijn (het kerkje): daar speelt de jazz
+    function voorKerk(breedte, duur) {
+        const sr = strip.getBoundingClientRect(), k = pleinRand.kerk && pleinRand.kerk.getBoundingClientRect();
+        const c = k ? k.left + k.width / 2 - sr.left : W() * .62;
         zones.push({ a: c - breedte / 2, b: c + breedte / 2, t: performance.now() + duur });
         return c;
     }
@@ -1204,7 +1211,7 @@
     function jazz() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, h = 24, y = GROUND - h, speed = 20;
-        const kinds = ['sax', 'bas', 'trompet'], SPEEL = rand(9000, 12000), stopX = plek(100, .3, .7, jazzDur()) + 20 * f;
+        const kinds = ['sax', 'bas', 'trompet'], SPEEL = rand(9000, 12000), stopX = voorKerk(100, jazzDur()) - 7 + 20 * f;   // altijd pal voor De Dillewijn
         const x0 = fromLeft ? -40 : width + 20, x1 = fromLeft ? width + 40 + EX : -60 - EX;
         let inDur = 0;
         kinds.forEach((kind, i) => {
@@ -1637,7 +1644,7 @@ ${pot(47.4)}${pot(61.6)}
         const tb = document.getElementById('topbar') || strip.parentElement;
         const dw = document.createElement('div'); dw.setAttribute('aria-hidden', 'true');
         dw.innerHTML = kerk(74);
-        tb.appendChild(dw); obstakels.push(dw);
+        tb.appendChild(dw); obstakels.push(dw); pleinRand.kerk = dw;
         const zetKerk = () => {
             const sr = strip.getBoundingClientRect(), br = tb.getBoundingClientRect();
             dw.style.cssText = `position:absolute;z-index:-1;pointer-events:none;line-height:0;opacity:.26;left:${sr.left - br.left + sr.width * .62}px;top:${sr.top - br.top + GROUND - 74}px;transform:translateX(-50%)`;
