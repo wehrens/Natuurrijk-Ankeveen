@@ -235,7 +235,7 @@
         active++;
         const width = W(), meet = vrij(.2, .8), speed = rand(15, 21);
         const cl = pick(KLEUR), cr = chance(.5) ? cl : pick(KLEUR);
-        const oud = koffie === true || chance(.25);                // af en toe twee oudere stellen
+        const oud = koffie === true || chance(.08);                // heel af en toe twee oudere stellen (niet te vaak)
         const L = party(true, meet, cl, speed, oud), R = party(false, meet, cr, speed, oud);
         const all = L.concat(R), arrive = Math.max(...all.map(m => m.dur));
         setTimeout(() => {
