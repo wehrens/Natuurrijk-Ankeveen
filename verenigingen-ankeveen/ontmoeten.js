@@ -551,6 +551,17 @@
         const cd = plekken.cafeDeur(), deur = cd === null ? width * .5 : cd;
         // naar buiten: de kant met de meeste ruimte op; naar binnen: van de kant die het verst weg is
         const f = uit ? (chance(.5) ? 1 : -1) : (deur > width / 2 ? 1 : -1);
+        // het café deint mee op de muziek (n maten), met muzieknootjes boven het dak
+        const deinen = n => {
+            if (!pleinRand.cafe) return;
+            const pand = pleinRand.cafe.firstElementChild; pand.style.transformOrigin = '50% 100%';
+            animate(pand, [{ transform: 'scale(1, 1) rotate(0deg)' }, { transform: 'scale(1.04, .95) rotate(-1.6deg)', offset: .25 }, { transform: 'scale(.97, 1.06) rotate(0deg)', offset: .5 },
+                { transform: 'scale(1.04, .95) rotate(1.6deg)', offset: .75 }, { transform: 'scale(1, 1) rotate(0deg)' }], { duration: 1040, iterations: n, easing: 'ease-in-out' });
+            for (let k = 0; k < n; k++) later(() => zegOp(deur + (k % 2 ? 12 : -12), GROUND - 34, k % 2 ? '♫' : '♪', pick(CARN), 11), k * 1040);
+        };
+        // komen ze naar buiten, dan deint het café eerst al even: het feest is binnen in volle gang
+        const VOOR = uit ? 3200 : 0;
+        if (uit) deinen(4);
         const stoet = []; let binnenNa = 0;
         for (let i = 0; i < 12; i++) {
             const w = i === 0 ? prince() : reveler(i - 1); strip.appendChild(w); stoet.push(w);
@@ -562,7 +573,7 @@
                 const x1 = f > 0 ? width + 60 + EX : -80 - EX, d = Math.abs(x1 - xd) * speed, g = GROEI / Math.abs(x1 - xd);
                 w.style.opacity = 0; w.style.transform = zet(xd, KLEIN);
                 a = animate(w, [{ transform: zet(xd, KLEIN), opacity: 0 }, { transform: zet(xd + f * 3, KLEIN), opacity: 1, offset: g * .12 }, { transform: zet(xd + f * GROEI, 1), opacity: 1, offset: g }, { transform: zet(x1, 1), opacity: 1 }],
-                    { duration: d, delay: 400 + i * 330, easing: 'linear' });
+                    { duration: d, delay: VOOR + 400 + i * 330, easing: 'linear' });
             } else {
                 const x0 = f > 0 ? -40 - off : width + 20 + off, d = Math.abs(xd - x0) * speed, g = 1 - GROEI / Math.abs(xd - x0);
                 a = animate(w, [{ transform: zet(x0, 1), opacity: 1 }, { transform: zet(xd - f * GROEI, 1), opacity: 1, offset: g }, { transform: zet(xd - f * 2, KLEIN), opacity: 1, offset: g + (1 - g) * .9 }, { transform: zet(xd, KLEIN), opacity: 0 }],
@@ -575,12 +586,7 @@
                 { duration: 520, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: -(i % 2) * 520 });
         }
         // is iedereen binnen, dan gaat het feest daar door: het café deint een paar tellen mee op de muziek
-        if (!uit && pleinRand.cafe) later(() => {
-            const pand = pleinRand.cafe.firstElementChild; pand.style.transformOrigin = '50% 100%';
-            animate(pand, [{ transform: 'scale(1, 1) rotate(0deg)' }, { transform: 'scale(1.04, .95) rotate(-1.6deg)', offset: .25 }, { transform: 'scale(.97, 1.06) rotate(0deg)', offset: .5 },
-                { transform: 'scale(1.04, .95) rotate(1.6deg)', offset: .75 }, { transform: 'scale(1, 1) rotate(0deg)' }], { duration: 1040, iterations: 6, easing: 'ease-in-out' });
-            [0, 1100, 2300, 3500, 4700].forEach((t, k) => later(() => zegOp(deur + (k % 2 ? 12 : -12), GROUND - 34, k % 2 ? '♫' : '♪', pick(CARN), 11), t));
-        }, binnenNa + 150);
+        if (!uit) later(() => deinen(6), binnenNa + 150);
         // confetti boven wie er buiten loopt
         const tick = setInterval(() => {
             const buiten = stoet.filter(e => e.isConnected);
