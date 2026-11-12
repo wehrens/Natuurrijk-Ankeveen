@@ -40,6 +40,8 @@ body.scene-vleermuizen .bio-bord { filter: brightness(.7); }
     -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 62%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, #000 62%, transparent 100%); }
 body.scene-vleermuizen .bio-toren { opacity: .35; }
 @media (max-width: 900px) { .bio-toren { left: 74%; } }   /* smal scherm: tussen de naam en het menuknopje */
+/* waar op een smal scherm al iets op die plek staat (zwaluwpaal, hek, boom) schuift de toren een stukje naar links */
+@media (max-width: 900px) { body.scene-zwaluwen .bio-toren { left: 66%; } body.scene-egels .bio-toren, body.scene-vleermuizen .bio-toren { left: 61%; } }
 
 /* Gras: één afbeelding, herhaald */
 .bio-grass::after {
