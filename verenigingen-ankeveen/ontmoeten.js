@@ -1141,14 +1141,15 @@
         return p;
     }
     function ganzen(fromLeft, dur) {
-        const w = document.createElement('div'); w.className = 'om-p'; w.style.zIndex = 0;
+        const w = document.createElement('div'); w.style.cssText = 'position:absolute;left:0;top:0;will-change:transform;line-height:0';
         const gans = (x, y, d) => `<g transform="translate(${x} ${y})"><path class="vl" d="M-4 0 q2 -1.5 4 0 q2 -1.5 4 0" fill="none" stroke="#3b3b3b" stroke-width="1.1" stroke-linecap="round" style="transform-box:fill-box;transform-origin:50% 50%;animation:none"><animate attributeName="d" dur="${d}s" repeatCount="indefinite" values="M-4 0 q2 -1.5 4 0 q2 -1.5 4 0;M-4 1.2 q2 -2.4 4 -1 q2 -2.4 4 0;M-4 0 q2 -1.5 4 0 q2 -1.5 4 0"/></path></g>`;
         w.innerHTML = `<svg viewBox="0 0 60 16" width="60" height="16" aria-hidden="true" style="overflow:visible">${gans(30, 3, .55)}${gans(22, 6, .5)}${gans(38, 6, .6)}${gans(14, 9.5, .55)}${gans(46, 9.5, .5)}${gans(6, 13, .6)}</svg>`;
-        strip.appendChild(w);
-        const width = W(), x0 = fromLeft ? -70 : width + 10, x1 = fromLeft ? width + 10 : -70;
-        animate(w, [{ transform: `translate(${x0}px, 2px) scaleX(${fromLeft ? 1 : -1})` }, { transform: `translate(${(x0 + x1) / 2}px, 0px) scaleX(${fromLeft ? 1 : -1})`, offset: .5 }, { transform: `translate(${x1}px, 2px) scaleX(${fromLeft ? 1 : -1})` }], { duration: dur, easing: 'linear' })
+        // ze vliegen in een eigen laag in de kopbalk: vóór de omroeptoren in de verte, maar achter de toren van De Dillewijn
+        ganzenlaag.appendChild(w);
+        const width = W(), gx = dx(), gy = dy(), x0 = (fromLeft ? -70 : width + 10) + gx, x1 = (fromLeft ? width + 10 : -70) + gx;
+        animate(w, [{ transform: `translate(${x0}px, ${gy + 2}px) scaleX(${fromLeft ? 1 : -1})` }, { transform: `translate(${(x0 + x1) / 2}px, ${gy}px) scaleX(${fromLeft ? 1 : -1})`, offset: .5 }, { transform: `translate(${x1}px, ${gy + 2}px) scaleX(${fromLeft ? 1 : -1})` }], { duration: dur, easing: 'linear' })
             .finished.then(() => w.remove()).catch(() => w.remove());
-        return { x0, x1 };
+        return { x0: x0 - gx, x1: x1 - gx };
     }
     function vogelaars() {
         if (document.hidden) return;
@@ -1672,11 +1673,14 @@ ${pot(47.4)}${pot(61.6)}
         // met zijn voet op de grondlijn van de strook
         const tb = document.getElementById('topbar') || strip.parentElement;
         const dw = document.createElement('div'); dw.setAttribute('aria-hidden', 'true');
-        dw.innerHTML = kerk(74);
+        // Het kerkje is licht doorschijnend getekend. Eronder ligt hetzelfde silhouet in de kleur van de kopbalk,
+        // zodat wat erachter langs vliegt (de ganzen) ook echt achter de toren verdwijnt.
+        const ksvg = kerk(74), kmask = `url('data:image/svg+xml,${encodeURIComponent(ksvg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')).replace(/'/g, '%27')}') center / 100% 100% no-repeat`;
+        dw.innerHTML = `<div style="position:absolute;inset:0;background:${getComputedStyle(tb).backgroundColor};-webkit-mask:${kmask};mask:${kmask}"></div><div style="position:relative;opacity:.26">${ksvg}</div>`;
         tb.appendChild(dw); obstakels.push(dw); pleinRand.kerk = dw;
         const zetKerk = () => {
             const sr = strip.getBoundingClientRect(), br = tb.getBoundingClientRect();
-            dw.style.cssText = `position:absolute;z-index:-1;pointer-events:none;line-height:0;opacity:.26;left:${sr.left - br.left + sr.width * .62}px;top:${sr.top - br.top + GROUND - 74}px;transform:translateX(-50%)`;
+            dw.style.cssText = `position:absolute;z-index:-1;pointer-events:none;line-height:0;left:${sr.left - br.left + sr.width * .62}px;top:${sr.top - br.top + GROUND - 74}px;transform:translateX(-50%)`;
         };
         zetKerk(); addEventListener('resize', zetKerk);
         gebouwen.push(dw);
@@ -1717,7 +1721,7 @@ ${pot(47.4)}${pot(61.6)}
         const nevel = 'linear-gradient(180deg, #000 0%, #000 62%, transparent 100%)';
         const zetToren = () => {
             const sr = strip.getBoundingClientRect(), br = tb.getBoundingClientRect();
-            toren.style.cssText = `position:absolute;z-index:-1;pointer-events:none;line-height:0;opacity:.6;left:${sr.left - br.left + sr.width * .3}px;top:${sr.top - br.top + GROUND - 5 - 34}px;transform:translateX(-50%);-webkit-mask-image:${nevel};mask-image:${nevel}`;
+            toren.style.cssText = `position:absolute;z-index:-3;pointer-events:none;line-height:0;opacity:.6;left:${sr.left - br.left + sr.width * .3}px;top:${sr.top - br.top + GROUND - 5 - 34}px;transform:translateX(-50%);-webkit-mask-image:${nevel};mask-image:${nevel}`;
         };
         zetToren(); addEventListener('resize', zetToren);
     }
@@ -1768,9 +1772,14 @@ ${pot(47.4)}${pot(61.6)}
     balk.appendChild(lucht);
     // de verre lucht: achter de omroeptoren, het kerkje en de tekst. Hier hangt de zon.
     const verte = document.createElement('div');
-    verte.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:-2;overflow:hidden';
+    verte.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:-4;overflow:hidden';
     verte.setAttribute('aria-hidden', 'true');
     balk.appendChild(verte);
+    // de laag van de ganzen: vóór de omroeptoren (z-index -3), achter De Dillewijn (z-index -1)
+    const ganzenlaag = document.createElement('div');
+    ganzenlaag.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:-2;overflow:hidden';
+    ganzenlaag.setAttribute('aria-hidden', 'true');
+    balk.appendChild(ganzenlaag);
     const dy = () => strip.getBoundingClientRect().top - balk.getBoundingClientRect().top;   // strook t.o.v. de kopbalk
     const dx = () => strip.getBoundingClientRect().left - balk.getBoundingClientRect().left;
     const naarLucht = () => { lucht.appendChild(ooi); };
@@ -1853,8 +1862,9 @@ ${pot(47.4)}${pot(61.6)}
     if (!REDUCE) setTimeout(houdingRonde, 9000);
     // bij draaien of breder maken van het scherm schuift de paal mee (7%), dus de zittende ooievaar ook
     addEventListener('resize', () => { if (ooiThuis && !ooiBezig) ooi.style.transform = zet(nestX(), NESTY, /scaleX\(-1\)/.test(ooi.style.transform) ? -1 : 1); });
-    const ooiRonde = () => { const was = ooiThuis; ooievaar(); setTimeout(ooiRonde, was ? rand(35000, 70000) : rand(30000, 50000)); };
-    if (!REDUCE) setTimeout(ooiRonde, rand(8000, 18000));
+    // het nest is ongeveer 80% van de tijd bezet: lang thuis (ruim anderhalve minuut), kort weg
+    const ooiRonde = () => { const was = ooiThuis; ooievaar(); setTimeout(ooiRonde, was ? rand(13000, 21000) : rand(100000, 150000)); };
+    if (!REDUCE) setTimeout(ooiRonde, rand(3000, 7000));
 
 
     // Ruiter: amazone met donkere cap, blonde paardenstaart en zwart leren jasje op een bruinbonte paint (wit met
