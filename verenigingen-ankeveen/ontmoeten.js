@@ -1144,8 +1144,13 @@
             { w: t2, off: 50, h: 12, lift: 0, z: 2 },
         ];
         const x0 = fromLeft ? -60 : width + 30, x1 = fromLeft ? width + 90 + EX : -150 - EX;
+        // Vader zit in een breed vak (hij achteraan, de hond aan de lijn ervoor). Lopen ze naar links, dan is dat vak
+        // gespiegeld en staat vader aan de rechterkant ervan: de rest schuift dan zoveel op dat niemand achter hem loopt.
+        strip.appendChild(vader.w);
+        const extra = f < 0 ? Math.max(0, vader.w.offsetWidth - 14) : 0;
         leden.forEach(m => {
-            const y = GROUND - m.h - m.lift, xa = x0 - m.off * f, xb = x1 - m.off * f;
+            const o = m.w === vader.w ? 0 : m.off + extra;
+            const y = GROUND - m.h - m.lift, xa = x0 - o * f, xb = x1 - o * f;
             m.w.style.zIndex = m.z; m.w.style.transform = `translate(${xa}px, ${y}px) scaleX(${f})`;
             strip.appendChild(m.w);
             const b = m.w === vader.w ? vader.bob : bob(m.w, m.h < 15 ? rand(210, 250) : rand(400, 450));
