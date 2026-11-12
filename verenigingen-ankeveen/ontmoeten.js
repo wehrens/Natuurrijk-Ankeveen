@@ -774,11 +774,11 @@
     // Weekmarkt van Bruisend Ankeveen: twee vrijwilligers zetten vijf kraampjes op, mensen komen boodschappen
     // doen en gaan met een tas (met stokbrood) weer weg, en na een tijdje wordt de markt weer afgebroken.
     const KRAAM = [
-        { luifel: '#D64541', waar: '<rect x="4" y="19" width="5" height="3" rx="1" fill="#c98b3a"/><rect x="10" y="18.5" width="6" height="3.5" rx="1" fill="#e0a650"/><rect x="17" y="19" width="5" height="3" rx="1" fill="#b87a2e"/>' },   // brood
-        { luifel: '#1b4f9c', waar: '<circle cx="7" cy="20.5" r="2.4" fill="#f4d35e"/><circle cx="13" cy="20.5" r="2.4" fill="#f1c232"/><rect x="17" y="18.5" width="6" height="4" fill="#f8e58c"/>' },                             // kaas
-        { luifel: '#1E9E3E', waar: '<circle cx="6" cy="20.5" r="2.2" fill="#e8552b"/><circle cx="11" cy="20.5" r="2.2" fill="#e8552b"/><rect x="15" y="18" width="2" height="5" fill="#f39a2b"/><rect x="18" y="18" width="2" height="5" fill="#f39a2b"/><circle cx="23" cy="20" r="2.4" fill="#3c9a3c"/>' }, // groente
-        { luifel: '#D64541', waar: '<path d="M4 21 q5 -4 10 0 q-5 4 -10 0z" fill="#9fb8c8"/><path d="M14 21 q5 -4 10 0 q-5 4 -10 0z" fill="#8aa7ba"/><path d="M3 23 h22" stroke="#cfe3ee" stroke-width="2"/>' },     // vis
-        { luifel: '#1b4f9c', waar: '<path d="M6 23 v-5 M11 23 v-6 M16 23 v-5 M21 23 v-6" stroke="#3c9a3c" stroke-width="1.2"/><circle cx="6" cy="17.5" r="2" fill="#ff4f9a"/><circle cx="11" cy="16.5" r="2" fill="#f2c318"/><circle cx="16" cy="17.5" r="2" fill="#7b5cc4"/><circle cx="21" cy="16.5" r="2" fill="#ffffff" stroke="#ccc" stroke-width=".5"/>' } // bloemen
+        { naam: 'BROOD', luifel: '#D64541', waar: '<rect x="4" y="19" width="5" height="3" rx="1" fill="#c98b3a"/><rect x="10" y="18.5" width="6" height="3.5" rx="1" fill="#e0a650"/><rect x="17" y="19" width="5" height="3" rx="1" fill="#b87a2e"/>' },   // brood
+        { naam: 'KAAS', luifel: '#1b4f9c', waar: '<circle cx="7" cy="20.5" r="2.4" fill="#f4d35e"/><circle cx="13" cy="20.5" r="2.4" fill="#f1c232"/><rect x="17" y="18.5" width="6" height="4" fill="#f8e58c"/>' },                             // kaas
+        { naam: 'GROENTE', luifel: '#1E9E3E', waar: '<circle cx="6" cy="20.5" r="2.2" fill="#e8552b"/><circle cx="11" cy="20.5" r="2.2" fill="#e8552b"/><rect x="15" y="18" width="2" height="5" fill="#f39a2b"/><rect x="18" y="18" width="2" height="5" fill="#f39a2b"/><circle cx="23" cy="20" r="2.4" fill="#3c9a3c"/>' }, // groente
+        { naam: 'VIS', luifel: '#D64541', waar: '<path d="M4 21 q5 -4 10 0 q-5 4 -10 0z" fill="#9fb8c8"/><path d="M14 21 q5 -4 10 0 q-5 4 -10 0z" fill="#8aa7ba"/><path d="M3 23 h22" stroke="#cfe3ee" stroke-width="2"/>' },     // vis
+        { naam: 'BLOEMEN', luifel: '#1b4f9c', waar: '<path d="M6 23 v-5 M11 23 v-6 M16 23 v-5 M21 23 v-6" stroke="#3c9a3c" stroke-width="1.2"/><circle cx="6" cy="17.5" r="2" fill="#ff4f9a"/><circle cx="11" cy="16.5" r="2" fill="#f2c318"/><circle cx="16" cy="17.5" r="2" fill="#7b5cc4"/><circle cx="21" cy="16.5" r="2" fill="#ffffff" stroke="#ccc" stroke-width=".5"/>' } // bloemen
     ];
     function kraam(k) {
         const w = document.createElement('div'); w.className = 'om-p om-kraam';
@@ -788,6 +788,7 @@
               <path d="M3 8 v26 M25 8 v26" stroke="#8b5a2b" stroke-width="1.6"/>
               <rect x="2" y="23" width="24" height="2" fill="#a97142"/><rect x="3" y="25" width="22" height="7" fill="#ffffff" stroke="#ddd" stroke-width=".5"/>
               <path d="M3 25 h22" stroke="${k.luifel}" stroke-width="1.5"/>
+              <text x="14" y="30.6" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="4.6" fill="${k.luifel}"${k.naam.length > 5 ? ' textLength="19.6" lengthAdjust="spacingAndGlyphs"' : ' letter-spacing=".3"'}>${k.naam}</text>
               <g class="waar" style="opacity:0">${k.waar}</g>
             </g>
             <g class="luifel" style="transform-box:view-box;transform-origin:14px 9px">
