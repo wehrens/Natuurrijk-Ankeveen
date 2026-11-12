@@ -588,19 +588,38 @@
     }
 
     // Yogi: drie mediterende figuren in lotushouding, handen tegen elkaar, zweven langzaam voorbij
+    // Yoga: elke yogi staat op een matje en wisselt rustig van houding: de boom (op één been, andere voet
+    // tegen de knie, handen boven het hoofd tegen elkaar), armen omhoog, de neerwaartse hond en weer terug.
+    const YOGA_T = 10400;
     function yogi() {
         const w = document.createElement('div'); w.className = 'om-p';
         const huid = pick(HUID), kleur = pick(['#2BB39A', '#7B5CC4', '#F39A2B', '#5C9BD6', '#C9A227']), haar = pick(HAAR);
-        w.innerHTML = `<svg viewBox="0 0 30 30" width="18" height="18" aria-hidden="true">
-            <ellipse cx="15" cy="27.5" rx="12" ry="1.6" fill="#16233a" opacity=".08"/>
-            <path d="M4 25 q0 -5 7 -6 l4 0 l4 0 q7 1 7 6 q-5 1.5 -11 1.5 q-6 0 -11 -1.5 z" fill="${kleur}"/>
-            <path d="M6.5 24.6 q3 -4.5 8.5 -3 M23.5 24.6 q-3 -4.5 -8.5 -3" fill="none" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/>
-            <path d="M10 20 q0 -8 5 -9 q5 1 5 9 z" fill="${kleur}"/>
-            <path d="M10.5 13 q-2.5 4 -0.5 8 M19.5 13 q2.5 4 0.5 8" fill="none" stroke="${huid}" stroke-width="2" stroke-linecap="round"/>
-            <path d="M15 17.5 l-1.4 4.2 l2.8 0 z" fill="${huid}"/>
-            <circle cx="15" cy="7.5" r="4" fill="${huid}"/>
-            <path d="M11 7 q0 -5 4 -5 q4 0 4 5 q-1.5 -2.2 -4 -2.2 q-2.5 0 -4 2.2z" fill="${haar}"/>
-            <path d="M13.3 8.2 q0.6 0.5 1.2 0 M15.5 8.2 q0.6 0.5 1.2 0" stroke="#2b2b2b" stroke-width=".6" fill="none" stroke-linecap="round"/></svg>`;
+        const kop = (x, y) => `<circle cx="${x}" cy="${y}" r="2.7" fill="${huid}"/><path d="M${x - 2.7} ${y - .3} q0 -3.2 2.7 -3.2 q2.7 0 2.7 3.2 q-1 -1.5 -2.7 -1.5 q-1.7 0 -2.7 1.5z" fill="${haar}"/>`;
+        const romp = `<path d="M12.6 9.6 q2.4 -1 4.8 0 l.5 7.6 q-2.9 1 -5.8 0 z" fill="${kleur}"/>`;
+        w.innerHTML = `<svg viewBox="0 0 30 30" width="22" height="22" aria-hidden="true" style="overflow:visible">
+            <rect x="3" y="27" width="24" height="1.7" rx=".85" fill="#B9A6E0"/>
+            <g class="boom">
+                <path d="M15 17 V26.4" stroke="${kleur}" stroke-width="2.7" stroke-linecap="round"/><path d="M13.6 26.6 h3" stroke="${huid}" stroke-width="1.3" stroke-linecap="round"/>
+                <path d="M15.4 17.2 L20.6 20.4 L16 22.2" fill="none" stroke="${kleur}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15.9" cy="22.3" r="1" fill="${huid}"/>
+                ${romp}
+                <path d="M12.9 10.4 Q10.4 5.4 14.8 .8 M17.1 10.4 Q19.6 5.4 15.2 .8" fill="none" stroke="${huid}" stroke-width="1.7" stroke-linecap="round"/>
+                ${kop(15, 6.6)}</g>
+            <g class="omhoog" style="opacity:0">
+                <path d="M13.8 17 L13.5 26.4 M16.2 17 L16.5 26.4" stroke="${kleur}" stroke-width="2.6" stroke-linecap="round"/><path d="M12.4 26.6 h2.4 M15.2 26.6 h2.4" stroke="${huid}" stroke-width="1.3" stroke-linecap="round"/>
+                ${romp}
+                <path d="M12.9 10.4 L10.2 1.4 M17.1 10.4 L19.8 1.4" fill="none" stroke="${huid}" stroke-width="1.7" stroke-linecap="round"/>
+                ${kop(15, 6.6)}</g>
+            <g class="hond" style="opacity:0">
+                <path d="M15.6 13.6 L23.6 26.2" stroke="${kleur}" stroke-width="2.7" stroke-linecap="round"/><path d="M23 26.6 h2.6" stroke="${huid}" stroke-width="1.3" stroke-linecap="round"/>
+                <path d="M9.8 20.8 L5.4 26.4" stroke="${huid}" stroke-width="1.7" stroke-linecap="round"/><path d="M4.4 26.7 h2.2" stroke="${huid}" stroke-width="1.2" stroke-linecap="round"/>
+                <path d="M15.4 13.4 L10 20.6" stroke="${kleur}" stroke-width="4" stroke-linecap="round"/>
+                ${kop(11.2, 23.4)}</g></svg>`;
+        const T = YOGA_T, o = ms => ms / T, svg = w.firstElementChild;
+        const lus = (cls, frames) => animate(svg.querySelector(cls), frames, { duration: T, iterations: Infinity, easing: 'linear' });
+        lus('.boom', [{ opacity: 1 }, { opacity: 1, offset: o(3000) }, { opacity: 0, offset: o(3400) }, { opacity: 0, offset: o(10000) }, { opacity: 1 }]);
+        lus('.omhoog', [{ opacity: 0 }, { opacity: 0, offset: o(3000) }, { opacity: 1, offset: o(3400) }, { opacity: 1, offset: o(5000) }, { opacity: 0, offset: o(5400) },
+            { opacity: 0, offset: o(8200) }, { opacity: 1, offset: o(8600) }, { opacity: 1, offset: o(10000) }, { opacity: 0 }]);
+        lus('.hond', [{ opacity: 0 }, { opacity: 0, offset: o(5000) }, { opacity: 1, offset: o(5400) }, { opacity: 1, offset: o(8200) }, { opacity: 0, offset: o(8600) }, { opacity: 0 }]);
         return w;
     }
     function yogis() {
@@ -609,11 +628,10 @@
         const yogi3 = [];
         for (let i = 0; i < 3; i++) {
             const w = yogi(); strip.appendChild(w); yogi3.push(w);
-            const off = i * 30, y = GROUND - 18 + 1;
+            const off = i * 30, y = GROUND - 21;
             const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off : -60 - EX + off;
             animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
-            animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-3px)' }], { duration: 2400, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: -i * 800 });
         }
         // af en toe een klein "om"-kringetje dat opstijgt
         const t0 = performance.now();
@@ -1729,6 +1747,7 @@ ${pot(47.4)}${pot(61.6)}
             }, dur);
         } else {
             // opstaan, opvliegen en hoog over de kopbalk weg
+            houdingen.splice(0).forEach(a => a.cancel());
             animate(staan, [{ transform: 'translateY(4px)' }, { transform: 'translateY(0)' }], { duration: 600, easing: 'ease-out' });
             later(() => {
                 const naarRechts = chance(.5), r = naarRechts ? 1 : -1, xb = naarRechts ? width + 50 : -50, dur = Math.abs(xb - xn) * 8;
@@ -1741,6 +1760,40 @@ ${pot(47.4)}${pot(61.6)}
             }, 700);
         }
     }
+    // Op het nest verandert hij af en toe van houding: zich uitschudden, even opstaan en weer gaan zitten,
+    // zich omdraaien, de andere kant op kijken of klepperen. Elke beweging begint en eindigt in de zithouding.
+    const houdingen = [];
+    function ooiHouding(kies) {
+        if (!ooiThuis || ooiBezig || document.hidden || performance.now() - ooiSinds < 6000) return;
+        const staan = ooi.querySelector('.staan'), kop = staan.querySelector('.kop');
+        const doe = (el, frames, opts) => { const a = el.animate(frames, opts); houdingen.push(a); a.finished.catch(() => {}).then(() => { const i = houdingen.indexOf(a); if (i >= 0) houdingen.splice(i, 1); }); return a; };
+        const ZIT = 'translateY(4px)';
+        const soort = typeof kies === 'string' ? kies : pick(['schud', 'schud', 'sta', 'sta', 'draai', 'kijk', 'kijk', 'klepper']);
+        if (soort === 'schud') {
+            // uitschudden: lijf even omhoog en snel heen en weer
+            const f = [{ transform: ZIT }, { transform: 'translateY(2.5px) rotate(0deg)' }];
+            for (let i = 0; i < 8; i++) f.push({ transform: `translateY(2.5px) rotate(${i % 2 ? 5 : -5}deg)` });
+            f.push({ transform: 'translateY(2.5px) rotate(0deg)' }, { transform: ZIT });
+            staan.style.transformOrigin = '50% 100%';
+            doe(staan, f, { duration: 1500, easing: 'ease-in-out' });
+        } else if (soort === 'sta') {
+            // opstaan, even staan (kop iets vooruit) en weer gaan zitten
+            doe(staan, [{ transform: ZIT }, { transform: 'translateY(0)', offset: .18 }, { transform: 'translateY(0)', offset: .8 }, { transform: ZIT }], { duration: 5200, easing: 'ease-in-out' });
+            doe(kop, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(0deg)', offset: .25 }, { transform: 'rotate(14deg)', offset: .4 }, { transform: 'rotate(14deg)', offset: .6 }, { transform: 'rotate(0deg)', offset: .75 }, { transform: 'rotate(0deg)' }], { duration: 5200, easing: 'ease-in-out' });
+        } else if (soort === 'draai') {
+            // omdraaien: hij gaat andersom op het nest zitten
+            const r0 = /scaleX\(-1\)/.test(ooi.style.transform) ? -1 : 1, x = nestX();
+            ooi.style.transform = zet(x, NESTY, -r0);
+            doe(ooi, [{ transform: zet(x, NESTY, r0) }, { transform: `translate(${x - 15}px, ${NESTY - 21.5}px) scaleX(${r0 * .15})`, offset: .5 }, { transform: zet(x, NESTY, -r0) }], { duration: 700, easing: 'ease-in-out' });
+        } else if (soort === 'kijk') {
+            // de andere kant op kijken: kop en snavel draaien om en weer terug
+            doe(kop, [{ transform: 'scaleX(1)' }, { transform: 'scaleX(-1)', offset: .1 }, { transform: 'scaleX(-1) rotate(8deg)', offset: .45 }, { transform: 'scaleX(-1)', offset: .88 }, { transform: 'scaleX(1)' }], { duration: rand(3200, 5200), easing: 'ease-in-out' });
+        } else {
+            doe(kop, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-55deg)', offset: .15 }, { transform: 'rotate(-48deg)', offset: .3 }, { transform: 'rotate(-55deg)', offset: .45 }, { transform: 'rotate(-48deg)', offset: .6 }, { transform: 'rotate(-55deg)', offset: .75 }, { transform: 'rotate(0deg)' }], { duration: 1600, easing: 'ease-in-out' });
+        }
+    }
+    const houdingRonde = () => { if (!houdingen.length) ooiHouding(); setTimeout(houdingRonde, rand(7000, 14000)); };
+    if (!REDUCE) setTimeout(houdingRonde, 9000);
     // bij draaien of breder maken van het scherm schuift de paal mee (7%), dus de zittende ooievaar ook
     addEventListener('resize', () => { if (ooiThuis && !ooiBezig) ooi.style.transform = zet(nestX(), NESTY, /scaleX\(-1\)/.test(ooi.style.transform) ? -1 : 1); });
     const ooiRonde = () => { const was = ooiThuis; ooievaar(); setTimeout(ooiRonde, was ? rand(35000, 70000) : rand(30000, 50000)); };
@@ -2567,7 +2620,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: chance(.5) }); window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: chance(.5) }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: chance(.5) }); window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: chance(.5) }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
