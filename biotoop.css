@@ -35,6 +35,11 @@ body.scene-vleermuizen .bio-flower { filter: brightness(.6) saturate(.7); }
 /* Plaatsnaambord Ankeveen: rechts, met de palen in het gras (net boven de menubalk, onder de dieren) */
 .bio-bord { position: fixed; right: max(10px, 3%); top: calc(var(--header-total) - 26px); z-index: 1021; line-height: 0; pointer-events: none; }
 body.scene-vleermuizen .bio-bord { filter: brightness(.7); }
+/* Omroeptoren van Hilversum in de verte: boven het gras, onderaan vervagend; vogels vliegen ervoor langs */
+.bio-toren { position: fixed; left: 31%; top: calc(var(--header-total) - 10px - 30px); z-index: 1021; line-height: 0; opacity: .85; pointer-events: none;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 62%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, #000 62%, transparent 100%); }
+body.scene-vleermuizen .bio-toren { opacity: .35; }
+@media (max-width: 900px) { .bio-toren { left: 74%; } }   /* smal scherm: tussen de naam en het menuknopje */
 
 /* Gras: één afbeelding, herhaald */
 .bio-grass::after {

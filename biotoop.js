@@ -27,6 +27,21 @@
             <text x="27" y="11.4" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="8" fill="#fff" letter-spacing=".3">Ankeveen</text></svg>`;
         document.body.appendChild(bord);
     })();
+
+    // De omroeptoren van Hilversum in de verte (vanuit Ankeveen op veel plekken te zien): klein, onderaan in de nevel
+    (function () {
+        const toren = document.createElement('div');
+        toren.className = 'bio-toren'; toren.setAttribute('aria-hidden', 'true');
+        toren.innerHTML = `<svg viewBox="17.5 1 9 57" width="${30 * 9 / 57}" height="30">
+            <path d="M22 5 V2" stroke="#9AA3A8" stroke-width=".5"/>
+            <path d="M21.3 19.5 V5.5 M22.7 19.5 V5.5" stroke="#4E5A60" stroke-width=".55"/>
+            <path d="M21.3 7 L22.7 9 L21.3 11 L22.7 13 L21.3 15 L22.7 17 L21.3 19" fill="none" stroke="#4E5A60" stroke-width=".4"/>
+            <rect x="20.3" y="19.5" width="3.4" height="38.5" fill="#A9B0B4"/><path d="M22 20 V58" stroke="#8C959A" stroke-width=".5"/>
+            <g fill="#5F706A"><rect x="18.6" y="29" width="6.8" height="1.6"/><rect x="18.6" y="31" width="6.8" height="1.6"/><rect x="18.6" y="33" width="6.8" height="1.6"/></g>
+            <g fill="#8A9692"><rect x="18.7" y="35.6" width="6.6" height=".9"/><rect x="18.7" y="37.6" width="6.6" height=".9"/><rect x="18.9" y="39.6" width="6.2" height=".8"/><rect x="18.7" y="41.4" width="6.6" height=".9"/></g>
+            <circle cx="19.3" cy="41" r=".7" fill="#F2F2F2"/><circle cx="24.7" cy="36.9" r=".6" fill="#F2F2F2"/></svg>`;
+        document.body.appendChild(toren);
+    })();
     const NARROW = () => innerWidth < 720;
     const IMG = 'images/';
 
