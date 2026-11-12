@@ -551,7 +551,7 @@
         const cd = plekken.cafeDeur(), deur = cd === null ? width * .5 : cd;
         // naar buiten: de kant met de meeste ruimte op; naar binnen: van de kant die het verst weg is
         const f = uit ? (chance(.5) ? 1 : -1) : (deur > width / 2 ? 1 : -1);
-        const stoet = [];
+        const stoet = []; let binnenNa = 0;
         for (let i = 0; i < 12; i++) {
             const w = i === 0 ? prince() : reveler(i - 1); strip.appendChild(w); stoet.push(w);
             w.style.transformOrigin = '50% 100%';
@@ -567,12 +567,20 @@
                 const x0 = f > 0 ? -40 - off : width + 20 + off, d = Math.abs(xd - x0) * speed, g = 1 - GROEI / Math.abs(xd - x0);
                 a = animate(w, [{ transform: zet(x0, 1), opacity: 1 }, { transform: zet(xd - f * GROEI, 1), opacity: 1, offset: g }, { transform: zet(xd - f * 2, KLEIN), opacity: 1, offset: g + (1 - g) * .9 }, { transform: zet(xd, KLEIN), opacity: 0 }],
                     { duration: d, easing: 'linear' });
+                binnenNa = Math.max(binnenNa, d);
             }
             a.finished.then(() => w.remove()).catch(() => w.remove());
             // polonaise: hossen in de maat, om en om naar links en rechts
             animate(w.firstElementChild, [{ transform: 'translate(-2px, 0) rotate(-6deg)' }, { transform: 'translate(0, -2.5px) rotate(0deg)' }, { transform: 'translate(2px, 0) rotate(6deg)' }],
                 { duration: 520, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: -(i % 2) * 520 });
         }
+        // is iedereen binnen, dan gaat het feest daar door: het café deint een paar tellen mee op de muziek
+        if (!uit && pleinRand.cafe) later(() => {
+            const pand = pleinRand.cafe.firstElementChild; pand.style.transformOrigin = '50% 100%';
+            animate(pand, [{ transform: 'scale(1, 1) rotate(0deg)' }, { transform: 'scale(1.04, .95) rotate(-1.6deg)', offset: .25 }, { transform: 'scale(.97, 1.06) rotate(0deg)', offset: .5 },
+                { transform: 'scale(1.04, .95) rotate(1.6deg)', offset: .75 }, { transform: 'scale(1, 1) rotate(0deg)' }], { duration: 1040, iterations: 6, easing: 'ease-in-out' });
+            [0, 1100, 2300, 3500, 4700].forEach((t, k) => later(() => zegOp(deur + (k % 2 ? 12 : -12), GROUND - 34, k % 2 ? '♫' : '♪', pick(CARN), 11), t));
+        }, binnenNa + 150);
         // confetti boven wie er buiten loopt
         const tick = setInterval(() => {
             const buiten = stoet.filter(e => e.isConnected);
@@ -1211,14 +1219,16 @@
         animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(x1 - x0) * speed, easing: 'linear' })
             .finished.then(() => w.remove()).catch(() => w.remove());
     }
-    // Biljart ('t Centrum en De Tram): twee mannen in Albert Heijn-blauwe blouses dragen samen een biljarttafel aan
+    // Biljart ('t Centrum en De Tram): twee mannen in Albert Heijn-blauwe blouses en zwarte broeken dragen samen een biljarttafel aan
     // (het laken wiebelt, de ballen rollen). Pal voor het café zetten ze hem neer, krijten hun keu, spelen allebei
     // een bal en dragen de tafel daarna het café in (ze worden klein, net als de carnavalsvierders).
     function biljarters() {
         if (document.hidden) return;
         const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, speed = 30, h = 23.5, GAT = 46, BW = GAT + 11, AH = '#00A0E2';
         const w = document.createElement('div'); w.className = 'om-p'; w.style.width = BW + 'px'; w.style.height = h + 'px'; w.style.transformOrigin = '50% 100%';
-        const spelers = [0, GAT].map(x => { const p = person(AH, h, 0); delete p.dataset.groet; p.style.left = x + 'px'; p.style.top = '0'; w.appendChild(p); bob(p, rand(430, 480)); return p; });
+        const spelers = [0, GAT].map(x => { const p = person(AH, h, 0); delete p.dataset.groet;
+            p.querySelectorAll('.legA, .legB').forEach(b => b.setAttribute('stroke', '#1d1d1d')); p.querySelector('path[d^="M4.5 22"]').setAttribute('fill', '#1d1d1d');   // zwarte broek
+            p.style.left = x + 'px'; p.style.top = '0'; w.appendChild(p); bob(p, rand(430, 480)); return p; });
         const tafel = document.createElement('div');
         const tw = GAT - 5, ty = h * .5, ZAK = h - 13.4 - (ty - 6);                      // zoveel zakt de tafel als hij op de grond staat
         tafel.style.cssText = `position:absolute;left:8px;top:${ty - 6}px;width:${tw}px;height:14px;line-height:0;transform-origin:50% 60%`;
