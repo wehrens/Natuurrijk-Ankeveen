@@ -456,9 +456,12 @@
         const adults = hs.map((h, i) => i).filter(i => i !== tallest && hs[i] >= 20);
         const woman = adults.length ? pick(adults) : -1;
         // halverwege leggen ze een grote handdoek neer en gaan er even op liggen zonnen
-        const GAP = 27, LIG = rand(7000, 9500);
+        const GAP = 27, LIG = rand(8500, 11000);
         const midden = plek((n - 1) * GAP + 70, .25, .7, (width + 160 + EX) * 26 + LIG + 4000), stopX = midden - (n - 1) * GAP * (fromLeft ? 1 : -1) / 2;
         const inDur = (stopX + 60) * speed, outDur = (width + 100 + EX) * speed;
+        // ieder gaat op zijn eigen moment liggen en staat op zijn eigen moment weer op (niet allemaal tegelijk)
+        const beurt = () => hs.map((_, i) => i).sort(() => Math.random() - .5).map(k => k * rand(520, 800));
+        const neer = beurt(), op = beurt(), NA = 3400;                     // NA: zo lang na het eerste opstaan lopen ze samen verder
         for (let i = 0; i < n; i++) {
             const h = hs[i], w = naturist(h, i === tallest, i === woman); strip.appendChild(w);
             w.style.transformOrigin = '0 100%';
@@ -467,9 +470,9 @@
             const sta = x => `translate(${x}px, ${y}px) scaleX(${f}) rotate(0deg)`, lig = `translate(${xs}px, ${y}px) scaleX(${f}) rotate(-90deg)`;
             animate(w, [{ transform: sta(x0) }, { transform: sta(xs) }], { duration: inDur, easing: 'linear' });
             const b = bob(w, rand(520, 640));
-            later(() => { b.pause(); animate(w, [{ transform: sta(xs) }, { transform: lig }], { duration: 800, easing: 'ease-in-out', delay: i * 120 }); }, inDur + 600);
-            later(() => { animate(w, [{ transform: lig }, { transform: sta(xs) }], { duration: 700, easing: 'ease-in-out', delay: i * 100 }); }, inDur + 1400 + LIG);
-            later(() => { b.play(); animate(w, [{ transform: sta(xs) }, { transform: sta(x1) }], { duration: outDur, easing: 'linear' }).finished.then(() => w.remove()).catch(() => w.remove()); }, inDur + 1400 + LIG + 1400);
+            later(() => { b.pause(); animate(w, [{ transform: sta(xs) }, { transform: lig }], { duration: 800, easing: 'ease-in-out', delay: neer[i] }); }, inDur + 600);
+            later(() => { animate(w, [{ transform: lig }, { transform: sta(xs) }], { duration: 700, easing: 'ease-in-out', delay: op[i] }); }, inDur + 1400 + LIG);
+            later(() => { b.play(); animate(w, [{ transform: sta(xs) }, { transform: sta(x1) }], { duration: outDur, easing: 'linear' }).finished.then(() => w.remove()).catch(() => w.remove()); }, inDur + 1400 + LIG + NA + 700);
             members.push({ w, x0, xs, x1, b });
             if (i === 0) {                                   // de voorste zwaait af en toe
                 const arm = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -486,7 +489,7 @@
         towel.innerHTML = `<svg viewBox="0 0 ${tw} 5" width="${tw}" height="5" aria-hidden="true"><rect width="${tw}" height="5" rx="1" fill="#fff" stroke="#9DC3E6" stroke-width=".6"/>${Array.from({ length: Math.floor(tw / 6) }, (_, i) => `<rect x="${3 + i * 6}" y="0" width="2.4" height="5" fill="#9DC3E6"/>`).join('')}</svg>`;
         later(() => { strip.appendChild(towel); towel.style.transform = `translate(${tx}px, ${GROUND - 4}px)`;
             animate(towel, [{ transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(0)` }, { transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(1)` }], { duration: 500, easing: 'ease-out' }); }, inDur + 100);
-        later(() => { animate(towel, [{ transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(1)` }, { transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(0)` }], { duration: 400, easing: 'ease-in' }).finished.then(() => towel.remove()).catch(() => towel.remove()); }, inDur + 1400 + LIG + 1000);
+        later(() => { animate(towel, [{ transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(1)` }, { transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(0)` }], { duration: 400, easing: 'ease-in' }).finished.then(() => towel.remove()).catch(() => towel.remove()); }, inDur + 1400 + LIG + NA + 200);
         // zonnetje boven de handdoek
         later(() => { const z = document.createElement('div'); z.style.cssText = 'position:absolute;left:0;top:0;font-size:12px;line-height:1;pointer-events:none';
             const zp = luchtPlek(stopX + (n - 1) * GAP * f / 2, 14, 14);
@@ -494,7 +497,7 @@
             animate(z, [{ opacity: 0, transform: z.style.transform + ' scale(.5)' }, { opacity: 1, transform: z.style.transform + ' scale(1)' }], { duration: 600, easing: 'ease-out' });
             later(() => animate(z, [{ opacity: 1 }, { opacity: 0 }], { duration: 500 }).finished.then(() => z.remove()).catch(() => z.remove()), LIG - 1800); }, inDur + 1800);
         // omstanders schrikken: hun tekstballon wordt een uitroepteken
-        const t0 = performance.now(), seen = new Set(), total = inDur + 1400 + LIG + 1400 + outDur;
+        const t0 = performance.now(), seen = new Set(), total = inDur + 1400 + LIG + NA + 700 + outDur;
         const tick = setInterval(() => {
             if (performance.now() - t0 > total) { clearInterval(tick); return; }
             const r = members[0].w.getBoundingClientRect(), x = r.left - strip.getBoundingClientRect().left;
@@ -539,7 +542,7 @@
     // Carnaval hoort bij de kroeg: de ene keer komt de polonaise één voor één uit de deur van het café en host het
     // beeld uit, de volgende keer komt ze van opzij aangehost en verdwijnt ze één voor één het café in.
     // In de deur zijn de feestvierders klein (ze moeten erdoor passen); buiten groeien ze naar hun gewone formaat.
-    let carnBinnen = true;
+    let carnBinnen = Math.random() < .5;        // de eerste keer willekeurig: het café uit of het café in; daarna om en om
     function carnaval(kies) {
         if (document.hidden) return;
         const uit = kies === 'uit' ? true : kies === 'in' ? false : carnBinnen;
@@ -1206,28 +1209,66 @@
         animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(x1 - x0) * speed, easing: 'linear' })
             .finished.then(() => w.remove()).catch(() => w.remove());
     }
-    // Biljart ('t Centrum en De Tram): twee mannen dragen samen een biljarttafel voorbij. Het groene laken wiebelt,
-    // de drie ballen (wit, geel, rood) rollen heen en weer en de keus liggen erbovenop.
+    // Biljart ('t Centrum en De Tram): twee mannen in Albert Heijn-blauwe blouses dragen samen een biljarttafel aan
+    // (het laken wiebelt, de ballen rollen). Pal voor het café zetten ze hem neer, krijten hun keu, spelen allebei
+    // een bal en dragen de tafel daarna het café in (ze worden klein, net als de carnavalsvierders).
     function biljarters() {
         if (document.hidden) return;
-        const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, speed = 30, h = 23.5, GAT = 46, BW = GAT + 11;
-        const w = document.createElement('div'); w.className = 'om-p'; w.style.width = BW + 'px'; w.style.height = h + 'px';
-        [0, GAT].forEach(x => { const p = person(pick(['#2f3e55', '#5a3a2a', '#1f4e79', '#4a5d3a', '#7a1f2b']), h, 0); delete p.dataset.groet; p.style.left = x + 'px'; p.style.top = '0'; w.appendChild(p); bob(p, rand(430, 480)); });
+        const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, speed = 30, h = 23.5, GAT = 46, BW = GAT + 11, AH = '#00A0E2';
+        const w = document.createElement('div'); w.className = 'om-p'; w.style.width = BW + 'px'; w.style.height = h + 'px'; w.style.transformOrigin = '50% 100%';
+        const spelers = [0, GAT].map(x => { const p = person(AH, h, 0); delete p.dataset.groet; p.style.left = x + 'px'; p.style.top = '0'; w.appendChild(p); bob(p, rand(430, 480)); return p; });
         const tafel = document.createElement('div');
-        const tw = GAT - 5, ty = h * .5;
+        const tw = GAT - 5, ty = h * .5, ZAK = h - 13.4 - (ty - 6);                      // zoveel zakt de tafel als hij op de grond staat
         tafel.style.cssText = `position:absolute;left:8px;top:${ty - 6}px;width:${tw}px;height:14px;line-height:0;transform-origin:50% 60%`;
         tafel.innerHTML = `<svg viewBox="0 0 ${tw} 14" width="${tw}" height="14" aria-hidden="true" style="overflow:visible">
-            <path d="M-3 4.6 L${tw * .55} 3.4 M${tw + 4} 4.2 L${tw * .4} 3" stroke="#B98A4E" stroke-width=".9" stroke-linecap="round"/>
+            <path class="liggend" d="M-3 4.6 L${tw * .55} 3.4 M${tw + 4} 4.2 L${tw * .4} 3" stroke="#B98A4E" stroke-width=".9" stroke-linecap="round"/>
             <path d="M4 9 v4.4 M${tw - 4} 9 v4.4" stroke="#5A3A22" stroke-width="2.2" stroke-linecap="round"/>
             <rect x="0" y="5.2" width="${tw}" height="4.4" rx="1" fill="#6B4226"/><rect x="1.2" y="5.2" width="${tw - 2.4}" height="1.7" fill="#1F8A52"/>
-            <g class="ballen"><circle cx="${tw * .36}" cy="3.9" r="1.35" fill="#fff" stroke="#8a8f96" stroke-width=".3"/><circle cx="${tw * .5}" cy="3.9" r="1.35" fill="#F2C318"/><circle cx="${tw * .66}" cy="3.9" r="1.35" fill="#D22630"/></g></svg>`;
-        w.appendChild(tafel); strip.appendChild(w);
-        const o = { duration: 950, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' };
-        animate(tafel, [{ transform: 'rotate(-2.2deg)' }, { transform: 'rotate(2.2deg)' }], o);
-        animate(tafel.querySelector('.ballen'), [{ transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }], Object.assign({ delay: 180 }, o));
-        const x0 = fromLeft ? -BW - 10 : width + 10, x1 = fromLeft ? width + 30 + EX : -BW - 30 - EX, y = GROUND - h;
-        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(x1 - x0) * speed, easing: 'linear' })
-            .finished.then(() => w.remove()).catch(() => w.remove());
+            <g class="ballen"><circle class="wit" cx="${tw * .36}" cy="3.9" r="1.35" fill="#fff" stroke="#8a8f96" stroke-width=".3"/><circle class="geel" cx="${tw * .5}" cy="3.9" r="1.35" fill="#F2C318"/><circle class="rood" cx="${tw * .66}" cy="3.9" r="1.35" fill="#D22630"/></g></svg>`;
+        w.appendChild(tafel);
+        // de keus in de hand: links wijst naar rechts, rechts naar links; met een blauw krijtje op de punt
+        const keu = links => {
+            const k = document.createElement('div');
+            k.style.cssText = `position:absolute;${links ? 'left:2px' : 'right:2px'};top:${h - 13.4 + 3.3}px;width:19px;height:1.2px;border-radius:1px;opacity:0;` +
+                `background:linear-gradient(${links ? 90 : 270}deg,#5A3A22 0 30%,#C9A46A 30% 94%,#f4f1ea 94%);transform-origin:${links ? '12% 50%' : '88% 50%'}`;
+            k.innerHTML = `<div style="position:absolute;${links ? 'right:-1.2px' : 'left:-1.2px'};top:-.9px;width:2.6px;height:2.6px;border-radius:.5px;background:#2E6FD9"></div>`;
+            w.appendChild(k); return k;
+        };
+        const kA = keu(true), kB = keu(false);
+        strip.appendChild(w);
+        const wiebel = { duration: 950, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' };
+        let wt = animate(tafel, [{ transform: 'rotate(-2.2deg)' }, { transform: 'rotate(2.2deg)' }], wiebel);
+        let wb = animate(tafel.querySelector('.ballen'), [{ transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }], Object.assign({ delay: 180 }, wiebel));
+        const y = GROUND - h, zet = (x, sc) => `translate(${x}px, ${y}px) scale(${f * (sc || 1)}, ${sc || 1})`;
+        const x0 = fromLeft ? -BW - 10 : width + 10, cd = plekken.cafeDeur(), xs = (cd === null ? width / 2 : cd) - BW / 2;
+        const bal = c => tafel.querySelector('.' + c), rol = (c, van, naar, ms) => animate(bal(c), [{ transform: `translateX(${van}px)` }, { transform: `translateX(${naar}px)` }], { duration: ms, easing: 'ease-out' });
+        animate(w, [{ transform: zet(x0) }, { transform: zet(xs) }], { duration: Math.abs(xs - x0) * speed, easing: 'linear' }).finished.then(() => {
+            // tafel neerzetten
+            wt.cancel(); wb.cancel();
+            animate(tafel, [{ transform: 'translateY(0)' }, { transform: `translateY(${ZAK}px)` }], { duration: 450, easing: 'ease-in' });
+            // keus pakken en krijten (keu rechtop, krijtje wrijft over de punt)
+            later(() => {
+                tafel.querySelector('.liggend').style.opacity = 0;
+                [[kA, -72], [kB, 72]].forEach(([k, g]) => {
+                    k.style.opacity = 1; k.style.transform = `rotate(${g}deg)`;
+                    animate(k.firstElementChild, [{ transform: 'translate(0, 0)' }, { transform: 'translate(0, 1.4px)' }], { duration: 170, direction: 'alternate', iterations: 8, easing: 'ease-in-out' })
+                        .finished.then(() => { k.firstElementChild.style.opacity = 0; }).catch(() => {});
+                });
+            }, 500);
+            // om de beurt een stoot: keu omlaag, even terug, stoot, en de ballen tikken elkaar aan
+            const stoot = (k, g, r) => animate(k, [{ transform: `rotate(${g}deg)` }, { transform: 'rotate(0deg)', offset: .35 }, { transform: `translateX(${-3 * r}px)`, offset: .62 }, { transform: `translateX(${2.6 * r}px)`, offset: .74 }, { transform: 'translateX(0)' }], { duration: 1150, easing: 'ease-in-out' });
+            later(() => { stoot(kA, -72, 1); later(() => { rol('wit', 0, 3.4, 420); later(() => rol('geel', 0, 2.6, 520), 240); }, 830); }, 2100);
+            later(() => { stoot(kB, 72, -1); later(() => { rol('rood', 0, -2.4, 400); later(() => { rol('geel', 2.6, -1.6, 560); later(() => rol('wit', 3.4, .6, 520), 300); }, 220); }, 830); }, 3700);
+            // keus terug op tafel, tafel optillen en het café in
+            later(() => {
+                kA.style.opacity = 0; kB.style.opacity = 0; tafel.querySelector('.liggend').style.opacity = 1;
+                animate(tafel, [{ transform: `translateY(${ZAK}px)` }, { transform: 'translateY(0)' }], { duration: 450, easing: 'ease-out' }).finished.then(() => {
+                    wt = animate(tafel, [{ transform: 'rotate(-2.2deg)' }, { transform: 'rotate(2.2deg)' }], wiebel);
+                    animate(w, [{ transform: zet(xs), opacity: 1 }, { transform: zet(xs, .42), opacity: 1, offset: .8 }, { transform: zet(xs, .36), opacity: 0 }], { duration: 1900, easing: 'ease-in' })
+                        .finished.then(() => w.remove()).catch(() => w.remove());
+                }).catch(() => w.remove());
+            }, 5500);
+        }).catch(() => w.remove());
     }
     function familie() {
         if (document.hidden) return;
@@ -2923,7 +2964,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: peloton, dur: () => (W() + 300 + EX) * 4.5 },
         { run: fanfare, dur: () => (W() + 200 + EX) * 24, groot: true },
         { run: skaters, dur: () => (W() + 200 + EX) * 7.5, maanden: [12, 1, 2] },
-        { run: naturists, dur: () => (W() + 160 + EX) * 26 + 13000, groot: true, maanden: [5, 6, 7, 8, 9] },
+        { run: naturists, dur: () => (W() + 160 + EX) * 26 + 17500, groot: true, maanden: [5, 6, 7, 8, 9] },
         { run: carnaval, dur: () => (W() + 260 + EX) * 22, groot: true, maanden: [11, 12, 1, 2, 3] },
         { run: yogis, dur: () => (W() + 200 + EX) * 40, groot: true },
         { run: klasje, dur: () => (W() + 220 + EX) * 22, groot: true },
@@ -2945,7 +2986,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true, maanden: [11, 12, 1] },
         { run: newfoundlander, dur: () => (W() + 120) * 24 + 6500 },
         { run: tennissers, dur: () => (W() + 120 + EX) * 24 },
-        { run: biljarters, dur: () => (W() + 120 + EX) * 30 },
+        { run: biljarters, dur: () => (W() + 80) * 30 + 8000 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },   // de Snoek staat er twee keer in: hij komt elke ronde twee keer langs
     ];
