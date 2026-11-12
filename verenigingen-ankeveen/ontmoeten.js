@@ -1529,7 +1529,7 @@
         // lantaarntjes en een lichte plint
         const cafe = h => {
             const ZW = '#1C1C1C', DAK = '#3E3E41', MUUR = '#F4F1EA';
-            const links = y => 13 - (y - 12) * 4.5 / 32.5, rechts = y => 103 + (y - 12) * 4 / 32.5;
+            const links = y => 13 - (y - 12) * 4.5 / 32.5, rechts = y => 96 + (y - 12) * 4.5 / 32.5;
             let pannen = '';
             for (let y = 15; y < 44; y += 2.6) pannen += `M${links(y).toFixed(2)} ${y} H${rechts(y).toFixed(2)} `;
             // [x, y-boven, breedte, hoogte, deur?]
@@ -1576,10 +1576,9 @@
                 + '<path d="M4.3 5.9 V4.3 M5.1 5.9 V4.3" stroke="#3F5FD0" stroke-width=".35"/><ellipse cx="5" cy="3.6" rx="1.7" ry="1.05" fill="#3F5FD0" transform="rotate(18 5 3.6)"/>'
                 + '<path d="M3.9 3.2 Q3.3 2.2 4.5 1.5" fill="none" stroke="#3F5FD0" stroke-width=".6" stroke-linecap="round"/><circle cx="4.7" cy="1.35" r=".5" fill="#3F5FD0"/><path d="M4.4 1.4 L2.2 2.5" stroke="#3F5FD0" stroke-width=".35" stroke-linecap="round"/>'
                 + '<path d="M2 6.6 L2.5 5.2 L3 6.3 L3.6 5 L4.2 6.3 L4.8 5.3 L5.4 6.3 L6 5 L6.6 6.3 L7.2 5.3 L7.7 6.6 Z" fill="#3E8A5C"/>';
-            return `<svg viewBox="7 2.5 102 72.5" width="${h * 102 / 72.5}" height="${h}" aria-hidden="true">
-<path d="M12.5 12 V3.5 M103.5 12 V3.5" stroke="${ZW}" stroke-width=".8"/><circle cx="12.5" cy="3.2" r=".6" fill="${ZW}"/><circle cx="103.5" cy="3.2" r=".6" fill="${ZW}"/>
-<rect x="97" y="40" width="8" height="34.5" fill="#E8E4DB"/><path d="M98 44 V72" stroke="#5A5A5A" stroke-width=".5"/>
-<path d="M8.5 44.5 L13 12 H103 L107.5 44.5 Z" fill="${DAK}"/>
+            return `<svg viewBox="5.5 2.5 98 72.5" width="${h * 98 / 72.5}" height="${h}" aria-hidden="true">
+<path d="M12.5 12 V3.5 M96.5 12 V3.5" stroke="${ZW}" stroke-width=".8"/><circle cx="12.5" cy="3.2" r=".6" fill="${ZW}"/><circle cx="96.5" cy="3.2" r=".6" fill="${ZW}"/>
+<path d="M8.5 44.5 L13 12 H96 L100.5 44.5 Z" fill="${DAK}"/>
 <path d="${pannen}" stroke="#2C2C2F" stroke-width=".45"/>
 <rect x="37" y="23.6" width="23" height="18.4" fill="#22302C"/><rect x="35.8" y="21.6" width="25.4" height="2.4" fill="${ZW}"/>
 <g fill="#6E4C34" stroke="#121212" stroke-width=".8"><rect x="39.2" y="26.2" width="5" height="12.4"/><rect x="46" y="26.2" width="5" height="12.4"/><rect x="52.8" y="26.2" width="5" height="12.4"/></g>
@@ -1588,13 +1587,13 @@
 <g fill="#E9E5DC" stroke="#BDB6AA" stroke-width=".3">${reliëf}</g>
 ${ramen}
 <rect x="11.5" y="69.6" width="86" height="4.9" fill="#D3CEC4"/><path d="M11.5 69.6 H97.5" stroke="#B3ADA2" stroke-width=".4"/>
-<path d="M7.6 44.6 H108.2" stroke="${ZW}" stroke-width="1.3"/>
+<path d="M7.6 44.6 H101.4" stroke="${ZW}" stroke-width="1.3"/>
 <rect x="38.2" y="36.4" width="5.6" height="6" fill="#141414"/><rect x="39.9" y="37.2" width="2.2" height="2.2" fill="#B88A3A"/><path d="M38.9 40.4 h4.2 M38.9 41.4 h4.2" stroke="#B88A3A" stroke-width=".25"/>
 ${lantaarn(29, 45.2)}${lantaarn(45, 45.2)}${lantaarn(64, 45.2)}${lantaarn(80, 45.2)}
 ${bakje(14.2)}${bakje(94.8)}
-${vlag(22, -1, 10, vRood)}${vlag(66, 1, 15, vWapen)}${vlag(90, 1, 14, vNL)}
+${vlag(22, -1, 10, vRood)}${vlag(66, 1, 15, vWapen)}${vlag(85, 1, 14, vNL)}
 ${pot(47.4)}${pot(61.6)}
-<g fill="none" stroke="#262626" stroke-width="1" stroke-linejoin="round"><path d="M8.5 44.5 L13 12 H103 L107.5 44.5"/><path d="M11.5 45 V74.5 H97.5 V45"/><path d="M6.5 74.5 H109"/><path d="M35.8 21.6 H61.2 M37 24 V42 M60 24 V42"/></g>
+<g fill="none" stroke="#262626" stroke-width="1" stroke-linejoin="round"><path d="M8.5 44.5 L13 12 H96 L100.5 44.5"/><path d="M11.5 45 V74.5 H97.5 V45"/><path d="M6.5 74.5 H102.5"/><path d="M35.8 21.6 H61.2 M37 24 V42 M60 24 V42"/></g>
 </svg>`;
         };
         const bg = document.createElement('div');
