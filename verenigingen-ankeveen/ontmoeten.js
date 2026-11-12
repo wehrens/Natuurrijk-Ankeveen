@@ -998,13 +998,51 @@
         w.firstElementChild.setAttribute('width', 52 * .68); w.firstElementChild.setAttribute('height', 40 * .68);
         strip.appendChild(w); rideBike(w, fromLeft, 40 * .68);
     }
-    // Blonde vrouw op de fiets met een rieten mandje voor het stuur en witte fietstassen met rode tulpen
+    // Arda, onze ooievaarsspecialiste: blond, op de fiets met een rieten mandje voor het stuur en witte fietstassen
+    // met rode tulpen. Ze komt terug van de kant waar ze de vorige keer het beeld uit reed. Komt ze bij het nest
+    // terwijl de ooievaar erop zit, dan vliegen er drie rode hartjes van haar naar de ooievaar en drie terug.
+    const arda = { weg: null, kleur: null, huid: null, haar: null };
+    function hartje(x0, y0, x1, y1, wacht) {
+        const d = document.createElement('div');
+        d.style.cssText = 'position:absolute;left:0;top:0;width:7px;height:7px;line-height:0;pointer-events:none;opacity:0';
+        d.innerHTML = '<svg viewBox="0 0 10 10" width="7" height="7" aria-hidden="true"><path d="M5 9 C1 6 0 4 0 2.6 A2.5 2.5 0 0 1 5 2.2 A2.5 2.5 0 0 1 10 2.6 C10 4 9 6 5 9 Z" fill="#E0262E" stroke="#fff" stroke-width=".5"/></svg>';
+        lucht.appendChild(d);
+        const fr = [], top = Math.min(y0, y1) - 12;
+        for (let i = 0; i <= 10; i++) {
+            const t = i / 10, x = x0 + (x1 - x0) * t, y = (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * top + t * t * y1;
+            fr.push({ transform: `translate(${x - 3.5}px, ${y - 3.5}px) scale(${.5 + .7 * Math.sin(Math.PI * t)})`, opacity: t < .1 ? t * 10 : t > .85 ? (1 - t) / .15 : 1 });
+        }
+        animate(d, fr, { duration: 1500, delay: wacht, easing: 'linear' }).finished.then(() => d.remove()).catch(() => d.remove());
+    }
     function moederFiets() {
         if (document.hidden) return;
-        const fromLeft = chance(.5), haar = pick(['#E9C46A', '#F1D27B', '#E2BC5C']);      // blond
-        const m = cityBike({ color: pick(KLEUR), huid: pick(HUID), haar, ponytail: true, scale: .68, mandje: true, tassen: true });
+        // de eerste keer willekeurig; daarna komt ze binnen aan de kant waar ze verdween
+        const fromLeft = arda.weg === null ? chance(.5) : arda.weg === 'links';
+        arda.weg = fromLeft ? 'rechts' : 'links';
+        arda.kleur = arda.kleur || pick(KLEUR); arda.huid = arda.huid || pick(HUID); arda.haar = arda.haar || pick(['#E9C46A', '#F1D27B', '#E2BC5C']);      // blond
+        const m = cityBike({ color: arda.kleur, huid: arda.huid, haar: arda.haar, ponytail: true, scale: .68, mandje: true, tassen: true });
         strip.appendChild(m);
         rideBike(m, fromLeft, 40 * .68);
+        let vorige = null;
+        const kijk = setInterval(() => {
+            if (!m.isConnected) { clearInterval(kijk); return; }
+            if (document.hidden) { vorige = null; return; }
+            const bb = balk.getBoundingClientRect(), r = m.getBoundingClientRect(), nu = performance.now(), x = r.left + r.width / 2 - bb.left;
+            const nx = nestX() + dx();
+            if (vorige && Math.abs(x - nx) < 42) {
+                clearInterval(kijk);
+                if (!ooiThuis || ooiBezig) return;
+                const v = (x - vorige.x) / (nu - vorige.t), or = ooi.getBoundingClientRect();
+                const ox = or.left + or.width / 2 - bb.left, oy = or.top + 6 - bb.top, ay = r.top - bb.top + 3;
+                for (let i = 0; i < 3; i++) {
+                    const w1 = i * 320, w2 = 700 + i * 320;
+                    hartje(x + v * w1, ay, ox + (i - 1) * 3, oy, w1);                                 // van Arda naar de ooievaar
+                    hartje(ox + (i - 1) * 3, oy, x + v * (w2 + 1500), ay, w2);                       // en van de ooievaar naar Arda
+                }
+                return;
+            }
+            vorige = { x, t: nu };
+        }, 80);
     }
 
 
