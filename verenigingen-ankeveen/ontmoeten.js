@@ -1233,7 +1233,7 @@
             };
             const A = speler(1, 1), B = speler(CW - 10.5, -1);
             ding(v, `<svg viewBox="0 0 6 10" width="6" height="10"><path d="M3 1 V10" stroke="#6b7280" stroke-width="1.2"/><path d="M1 1.6 h4" stroke="#fff" stroke-width="1.6"/><path d="M1 1.6 h4" stroke="#9aa3ab" stroke-width=".4"/><path d="M2 3.5 h2 M2 5.5 h2 M2 7.5 h2" stroke="#9aa3ab" stroke-width=".5"/></svg>`, CW / 2 - 3, VH - 10);
-            const bal = bol(v, 1.7, 'background:#D9EC3F;box-shadow:0 0 0 .5px #7f8f1e');
+            const bal = bol(v, 1.9, 'background:#FFEB00;box-shadow:0 0 0 .6px #A89A00');
             const T = 950; animate(bal, boog(13, VH - 13, CW - 13, VH - 13, 11), { duration: T, direction: 'alternate', iterations: Infinity, easing: 'linear' });
             let beurt = 0;
             lus(() => { const s = beurt++ % 2 ? B : A, k = [{ transform: 'rotate(0deg)' }, { transform: `rotate(${s.binnen * 34}deg)`, offset: .3 }, { transform: `rotate(${-s.binnen * 46}deg)`, offset: .6 }, { transform: 'rotate(0deg)' }];
@@ -1299,6 +1299,13 @@
                 <path d="${lat}" fill="none" stroke="#7d8790" stroke-width="2.6" stroke-linejoin="round"/><path d="${lat}" fill="none" stroke="${o.gestreept ? '#D22630' : '#fff'}" stroke-width="1.8" stroke-linejoin="round"/>
                 ${o.gestreept ? `<path d="${lat}" fill="none" stroke="#fff" stroke-width="1.8" stroke-dasharray="2.4 2.4"/>` : ''}</svg>`, L, top);
             const kp = mens(v, o.keeper, mid - 4.5, 20, 0); kp.style.transformOrigin = '50% 78%';
+            if (o.asv) {                                    // ASV '65: wit shirt met groene baan, witte broek, groene mouwen en kousen
+                const svg = kp.firstElementChild, romp = svg.querySelector('path[d^="M3 13 q6"]'), broek = svg.querySelector('path[d^="M4.5 22"]');
+                romp.setAttribute('fill', '#fff'); romp.setAttribute('stroke', '#8f99a3'); romp.setAttribute('stroke-width', '.7');
+                romp.insertAdjacentHTML('afterend', '<path d="M6.4 11.3 h5.2 l.9 13.4 h-7 z" fill="#1E9E3E"/>');
+                broek.setAttribute('fill', '#fff'); broek.setAttribute('stroke', '#8f99a3'); broek.setAttribute('stroke-width', '.6');
+                svg.querySelectorAll('.legA, .legB').forEach(b => b.setAttribute('stroke', '#1E9E3E'));
+            }
             const aA = kp.querySelector('.armA'), aB = kp.querySelector('.armB');
             const armen = g => { aA.style.transform = `rotate(${g}deg)`; aB.style.transform = `rotate(${-g}deg)`; };
             armen(55);
@@ -1323,7 +1330,7 @@
             }, 2700, o.eerst);
         };
         doel(3, { breed: 34, hoog: 24, gestreept: true, keeper: '#7B3FB0', balR: 1.8, bal: 'background:#E8963A;box-shadow:0 0 0 .5px #8a4f12', eerst: 2300 });
-        doel(4, { breed: 46, hoog: 27, gestreept: false, keeper: '#F28C28', balR: 2.3, bal: 'background:radial-gradient(circle at 50% 50%,#222 0 19%,transparent 21%),radial-gradient(circle at 14% 24%,#222 0 14%,transparent 16%),radial-gradient(circle at 86% 24%,#222 0 14%,transparent 16%),radial-gradient(circle at 50% 96%,#222 0 14%,transparent 16%),#fff;box-shadow:0 0 0 .6px #16233a', eerst: 1000 });
+        doel(4, { breed: 68, hoog: 33, gestreept: false, asv: true, keeper: '#1E9E3E', balR: 2.3, bal: 'background:radial-gradient(circle at 50% 50%,#222 0 19%,transparent 21%),radial-gradient(circle at 14% 24%,#222 0 14%,transparent 16%),radial-gradient(circle at 86% 24%,#222 0 14%,transparent 16%),radial-gradient(circle at 50% 96%,#222 0 14%,transparent 16%),#fff;box-shadow:0 0 0 .6px #16233a', eerst: 1000 });
 
         // na een kwart minuut is het afgelopen: alles vervaagt
         later(() => { klaar = true; vakken.forEach(v => animate(v, [{ opacity: 1 }, { opacity: 0 }], { duration: 600 }).finished.then(() => v.remove()).catch(() => v.remove()));
@@ -1349,7 +1356,7 @@
         };
         const A = speler(0, 1), B = speler(GAT, -1);
         const bal = document.createElement('div');
-        bal.style.cssText = 'position:absolute;left:0;top:0;width:3.4px;height:3.4px;border-radius:50%;background:#D9EC3F;box-shadow:0 0 0 .5px #7f8f1e';
+        bal.style.cssText = 'position:absolute;left:0;top:0;width:3.8px;height:3.8px;border-radius:50%;background:#FFEB00;box-shadow:0 0 0 .6px #A89A00';
         w.appendChild(bal); strip.appendChild(w);
         // de bal gaat in een boogje heen en weer; bij elke slag zwaaien arm en racket
         const xa = 12, xb = GAT - 3, yh = h * .36, T = 1000, fr = [];
