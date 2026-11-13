@@ -1186,9 +1186,21 @@
     // SPORTDAG: vijf sporten naast elkaar, een kwart minuut lang. Van links naar rechts: tennis (ARTV), petanque,
     // biljart (twee tafels pal voor het café, die uit het niets verschijnen), handbal en voetbal. Bij handbal en
     // voetbal staat er alleen een keeper in het doel, die de ene na de andere bal uit de hoek haalt.
-    function sportdag() {
+    // Tijdens de sportdag loopt er verder niemand voorbij (alleen de ooievaar mag): eerst wachten we tot de strook
+    // leeg is, en zolang het duurt komen er geen nieuwe groepen, ontmoetingen of honden bij.
+    function sportdag(veldVrij) {
         if (document.hidden) return;
         const width = W(), VH = 36, CW = 76, DUUR = 16500, NS = 'http://www.w3.org/2000/svg';
+        if (veldVrij !== true) {
+            const t0 = performance.now(); marktTot = grootTot = t0 + 80000;
+            const wacht = setInterval(() => {
+                const sb = strip.getBoundingClientRect();
+                const bezet = [...strip.querySelectorAll(':scope > .om-p, :scope > .om-kraam')].some(e => { const q = e.getBoundingClientRect(); return q.width > 0 && q.right > sb.left && q.left < sb.right; });
+                if (!bezet || performance.now() - t0 > 70000) { clearInterval(wacht); sportdag(true); }      // een trage groep (het schoolklasje) krijgt ruim de tijd
+            }, 400);
+            return;
+        }
+        marktTot = grootTot = performance.now() + DUUR + 900;
         const pas = Math.max(68, Math.min(150, (width - 24) / 5)), sch = Math.min(1, (pas - 4) / CW);
         const cd = plekken.cafeDeur();
         let basis = (cd === null ? width / 2 : cd) - 2 * pas;                  // het middelste vak (biljart) staat voor het café
@@ -1314,7 +1326,8 @@
         doel(4, { breed: 46, hoog: 27, gestreept: false, keeper: '#F28C28', balR: 2.3, bal: 'background:radial-gradient(circle at 50% 50%,#222 0 19%,transparent 21%),radial-gradient(circle at 14% 24%,#222 0 14%,transparent 16%),radial-gradient(circle at 86% 24%,#222 0 14%,transparent 16%),radial-gradient(circle at 50% 96%,#222 0 14%,transparent 16%),#fff;box-shadow:0 0 0 .6px #16233a', eerst: 1000 });
 
         // na een kwart minuut is het afgelopen: alles vervaagt
-        later(() => { klaar = true; vakken.forEach(v => animate(v, [{ opacity: 1 }, { opacity: 0 }], { duration: 600 }).finished.then(() => v.remove()).catch(() => v.remove())); }, DUUR);
+        later(() => { klaar = true; vakken.forEach(v => animate(v, [{ opacity: 1 }, { opacity: 0 }], { duration: 600 }).finished.then(() => v.remove()).catch(() => v.remove()));
+            later(() => { marktTot = grootTot = performance.now(); }, 700); }, DUUR);       // daarna mag iedereen weer
     }
     // ARTV tennis: twee tennissers met een racket lopen voorbij en slaan onderweg een geel balletje naar elkaar over.
     // De voorste loopt daarvoor achteruit.
