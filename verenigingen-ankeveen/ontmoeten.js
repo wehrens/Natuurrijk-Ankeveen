@@ -1183,14 +1183,14 @@
 
     // Familie: een lange vader (zo'n twee koppen langer dan moeder) met een donkerbruine labrador aan de lijn,
     // moeder, en een tweeling die net kan lopen en waggelend meedribbelt. Ze lopen op peutertempo.
-    // SPORTDAG: vijf sporten naast elkaar, een kwart minuut lang. Van links naar rechts: tennis (ARTV), petanque,
+    // SPORTDAG: vijf sporten naast elkaar, ruim een halve minuut lang. Van links naar rechts: tennis (ARTV), petanque,
     // biljart (twee tafels pal voor het café, die uit het niets verschijnen), handbal en voetbal. Bij handbal en
     // voetbal staat er alleen een keeper in het doel, die de ene na de andere bal uit de hoek haalt.
     // Tijdens de sportdag loopt er verder niemand voorbij (alleen de ooievaar mag): eerst wachten we tot de strook
     // leeg is, en zolang het duurt komen er geen nieuwe groepen, ontmoetingen of honden bij.
     function sportdag(veldVrij) {
         if (document.hidden) return;
-        const width = W(), VH = 36, CW = 76, DUUR = 16500, NS = 'http://www.w3.org/2000/svg';
+        const width = W(), VH = 36, CW = 76, DUUR = 33000, NS = 'http://www.w3.org/2000/svg';
         if (veldVrij !== true) {
             const t0 = performance.now(); marktTot = grootTot = t0 + 80000;
             const wacht = setInterval(() => {
@@ -1221,41 +1221,102 @@
         const boog = (x0, y0, x1, y1, hoog, n = 10) => { const fr = []; for (let i = 0; i <= n; i++) { const t = i / n; fr.push({ transform: `translate(${x0 + (x1 - x0) * t}px, ${y0 + (y1 - y0) * t - hoog * 4 * t * (1 - t)}px)` }); } return fr; };
         const zwaai = (el, van, top, naar, ms) => el && el.animate([{ transform: `rotate(${van}deg)` }, { transform: `rotate(${top}deg)`, offset: .4 }, { transform: `rotate(${naar}deg)` }], { duration: ms, easing: 'ease-out' });
 
-        // 1. TENNIS: twee spelers, een net ertussen, de bal gaat in een boog over het net
+        // 1. TENNIS: een echte rally. De opslag (bal omhoog, racket boven het hoofd), dan slagen over het net waarbij
+        // de bal aan de overkant eerst stuitert. Gewone slagen, hoge lobs en harde lage ballen (dan bukt de ontvanger).
+        // Na een paar slagen gaat hij in het net of langs de speler, en serveert de ander.
         (() => {
-            const v = vak(0), kl = KLEUR.slice().sort(() => Math.random() - .5);
+            const v = vak(0), kl = KLEUR.slice().sort(() => Math.random() - .5), GR = VH - 1.9, YH = VH - 13;
             const speler = (x, binnen) => {
                 const m = mens(v, kl.pop(), x, 21), svg = m.firstElementChild, g = document.createElementNS(NS, 'g'), mx = q => binnen > 0 ? q : 18 - q;
                 g.style.cssText = `transform-box:view-box;transform-origin:${mx(13)}px 14px`;
                 g.innerHTML = `<path d="M${mx(13.6)} 23.4 L${mx(17.2)} 18.2" stroke="#3b3b3b" stroke-width="1.2" stroke-linecap="round"/><ellipse cx="${mx(19.4)}" cy="15" rx="2.7" ry="3.6" fill="rgba(255,255,255,.55)" stroke="#D64541" stroke-width="1" transform="rotate(${binnen * 34} ${mx(19.4)} 15)"/>`;
                 svg.appendChild(g); svg.insertAdjacentHTML('beforeend', '<path d="M4.6 3.4 h8.8" stroke="#fff" stroke-width="1.5"/>');
-                return { g, arm: svg.querySelector(binnen > 0 ? '.armB' : '.armA'), binnen };
+                return { m, svg, g, arm: svg.querySelector(binnen > 0 ? '.armB' : '.armA'), binnen, hand: binnen > 0 ? x + 12 : x - 2.5 };
             };
             const A = speler(1, 1), B = speler(CW - 10.5, -1);
             ding(v, `<svg viewBox="0 0 6 10" width="6" height="10"><path d="M3 1 V10" stroke="#6b7280" stroke-width="1.2"/><path d="M1 1.6 h4" stroke="#fff" stroke-width="1.6"/><path d="M1 1.6 h4" stroke="#9aa3ab" stroke-width=".4"/><path d="M2 3.5 h2 M2 5.5 h2 M2 7.5 h2" stroke="#9aa3ab" stroke-width=".5"/></svg>`, CW / 2 - 3, VH - 10);
-            const bal = bol(v, 1.9, 'background:#FFEB00;box-shadow:0 0 0 .6px #A89A00');
-            const T = 950; animate(bal, boog(13, VH - 13, CW - 13, VH - 13, 11), { duration: T, direction: 'alternate', iterations: Infinity, easing: 'linear' });
-            let beurt = 0;
-            lus(() => { const s = beurt++ % 2 ? B : A, k = [{ transform: 'rotate(0deg)' }, { transform: `rotate(${s.binnen * 34}deg)`, offset: .3 }, { transform: `rotate(${-s.binnen * 46}deg)`, offset: .6 }, { transform: 'rotate(0deg)' }];
-                s.g.animate(k, { duration: 420, easing: 'ease-out' }); s.arm && s.arm.animate(k, { duration: 420, easing: 'ease-out' }); }, T);
+            const bal = bol(v, 1.9, 'background:#FFEB00;box-shadow:0 0 0 .6px #A89A00;opacity:0');
+            const beide = (s, k, ms) => { s.g.animate(k, { duration: ms, easing: 'ease-out' }); s.arm && s.arm.animate(k, { duration: ms, easing: 'ease-out' }); };
+            const rot = (...g) => g.map((d, i) => Object.assign({ transform: `rotate(${d}deg)` }, i && i < g.length - 1 ? { offset: i / (g.length - 1) } : {}));
+            const sla = (s, soort) => { const q = s.binnen;                                  // uithalen en doorzwaaien
+                if (soort === 'hard') beide(s, rot(0, q * 62, -q * 74, -q * 30, 0), 480);
+                else if (soort === 'lob') beide(s, rot(0, q * 24, -q * 96, -q * 40, 0), 620);
+                else beide(s, rot(0, q * 38, -q * 50, 0), 440); };
+            const buk = (s, diep, ms) => s.svg.animate([{ transform: 'translateY(0)' }, { transform: `translate(${s.binnen * 1.2}px, ${diep}px)`, offset: .45 }, { transform: 'translateY(0)' }], { duration: ms, easing: 'ease-in-out' });
+            const stap = (s, dx, ms) => s.m.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${s.binnen * dx}px)`, offset: .5 }, { transform: 'translateX(0)' }], { duration: ms, easing: 'ease-in-out' });
+            const vlieg = (fr, ms, ease) => animate(bal, fr, { duration: ms, easing: ease || 'linear' }).finished;
+            const SOORT = { gewoon: [9, 900], lob: [17, 1300], hard: [4.5, 640] };
+            // één slag van s naar de ander; y0 is de hoogte waarop de bal geraakt wordt
+            const slag = (s, soort, y0, rest) => {
+                if (klaar) return;
+                const o = s === A ? B : A, [hoog, T] = SOORT[soort], stuit = o.hand - o.binnen * rand(9, 14), laag = soort === 'hard';
+                const y1 = laag ? VH - 7.5 : soort === 'lob' ? YH - 3 : YH;
+                sla(s, soort);
+                if (rest <= 0 && chance(.5)) {                                               // in het net
+                    vlieg(boog(s.hand, y0, CW / 2 - s.binnen * 1.5, VH - 8, hoog * .5), T * .45).then(() => vlieg([{ transform: `translate(${CW / 2 - s.binnen * 2}px, ${VH - 8}px)` }, { transform: `translate(${CW / 2 - s.binnen * 4}px, ${GR}px)` }], 300, 'ease-in'))
+                        .then(() => later(() => serveer(o), 900)).catch(() => {});
+                    return;
+                }
+                later(() => { if (laag) buk(o, 3.2, 520); else if (soort === 'lob') stap(o, -2.5, 700); else stap(o, 1.6, 500); }, T * .55);
+                vlieg(boog(s.hand, y0, stuit, GR, hoog), T * .68).then(() => vlieg(boog(stuit, GR, o.hand, y1, laag ? 1.2 : 3.2), T * .32)).then(() => {
+                    if (rest <= 0) {                                                         // de ontvanger mist: de bal schiet langs hem
+                        sla(o, 'gewoon');
+                        vlieg([{ transform: `translate(${o.hand}px, ${y1}px)`, opacity: 1 }, { transform: `translate(${o.hand - o.binnen * 16}px, ${GR}px)`, opacity: 0 }], 420, 'ease-out').then(() => later(() => serveer(s), 800)).catch(() => {});
+                    } else slag(o, laag ? pick(['gewoon', 'lob']) : pick(['gewoon', 'gewoon', 'hard', 'lob']), y1, rest - 1);
+                }).catch(() => {});
+            };
+            // opslag: bal omhoog, racket boven het hoofd en dan er vol op
+            const serveer = s => {
+                if (klaar) return;
+                const q = s.binnen, top = VH - 28;
+                bal.getAnimations().forEach(x => x.cancel()); bal.style.opacity = 1;      // ook de vastgehouden eindstand van het vorige punt weg
+                beide(s, rot(0, -q * 60, -q * 118, -q * 118, q * 30, 0), 1150);
+                buk(s, 1.6, 600);
+                vlieg([{ transform: `translate(${s.hand}px, ${YH}px)`, opacity: 1 }, { transform: `translate(${s.hand + q}px, ${top}px)`, opacity: 1 }], 520, 'ease-out')
+                    .then(() => vlieg([{ transform: `translate(${s.hand + q}px, ${top}px)` }, { transform: `translate(${s.hand + q}px, ${top + 2}px)` }], 180, 'ease-in'))
+                    .then(() => slag(s, 'hard', top + 2, Math.floor(rand(3, 7)))).catch(() => {});
+            };
+            later(() => serveer(A), 700);
         })();
 
-        // 2. PETANQUE: om de beurt een stalen bal richting het butje; de ballen blijven liggen
+        // 2. PETANQUE: drie spelers om de beurt. De \"pointeur\" gaat door de knieën en rolt zijn bal naar het butje;
+        // de \"tireur\" blijft staan, haalt uit en gooit met een boog recht op een bal die er al ligt: die ketst weg.
         (() => {
             const v = vak(1), spelers = [0, 9, 18].map((x, i) => mens(v, pick(KLEUR), x, i === 1 ? 20 : 21, i === 2 ? 0 : undefined));
-            const butX = CW - 13, grond = VH - 1.7;
-            bol(v, 1, `background:#E0262E;transform:translate(${butX}px, ${VH - 1}px)`);
+            const butX = CW - 13, grond = VH - 1.7, pos = (x, y) => `translate(${x}px, ${y}px)`;
+            bol(v, 1, `background:#E0262E;transform:${pos(butX, VH - 1)}`);
             let n = 0, liggen = [];
             lus(() => {
-                if (n && n % 6 === 0) { liggen.splice(0).forEach(b => animate(b, [{ opacity: 1 }, { opacity: 0 }], { duration: 400 }).finished.then(() => b.remove()).catch(() => b.remove())); }
-                const k = n++ % 3, m = spelers[k], arm = m.querySelector('.armB');
-                zwaai(arm, 0, 50, -70, 520);
-                const b = bol(v, 1.7, `background:${n % 2 ? '#aab3bb' : '#6c7780'};box-shadow:0 0 0 .5px #3d4650;opacity:0`);
-                const x0 = k * 9 + 10, x1 = Math.max(44, Math.min(CW - 3, butX + rand(-11, 7))), rolt = rand(1, 3.5);
-                later(() => { if (klaar) { b.remove(); return; } b.style.opacity = 1; liggen.push(b);
-                    animate(b, boog(x0, VH - 9, x1, grond, 9), { duration: 760, easing: 'linear' }).finished
-                        .then(() => animate(b, [{ transform: `translate(${x1}px, ${grond}px)` }, { transform: `translate(${x1 + rolt}px, ${grond}px)` }], { duration: 420, easing: 'ease-out' })).catch(() => {}); }, 260);
-            }, 1500, 700);
+                if (liggen.length >= 6) { liggen.splice(0).forEach(q => animate(q.b, [{ opacity: 1 }, { opacity: 0 }], { duration: 400 }).finished.then(() => q.b.remove()).catch(() => q.b.remove())); return; }
+                const k = n++ % 3, m = spelers[k], svg = m.firstElementChild, arm = m.querySelector('.armB');
+                const doelwit = liggen.length && chance(.55) ? pick(liggen) : null, x0 = k * 9 + 11;
+                const b = bol(v, 1.7, `background:${n % 2 ? '#b4bcc4' : '#69747d'};box-shadow:0 0 0 .5px #3d4650;opacity:0`);
+                if (doelwit) {
+                    // tireur: een stap naar voren, ver uithalen en gooien
+                    m.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(2.4px)', offset: .45 }, { transform: 'translateX(2.4px)', offset: .8 }, { transform: 'translateX(0)' }], { duration: 1500, easing: 'ease-in-out' });
+                    arm.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(70deg)', offset: .3 }, { transform: 'rotate(-120deg)', offset: .5 }, { transform: 'rotate(-95deg)', offset: .68 }, { transform: 'rotate(0deg)' }], { duration: 1300, easing: 'ease-in-out' });
+                    later(() => { if (klaar) { b.remove(); return; } b.style.opacity = 1;
+                        const xr = doelwit.x, weg = xr + rand(6, 11) > CW - 2 ? xr - rand(6, 10) : xr + rand(6, 11);
+                        animate(b, boog(x0 + 3, VH - 16, xr - 1.6, grond - 1, 13), { duration: 820, easing: 'linear' }).finished.then(() => {
+                            // kets: de geraakte bal schiet weg, de gegooide blijft (bijna) liggen; een vonkje op het raakpunt
+                            animate(doelwit.b, [{ transform: pos(xr, grond) }, { transform: pos((xr + weg) / 2, grond - 2.2), offset: .3 }, { transform: pos(weg, grond) }], { duration: 480, easing: 'ease-out' }); doelwit.x = weg;
+                            const nx = xr - 1.2 + rand(-.6, .6);
+                            animate(b, [{ transform: pos(xr - 1.6, grond - 1) }, { transform: pos(nx, grond) }], { duration: 220, easing: 'ease-out' }); liggen.push({ b, x: nx });
+                            const vonk = ding(v, '<svg viewBox="0 0 8 8" width="8" height="8"><path d="M4 0 v2 M0 4 h2 M8 4 h-2 M1.2 1.2 l1.4 1.4 M6.8 1.2 l-1.4 1.4" stroke="#F2A51A" stroke-width=".9" stroke-linecap="round"/></svg>', xr - 4, grond - 7);
+                            animate(vonk, [{ opacity: 1, transform: 'scale(.5)' }, { opacity: 0, transform: 'scale(1.5)' }], { duration: 380 }).finished.then(() => vonk.remove()).catch(() => vonk.remove());
+                        }).catch(() => {}); }, 640);
+                } else {
+                    // pointeur: door de knieën, arm naar achteren en de bal laag wegrollen
+                    svg.animate([{ transform: 'translateY(0)' }, { transform: 'translate(1px, 3.4px)', offset: .3 }, { transform: 'translate(1px, 3.4px)', offset: .7 }, { transform: 'translateY(0)' }], { duration: 1600, easing: 'ease-in-out' });
+                    arm.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(55deg)', offset: .34 }, { transform: 'rotate(-62deg)', offset: .52 }, { transform: 'rotate(-40deg)', offset: .7 }, { transform: 'rotate(0deg)' }], { duration: 1500, easing: 'ease-in-out' });
+                    later(() => { if (klaar) { b.remove(); return; } b.style.opacity = 1;
+                        let x1 = butX + rand(-9, 6); liggen.forEach(q => { if (Math.abs(q.x - x1) < 3.2) x1 = q.x - 3.4; });
+                        const land = x0 + (x1 - x0) * .55;
+                        animate(b, boog(x0 + 2, VH - 6, land, grond, 4.5), { duration: 520, easing: 'linear' }).finished
+                            .then(() => animate(b, [{ transform: pos(land, grond) }, { transform: pos(x1, grond) }], { duration: 900, easing: 'cubic-bezier(.2,.7,.3,1)' })).catch(() => {});
+                        liggen.push({ b, x: x1 }); }, 780);
+                }
+            }, 2300, 700);
         })();
 
         // 3. BILJART: twee tafels pal voor het café (ze ploppen uit het niets tevoorschijn), drie spelers in AH-blauw
@@ -3164,7 +3225,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: familie, dur: () => (W() + 200 + EX) * 27 },
         { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true, maanden: [11, 12, 1] },
         { run: newfoundlander, dur: () => (W() + 120) * 24 + 6500 },
-        { run: sportdag, dur: () => 18500, groot: true },   // tennis, petanque, biljart, handbal en voetbal naast elkaar
+        { run: sportdag, dur: () => 35500, groot: true },   // tennis, petanque, biljart, handbal en voetbal naast elkaar
         { run: oldtimer, dur: () => (W() + 180) * 14 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },   // de Snoek staat er twee keer in: hij komt elke ronde twee keer langs
     ];
