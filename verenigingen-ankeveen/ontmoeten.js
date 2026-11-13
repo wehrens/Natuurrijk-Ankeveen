@@ -1183,6 +1183,139 @@
 
     // Familie: een lange vader (zo'n twee koppen langer dan moeder) met een donkerbruine labrador aan de lijn,
     // moeder, en een tweeling die net kan lopen en waggelend meedribbelt. Ze lopen op peutertempo.
+    // SPORTDAG: vijf sporten naast elkaar, een kwart minuut lang. Van links naar rechts: tennis (ARTV), petanque,
+    // biljart (twee tafels pal voor het café, die uit het niets verschijnen), handbal en voetbal. Bij handbal en
+    // voetbal staat er alleen een keeper in het doel, die de ene na de andere bal uit de hoek haalt.
+    function sportdag() {
+        if (document.hidden) return;
+        const width = W(), VH = 36, CW = 76, DUUR = 16500, NS = 'http://www.w3.org/2000/svg';
+        const pas = Math.max(68, Math.min(150, (width - 24) / 5)), sch = Math.min(1, (pas - 4) / CW);
+        const cd = plekken.cafeDeur();
+        let basis = (cd === null ? width / 2 : cd) - 2 * pas;                  // het middelste vak (biljart) staat voor het café
+        basis = Math.max(40, Math.min(width - 40 - 4 * pas, basis));
+        let klaar = false; const vakken = [];
+        const lus = (fn, ms, eerst) => { const stap = () => { if (klaar) return; fn(); later(stap, typeof ms === 'function' ? ms() : ms); }; later(stap, eerst || 0); };
+        const vak = k => {
+            const v = document.createElement('div');
+            v.style.cssText = `position:absolute;left:${basis + k * pas - CW / 2}px;top:${GROUND - VH}px;width:${CW}px;height:${VH}px;transform:scale(${sch});transform-origin:50% 100%;opacity:0;z-index:1;pointer-events:none`;
+            strip.appendChild(v); vakken.push(v);
+            animate(v, [{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: k * 120 });
+            return v;
+        };
+        const zet = (el, x, y) => { el.style.position = 'absolute'; el.style.left = x + 'px'; el.style.top = y + 'px'; return el; };
+        const mens = (v, kleur, x, h, stijl) => { const m = person(kleur, h, stijl); delete m.dataset.groet; m.style.zIndex = 0; zet(m, x, VH - h); v.appendChild(m); return m; };
+        const ding = (v, html, x, y) => { const d = document.createElement('div'); d.style.lineHeight = 0; d.innerHTML = html; zet(d, x, y); v.appendChild(d); return d; };
+        const bol = (v, r, css) => { const b = document.createElement('div'); b.style.cssText = `position:absolute;left:${-r}px;top:${-r}px;width:${2 * r}px;height:${2 * r}px;border-radius:50%;${css}`; v.appendChild(b); return b; };
+        const boog = (x0, y0, x1, y1, hoog, n = 10) => { const fr = []; for (let i = 0; i <= n; i++) { const t = i / n; fr.push({ transform: `translate(${x0 + (x1 - x0) * t}px, ${y0 + (y1 - y0) * t - hoog * 4 * t * (1 - t)}px)` }); } return fr; };
+        const zwaai = (el, van, top, naar, ms) => el && el.animate([{ transform: `rotate(${van}deg)` }, { transform: `rotate(${top}deg)`, offset: .4 }, { transform: `rotate(${naar}deg)` }], { duration: ms, easing: 'ease-out' });
+
+        // 1. TENNIS: twee spelers, een net ertussen, de bal gaat in een boog over het net
+        (() => {
+            const v = vak(0), kl = KLEUR.slice().sort(() => Math.random() - .5);
+            const speler = (x, binnen) => {
+                const m = mens(v, kl.pop(), x, 21), svg = m.firstElementChild, g = document.createElementNS(NS, 'g'), mx = q => binnen > 0 ? q : 18 - q;
+                g.style.cssText = `transform-box:view-box;transform-origin:${mx(13)}px 14px`;
+                g.innerHTML = `<path d="M${mx(13.6)} 23.4 L${mx(17.2)} 18.2" stroke="#3b3b3b" stroke-width="1.2" stroke-linecap="round"/><ellipse cx="${mx(19.4)}" cy="15" rx="2.7" ry="3.6" fill="rgba(255,255,255,.55)" stroke="#D64541" stroke-width="1" transform="rotate(${binnen * 34} ${mx(19.4)} 15)"/>`;
+                svg.appendChild(g); svg.insertAdjacentHTML('beforeend', '<path d="M4.6 3.4 h8.8" stroke="#fff" stroke-width="1.5"/>');
+                return { g, arm: svg.querySelector(binnen > 0 ? '.armB' : '.armA'), binnen };
+            };
+            const A = speler(1, 1), B = speler(CW - 10.5, -1);
+            ding(v, `<svg viewBox="0 0 6 10" width="6" height="10"><path d="M3 1 V10" stroke="#6b7280" stroke-width="1.2"/><path d="M1 1.6 h4" stroke="#fff" stroke-width="1.6"/><path d="M1 1.6 h4" stroke="#9aa3ab" stroke-width=".4"/><path d="M2 3.5 h2 M2 5.5 h2 M2 7.5 h2" stroke="#9aa3ab" stroke-width=".5"/></svg>`, CW / 2 - 3, VH - 10);
+            const bal = bol(v, 1.7, 'background:#D9EC3F;box-shadow:0 0 0 .5px #7f8f1e');
+            const T = 950; animate(bal, boog(13, VH - 13, CW - 13, VH - 13, 11), { duration: T, direction: 'alternate', iterations: Infinity, easing: 'linear' });
+            let beurt = 0;
+            lus(() => { const s = beurt++ % 2 ? B : A, k = [{ transform: 'rotate(0deg)' }, { transform: `rotate(${s.binnen * 34}deg)`, offset: .3 }, { transform: `rotate(${-s.binnen * 46}deg)`, offset: .6 }, { transform: 'rotate(0deg)' }];
+                s.g.animate(k, { duration: 420, easing: 'ease-out' }); s.arm && s.arm.animate(k, { duration: 420, easing: 'ease-out' }); }, T);
+        })();
+
+        // 2. PETANQUE: om de beurt een stalen bal richting het butje; de ballen blijven liggen
+        (() => {
+            const v = vak(1), spelers = [0, 9, 18].map((x, i) => mens(v, pick(KLEUR), x, i === 1 ? 20 : 21, i === 2 ? 0 : undefined));
+            const butX = CW - 13, grond = VH - 1.7;
+            bol(v, 1, `background:#E0262E;transform:translate(${butX}px, ${VH - 1}px)`);
+            let n = 0, liggen = [];
+            lus(() => {
+                if (n && n % 6 === 0) { liggen.splice(0).forEach(b => animate(b, [{ opacity: 1 }, { opacity: 0 }], { duration: 400 }).finished.then(() => b.remove()).catch(() => b.remove())); }
+                const k = n++ % 3, m = spelers[k], arm = m.querySelector('.armB');
+                zwaai(arm, 0, 50, -70, 520);
+                const b = bol(v, 1.7, `background:${n % 2 ? '#aab3bb' : '#6c7780'};box-shadow:0 0 0 .5px #3d4650;opacity:0`);
+                const x0 = k * 9 + 10, x1 = Math.max(44, Math.min(CW - 3, butX + rand(-11, 7))), rolt = rand(1, 3.5);
+                later(() => { if (klaar) { b.remove(); return; } b.style.opacity = 1; liggen.push(b);
+                    animate(b, boog(x0, VH - 9, x1, grond, 9), { duration: 760, easing: 'linear' }).finished
+                        .then(() => animate(b, [{ transform: `translate(${x1}px, ${grond}px)` }, { transform: `translate(${x1 + rolt}px, ${grond}px)` }], { duration: 420, easing: 'ease-out' })).catch(() => {}); }, 260);
+            }, 1500, 700);
+        })();
+
+        // 3. BILJART: twee tafels pal voor het café (ze ploppen uit het niets tevoorschijn), drie spelers in AH-blauw
+        (() => {
+            const v = vak(2), tw = 26, ty = VH - 12.4;
+            const speler = x => { const m = mens(v, '#00A0E2', x, 21, 0); m.querySelectorAll('.legA, .legB').forEach(b => b.setAttribute('stroke', '#1d1d1d')); m.querySelector('path[d^="M4.5 22"]').setAttribute('fill', '#1d1d1d'); return m; };
+            speler(0); speler(CW / 2 - 4.7); speler(CW - 9.5);
+            const tafels = [9, 41].map((x, i) => {
+                const t = ding(v, `<svg viewBox="0 0 ${tw} 13" width="${tw}" height="13" style="overflow:visible"><path d="M3.4 8 v4.6 M${tw - 3.4} 8 v4.6" stroke="#5A3A22" stroke-width="2" stroke-linecap="round"/><rect x="0" y="4.2" width="${tw}" height="4.2" rx="1" fill="#6B4226"/><rect x="1.1" y="4.2" width="${tw - 2.2}" height="1.7" fill="#1F8A52"/>
+                    <circle class="b0" cx="${tw * .3}" cy="2.95" r="1.3" fill="#fff" stroke="#8a8f96" stroke-width=".3"/><circle class="b1" cx="${tw * .5}" cy="2.95" r="1.3" fill="#F2C318"/><circle class="b2" cx="${tw * .7}" cy="2.95" r="1.3" fill="#D22630"/></svg>`, x, ty);
+                t.style.transformOrigin = '50% 100%';
+                animate(t, [{ transform: 'scale(0)' }, { transform: 'scale(1.18)', offset: .7 }, { transform: 'scale(1)' }], { duration: 520, delay: 350 + i * 260, easing: 'ease-out' });
+                return { t, pos: [0, 0, 0] };
+            });
+            const keu = (x, links, kleur) => { const k = document.createElement('div');
+                k.style.cssText = `position:absolute;left:${x}px;top:${ty + 2.3}px;width:16px;height:1.1px;border-radius:1px;background:linear-gradient(${links ? 90 : 270}deg,#5A3A22 0 30%,#C9A46A 30% 94%,#f4f1ea 94%);transform-origin:${links ? '10% 50%' : '90% 50%'};opacity:0`;
+                v.appendChild(k); animate(k, [{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: 1100 }); return k; };
+            const keus = [keu(2.5, true), keu(CW - 18.5, false)];
+            // de middelste speler krijt zijn keu (rechtop, blauw krijtje op de punt)
+            const mk = keu(CW / 2 - 2, true); mk.style.top = (VH - 11) + 'px'; mk.style.transform = 'rotate(-84deg)';
+            mk.innerHTML = '<div style="position:absolute;right:-1.2px;top:-.9px;width:2.6px;height:2.6px;border-radius:.5px;background:#2E6FD9"></div>';
+            animate(mk.firstElementChild, [{ transform: 'translate(0, 0)' }, { transform: 'translate(0, 1.4px)' }], { duration: 180, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+            let beurt = 0;
+            lus(() => {
+                const i = beurt++ % 2, r = i ? -1 : 1, tf = tafels[i];
+                keus[i].animate([{ transform: 'translateX(0)' }, { transform: `translateX(${-3 * r}px)`, offset: .45 }, { transform: `translateX(${2.6 * r}px)`, offset: .62 }, { transform: 'translateX(0)' }], { duration: 760, easing: 'ease-in-out' });
+                later(() => [0, 1, 2].forEach(b => { const van = tf.pos[b], naar = rand(-3.2, 3.2); tf.pos[b] = naar;
+                    animate(tf.t.querySelector('.b' + b), [{ transform: `translateX(${van}px)` }, { transform: `translateX(${naar}px)` }], { duration: 620, delay: b * 140 * (i ? -1 : 1) + (i ? 280 : 0), easing: 'ease-out' }); }), 470);
+            }, 1500, 1700);
+        })();
+
+        // 4 en 5. HANDBAL en VOETBAL: een doel met een keeper. De bal komt (van de kijker af) op het doel af,
+        // de keeper duikt naar de hoek en stopt hem.
+        const doel = (k, o) => {
+            const v = vak(k), L = (CW - o.breed) / 2, top = VH - o.hoog, mid = CW / 2;
+            let net = '';
+            for (let x = 3; x < o.breed - 1; x += 3) net += `M${x} 1.4 V${o.hoog} `;
+            for (let y = 4; y < o.hoog; y += 3) net += `M1 ${y} H${o.breed - 1} `;
+            const lat = `M1 ${o.hoog} V1 H${o.breed - 1} V${o.hoog}`;
+            ding(v, `<svg viewBox="0 0 ${o.breed} ${o.hoog}" width="${o.breed}" height="${o.hoog}" style="overflow:visible"><rect x="1" y="1" width="${o.breed - 2}" height="${o.hoog - 1}" fill="rgba(110,125,140,.10)"/><path d="${net}" stroke="#8f99a3" stroke-width=".3" opacity=".7"/>
+                <path d="${lat}" fill="none" stroke="#7d8790" stroke-width="2.6" stroke-linejoin="round"/><path d="${lat}" fill="none" stroke="${o.gestreept ? '#D22630' : '#fff'}" stroke-width="1.8" stroke-linejoin="round"/>
+                ${o.gestreept ? `<path d="${lat}" fill="none" stroke="#fff" stroke-width="1.8" stroke-dasharray="2.4 2.4"/>` : ''}</svg>`, L, top);
+            const kp = mens(v, o.keeper, mid - 4.5, 20, 0); kp.style.transformOrigin = '50% 78%';
+            const aA = kp.querySelector('.armA'), aB = kp.querySelector('.armB');
+            const armen = g => { aA.style.transform = `rotate(${g}deg)`; aB.style.transform = `rotate(${-g}deg)`; };
+            armen(55);
+            // even heen en weer wippen op de doellijn
+            const wip = animate(kp.firstElementChild, [{ transform: 'translateX(-1.2px)' }, { transform: 'translateX(1.2px)' }], { duration: 420, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+            const hoeken = [[-1, 1], [1, 0], [1, 1], [-1, 0], [0, .5], [-1, 1], [1, 1]].sort(() => Math.random() - .5);
+            let schot = 0;
+            lus(() => {
+                const [kant, hg] = hoeken[schot++ % hoeken.length];
+                const tx = mid + kant * (o.breed / 2 - 4.5), ty = hg === 1 ? top + 4.5 : hg === 0 ? VH - 4 : VH - 13;
+                const b = bol(v, o.balR, o.bal + ';opacity:0');
+                const p = (x, y, sc) => `translate(${x}px, ${y}px) scale(${sc})`;
+                animate(b, [{ transform: p(mid - kant * 6, VH + 7, 1.9), opacity: 0 }, { transform: p(mid - kant * 3, VH + 2, 1.6), opacity: 1, offset: .2 }, { transform: p(tx, ty, 1), opacity: 1 }], { duration: 470, easing: 'ease-out' }).finished.then(() => {
+                    // gestopt: de bal stuit weg
+                    animate(b, [{ transform: p(tx, ty, 1), opacity: 1 }, { transform: p(tx + (kant || 1) * 9, ty - 5, 1.1), opacity: 1, offset: .45 }, { transform: p(tx + (kant || 1) * 15, VH - 2, 1.2), opacity: 0 }], { duration: 620, easing: 'ease-in' }).finished.then(() => b.remove()).catch(() => b.remove());
+                }).catch(() => b.remove());
+                // de duik
+                const dx = (tx - mid) * .66, dy = !kant ? 0 : hg === 1 ? -(o.hoog - 19) : 4.5, rot = kant * (hg === 1 ? 40 : 76);
+                wip.pause(); armen(kant ? 150 : 95);
+                animate(kp, [{ transform: 'translate(0, 0) rotate(0deg)' }, { transform: `translate(${dx}px, ${dy}px) rotate(${rot}deg)`, offset: .26 }, { transform: `translate(${dx}px, ${dy + (kant ? 1.5 : 0)}px) rotate(${rot}deg)`, offset: .62 }, { transform: 'translate(0, 0) rotate(0deg)' }], { duration: 1500, delay: 110, easing: 'ease-out' })
+                    .finished.then(() => { armen(55); wip.play(); }).catch(() => {});
+            }, 2700, o.eerst);
+        };
+        doel(3, { breed: 34, hoog: 24, gestreept: true, keeper: '#7B3FB0', balR: 1.8, bal: 'background:#E8963A;box-shadow:0 0 0 .5px #8a4f12', eerst: 2300 });
+        doel(4, { breed: 46, hoog: 27, gestreept: false, keeper: '#F28C28', balR: 2.3, bal: 'background:radial-gradient(circle at 50% 50%,#222 0 19%,transparent 21%),radial-gradient(circle at 14% 24%,#222 0 14%,transparent 16%),radial-gradient(circle at 86% 24%,#222 0 14%,transparent 16%),radial-gradient(circle at 50% 96%,#222 0 14%,transparent 16%),#fff;box-shadow:0 0 0 .6px #16233a', eerst: 1000 });
+
+        // na een kwart minuut is het afgelopen: alles vervaagt
+        later(() => { klaar = true; vakken.forEach(v => animate(v, [{ opacity: 1 }, { opacity: 0 }], { duration: 600 }).finished.then(() => v.remove()).catch(() => v.remove())); }, DUUR);
+    }
     // ARTV tennis: twee tennissers met een racket lopen voorbij en slaan onderweg een geel balletje naar elkaar over.
     // De voorste loopt daarvoor achteruit.
     function tennissers() {
@@ -3011,8 +3144,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: familie, dur: () => (W() + 200 + EX) * 27 },
         { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true, maanden: [11, 12, 1] },
         { run: newfoundlander, dur: () => (W() + 120) * 24 + 6500 },
-        { run: tennissers, dur: () => (W() + 120 + EX) * 24 },
-        { run: biljarters, dur: () => (W() + 80) * 30 + 8000 },
+        { run: sportdag, dur: () => 18500, groot: true },   // tennis, petanque, biljart, handbal en voetbal naast elkaar
         { run: oldtimer, dur: () => (W() + 180) * 14 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },   // de Snoek staat er twee keer in: hij komt elke ronde twee keer langs
     ];
@@ -3090,7 +3222,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
