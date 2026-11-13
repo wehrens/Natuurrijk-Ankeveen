@@ -1396,9 +1396,10 @@
             for (let y = 4; y < o.hoog; y += 3) net += `M1 ${y} H${o.breed - 1} `;
             const lat = `M1 ${o.hoog} V1 H${o.breed - 1} V${o.hoog}`;
             ding(v, `<svg viewBox="0 0 ${o.breed} ${o.hoog}" width="${o.breed}" height="${o.hoog}" style="overflow:visible"><rect x="1" y="1" width="${o.breed - 2}" height="${o.hoog - 1}" fill="rgba(110,125,140,.10)"/><path d="${net}" stroke="#8f99a3" stroke-width=".3" opacity=".7"/>
-                <path d="${lat}" fill="none" stroke="#7d8790" stroke-width="2.6" stroke-linejoin="round"/><path d="${lat}" fill="none" stroke="${o.gestreept ? '#D22630' : '#fff'}" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="${lat}" fill="none" stroke="#7d8790" stroke-width="2.6" stroke-linejoin="round"/><path d="${lat}" fill="none" stroke="${o.gestreept || '#fff'}" stroke-width="1.8" stroke-linejoin="round"/>
                 ${o.gestreept ? `<path d="${lat}" fill="none" stroke="#fff" stroke-width="1.8" stroke-dasharray="2.4 2.4"/>` : ''}</svg>`, L, top);
-            const kp = mens(v, o.keeper, mid - 4.5, 20, 0); kp.style.transformOrigin = '50% 78%';
+            const kp = mens(v, o.keeper, mid - 4.5, 20, o.kapsel || 0); kp.style.transformOrigin = '50% 78%';
+            if (o.zwart) { kp.querySelectorAll('.legA, .legB').forEach(b => b.setAttribute('stroke', '#1d1d1d')); kp.querySelector('path[d^="M4.5 22"]').setAttribute('fill', '#1d1d1d'); }
             if (o.asv) {                                    // ASV '65: wit shirt met groene baan, witte broek, groene mouwen en kousen
                 const svg = kp.firstElementChild, romp = svg.querySelector('path[d^="M3 13 q6"]'), broek = svg.querySelector('path[d^="M4.5 22"]');
                 romp.setAttribute('fill', '#fff'); romp.setAttribute('stroke', '#8f99a3'); romp.setAttribute('stroke-width', '.7');
@@ -1429,7 +1430,8 @@
                     .finished.then(() => { armen(55); wip.play(); }).catch(() => {});
             }, 2700, o.eerst);
         };
-        doel(3, { breed: 34, hoog: 24, gestreept: true, keeper: '#7B3FB0', balR: 1.8, bal: 'background:#E8963A;box-shadow:0 0 0 .5px #8a4f12', eerst: 2300 });
+        // handbal in de kleuren van ASV: groen-wit gestreept doel, keepster in het rood met zwarte broek, geelgroene bal
+        doel(3, { breed: 34, hoog: 24, gestreept: '#1E9E3E', keeper: '#D5202A', zwart: true, kapsel: 1, balR: 1.9, bal: 'background:#C6E22E;box-shadow:0 0 0 .5px #6f8412', eerst: 2300 });
         doel(4, { breed: 68, hoog: 33, gestreept: false, asv: true, keeper: '#1E9E3E', balR: 2.3, bal: 'background:radial-gradient(circle at 50% 50%,#222 0 19%,transparent 21%),radial-gradient(circle at 14% 24%,#222 0 14%,transparent 16%),radial-gradient(circle at 86% 24%,#222 0 14%,transparent 16%),radial-gradient(circle at 50% 96%,#222 0 14%,transparent 16%),#fff;box-shadow:0 0 0 .6px #16233a', eerst: 1000 });
 
         // na een kwart minuut is het afgelopen: alles vervaagt
