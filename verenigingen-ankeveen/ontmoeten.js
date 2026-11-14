@@ -3033,7 +3033,8 @@ ${pot(47.4)}${pot(61.6)}
             vorige = { x: midden, ox, t: nu };
         }, 50);
     }
-    // Symon, de barista en pizzabakker van de markt: hij rijdt voorbij in zijn grijze terreinwagen met wit dak, met
+    // Symon, de barista en pizzabakker van de markt: hij rijdt voorbij in zijn grijze terreinwagen met wit dak (met het
+    // langwerpige dakraampje in de dakrand), met
     // daarachter de zwarte houten kar (bruin luik met zilveren scharnieren, vlak dak) waarin de koffiemachine en de
     // pizzaoven staan. Op de kar wappert de Italiaanse vlag en uit het pijpje komt een rookwolkje.
     function symon() {
@@ -3055,12 +3056,13 @@ ${pot(47.4)}${pot(61.6)}
           <path d="M-34 1.8 V8.4 M-29.6 1.8 V9.8 M-16.4 1.8 V9.8 M-12 1.8 V8.4" stroke="#C9CDD0" stroke-width=".9" stroke-linecap="round"/>
           <path d="M-33.4 9.4 v2.4 M-12.6 9.4 v2.4" stroke="#C9CDD0" stroke-width=".8" stroke-linecap="round"/>
           <rect x="-40.4" y="0" width="2.6" height="15.4" fill="#B59A6C"/><rect x="-8.4" y="0" width="2.6" height="15.4" fill="#B59A6C"/><rect x="-40.4" y="-.2" width="34.6" height="1.7" fill="#8C7550"/>
-          <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="-23" y="14.3" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="2.7" fill="#F4F1EA" letter-spacing=".25">CAFFÈ &amp; PIZZA</text></g>
           <path d="M-33.4 16.2 Q-33.4 12.8 -30 12.8 H-17 Q-13.6 12.8 -13.6 16.2 Z" fill="#111"/>
           ${wiel(-27.2, 17.2, 3.2, '#3a3a3a', 'wk')}${wiel(-19.8, 17.2, 3.2, '#3a3a3a', 'wk')}
+          <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="-23" y="13.7" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="2.6" fill="#F4F1EA" letter-spacing=".25">CAFFÈ &amp; PIZZA</text></g>
           <g class="auto">
             <path d="M3 4 H30.6 L32.8 8.8 H44.4 Q46 8.8 46 10.4 V15.4 H3 Z" fill="#8E8C86"/>
-            <path d="M2.4 4 V2.6 Q2.4 1.5 3.6 1.5 H29.8 Q31 1.5 31.3 2.8 L31.6 4 Z" fill="#F1EFE6" stroke="#b9b6ad" stroke-width=".3"/>
+            <path d="M2.4 4 V2 Q2.4 .5 4 .5 H29.4 Q30.8 .5 31.2 2 L31.6 4 Z" fill="#F1EFE6" stroke="#b9b6ad" stroke-width=".3"/>
+            <rect x="11.6" y="1.3" width="11.6" height="1.9" rx=".95" fill="#3E4A50" stroke="#55534f" stroke-width=".35"/><path d="M13 1.9 h5.4" stroke="rgba(255,255,255,.35)" stroke-width=".35" stroke-linecap="round"/>
             <path d="M3 9 H46" stroke="#7b7973" stroke-width=".35"/>
             <rect x="4.6" y="4.9" width="8.8" height="3.7" rx=".5" fill="#3E4A50"/><rect x="15" y="4.9" width="6.6" height="3.7" rx=".5" fill="#3E4A50"/>
             <path d="M23.2 4.9 H29.9 L31.5 8.6 H23.2 Z" fill="#3E4A50"/>
