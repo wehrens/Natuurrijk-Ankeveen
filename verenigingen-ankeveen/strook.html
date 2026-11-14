@@ -13,6 +13,7 @@
   Adres:  strook.html            de strook helemaal onderin beeld, daarboven pikzwart
   Opties achter het adres (te combineren met &):
     ?b=800            hoeveel "strookpixels" er op de schermbreedte passen. Kleiner getal = alles groter (standaard 400: de telefoonindeling, met minder huisjes en alles flink groot)
+    ?lucht            een zomerse blauwe lucht over het hele beeld (met zon, wolken en gras) in plaats van wit en zwart
     ?licht            licht in plaats van zwart rond de strook
     ?pos=midden       strook in het midden (of boven); standaard onder
     ?titel=Tekst      een titel boven de strook (staat "Ankeveen" erin, dan stuitert de voetbal over de letters)
@@ -30,6 +31,13 @@ body.buiten iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0;
 body.binnen{background:#fff;overflow:hidden}
 /* projectiestand: helder wit vlak en een stevige grondlijn, voor een donkere of houten wand */
 body.binnen #ontmoeten::after{background:#6f6a5e;height:1.5px}
+/* ?lucht: een zomerse blauwe lucht over het hele beeld, met zon, wolken en gras. De strook zelf is dan doorzichtig. */
+body.buiten.lucht iframe{background:transparent}
+body.binnen.lucht{background:transparent}
+body.binnen.lucht #ontmoeten::after{background:#4E8A3A}
+.wolk{position:absolute;left:0;fill:#fff;opacity:.93;will-change:transform;animation:drijf linear infinite}
+@keyframes drijf{from{transform:translateX(-30vw)}to{transform:translateX(112vw)}}
+.zon{position:absolute;border-radius:50%;background:radial-gradient(circle,#FFF7C2 0 34%,#FFE35C 52%,rgba(255,227,92,.35) 62%,rgba(255,227,92,0) 72%)}
 /* dezelfde regels als op de verenigingenpagina (index.html) */
 #ontmoeten{position:relative;height:64px;overflow:visible;clip-path:inset(-80px 0 0 0);background:transparent}
 #ontmoeten::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:1px;background:#d9d3c4}
@@ -54,10 +62,10 @@ body.binnen #ontmoeten::after{background:#6f6a5e;height:1.5px}
     var KOP = 58, HOOGTE = KOP + 64 + 8;                 // lucht boven de strook + de strook + een randje eronder
     if (binnen) {
         // de strook zelf, op ware grootte
-        document.body.className = 'binnen projectie';
+        document.body.className = 'binnen projectie' + (q.has('lucht') ? ' lucht' : '');
         var titel = q.get('titel') || '';
         document.body.innerHTML =
-            '<div id="topbar" style="position:relative;z-index:0;overflow:hidden;background:#fff;font-family:Inter,system-ui,sans-serif;padding-bottom:8px">' +
+            '<div id="topbar" style="position:relative;z-index:0;overflow:hidden;background:' + (q.has('lucht') ? 'transparent' : '#fff') + ';font-family:Inter,system-ui,sans-serif;padding-bottom:8px">' +
             '<div style="height:' + KOP + 'px;box-sizing:border-box;padding:14px clamp(12px,4.5vw,60px) 0;display:flex;align-items:flex-start">' +
             '<a style="font-family:Fraunces,Georgia,serif;font-size:1.3rem;font-weight:700;color:#2d4a3e;text-decoration:none;white-space:nowrap"></a></div>' +
             '<div id="ontmoeten" aria-hidden="true"></div></div>';
@@ -67,17 +75,38 @@ body.binnen #ontmoeten::after{background:#6f6a5e;height:1.5px}
         return;
     }
     // de buitenste pagina: het iframe met de strook, vergroot tot de volle schermbreedte
-    document.body.className = 'buiten' + (q.has('licht') ? '' : ' zwart');
+    var lucht = q.has('lucht');
+    document.body.className = 'buiten' + (lucht ? ' lucht' : q.has('licht') ? '' : ' zwart');
     var b = Math.max(280, Math.min(3000, parseFloat(q.get('b')) || 400)), pos = q.get('pos') || 'onder';
     var f = document.createElement('iframe');
     f.title = 'Animatiestrook Ankeveen';
-    f.src = 'strook.html?binnen' + (q.get('titel') ? '&titel=' + encodeURIComponent(q.get('titel')) : '') + location.hash;
+    f.src = 'strook.html?binnen' + (lucht ? '&lucht' : '') + (q.get('titel') ? '&titel=' + encodeURIComponent(q.get('titel')) : '') + location.hash;
+    // de zomerlucht: zon en een paar wolken die langzaam overdrijven (achter de strook)
+    var hemel = null;
+    if (lucht) {
+        hemel = document.createElement('div'); hemel.style.cssText = 'position:absolute;left:0;top:0;right:0;overflow:hidden;pointer-events:none';
+        var W1 = 'M14 30 Q2 30 2 21 Q2 13 11 13 Q12 4 23 4 Q31 4 34 10 Q38 6 44 8 Q51 10 51 17 Q60 17 60 24 Q60 30 52 30 Z';
+        var W2 = 'M10 26 Q2 26 2 19 Q2 13 9 13 Q11 6 20 6 Q27 6 30 11 Q39 9 41 17 Q48 17 48 22 Q48 26 42 26 Z';
+        var html = '<div class="zon"></div>';
+        [[.08, .26, 150, 0], [.30, .16, 190, -70], [.16, .34, 230, -150], [.46, .20, 170, -120], [.58, .30, 210, -30], [.36, .13, 260, -200]].forEach(function (c, i) {
+            html += '<svg class="wolk" viewBox="0 0 62 34" style="top:' + (c[0] * 100) + '%;width:' + (c[1] * 100) + 'vw;animation-duration:' + c[2] + 's;animation-delay:' + c[3] + 's"><path d="' + (i % 2 ? W2 : W1) + '"/></svg>';
+        });
+        hemel.innerHTML = html; document.body.appendChild(hemel);
+    }
     document.body.appendChild(f);
     function pas() {
         var W = innerWidth, H = innerHeight, z = W / b;
         f.style.width = b + 'px'; f.style.height = HOOGTE + 'px';
         var top = pos === 'boven' ? 0 : pos === 'onder' ? H - HOOGTE * z : (H - HOOGTE * z) / 2;
         f.style.transform = 'translate(0px, ' + Math.max(0, top) + 'px) scale(' + z + ')';
+        if (lucht) {
+            // de horizon ligt op de grondlijn van de strook: daarboven lucht (bovenin dieper blauw), daaronder gras
+            var g = Math.max(0, top) + (KOP + 64 - 6) * z;
+            document.body.style.background = 'linear-gradient(180deg, #2E86D8 0px, #6DB9EE ' + (g * .55) + 'px, #CFEBFA ' + g + 'px, #7DB85A ' + g + 'px, #5E9C42 100%)';
+            hemel.style.height = Math.max(0, g - 30 * z) + 'px';
+            var zon = hemel.firstChild, d = Math.min(W, H) * .34;
+            zon.style.width = zon.style.height = d + 'px'; zon.style.right = (W * .04) + 'px'; zon.style.top = Math.max(-d * .1, g * .08) + 'px';
+        }
     }
     pas(); addEventListener('resize', pas);
     // klik of F: volledig scherm
