@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Ankeveen in beweging</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="stylesheet" href="../fonts/fonts.css?v=20261106b">
+<!--
+  Alleen de animatiestrook van de verenigingenpagina, beeldvullend, om te projecteren (bijvoorbeeld in het theater).
+
+  Adres:  strook.html            de strook, midden in beeld, op een rustige lichte achtergrond
+  Opties achter het adres (te combineren met &):
+    ?b=800            hoeveel "strookpixels" er op de schermbreedte passen. Kleiner getal = alles groter (standaard 660)
+    ?zwart            zwart rond de strook in plaats van licht
+    ?pos=boven        strook bovenaan (of onder); standaard midden
+    ?titel=Tekst      een titel boven de strook (staat "Ankeveen" erin, dan stuitert de voetbal over de letters)
+    #naam             meteen één groep laten zien, zoals op de gewone pagina (bijvoorbeeld #sportdag)
+  Klik op het scherm (of druk op F) voor volledig scherm.
+
+  Werking: de buitenste pagina zet de strook in een iframe en vergroot dat. Binnen het iframe is alles op ware
+  grootte, zodat ontmoeten.js ongewijzigd blijft.
+-->
+<style>
+html,body{margin:0;height:100%}
+body.buiten{overflow:hidden;background:#f8f6f0;cursor:none}
+body.buiten.zwart{background:#000}
+body.buiten iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0;display:block;background:#f8f6f0;pointer-events:none}
+body.binnen{background:#f8f6f0;overflow:hidden}
+/* dezelfde regels als op de verenigingenpagina (index.html) */
+#ontmoeten{position:relative;height:64px;overflow:visible;clip-path:inset(-80px 0 0 0);background:transparent}
+#ontmoeten::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:1px;background:#d9d3c4}
+#ontmoeten .om-p{position:absolute;left:0;top:0;will-change:transform}
+#ontmoeten .om-p svg{display:block}
+#ontmoeten .om-bubble{position:absolute;left:0;top:0;background:#fff;border:1.5px solid #1b4f9c;border-radius:9px;padding:2px 5px;display:flex;gap:2px;box-shadow:0 1px 3px rgba(22,35,58,.12)}
+#ontmoeten .om-conf{position:absolute;left:0;top:0;width:3px;height:5px;border-radius:1px;pointer-events:none}
+#ontmoeten .om-ring{position:absolute;left:0;top:0;width:10px;height:10px;border:1.5px solid #2BB39A;border-radius:50%;pointer-events:none}
+#ontmoeten .om-ball{position:absolute;left:0;top:0;width:7px;height:7px;pointer-events:none;will-change:transform}
+#ontmoeten .om-p{z-index:1}
+#ontmoeten .om-p.om-kraam{transform-origin:50% 100%;z-index:0}
+#ontmoeten .om-p.om-achter{z-index:0}
+#ontmoeten .om-bubble,#ontmoeten .om-note,#ontmoeten .om-ring,#ontmoeten .om-conf,#ontmoeten .om-ball{z-index:2}
+#ontmoeten .om-note{position:absolute;left:0;top:0;font-size:13px;line-height:1;font-weight:700;pointer-events:none}
+#ontmoeten .om-bubble span{width:3px;height:3px;border-radius:50%;background:#16233a;opacity:.7}
+</style>
+</head>
+<body>
+<script>
+(function () {
+    var q = new URLSearchParams(location.search), binnen = q.has('binnen');
+    var KOP = 58, HOOGTE = KOP + 64 + 8;                 // lucht boven de strook + de strook + een randje eronder
+    if (binnen) {
+        // de strook zelf, op ware grootte
+        document.body.className = 'binnen';
+        var titel = q.get('titel') || '';
+        document.body.innerHTML =
+            '<div id="topbar" style="position:relative;z-index:0;overflow:hidden;background:#f8f6f0;font-family:Inter,system-ui,sans-serif;padding-bottom:8px">' +
+            '<div style="height:' + KOP + 'px;box-sizing:border-box;padding:14px clamp(12px,4.5vw,60px) 0;display:flex;align-items:flex-start">' +
+            '<a style="font-family:Fraunces,Georgia,serif;font-size:1.3rem;font-weight:700;color:#2d4a3e;text-decoration:none;white-space:nowrap"></a></div>' +
+            '<div id="ontmoeten" aria-hidden="true"></div></div>';
+        document.querySelector('#topbar a').textContent = titel;
+        var s = document.createElement('script'); s.src = 'ontmoeten.js?v=' + new Date().toISOString().slice(0, 10);     // elke dag de nieuwste versie
+        document.body.appendChild(s);
+        return;
+    }
+    // de buitenste pagina: het iframe met de strook, vergroot tot de volle schermbreedte
+    document.body.className = 'buiten' + (q.has('zwart') ? ' zwart' : '');
+    var b = Math.max(280, Math.min(3000, parseFloat(q.get('b')) || 660)), pos = q.get('pos') || 'midden';
+    var f = document.createElement('iframe');
+    f.title = 'Animatiestrook Ankeveen';
+    f.src = 'strook.html?binnen' + (q.get('titel') ? '&titel=' + encodeURIComponent(q.get('titel')) : '') + location.hash;
+    document.body.appendChild(f);
+    function pas() {
+        var W = innerWidth, H = innerHeight, z = W / b;
+        f.style.width = b + 'px'; f.style.height = HOOGTE + 'px';
+        var top = pos === 'boven' ? 0 : pos === 'onder' ? H - HOOGTE * z : (H - HOOGTE * z) / 2;
+        f.style.transform = 'translate(0px, ' + Math.max(0, top) + 'px) scale(' + z + ')';
+    }
+    pas(); addEventListener('resize', pas);
+    // klik of F: volledig scherm
+    function vol() { var d = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else if (d.requestFullscreen) d.requestFullscreen().catch(function () {}); }
+    addEventListener('click', vol); addEventListener('keydown', function (e) { if (e.key === 'f' || e.key === 'F') vol(); });
+    // het scherm wakker houden tijdens het projecteren (waar de browser dat toestaat)
+    function wakker() { try { if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(function () {}); } catch (e) {} }
+    wakker(); document.addEventListener('visibilitychange', function () { if (!document.hidden) wakker(); });
+})();
+</script>
+</body>
+</html>
