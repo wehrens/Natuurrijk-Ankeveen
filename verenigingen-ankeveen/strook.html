@@ -12,7 +12,7 @@
 
   Adres:  strook.html            de strook helemaal onderin beeld, daarboven pikzwart
   Opties achter het adres (te combineren met &):
-    ?b=800            hoeveel "strookpixels" er op de schermbreedte passen. Kleiner getal = alles groter (standaard 660)
+    ?b=800            hoeveel "strookpixels" er op de schermbreedte passen. Kleiner getal = alles groter (standaard 400: de telefoonindeling, met minder huisjes en alles flink groot)
     ?licht            licht in plaats van zwart rond de strook
     ?pos=midden       strook in het midden (of boven); standaard onder
     ?titel=Tekst      een titel boven de strook (staat "Ankeveen" erin, dan stuitert de voetbal over de letters)
@@ -68,7 +68,7 @@ body.binnen #ontmoeten::after{background:#6f6a5e;height:1.5px}
     }
     // de buitenste pagina: het iframe met de strook, vergroot tot de volle schermbreedte
     document.body.className = 'buiten' + (q.has('licht') ? '' : ' zwart');
-    var b = Math.max(280, Math.min(3000, parseFloat(q.get('b')) || 660)), pos = q.get('pos') || 'onder';
+    var b = Math.max(280, Math.min(3000, parseFloat(q.get('b')) || 400)), pos = q.get('pos') || 'onder';
     var f = document.createElement('iframe');
     f.title = 'Animatiestrook Ankeveen';
     f.src = 'strook.html?binnen' + (q.get('titel') ? '&titel=' + encodeURIComponent(q.get('titel')) : '') + location.hash;
