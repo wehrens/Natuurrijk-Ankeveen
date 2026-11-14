@@ -10,11 +10,11 @@
 <!--
   Alleen de animatiestrook van de verenigingenpagina, beeldvullend, om te projecteren (bijvoorbeeld in het theater).
 
-  Adres:  strook.html            de strook, midden in beeld, op een rustige lichte achtergrond
+  Adres:  strook.html            de strook helemaal onderin beeld, daarboven pikzwart
   Opties achter het adres (te combineren met &):
     ?b=800            hoeveel "strookpixels" er op de schermbreedte passen. Kleiner getal = alles groter (standaard 660)
-    ?zwart            zwart rond de strook in plaats van licht
-    ?pos=boven        strook bovenaan (of onder); standaard midden
+    ?licht            licht in plaats van zwart rond de strook
+    ?pos=midden       strook in het midden (of boven); standaard onder
     ?titel=Tekst      een titel boven de strook (staat "Ankeveen" erin, dan stuitert de voetbal over de letters)
     #naam             meteen één groep laten zien, zoals op de gewone pagina (bijvoorbeeld #sportdag)
   Klik op het scherm (of druk op F) voor volledig scherm.
@@ -65,8 +65,8 @@ body.binnen{background:#f8f6f0;overflow:hidden}
         return;
     }
     // de buitenste pagina: het iframe met de strook, vergroot tot de volle schermbreedte
-    document.body.className = 'buiten' + (q.has('zwart') ? ' zwart' : '');
-    var b = Math.max(280, Math.min(3000, parseFloat(q.get('b')) || 660)), pos = q.get('pos') || 'midden';
+    document.body.className = 'buiten' + (q.has('licht') ? '' : ' zwart');
+    var b = Math.max(280, Math.min(3000, parseFloat(q.get('b')) || 660)), pos = q.get('pos') || 'onder';
     var f = document.createElement('iframe');
     f.title = 'Animatiestrook Ankeveen';
     f.src = 'strook.html?binnen' + (q.get('titel') ? '&titel=' + encodeURIComponent(q.get('titel')) : '') + location.hash;
