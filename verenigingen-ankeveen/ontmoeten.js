@@ -1587,7 +1587,7 @@
         head.parentNode.insertBefore(g, head); g.appendChild(head); while (g.nextSibling) g.appendChild(g.nextSibling);
         const rugzak = pick(['#D64541', '#1f4e79', '#C9A227', '#2BB39A']);
         svg.insertAdjacentHTML('afterbegin', `<rect x="0.8" y="12.5" width="4.6" height="10" rx="1.6" fill="${rugzak}"/>`);
-        g.insertAdjacentHTML('beforeend', `<g class="kijker" opacity="0"><rect x="9.4" y="3.4" width="7.4" height="1.5" rx=".5" fill="#222"/><rect x="9.4" y="5.3" width="7.4" height="1.5" rx=".5" fill="#222"/><rect x="9.4" y="3.2" width="2.2" height="3.8" rx=".6" fill="#333"/></g>`);
+        g.insertAdjacentHTML('beforeend', `<g class="kijker" opacity="0"><rect x="9.4" y="2.5" width="9.8" height="2.4" rx=".8" fill="#222"/><rect x="9.4" y="5.1" width="9.8" height="2.4" rx=".8" fill="#222"/><rect x="9.2" y="2.3" width="2.6" height="5.4" rx=".7" fill="#333"/><rect x="17" y="2.2" width="2.5" height="2.9" rx=".7" fill="#111"/><rect x="17" y="4.9" width="2.5" height="2.9" rx=".7" fill="#111"/><path d="M19.5 3.1 v1.1 M19.5 5.8 v1.1" stroke="#8fb8d8" stroke-width=".6" stroke-linecap="round"/></g>`);
         svg.insertAdjacentHTML('beforeend', `<g class="kijkarmen" opacity="0"><path d="M5 14 l2.5 -3.5 l4 -3" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11.6" cy="7.3" r="1.3" fill="${huid}"/><path d="M13.5 14 l1.5 -3.5 l-0.3 -3.6" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14.6" cy="6.8" r="1.3" fill="${huid}"/></g>`);
         return p;
     }
