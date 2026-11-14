@@ -3033,6 +3033,56 @@ ${pot(47.4)}${pot(61.6)}
             vorige = { x: midden, ox, t: nu };
         }, 50);
     }
+    // Symon, de barista en pizzabakker van de markt: hij rijdt voorbij in zijn grijze terreinwagen met wit dak, met
+    // daarachter de zwarte houten kar (bruin luik met zilveren scharnieren, vlak dak) waarin de koffiemachine en de
+    // pizzaoven staan. Op de kar wappert de Italiaanse vlag en uit het pijpje komt een rookwolkje.
+    function symon() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, SC = 1.15, VW = 90, VH = 32.4, wpx = VW * SC, hpx = VH * SC, y = GROUND - 31.4 * SC + .6;
+        const w = document.createElement('div'); w.className = 'om-p'; w.style.width = wpx + 'px'; w.style.height = hpx + 'px';
+        const wiel = (x, yy, rr, velg, cls) => `<g class="${cls}" style="transform-box:fill-box;transform-origin:center"><circle cx="${x}" cy="${yy}" r="${rr}" fill="#1b1b1b"/><circle cx="${x}" cy="${yy}" r="${rr * .56}" fill="${velg}"/>
+            <path d="M${x - rr * .4} ${yy} h${rr * .8} M${x} ${yy - rr * .4} v${rr * .8}" stroke="rgba(0,0,0,.35)" stroke-width=".5"/><circle cx="${x}" cy="${yy}" r="${rr * .16}" fill="#6a6a6a"/></g>`;
+        w.innerHTML = `<div style="position:absolute;left:3%;right:3%;bottom:-1.5px;height:3px;border-radius:50%;background:#16233a;opacity:.12"></div>
+        <svg class="kar" viewBox="-42 -11 ${VW} ${VH}" width="${wpx}" height="${hpx}" aria-hidden="true" style="display:block;position:relative;overflow:visible">
+          <g class="rook" fill="#9aa0a6"><circle cx="-30" cy="-4.4" r="1.1"/><circle cx="-31" cy="-6.4" r="1.4"/><circle cx="-32.4" cy="-8.6" r="1.7"/></g>
+          <rect x="-30.7" y="-3" width="1.4" height="3.4" fill="#2a2826"/><rect x="-31.1" y="-3.4" width="2.2" height=".8" fill="#2a2826"/>
+          <path d="M-7.2 1 V-10.4" stroke="#8a8f96" stroke-width=".6" stroke-linecap="round"/>
+          <g class="vlag" style="transform-box:fill-box;transform-origin:100% 50%"><rect x="-10.6" y="-10.2" width="3.2" height="6" fill="#009246"/><rect x="-13.8" y="-10.2" width="3.2" height="6" fill="#fff"/><rect x="-17" y="-10.2" width="3.2" height="6" fill="#CE2B37"/><rect x="-17" y="-10.2" width="9.6" height="6" fill="none" stroke="#8f99a3" stroke-width=".25"/></g>
+          <path d="M3.4 15 L-5 15.6" stroke="#5d6166" stroke-width="1" stroke-linecap="round"/>
+          <rect x="-40" y="15" width="34.4" height="1" fill="#8a8f96"/>
+          <rect x="-40" y=".4" width="34" height="15" fill="#24211F"/>
+          <rect x="-36" y="2.6" width="26.2" height="8.6" fill="#6E4334"/><path d="M-36 3 H-9.8" stroke="#C9CDD0" stroke-width=".5"/>
+          <path d="M-34 1.8 V8.4 M-29.6 1.8 V9.8 M-16.4 1.8 V9.8 M-12 1.8 V8.4" stroke="#C9CDD0" stroke-width=".9" stroke-linecap="round"/>
+          <path d="M-33.4 9.4 v2.4 M-12.6 9.4 v2.4" stroke="#C9CDD0" stroke-width=".8" stroke-linecap="round"/>
+          <rect x="-40.4" y="0" width="2.6" height="15.4" fill="#B59A6C"/><rect x="-8.4" y="0" width="2.6" height="15.4" fill="#B59A6C"/><rect x="-40.4" y="-.2" width="34.6" height="1.7" fill="#8C7550"/>
+          <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="-23" y="14.3" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="2.7" fill="#F4F1EA" letter-spacing=".25">CAFFÈ &amp; PIZZA</text></g>
+          <path d="M-33.4 16.2 Q-33.4 12.8 -30 12.8 H-17 Q-13.6 12.8 -13.6 16.2 Z" fill="#111"/>
+          ${wiel(-27.2, 17.2, 3.2, '#3a3a3a', 'wk')}${wiel(-19.8, 17.2, 3.2, '#3a3a3a', 'wk')}
+          <g class="auto">
+            <path d="M3 4 H30.6 L32.8 8.8 H44.4 Q46 8.8 46 10.4 V15.4 H3 Z" fill="#8E8C86"/>
+            <path d="M2.4 4 V2.6 Q2.4 1.5 3.6 1.5 H29.8 Q31 1.5 31.3 2.8 L31.6 4 Z" fill="#F1EFE6" stroke="#b9b6ad" stroke-width=".3"/>
+            <path d="M3 9 H46" stroke="#7b7973" stroke-width=".35"/>
+            <rect x="4.6" y="4.9" width="8.8" height="3.7" rx=".5" fill="#3E4A50"/><rect x="15" y="4.9" width="6.6" height="3.7" rx=".5" fill="#3E4A50"/>
+            <path d="M23.2 4.9 H29.9 L31.5 8.6 H23.2 Z" fill="#3E4A50"/>
+            <circle cx="27" cy="7.1" r="1.55" fill="#E3B592"/><path d="M25.4 6.9 q.2 -1.9 1.9 -1.8 q1.4 .1 1.3 1.5 q-1.4 -.9 -3.2 .3z" fill="#8a8f96"/><path d="M24.9 8.6 q2.1 -1.3 4.2 0z" fill="#3D4A2F"/>
+            <path d="M5.4 5.4 l2 2.6 M16 5.4 l1.6 2.4" stroke="rgba(255,255,255,.35)" stroke-width=".5"/>
+            <path d="M14.2 4.2 V15.2 M22.4 4.2 V15.2" stroke="#6f6d68" stroke-width=".4"/><path d="M15.2 10 h1.4 M23.4 10 h1.4" stroke="#55534f" stroke-width=".7" stroke-linecap="round"/>
+            <rect x="12.6" y="15" width="24" height="1" fill="#2c2c2c"/>
+            <circle cx="45.2" cy="10.9" r=".9" fill="#F6E7A6" stroke="#55534f" stroke-width=".3"/><rect x="45.2" y="13.4" width="2" height="1.5" rx=".3" fill="#2a2a2a"/><rect x="2.2" y="13.6" width="1.2" height="3.6" fill="#2a2a2a"/>
+            <path d="M5.6 15.9 a5.4 5.4 0 0 1 10.8 0 Z M33 15.9 a5.4 5.4 0 0 1 10.8 0 Z" fill="#2a2a2a"/>
+            ${wiel(11, 15.9, 4.5, '#EAE4D2', 'wa')}${wiel(38.4, 15.9, 4.5, '#EAE4D2', 'wa')}
+          </g></svg>`;
+        strip.appendChild(w);
+        if (f < 0) w.querySelector('.tekst').style.transform = 'scaleX(-1)';          // de tekst op de kar blijft leesbaar
+        const speed = 16, dur = (width + 220) * speed, x0 = fromLeft ? -wpx - 10 : width + 10, x1 = fromLeft ? width + 20 : -wpx - 20;
+        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+            .finished.then(() => w.remove()).catch(() => w.remove());
+        const rond = (sel, ms) => w.querySelectorAll(sel).forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: ms, iterations: Infinity, easing: 'linear' }));
+        rond('.wa', 2 * Math.PI * 4.5 * SC * speed); rond('.wk', 2 * Math.PI * 3.2 * SC * speed);
+        animate(w.querySelector('.auto'), [{ transform: 'translateY(0)' }, { transform: 'translateY(-.5px)' }], { duration: 700, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        animate(w.querySelector('.vlag'), [{ transform: 'skewY(-7deg) scaleX(1)' }, { transform: 'skewY(6deg) scaleX(.9)' }], { duration: 420, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        animate(w.querySelector('.rook'), [{ opacity: .0, transform: 'translate(0, 2px)' }, { opacity: .55, transform: 'translate(-2px, 0)', offset: .4 }, { opacity: 0, transform: 'translate(-7px, -3px)' }], { duration: 1500, iterations: Infinity, easing: 'ease-out' });
+    }
     function oldtimer() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, wpx = 68, hpx = wpx * 96 / 307, y = GROUND - hpx + .6;
@@ -3266,6 +3316,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: familie, dur: () => (W() + 200 + EX) * 27 },
         { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true, maanden: [11, 12, 1] },
         { run: newfoundlander, dur: () => (W() + 120) * 24 + 6500 },
+        { run: symon, dur: () => (W() + 220) * 16 },
         { run: sportdag, dur: () => 35500, groot: true },   // tennis, petanque, biljart, handbal en voetbal naast elkaar
         { run: oldtimer, dur: () => (W() + 180) * 14 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },   // de Snoek staat er twee keer in: hij komt elke ronde twee keer langs
@@ -3344,7 +3395,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
