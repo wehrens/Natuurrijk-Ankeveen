@@ -3049,7 +3049,7 @@ ${pot(47.4)}${pot(61.6)}
           <rect x="-30.7" y="-3" width="1.4" height="3.4" fill="#2a2826"/><rect x="-31.1" y="-3.4" width="2.2" height=".8" fill="#2a2826"/>
           <path d="M-7.2 1 V-10.4" stroke="#8a8f96" stroke-width=".6" stroke-linecap="round"/>
           <g class="vlag" style="transform-box:fill-box;transform-origin:100% 50%"><rect x="-10.6" y="-10.2" width="3.2" height="6" fill="#009246"/><rect x="-13.8" y="-10.2" width="3.2" height="6" fill="#fff"/><rect x="-17" y="-10.2" width="3.2" height="6" fill="#CE2B37"/><rect x="-17" y="-10.2" width="9.6" height="6" fill="none" stroke="#8f99a3" stroke-width=".25"/></g>
-          <path d="M3.4 15 L-5 15.6" stroke="#5d6166" stroke-width="1" stroke-linecap="round"/>
+          <path d="M-5.8 13.9 L2 14.9 V15.9 L-5.8 16.4 Z" fill="#9aa0a6" stroke="#5d6166" stroke-width=".4" stroke-linejoin="round"/><circle cx="2.3" cy="15.4" r=".8" fill="#3a3d40"/>
           <rect x="-40" y="15" width="34.4" height="1" fill="#8a8f96"/>
           <rect x="-40" y=".4" width="34" height="15" fill="#24211F"/>
           <rect x="-36" y="2.6" width="26.2" height="8.6" fill="#6E4334"/><path d="M-36 3 H-9.8" stroke="#C9CDD0" stroke-width=".5"/>
@@ -3070,7 +3070,7 @@ ${pot(47.4)}${pot(61.6)}
             <path d="M5.4 5.4 l2 2.6 M16 5.4 l1.6 2.4" stroke="rgba(255,255,255,.35)" stroke-width=".5"/>
             <path d="M14.2 4.2 V15.2 M22.4 4.2 V15.2" stroke="#6f6d68" stroke-width=".4"/><path d="M15.2 10 h1.4 M23.4 10 h1.4" stroke="#55534f" stroke-width=".7" stroke-linecap="round"/>
             <rect x="12.6" y="15" width="24" height="1" fill="#2c2c2c"/>
-            <circle cx="45.2" cy="10.9" r=".9" fill="#F6E7A6" stroke="#55534f" stroke-width=".3"/><rect x="45.2" y="13.4" width="2" height="1.5" rx=".3" fill="#2a2a2a"/><rect x="2.2" y="13.6" width="1.2" height="3.6" fill="#2a2a2a"/>
+            <circle cx="45.2" cy="10.9" r=".9" fill="#F6E7A6" stroke="#55534f" stroke-width=".3"/><rect x="45.2" y="13.4" width="2" height="1.5" rx=".3" fill="#2a2a2a"/><rect x="1.6" y="13.9" width="2.2" height="1.3" rx=".3" fill="#2a2a2a"/>
             <path d="M5.6 15.9 a5.4 5.4 0 0 1 10.8 0 Z M33 15.9 a5.4 5.4 0 0 1 10.8 0 Z" fill="#2a2a2a"/>
             ${wiel(11, 15.9, 4.5, '#EAE4D2', 'wa')}${wiel(38.4, 15.9, 4.5, '#EAE4D2', 'wa')}
           </g></svg>`;
