@@ -26,6 +26,9 @@
     const strip = document.getElementById('ontmoeten');
     if (!strip) return;
     const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Projectiestand (strook.html, <body class="projectie">): de achtergrond (huizen, café, De Dillewijn, toren, groen)
+    // wordt niet vaag maar stevig getekend, zodat hij op een donkere of houten wand goed overkomt.
+    const STERK = document.body.classList.contains('projectie');
     const KLEUR = ['#7B5CC4', '#F39A2B', '#2BB39A', '#D64541', '#3B8FE0', '#C9A227'];
     const H = strip.clientHeight, GROUND = H - 8;
     const W = () => strip.clientWidth;
@@ -1999,7 +2002,7 @@
     // Achtergrond uit het Dorpsgenoten-logo: vage huisjes (rood en blauw) en het kerkje, en een plaatsnaambord
     // "Ankeveen", zodat je meteen ziet dat dit ons dorp is. Ze staan zacht op de achtergrond, achter alle mensen.
     {
-        const ROOD = '#B5401F', BLAUW = '#3B7BC8', vaag = .2;
+        const ROOD = '#B5401F', BLAUW = '#3B7BC8', vaag = STERK ? .75 : .2;
         const huis = (kleur, h) => `<svg viewBox="0 0 30 34" width="${h * 30 / 34}" height="${h}" aria-hidden="true">
             <path d="M0 13 L15 0 L30 13 V34 H0 Z" fill="${kleur}"/><rect x="5" y="15" width="5.4" height="5.4" rx="1" fill="#fff"/><rect x="19.6" y="15" width="5.4" height="5.4" rx="1" fill="#fff"/>
             <path d="M12 34 V26 q3 -3.4 6 0 V34 Z" fill="#fff"/></svg>`;
@@ -2093,7 +2096,7 @@ ${pot(47.4)}${pot(61.6)}
         // [positie %, svg, alleen op bredere schermen]
         const stukken = [[17, huis(ROOD, 26), false], [22, huis2(BLAUW, 30), true],  [68, huis(ROOD, 27), true],
             [73, huis2(ROOD, 29), false], [78.5, huis(BLAUW, 25), true]];
-        stukken.push(['calc(62% - 70px)', cafe(34), false, .4]);                 // het café staat een stukje links van het kerkje
+        stukken.push(['calc(62% - 70px)', cafe(34), false, STERK ? 1 : .4]);                 // het café staat een stukje links van het kerkje
         stukken.forEach(([pct, svg, breed, op]) => {
             const d = document.createElement('div');
             d.style.cssText = `position:absolute;left:${typeof pct === 'number' ? pct + '%' : pct};bottom:${H - GROUND}px;transform:translateX(-50%);opacity:${op || vaag};line-height:0`;
@@ -2125,7 +2128,7 @@ ${pot(47.4)}${pot(61.6)}
         // Het kerkje is licht doorschijnend getekend. Eronder ligt hetzelfde silhouet in de kleur van de kopbalk,
         // zodat wat erachter langs vliegt (de ganzen) ook echt achter de toren verdwijnt.
         const ksvg = kerk(74), kmask = `url('data:image/svg+xml,${encodeURIComponent(ksvg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')).replace(/'/g, '%27')}') center / 100% 100% no-repeat`;
-        dw.innerHTML = `<div style="position:absolute;inset:0;background:${getComputedStyle(tb).backgroundColor};-webkit-mask:${kmask};mask:${kmask}"></div><div style="position:relative;opacity:.36">${ksvg}</div>`;
+        dw.innerHTML = `<div style="position:absolute;inset:0;background:${getComputedStyle(tb).backgroundColor};-webkit-mask:${kmask};mask:${kmask}"></div><div style="position:relative;opacity:${STERK ? 1 : .36}">${ksvg}</div>`;
         tb.appendChild(dw); obstakels.push(dw); pleinRand.kerk = dw;
         const zetKerk = () => {
             const sr = strip.getBoundingClientRect(), br = tb.getBoundingClientRect();
@@ -2149,7 +2152,7 @@ ${pot(47.4)}${pot(61.6)}
                 if (i !== 0 && i !== r.length - 2) continue;            // alleen bij het ooievaarsnest en bij het bord Ankeveen
                 let kruinen = 'M0 6 V3.4';
                 for (let x = 0; x < w; x += 5) kruinen += ` q2.5 ${-(1.4 + ((x + i * 3) * 7 % 5) * .45).toFixed(2)} 5 0`;
-                html += `<div style="position:absolute;left:${x0}px;bottom:${H - GROUND}px;width:${w}px;height:6px;opacity:.5;line-height:0;-webkit-mask-image:${fade};mask-image:${fade}"><svg viewBox="0 0 ${w} 6" width="${w}" height="6" preserveAspectRatio="none" aria-hidden="true"><path d="${kruinen} V6 H0 Z" fill="#5E8467"/></svg></div>`;
+                html += `<div style="position:absolute;left:${x0}px;bottom:${H - GROUND}px;width:${w}px;height:6px;opacity:${STERK ? 1 : .5};line-height:0;-webkit-mask-image:${fade};mask-image:${fade}"><svg viewBox="0 0 ${w} 6" width="${w}" height="6" preserveAspectRatio="none" aria-hidden="true"><path d="${kruinen} V6 H0 Z" fill="#5E8467"/></svg></div>`;
             }
             groen.innerHTML = html;
         };
@@ -2171,7 +2174,7 @@ ${pot(47.4)}${pot(61.6)}
         const nevel = 'linear-gradient(180deg, #000 0%, #000 62%, transparent 100%)';
         const zetToren = () => {
             const sr = strip.getBoundingClientRect(), br = tb.getBoundingClientRect();
-            toren.style.cssText = `position:absolute;z-index:-3;pointer-events:none;line-height:0;opacity:.6;left:${sr.left - br.left + sr.width * .3}px;top:${sr.top - br.top + GROUND - 5 - 34}px;transform:translateX(-50%);-webkit-mask-image:${nevel};mask-image:${nevel}`;
+            toren.style.cssText = `position:absolute;z-index:-3;pointer-events:none;line-height:0;opacity:${STERK ? 1 : .6};left:${sr.left - br.left + sr.width * .3}px;top:${sr.top - br.top + GROUND - 5 - 34}px;transform:translateX(-50%);-webkit-mask-image:${nevel};mask-image:${nevel}`;
         };
         zetToren(); addEventListener('resize', zetToren);
     }
