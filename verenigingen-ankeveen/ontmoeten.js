@@ -2128,7 +2128,7 @@ ${pot(47.4)}${pot(61.6)}
         // Het kerkje is licht doorschijnend getekend. Eronder ligt hetzelfde silhouet in de kleur van de kopbalk,
         // zodat wat erachter langs vliegt (de ganzen) ook echt achter de toren verdwijnt.
         const ksvg = kerk(74), kmask = `url('data:image/svg+xml,${encodeURIComponent(ksvg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')).replace(/'/g, '%27')}') center / 100% 100% no-repeat`;
-        dw.innerHTML = `<div style="position:absolute;inset:0;background:${new URLSearchParams(location.search).has('lucht') && !STERK ? '#E6F0F5' : getComputedStyle(tb).backgroundColor};-webkit-mask:${kmask};mask:${kmask}"></div><div style="position:relative;opacity:${STERK ? 1 : .36}">${ksvg}</div>`;
+        dw.innerHTML = `<div style="position:absolute;inset:0;background:${STERK ? getComputedStyle(tb).backgroundColor : '#E6F0F5'};-webkit-mask:${kmask};mask:${kmask}"></div><div style="position:relative;opacity:${STERK ? 1 : .36}">${ksvg}</div>`;
         tb.appendChild(dw); obstakels.push(dw); pleinRand.kerk = dw;
         const zetKerk = () => {
             const sr = strip.getBoundingClientRect(), br = tb.getBoundingClientRect();
@@ -2231,10 +2231,10 @@ ${pot(47.4)}${pot(61.6)}
     verte.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:-4;overflow:hidden';
     verte.setAttribute('aria-hidden', 'true');
     balk.appendChild(verte);
-    // PROEF (alleen met ?lucht achter het adres): een zachte zomerlucht in de kopbalk. Bovenin een licht blauw waas dat
+    // Een zachte zomerlucht in de kopbalk (niet in de projectiestand, die heeft zijn eigen lucht). Bovenin een licht blauw waas dat
     // naar beneden toe in de gewone achtergrond overgaat, met twee bleke wolkjes die traag overdrijven. Geen zon, geen
     // gras; titel en menu blijven goed leesbaar.
-    const ZACHTE_LUCHT = !STERK && new URLSearchParams(location.search).has('lucht');
+    const ZACHTE_LUCHT = !STERK;
     if (ZACHTE_LUCHT) {
         const hemel = document.createElement('div');
         hemel.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:-5;overflow:hidden;background:linear-gradient(180deg, #CBE4F5 0%, #DDEDF7 45%, rgba(248,246,240,0) 92%)';
