@@ -701,22 +701,24 @@
         lus('.hond', [{ opacity: 0 }, { opacity: 0, offset: o(5000) }, { opacity: 1, offset: o(5400) }, { opacity: 1, offset: o(8200) }, { opacity: 0, offset: o(8600) }, { opacity: 0 }]);
         return w;
     }
+    // De yogi's schuiven niet voorbij: ze verschijnen op een vaste plek, doen daar twee rondes houdingen en verdwijnen weer.
+    const YOGA_DUUR = YOGA_T * 2 + 2000;
     function yogis() {
         if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, dur = (width + 200 + EX) * 40;
-        const yogi3 = [];
+        const f = chance(.5) ? 1 : -1, dur = YOGA_DUUR, cx = plek(100, .12, .88, dur), y = GROUND - 21;
         for (let i = 0; i < 3; i++) {
-            const w = yogi(); strip.appendChild(w); yogi3.push(w);
-            const off = i * 30, y = GROUND - 21;
-            const x0 = fromLeft ? -40 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off : -60 - EX + off;
-            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+            const w = yogi(); strip.appendChild(w);
+            const x = cx + (i - 1) * 32 - 10;
+            w.style.transform = `translate(${x}px, ${y}px) scaleX(${f})`;
+            animate(w, [{ opacity: 0 }, { opacity: 1, offset: 900 / dur }, { opacity: 1, offset: 1 - 900 / dur }, { opacity: 0 }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
         }
         // af en toe een klein "om"-kringetje dat opstijgt
         const t0 = performance.now();
         const tick = setInterval(() => {
-            const p = (performance.now() - t0) / dur; if (p >= 1) { clearInterval(tick); return; }
-            const x = (fromLeft ? -40 : width + 20) + f * (width + 80 + EX) * p - f * rand(0, 70);
+            if (performance.now() - t0 >= dur - 2600) { clearInterval(tick); return; }
+            if (document.hidden) return;
+            const x = cx + rand(-40, 40);
             const c = document.createElement('div'); c.className = 'om-ring'; strip.appendChild(c);
             animate(c, [{ transform: `translate(${x}px, ${GROUND - 26}px) scale(.4)`, opacity: .6 }, { transform: `translate(${x}px, ${GROUND - 46}px) scale(1.2)`, opacity: 0 }], { duration: 2600, easing: 'ease-out' })
                 .finished.then(() => c.remove()).catch(() => c.remove());
@@ -3381,7 +3383,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: skaters, dur: () => (W() + 200 + EX) * 7.5, maanden: [12, 1, 2] },
         { run: naturists, dur: () => (W() + 160 + EX) * 26 + 17500, groot: true, maanden: [5, 6, 7, 8, 9] },
         { run: carnaval, dur: () => (W() + 300 + EX) * 22 + 9000, groot: true, maanden: [11, 12, 1, 2, 3] },
-        { run: yogis, dur: () => (W() + 200 + EX) * 40, groot: true },
+        { run: yogis, dur: () => YOGA_DUUR, groot: true },
         { run: klasje, dur: () => (W() + 220 + EX) * 22, groot: true },
         { run: voetballer, dur: () => (W() + 100) * 30 },
         { run: footballers, dur: () => (W() + 220 + EX) * 11 },
