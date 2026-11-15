@@ -3107,7 +3107,7 @@ ${pot(47.4)}${pot(61.6)}
         animate(w.querySelector('.vlag'), [{ transform: 'skewY(-7deg) scaleX(1)' }, { transform: 'skewY(6deg) scaleX(.9)' }], { duration: 420, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         animate(w.querySelector('.rook'), [{ opacity: .0, transform: 'translate(0, 2px)' }, { opacity: .55, transform: 'translate(-2px, 0)', offset: .4 }, { opacity: 0, transform: 'translate(-7px, -3px)' }], { duration: 1500, iterations: Infinity, easing: 'ease-out' });
     }
-    // Blond meisje met een witte helm en een zwarte jas op een zwarte scooter met windscherm en een bruin zadel. Haar haar wappert
+    // Blond meisje met een witte jethelm (grijs carbonvlak, helder vizier) en een zwarte jas op een zwarte scooter met windscherm en een bruin zadel. Haar haar wappert
     // achter haar aan en uit de uitlaat komt af en toe een wolkje.
     function vespa() {
         if (document.hidden) return;
@@ -3138,8 +3138,14 @@ ${pot(47.4)}${pot(61.6)}
             <path d="M17.2 15.4 L21.2 6.6" stroke="${jas}" stroke-width="5.4" stroke-linecap="round"/><path d="M19.6 13.6 L22.6 7.4" stroke="#4a4a52" stroke-width=".5" stroke-linecap="round"/>
             <g class="haar" style="transform-box:view-box;transform-origin:20.6px 4.6px"><path d="M21 3.6 Q16.4 4.6 12.6 9.6 Q16.8 9.6 21.4 7 Z" fill="#E9C46A"/><path d="M20 5 Q16.6 6.4 14.4 9" fill="none" stroke="#D2A94B" stroke-width=".5" stroke-linecap="round"/></g>
             <circle cx="23" cy="3.4" r="3" fill="${huid}"/><circle cx="24.6" cy="3.2" r=".42" fill="#1d1d1d"/>
-            <path d="M19.6 4.6 Q18.8 -1.2 23.2 -1 Q26.8 -.8 26.6 2.6 L24.9 2.5 Q23.4 1.5 21.8 3 L21.6 5.2 Z" fill="#fff" stroke="#8f99a3" stroke-width=".5" stroke-linejoin="round"/>
-            <path d="M20.6 1.2 Q22.8 -.2 25.4 .8" fill="none" stroke="#D22630" stroke-width=".6" stroke-linecap="round"/>
+            <!-- de helm: witte jethelm met een grijs carbonvlak bovenop, een zwarte scharnierarm met crèmekleurige knop,
+                 een helder vizier voor het gezicht en een lichtbruine leren rand onderlangs -->
+            <path d="M19.1 5.7 Q18.2 -1.7 23.2 -1.5 Q27 -1.3 26.9 2.3 L25.2 2.5 Q24.3 3.2 24.1 4.9 L23.7 6.1 Q21.1 6.8 19.1 5.7 Z" fill="#fff" stroke="#8f99a3" stroke-width=".45" stroke-linejoin="round"/>
+            <path d="M19.7 1.5 Q20.9 -1 23.6 -.9 Q25.6 -.8 26.3 .6 Q22.9 .2 19.7 1.5 Z" fill="#6f757c"/>
+            <path d="M19.2 5.7 Q21.1 6.8 23.7 6.1 L24.1 4.9" fill="none" stroke="#B98A5E" stroke-width=".75" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M25.9 .5 Q29.3 2.2 26.5 6.2 L25 5.6 Q26.6 3 25.3 1.2 Z" fill="rgba(205,232,248,.5)" stroke="#9fb6c4" stroke-width=".3" stroke-linejoin="round"/>
+            <path d="M22.5 3.9 Q24.6 3.2 25.7 .5" fill="none" stroke="#141414" stroke-width=".9" stroke-linecap="round"/>
+            <circle cx="22.5" cy="3.9" r=".95" fill="#141414"/><circle cx="22.5" cy="3.9" r=".62" fill="#EFEAC8"/>
             <path d="M21.8 7.6 L28 9.6 L32 11" fill="none" stroke="#4a4a52" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.8 7.6 L28 9.6 L32 11" fill="none" stroke="${jas}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32.4" cy="11.1" r="1.1" fill="${huid}"/>
           </g></svg>`;
         strip.appendChild(w);
