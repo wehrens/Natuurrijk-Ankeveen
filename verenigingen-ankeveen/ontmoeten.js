@@ -1755,9 +1755,10 @@
               <path d="M3.4 22.6 h11.2 l.2 2.4 h-11.6 z" fill="${jeans}"/>
               <path d="M3 13.8 l-.9 10 M15 13.8 l.9 10" stroke="#f4f4f4" stroke-width="2.4" stroke-linecap="round"/><path d="M2.1 23.8 v.1 M15.9 23.8 v.1" stroke="${huid}" stroke-width="2.2" stroke-linecap="round"/>
               <path d="M6.4 10.6 l2.6 4.2 l2.6 -4.2 z" fill="#D64541"/><circle cx="9" cy="13.4" r=".7" fill="#E8BE45"/>
-              ${acc ? `<g class="acc"><rect x="3.2" y="15.2" width="2.8" height="7" rx=".5" fill="#f4f4f4" stroke="#999" stroke-width=".3"/><path d="M3.6 16.4 h2 M3.6 17.6 h2 M3.6 18.8 h2 M3.6 20 h2 M3.6 21.2 h2" stroke="#222" stroke-width=".4"/>
-                <g class="balg" style="transform-box:fill-box;transform-origin:0% 50%"><rect x="6" y="15.4" width="6.4" height="6.6" fill="#B3262E"/><path d="M7.2 15.4 v6.6 M8.4 15.4 v6.6 M9.6 15.4 v6.6 M10.8 15.4 v6.6" stroke="#6e1218" stroke-width=".35"/></g>
-                <rect x="12.2" y="15.2" width="2.8" height="7" rx=".5" fill="#B3262E" stroke="#6e1218" stroke-width=".3"/><circle cx="13.6" cy="17" r=".35" fill="#fff"/><circle cx="13.6" cy="18.4" r=".35" fill="#fff"/><circle cx="13.6" cy="19.8" r=".35" fill="#fff"/></g>` : ''}
+              ${acc ? `<g class="acc">
+                <g class="balg" style="transform-box:fill-box;transform-origin:50% 50%"><rect x="7" y="14.8" width="4" height="7.8" fill="#B3262E"/><path d="M7.5 14.8 v7.8 M8 14.8 v7.8 M8.5 14.8 v7.8 M9 14.8 v7.8 M9.5 14.8 v7.8 M10 14.8 v7.8 M10.5 14.8 v7.8" stroke="#6e1218" stroke-width=".45" vector-effect="non-scaling-stroke"/><path d="M7 14.8 h4 M7 22.6 h4" stroke="#E8BE45" stroke-width=".5" vector-effect="non-scaling-stroke"/></g>
+                <g class="accL"><rect x="4" y="14.4" width="3.1" height="8.6" rx=".6" fill="#f4f4f4" stroke="#777" stroke-width=".35"/><path d="M4.5 15.8 h2.1 M4.5 17 h2.1 M4.5 18.2 h2.1 M4.5 19.4 h2.1 M4.5 20.6 h2.1 M4.5 21.8 h2.1" stroke="#222" stroke-width=".45"/><circle cx="4.1" cy="18.8" r="1.25" fill="${huid}"/></g>
+                <g class="accR"><rect x="10.9" y="14.4" width="3.1" height="8.6" rx=".6" fill="#B3262E" stroke="#6e1218" stroke-width=".35"/><circle cx="12.4" cy="16.4" r=".4" fill="#fff"/><circle cx="12.4" cy="17.8" r=".4" fill="#fff"/><circle cx="12.4" cy="19.2" r=".4" fill="#fff"/><circle cx="12.4" cy="20.6" r=".4" fill="#fff"/><circle cx="13.9" cy="18.8" r="1.25" fill="${huid}"/></g></g>` : ''}
               <circle cx="9" cy="6" r="4.6" fill="${huid}"/>
               <path d="M4.4 6.6 q-.2 -2 1 -3 M13.6 6.6 q.2 -2 -1 -3" fill="none" stroke="${haar}" stroke-width="1.1"/>
               ${baard ? `<path d="M5.6 7.6 q3.4 5 6.8 0 q-.4 3.4 -3.4 3.6 q-3 -.2 -3.4 -3.6 z" fill="${haar}"/>` : ''}
@@ -1802,7 +1803,13 @@
                 anims.push(animate(voor.querySelector('.mond'), [{ transform: 'scaleY(.5)' }, { transform: 'scaleY(2.4)' }], { duration: 560, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: 600 + rand(0, 90) }));
                 svg.style.transformOrigin = '50% 100%';               // wiegen vanuit de voeten, ruim heen en weer
                 anims.push(animate(svg, [{ transform: 'translateX(-1.2px) rotate(-7deg)' }, { transform: 'translateX(1.2px) rotate(7deg)' }], { duration: 1680, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: 400 }));
-                if (m.acc) anims.push(animate(voor.querySelector('.balg'), [{ transform: 'scaleX(.6)' }, { transform: 'scaleX(1.15)' }], { duration: 840, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: 400 }));
+                if (m.acc) {                                          // de trekzak gaat ruim open: breder dan de speler zelf
+                    m.w.style.zIndex = 3;
+                    const trek = { duration: 840, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: 400 };
+                    anims.push(animate(voor.querySelector('.balg'), [{ transform: 'scaleX(1)' }, { transform: 'scaleX(4.4)' }], trek));
+                    anims.push(animate(voor.querySelector('.accL'), [{ transform: 'translateX(0)' }, { transform: 'translateX(-6.8px)' }], trek));
+                    anims.push(animate(voor.querySelector('.accR'), [{ transform: 'translateX(0)' }, { transform: 'translateX(6.8px)' }], trek));
+                }
             });
             const top = Math.min(...leden.map(m => m.y));
             const noten = setInterval(() => { if (chance(.7)) note(cx + rand(-maxW / 2, maxW / 2), top - 2, '#1c2a4a'); }, 650);
