@@ -3107,6 +3107,50 @@ ${pot(47.4)}${pot(61.6)}
         animate(w.querySelector('.vlag'), [{ transform: 'skewY(-7deg) scaleX(1)' }, { transform: 'skewY(6deg) scaleX(.9)' }], { duration: 420, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         animate(w.querySelector('.rook'), [{ opacity: .0, transform: 'translate(0, 2px)' }, { opacity: .55, transform: 'translate(-2px, 0)', offset: .4 }, { opacity: 0, transform: 'translate(-7px, -3px)' }], { duration: 1500, iterations: Infinity, easing: 'ease-out' });
     }
+    // Blond meisje met een witte helm op een zwarte scooter met windscherm en een bruin zadel. Haar haar wappert
+    // achter haar aan en uit de uitlaat komt af en toe een wolkje.
+    function vespa() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, SC = .86, VW = 46, VH = 40, wpx = VW * SC, hpx = VH * SC, y = GROUND - 38.6 * SC + 2;
+        const jas = pick(['#E24A6B', '#2BB39A', '#7B5CC4', '#F39A2B', '#5C9BD6', '#D64541']), huid = pick(HUID), ZW = '#1b1b1d';
+        const wiel = x => `<g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="${x}" cy="30.2" r="4.6" fill="#1b1b1b"/><circle cx="${x}" cy="30.2" r="2.5" fill="#c9cdd0"/><path d="M${x - 2} 30.2 h4 M${x} 28.2 v4" stroke="#6f757c" stroke-width=".6"/><circle cx="${x}" cy="30.2" r=".8" fill="#55595e"/></g>`;
+        const w = document.createElement('div'); w.className = 'om-p'; w.style.width = wpx + 'px'; w.style.height = hpx + 'px';
+        w.innerHTML = `<svg viewBox="-2 -4 ${VW} ${VH}" width="${wpx}" height="${hpx}" aria-hidden="true" style="display:block;overflow:visible">
+          <g class="rook" fill="#9aa0a6" style="transform-box:fill-box;transform-origin:100% 100%"><circle cx="0" cy="29" r="1"/><circle cx="-2" cy="27.6" r="1.4"/></g>
+          <g class="scooter">
+            ${wiel(9)}${wiel(36)}
+            <path d="M2.4 29.6 h5" stroke="#b9bec4" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M3.4 27.4 Q2.6 19.6 10 19 H19.4 Q22 24 20.4 29.2 H14 A5 5 0 0 0 4.2 28.8 Z" fill="${ZW}"/>
+            <path d="M5.6 22.6 Q9 20.4 16.6 21" fill="none" stroke="#5a5a60" stroke-width=".6" stroke-linecap="round"/>
+            <rect x="2.3" y="21.4" width="1.3" height="1.8" rx=".5" fill="#D22630"/>
+            <rect x="19" y="27.4" width="12.4" height="1.9" rx=".8" fill="${ZW}"/>
+            <path d="M29.6 29.2 L32.2 12.4 H35 L33.8 22.4 Q33.4 27 31.8 29.2 Z" fill="${ZW}"/>
+            <path d="M34 13.6 L36 30" stroke="#8a8f96" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M30.8 27.6 Q36 21 41.4 27.6" fill="none" stroke="${ZW}" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M33.8 11 L36.6 .4 L37.9 .8 L35.4 11 Z" fill="rgba(200,230,248,.6)" stroke="#8fb0c4" stroke-width=".4" stroke-linejoin="round"/>
+            <path d="M31.2 11.2 H35.6" stroke="${ZW}" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="35.6" cy="12.6" r="1.4" fill="#F6E7A6" stroke="#b9bec4" stroke-width=".5"/>
+            <path d="M9.2 19.2 Q8.6 16.3 12 16.2 H21.4 Q23.8 16.3 23.6 18.4 L23 19.2 Z" fill="#8B5A2B"/><path d="M10.4 17.2 H21.4" stroke="#B07A45" stroke-width=".6" stroke-linecap="round"/>
+          </g>
+          <g class="meisje">
+            <path d="M17.6 15.8 L26.2 17.2 L27.2 27" fill="none" stroke="#2f4f7a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M26.4 27.6 h3.2" stroke="#f4f4f4" stroke-width="1.8" stroke-linecap="round"/><path d="M26.4 27.6 h3.2" stroke="#9aa3ab" stroke-width=".3"/>
+            <path d="M17.2 15.4 L21.2 6.6" stroke="${jas}" stroke-width="5.4" stroke-linecap="round"/>
+            <g class="haar" style="transform-box:view-box;transform-origin:20.6px 4.6px"><path d="M21 3.6 Q16.4 4.6 12.6 9.6 Q16.8 9.6 21.4 7 Z" fill="#E9C46A"/><path d="M20 5 Q16.6 6.4 14.4 9" fill="none" stroke="#D2A94B" stroke-width=".5" stroke-linecap="round"/></g>
+            <circle cx="23" cy="3.4" r="3" fill="${huid}"/><circle cx="24.6" cy="3.2" r=".42" fill="#1d1d1d"/>
+            <path d="M19.6 4.6 Q18.8 -1.2 23.2 -1 Q26.8 -.8 26.6 2.6 L24.9 2.5 Q23.4 1.5 21.8 3 L21.6 5.2 Z" fill="#fff" stroke="#8f99a3" stroke-width=".5" stroke-linejoin="round"/>
+            <path d="M20.6 1.2 Q22.8 -.2 25.4 .8" fill="none" stroke="#D22630" stroke-width=".6" stroke-linecap="round"/>
+            <path d="M21.8 7.6 L28 9.6 L32 11" fill="none" stroke="${jas}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32.4" cy="11.1" r="1.1" fill="${huid}"/>
+          </g></svg>`;
+        strip.appendChild(w);
+        const speed = 9, x0 = fromLeft ? -wpx - 10 : width + 10, x1 = fromLeft ? width + 20 + EX : -wpx - 20 - EX;
+        animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(x1 - x0) * speed, easing: 'linear' })
+            .finished.then(() => w.remove()).catch(() => w.remove());
+        w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 2 * Math.PI * 4.6 * SC * speed, iterations: Infinity, easing: 'linear' }));
+        animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-.6px)' }], { duration: 260, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        animate(w.querySelector('.haar'), [{ transform: 'rotate(-7deg) scaleX(1)' }, { transform: 'rotate(8deg) scaleX(1.12)' }], { duration: 230, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        animate(w.querySelector('.rook'), [{ opacity: 0, transform: 'translate(2px, 0) scale(.6)' }, { opacity: .6, transform: 'translate(0, -.5px) scale(1)', offset: .3 }, { opacity: 0, transform: 'translate(-6px, -3px) scale(1.5)' }], { duration: 900, iterations: Infinity, easing: 'ease-out' });
+    }
     function oldtimer() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, wpx = 68, hpx = wpx * 96 / 307, y = GROUND - hpx + .6;
@@ -3341,6 +3385,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true, maanden: [11, 12, 1] },
         { run: newfoundlander, dur: () => (W() + 120) * 24 + 6500 },
         { run: symon, dur: () => (W() + 220) * 16 },
+        { run: vespa, dur: () => (W() + 120 + EX) * 9 },
         { run: sportdag, dur: () => 35500, groot: true },   // tennis, petanque, biljart, handbal en voetbal naast elkaar
         { run: oldtimer, dur: () => (W() + 180) * 14 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },   // de Snoek staat er twee keer in: hij komt elke ronde twee keer langs
@@ -3420,7 +3465,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.vespa = vespa; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
