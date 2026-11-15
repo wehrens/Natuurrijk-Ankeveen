@@ -493,8 +493,8 @@
         later(() => { strip.appendChild(towel); towel.style.transform = `translate(${tx}px, ${GROUND - 4}px)`;
             animate(towel, [{ transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(0)` }, { transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(1)` }], { duration: 500, easing: 'ease-out' }); }, inDur + 100);
         later(() => { animate(towel, [{ transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(1)` }, { transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(0)` }], { duration: 400, easing: 'ease-in' }).finished.then(() => towel.remove()).catch(() => towel.remove()); }, inDur + 1400 + LIG + NA + 200);
-        // zonnetje boven de handdoek
-        later(() => { const z = document.createElement('div'); z.style.cssText = 'position:absolute;left:0;top:0;font-size:12px;line-height:1;pointer-events:none';
+        // zonnetje boven de handdoek (niet als er al een zon aan de hemel staat: de projectie met zomerlucht)
+        if (!document.body.classList.contains('lucht')) later(() => { const z = document.createElement('div'); z.style.cssText = 'position:absolute;left:0;top:0;font-size:12px;line-height:1;pointer-events:none';
             const zp = luchtPlek(stopX + (n - 1) * GAP * f / 2, 14, 14);
             z.textContent = '☀️'; z.style.transform = `translate(${zp.x}px, ${zp.y}px)`; verte.appendChild(z);
             animate(z, [{ opacity: 0, transform: z.style.transform + ' scale(.5)' }, { opacity: 1, transform: z.style.transform + ' scale(1)' }], { duration: 600, easing: 'ease-out' });

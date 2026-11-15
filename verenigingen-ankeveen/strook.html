@@ -68,14 +68,17 @@ body.binnen.lucht #ontmoeten::after{background:#4E8A3A}
 <script>
 (function () {
     var q = new URLSearchParams(location.search), binnen = q.has('binnen');
-    var KOP = 58, HOOGTE = KOP + 64 + 8;                 // lucht boven de strook + de strook + een randje eronder
+    // De band is zo krap mogelijk, zodat alles zo groot mogelijk in beeld komt: de torenspits van De Dillewijn reikt
+    // net tot de bovenrand (19 px boven de strook) en onder de grondlijn zit nog maar een smal randje. Alleen met een
+    // titel erboven is er meer lucht nodig.
+    var KOP = q.get('titel') ? 58 : 19, RAND = 2, HOOGTE = KOP + 64 + RAND;
     if (binnen) {
         // de strook zelf, op ware grootte
         document.body.className = 'binnen projectie' + (q.has('lucht') ? ' lucht' : '');
         var titel = q.get('titel') || '';
         document.body.innerHTML =
-            '<div id="topbar" style="position:relative;z-index:0;overflow:hidden;background:' + (q.has('lucht') ? 'transparent' : '#fff') + ';font-family:Inter,system-ui,sans-serif;padding-bottom:8px">' +
-            '<div style="height:' + KOP + 'px;box-sizing:border-box;padding:14px clamp(12px,4.5vw,60px) 0;display:flex;align-items:flex-start">' +
+            '<div id="topbar" style="position:relative;z-index:0;overflow:hidden;background:' + (q.has('lucht') ? 'transparent' : '#fff') + ';font-family:Inter,system-ui,sans-serif;padding-bottom:' + RAND + 'px">' +
+            '<div style="height:' + KOP + 'px;box-sizing:border-box;overflow:hidden;padding:' + (KOP > 30 ? 14 : 0) + 'px clamp(12px,4.5vw,60px) 0;display:flex;align-items:flex-start">' +
             '<a style="font-family:Fraunces,Georgia,serif;font-size:1.3rem;font-weight:700;color:#2d4a3e;text-decoration:none;white-space:nowrap"></a></div>' +
             '<div id="ontmoeten" aria-hidden="true"></div></div>';
         document.querySelector('#topbar a').textContent = titel;
