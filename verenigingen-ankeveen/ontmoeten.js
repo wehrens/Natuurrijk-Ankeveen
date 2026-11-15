@@ -3127,7 +3127,7 @@ ${pot(47.4)}${pot(61.6)}
             <path d="M29.6 29.2 L32.2 12.4 H35 L33.8 22.4 Q33.4 27 31.8 29.2 Z" fill="${ZW}"/>
             <path d="M34 13.6 L36 30" stroke="#8a8f96" stroke-width="1.2" stroke-linecap="round"/>
             <path d="M30.8 27.6 Q36 21 41.4 27.6" fill="none" stroke="${ZW}" stroke-width="2.4" stroke-linecap="round"/>
-            <path d="M33.8 11 L36.6 .4 L37.9 .8 L35.4 11 Z" fill="rgba(200,230,248,.6)" stroke="#8fb0c4" stroke-width=".4" stroke-linejoin="round"/>
+            <path d="M33.8 11 L31.4 .9 L32.7 .5 L35.4 11 Z" fill="rgba(200,230,248,.6)" stroke="#8fb0c4" stroke-width=".4" stroke-linejoin="round"/>
             <path d="M31.2 11.2 H35.6" stroke="${ZW}" stroke-width="1.5" stroke-linecap="round"/>
             <circle cx="35.6" cy="12.6" r="1.4" fill="#F6E7A6" stroke="#b9bec4" stroke-width=".5"/>
             <path d="M9.2 19.2 Q8.6 16.3 12 16.2 H21.4 Q23.8 16.3 23.6 18.4 L23 19.2 Z" fill="#8B5A2B"/><path d="M10.4 17.2 H21.4" stroke="#B07A45" stroke-width=".6" stroke-linecap="round"/>
