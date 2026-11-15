@@ -17,11 +17,13 @@
 <!--
   Alleen de animatiestrook van de verenigingenpagina, beeldvullend, om te projecteren (bijvoorbeeld in het theater).
 
-  Adres:  strook.html            de strook helemaal onderin beeld, daarboven pikzwart
+  Adres:  strook.html            de band onderin beeld, een kwart van de beeldhoogte, daarboven pikzwart
   Opties achter het adres (te combineren met &):
-    ?b=800            hoeveel "strookpixels" er op de schermbreedte passen. Kleiner getal = alles groter (standaard 400: de telefoonindeling, met minder huisjes en alles flink groot)
-    ?lucht            een zomerse blauwe lucht over het hele beeld (met zon, wolken en gras) in plaats van wit en zwart
-    ?licht            licht in plaats van zwart rond de strook
+    ?h=30             de band 30% van de beeldhoogte (standaard 25)
+    ?b=400            in plaats daarvan: hoeveel "strookpixels" er op de schermbreedte passen (kleiner = alles groter)
+    ?lucht            een zomerse blauwe lucht met zon, wolken en gras in de band (daarboven blijft het zwart)
+    ?lucht&vol        die lucht over het hele beeld
+    ?licht            licht in plaats van zwart rond de band
     ?pos=midden       strook in het midden (of boven); standaard onder
     ?titel=Tekst      een titel boven de strook (staat "Ankeveen" erin, dan stuitert de voetbal over de letters)
     #naam             meteen één groep laten zien, zoals op de gewone pagina (bijvoorbeeld #sportdag)
@@ -82,41 +84,50 @@ body.binnen.lucht #ontmoeten::after{background:#4E8A3A}
         return;
     }
     // de buitenste pagina: het iframe met de strook, vergroot tot de volle schermbreedte
-    var lucht = q.has('lucht');
-    document.body.className = 'buiten' + (lucht ? ' lucht' : q.has('licht') ? '' : ' zwart');
+    var lucht = q.has('lucht'), vol = lucht && q.has('vol'), licht = !lucht && q.has('licht');
+    document.body.className = 'buiten' + (lucht ? ' lucht' : licht ? '' : ' zwart');
     // ook de randen buiten de pagina (rond de inkeping, bij doorveren, de balken van de browser) in de goede kleur
-    var rand = lucht ? '#2E86D8' : q.has('licht') ? '#f8f6f0' : '#000';
-    document.documentElement.style.background = rand;
+    var rand = vol ? '#2E86D8' : licht ? '#f8f6f0' : '#000';
+    document.documentElement.style.background = rand; document.body.style.background = rand;
     document.querySelector('meta[name="theme-color"]').setAttribute('content', rand);
-    var b = Math.max(280, Math.min(3000, parseFloat(q.get('b')) || 400)), pos = q.get('pos') || 'onder';
+    // Grootte: standaard is de band een kwart van de beeldhoogte (?h=30 voor 30%). Met ?b=... bepaal je in plaats
+    // daarvan hoeveel strookpixels er op de breedte passen.
+    var hq = parseFloat(q.get('h')), deel = hq > 0 ? Math.min(1, hq > 1 ? hq / 100 : hq) : .25;
+    var bq = parseFloat(q.get('b')), pos = q.get('pos') || 'onder';
     var f = document.createElement('iframe');
     f.title = 'Animatiestrook Ankeveen';
     f.src = 'strook.html?binnen' + (lucht ? '&lucht' : '') + (q.get('titel') ? '&titel=' + encodeURIComponent(q.get('titel')) : '') + location.hash;
-    // de zomerlucht: zon en een paar wolken die langzaam overdrijven (achter de strook)
-    var hemel = null;
+    // de zomerlucht: zon en een paar wolken die langzaam overdrijven (achter de strook). Standaard alleen in de band
+    // (daarboven zwart); met ?lucht&vol over het hele beeld.
+    var hemel = null, WOLKEN = [[.06, .26, 150, 0], [.34, .16, 190, -70], [.16, .34, 230, -150], [.50, .20, 170, -120], [.62, .30, 210, -30], [.40, .13, 260, -200]];
     if (lucht) {
-        hemel = document.createElement('div'); hemel.style.cssText = 'position:absolute;left:0;top:0;right:0;overflow:hidden;pointer-events:none';
+        hemel = document.createElement('div'); hemel.style.cssText = 'position:absolute;left:0;right:0;overflow:hidden;pointer-events:none';
         var W1 = 'M14 30 Q2 30 2 21 Q2 13 11 13 Q12 4 23 4 Q31 4 34 10 Q38 6 44 8 Q51 10 51 17 Q60 17 60 24 Q60 30 52 30 Z';
         var W2 = 'M10 26 Q2 26 2 19 Q2 13 9 13 Q11 6 20 6 Q27 6 30 11 Q39 9 41 17 Q48 17 48 22 Q48 26 42 26 Z';
         var html = '<div class="zon"></div>';
-        [[.08, .26, 150, 0], [.30, .16, 190, -70], [.16, .34, 230, -150], [.46, .20, 170, -120], [.58, .30, 210, -30], [.36, .13, 260, -200]].forEach(function (c, i) {
-            html += '<svg class="wolk" viewBox="0 0 62 34" style="top:' + (c[0] * 100) + '%;width:' + (c[1] * 100) + 'vw;animation-duration:' + c[2] + 's;animation-delay:' + c[3] + 's"><path d="' + (i % 2 ? W2 : W1) + '"/></svg>';
+        WOLKEN.forEach(function (c, i) {
+            html += '<svg class="wolk" viewBox="0 0 62 34" style="animation-duration:' + c[2] + 's;animation-delay:' + c[3] + 's"><path d="' + (i % 2 ? W2 : W1) + '"/></svg>';
         });
         hemel.innerHTML = html; document.body.appendChild(hemel);
     }
     document.body.appendChild(f);
     function pas() {
-        var W = innerWidth, H = innerHeight, z = W / b;
+        var W = innerWidth, H = innerHeight;
+        var z = bq > 0 ? W / Math.max(280, Math.min(3000, bq)) : deel * H / HOOGTE, b = Math.max(200, W / z);
         f.style.width = b + 'px'; f.style.height = HOOGTE + 'px';
-        var top = pos === 'boven' ? 0 : pos === 'onder' ? H - HOOGTE * z : (H - HOOGTE * z) / 2;
-        f.style.transform = 'translate(0px, ' + Math.max(0, top) + 'px) scale(' + z + ')';
+        var top = Math.max(0, pos === 'boven' ? 0 : pos === 'onder' ? H - HOOGTE * z : (H - HOOGTE * z) / 2);
+        f.style.transform = 'translate(0px, ' + top + 'px) scale(' + z + ')';
         if (lucht) {
             // de horizon ligt op de grondlijn van de strook: daarboven lucht (bovenin dieper blauw), daaronder gras
-            var g = Math.max(0, top) + (KOP + 64 - 6) * z;
-            document.body.style.background = 'linear-gradient(180deg, #2E86D8 0px, #6DB9EE ' + (g * .55) + 'px, #CFEBFA ' + g + 'px, #7DB85A ' + g + 'px, #5E9C42 100%)';
-            hemel.style.height = Math.max(0, g - 30 * z) + 'px';
-            var zon = hemel.firstChild, d = Math.min(W, H) * .34;
-            zon.style.width = zon.style.height = d + 'px'; zon.style.right = (W * .04) + 'px'; zon.style.top = Math.max(-d * .1, g * .08) + 'px';
+            var boven = vol ? 0 : top, g = top - boven + (KOP + 64 - 6) * z, luchtH = Math.max(0, g - 30 * z);
+            hemel.style.top = boven + 'px'; hemel.style.height = (vol ? H : H - top) + 'px';
+            hemel.style.background = 'linear-gradient(180deg, #2E86D8 0px, #6DB9EE ' + (g * .55) + 'px, #CFEBFA ' + g + 'px, #7DB85A ' + g + 'px, #5E9C42 100%)';
+            var zon = hemel.firstChild, d = vol ? Math.min(W, H) * .34 : g * .62;
+            zon.style.width = zon.style.height = d + 'px'; zon.style.right = (W * .04) + 'px'; zon.style.top = (vol ? Math.max(-d * .1, g * .08) : -d * .12) + 'px';
+            [].forEach.call(hemel.querySelectorAll('.wolk'), function (w, i) {
+                var c = WOLKEN[i];
+                w.style.top = (c[0] * luchtH) + 'px'; w.style.width = (vol ? c[1] * W : c[1] * g * 1.5) + 'px';
+            });
         }
     }
     pas(); addEventListener('resize', pas);
@@ -125,8 +136,8 @@ body.binnen.lucht #ontmoeten::after{background:#4E8A3A}
     addEventListener('orientationchange', later); addEventListener('pageshow', later);
     if (window.visualViewport) visualViewport.addEventListener('resize', pas);
     // klik of F: volledig scherm
-    function vol() { var d = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else if (d.requestFullscreen) d.requestFullscreen().catch(function () {}); }
-    addEventListener('click', vol); addEventListener('keydown', function (e) { if (e.key === 'f' || e.key === 'F') vol(); });
+    function schermvullend() { var d = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else if (d.requestFullscreen) d.requestFullscreen().catch(function () {}); }
+    addEventListener('click', schermvullend); addEventListener('keydown', function (e) { if (e.key === 'f' || e.key === 'F') schermvullend(); });
     // het scherm wakker houden tijdens het projecteren (waar de browser dat toestaat)
     function wakker() { try { if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(function () {}); } catch (e) {} }
     wakker(); document.addEventListener('visibilitychange', function () { if (!document.hidden) wakker(); });
