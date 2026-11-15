@@ -3082,19 +3082,19 @@ ${pot(47.4)}${pot(61.6)}
           ${wiel(-27.2, 17.2, 3.2, '#3a3a3a', 'wk')}${wiel(-19.8, 17.2, 3.2, '#3a3a3a', 'wk')}
           <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="-23" y="13.7" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="2.6" fill="#F4F1EA" letter-spacing=".25">CAFFÈ &amp; PIZZA</text></g>
           <g class="auto">
-            <path d="M3 4 H30.6 L32.8 8.8 H44.4 Q46 8.8 46 10.4 V15.4 H3 Z" fill="#8E8C86"/>
-            <path d="M2.4 4 V2 Q2.4 .5 4 .5 H29.4 Q30.8 .5 31.2 2 L31.6 4 Z" fill="#F1EFE6" stroke="#b9b6ad" stroke-width=".3"/>
+            <path d="M3 4 H30.6 L32.8 8.8 H44.4 Q46 8.8 46 10.4 V15.4 H3 Z" fill="#575B59"/>
+            <path d="M2.4 4 V1.7 Q2.4 .1 4 .1 H20 Q27.4 .5 33.6 3.5 L33.4 4 Z" fill="#EDE8D6" stroke="#a9a594" stroke-width=".3"/>
             <rect x="11.6" y="1.3" width="11.6" height="1.9" rx=".95" fill="#3E4A50" stroke="#55534f" stroke-width=".35"/><path d="M13 1.9 h5.4" stroke="rgba(255,255,255,.35)" stroke-width=".35" stroke-linecap="round"/>
-            <path d="M3 9 H46" stroke="#7b7973" stroke-width=".35"/>
+            <path d="M3 9 H46" stroke="#3f4341" stroke-width=".35"/>
             <rect x="4.6" y="4.9" width="8.8" height="3.7" rx=".5" fill="#3E4A50"/><rect x="15" y="4.9" width="6.6" height="3.7" rx=".5" fill="#3E4A50"/>
             <path d="M23.2 4.9 H29.9 L31.5 8.6 H23.2 Z" fill="#3E4A50"/>
             <circle cx="27" cy="7.1" r="1.55" fill="#E3B592"/><path d="M25.4 6.9 q.2 -1.9 1.9 -1.8 q1.4 .1 1.3 1.5 q-1.4 -.9 -3.2 .3z" fill="#8a8f96"/><path d="M24.9 8.6 q2.1 -1.3 4.2 0z" fill="#3D4A2F"/>
             <path d="M5.4 5.4 l2 2.6 M16 5.4 l1.6 2.4" stroke="rgba(255,255,255,.35)" stroke-width=".5"/>
-            <path d="M14.2 4.2 V15.2 M22.4 4.2 V15.2" stroke="#6f6d68" stroke-width=".4"/><path d="M15.2 10 h1.4 M23.4 10 h1.4" stroke="#55534f" stroke-width=".7" stroke-linecap="round"/>
+            <path d="M14.2 4.2 V15.2 M22.4 4.2 V15.2" stroke="#3a3e3c" stroke-width=".4"/><path d="M15.2 10 h1.4 M23.4 10 h1.4" stroke="#222524" stroke-width=".7" stroke-linecap="round"/>
             <rect x="12.6" y="15" width="24" height="1" fill="#2c2c2c"/>
             <circle cx="45.2" cy="10.9" r=".9" fill="#F6E7A6" stroke="#55534f" stroke-width=".3"/><rect x="45.2" y="13.4" width="2" height="1.5" rx=".3" fill="#2a2a2a"/><rect x="1.6" y="13.9" width="2.2" height="1.3" rx=".3" fill="#2a2a2a"/>
             <path d="M5.6 15.9 a5.4 5.4 0 0 1 10.8 0 Z M33 15.9 a5.4 5.4 0 0 1 10.8 0 Z" fill="#2a2a2a"/>
-            ${wiel(11, 15.9, 4.5, '#EAE4D2', 'wa')}${wiel(38.4, 15.9, 4.5, '#EAE4D2', 'wa')}
+            ${wiel(11, 15.9, 4.5, '#4A4E4C', 'wa')}${wiel(38.4, 15.9, 4.5, '#4A4E4C', 'wa')}
           </g></svg>`;
         strip.appendChild(w);
         if (f < 0) w.querySelector('.tekst').style.transform = 'scaleX(-1)';          // de tekst op de kar blijft leesbaar
