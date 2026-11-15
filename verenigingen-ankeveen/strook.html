@@ -2,7 +2,13 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<!-- iPhone/iPad: via "Zet op beginscherm" opent deze pagina beeldvullend, zonder de balken van Safari, en met zwarte randen -->
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Strook">
 <meta name="robots" content="noindex">
 <title>Ankeveen in beweging</title>
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -25,7 +31,7 @@
 -->
 <style>
 html,body{margin:0;height:100%}
-body.buiten{overflow:hidden;background:#f8f6f0;cursor:none}
+body.buiten{position:fixed;left:0;top:0;right:0;bottom:0;overflow:hidden;background:#f8f6f0;cursor:none;overscroll-behavior:none;touch-action:none;-webkit-user-select:none;user-select:none}
 body.buiten.zwart{background:#000}
 body.buiten iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0;display:block;background:#fff;pointer-events:none}
 body.binnen{background:#fff;overflow:hidden}
@@ -77,6 +83,10 @@ body.binnen.lucht #ontmoeten::after{background:#4E8A3A}
     // de buitenste pagina: het iframe met de strook, vergroot tot de volle schermbreedte
     var lucht = q.has('lucht');
     document.body.className = 'buiten' + (lucht ? ' lucht' : q.has('licht') ? '' : ' zwart');
+    // ook de randen buiten de pagina (rond de inkeping, bij doorveren, de balken van de browser) in de goede kleur
+    var rand = lucht ? '#2E86D8' : q.has('licht') ? '#f8f6f0' : '#000';
+    document.documentElement.style.background = rand;
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', rand);
     var b = Math.max(280, Math.min(3000, parseFloat(q.get('b')) || 400)), pos = q.get('pos') || 'onder';
     var f = document.createElement('iframe');
     f.title = 'Animatiestrook Ankeveen';
@@ -109,6 +119,10 @@ body.binnen.lucht #ontmoeten::after{background:#4E8A3A}
         }
     }
     pas(); addEventListener('resize', pas);
+    // telefoon gedraaid of balken van de browser in- of uitgeschoven: opnieuw passend maken (ook even later, als het scherm tot rust is)
+    function later() { pas(); setTimeout(pas, 350); setTimeout(pas, 900); }
+    addEventListener('orientationchange', later); addEventListener('pageshow', later);
+    if (window.visualViewport) visualViewport.addEventListener('resize', pas);
     // klik of F: volledig scherm
     function vol() { var d = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else if (d.requestFullscreen) d.requestFullscreen().catch(function () {}); }
     addEventListener('click', vol); addEventListener('keydown', function (e) { if (e.key === 'f' || e.key === 'F') vol(); });
