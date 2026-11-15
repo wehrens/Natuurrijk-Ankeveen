@@ -3107,7 +3107,8 @@ ${pot(47.4)}${pot(61.6)}
         animate(w.querySelector('.vlag'), [{ transform: 'skewY(-7deg) scaleX(1)' }, { transform: 'skewY(6deg) scaleX(.9)' }], { duration: 420, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         animate(w.querySelector('.rook'), [{ opacity: .0, transform: 'translate(0, 2px)' }, { opacity: .55, transform: 'translate(-2px, 0)', offset: .4 }, { opacity: 0, transform: 'translate(-7px, -3px)' }], { duration: 1500, iterations: Infinity, easing: 'ease-out' });
     }
-    // Blond meisje met een witte jethelm (grijs carbonvlak, helder vizier) en een zwarte jas op een zwarte scooter met windscherm en een bruin zadel. Haar haar wappert
+    // Blond meisje met een witte jethelm (zwart vlak bovenop, helder vizier) en een zwarte jas op een zwarte scooter met een naar achteren gebogen windscherm, een
+    // achteruitkijkspiegel, een bruin zadel en een metalen rekje achterop. Haar haar wappert
     // achter haar aan en uit de uitlaat komt af en toe een wolkje.
     function vespa() {
         if (document.hidden) return;
@@ -3123,11 +3124,13 @@ ${pot(47.4)}${pot(61.6)}
             <path d="M3.4 27.4 Q2.6 19.6 10 19 H19.4 Q22 24 20.4 29.2 H14 A5 5 0 0 0 4.2 28.8 Z" fill="${ZW}"/>
             <path d="M5.6 22.6 Q9 20.4 16.6 21" fill="none" stroke="#5a5a60" stroke-width=".6" stroke-linecap="round"/>
             <rect x="2.3" y="21.4" width="1.3" height="1.8" rx=".5" fill="#D22630"/>
+            <path d="M9.4 17.6 H1.6 V15.4 M1.6 17.6 L3.6 20 M5.6 17.6 V19.4 M9 17.6 V19" fill="none" stroke="#b9bec4" stroke-width=".75" stroke-linecap="round" stroke-linejoin="round"/>
             <rect x="19" y="27.4" width="12.4" height="1.9" rx=".8" fill="${ZW}"/>
             <path d="M29.6 29.2 L32.2 12.4 H35 L33.8 22.4 Q33.4 27 31.8 29.2 Z" fill="${ZW}"/>
             <path d="M34 13.6 L36 30" stroke="#8a8f96" stroke-width="1.2" stroke-linecap="round"/>
             <path d="M30.8 27.6 Q36 21 41.4 27.6" fill="none" stroke="${ZW}" stroke-width="2.4" stroke-linecap="round"/>
-            <path d="M33.8 11 L31.4 .9 L32.7 .5 L35.4 11 Z" fill="rgba(200,230,248,.6)" stroke="#8fb0c4" stroke-width=".4" stroke-linejoin="round"/>
+            <path d="M33.9 11 Q33.8 4.6 30.4 .9 L31.7 .1 Q35.2 4.2 35.4 11 Z" fill="rgba(200,230,248,.6)" stroke="#8fb0c4" stroke-width=".4" stroke-linejoin="round"/>
+            <path d="M32.9 10.8 L31.2 7.4" stroke="#8a8f96" stroke-width=".55" stroke-linecap="round"/><ellipse cx="30.9" cy="6.5" rx="1.25" ry="1.05" fill="#dfe9ef" stroke="#55595e" stroke-width=".5"/>
             <path d="M31.2 11.2 H35.6" stroke="${ZW}" stroke-width="1.5" stroke-linecap="round"/>
             <circle cx="35.6" cy="12.6" r="1.4" fill="#F6E7A6" stroke="#b9bec4" stroke-width=".5"/>
             <path d="M9.2 19.2 Q8.6 16.3 12 16.2 H21.4 Q23.8 16.3 23.6 18.4 L23 19.2 Z" fill="#8B5A2B"/><path d="M10.4 17.2 H21.4" stroke="#B07A45" stroke-width=".6" stroke-linecap="round"/>
@@ -3141,7 +3144,7 @@ ${pot(47.4)}${pot(61.6)}
             <!-- de helm: witte jethelm met een grijs carbonvlak bovenop, een zwarte scharnierarm met crèmekleurige knop,
                  een helder vizier voor het gezicht en een lichtbruine leren rand onderlangs -->
             <path d="M19.1 5.7 Q18.2 -1.7 23.2 -1.5 Q27 -1.3 26.9 2.3 L25.2 2.5 Q24.3 3.2 24.1 4.9 L23.7 6.1 Q21.1 6.8 19.1 5.7 Z" fill="#fff" stroke="#8f99a3" stroke-width=".45" stroke-linejoin="round"/>
-            <path d="M19.7 1.5 Q20.9 -1 23.6 -.9 Q25.6 -.8 26.3 .6 Q22.9 .2 19.7 1.5 Z" fill="#6f757c"/>
+            <path d="M19.7 1.5 Q20.9 -1 23.6 -.9 Q25.6 -.8 26.3 .6 Q22.9 .2 19.7 1.5 Z" fill="#17171a"/>
             <path d="M19.2 5.7 Q21.1 6.8 23.7 6.1 L24.1 4.9" fill="none" stroke="#B98A5E" stroke-width=".75" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M25.9 .5 Q29.3 2.2 26.5 6.2 L25 5.6 Q26.6 3 25.3 1.2 Z" fill="rgba(205,232,248,.5)" stroke="#9fb6c4" stroke-width=".3" stroke-linejoin="round"/>
             <path d="M22.5 3.9 Q24.6 3.2 25.7 .5" fill="none" stroke="#141414" stroke-width=".9" stroke-linecap="round"/>
