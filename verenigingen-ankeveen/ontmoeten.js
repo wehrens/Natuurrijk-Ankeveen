@@ -3356,7 +3356,8 @@ ${pot(47.4)}${pot(61.6)}
             // seizoenen: schaatsers alleen in de winter, naturisten en kermis in de zomer, carnaval van 11 november
             // tot en met maart, de lichtjesmarkt rond de feestdagen
             const maand = new Date().getMonth() + 1;
-            bag = specials.filter(x => !x.maanden || x.maanden.includes(maand)).sort(() => Math.random() - 0.5);
+            // (in de projectiestand gelden de seizoenen niet: daar komt het hele jaar alles langs)
+            bag = specials.filter(x => STERK || !x.maanden || x.maanden.includes(maand)).sort(() => Math.random() - 0.5);
             const dubbel = bag.findIndex((x, i) => i && x.run === bag[i - 1].run);       // niet twee keer dezelfde direct na elkaar
             if (dubbel > 0) bag.splice((dubbel + Math.ceil(bag.length / 2)) % bag.length, 0, bag.splice(dubbel, 1)[0]);
             if (last && bag[0].run === last.run && bag.length > 1) bag.push(bag.shift());
