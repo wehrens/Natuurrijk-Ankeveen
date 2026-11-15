@@ -3107,12 +3107,12 @@ ${pot(47.4)}${pot(61.6)}
         animate(w.querySelector('.vlag'), [{ transform: 'skewY(-7deg) scaleX(1)' }, { transform: 'skewY(6deg) scaleX(.9)' }], { duration: 420, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         animate(w.querySelector('.rook'), [{ opacity: .0, transform: 'translate(0, 2px)' }, { opacity: .55, transform: 'translate(-2px, 0)', offset: .4 }, { opacity: 0, transform: 'translate(-7px, -3px)' }], { duration: 1500, iterations: Infinity, easing: 'ease-out' });
     }
-    // Blond meisje met een witte helm op een zwarte scooter met windscherm en een bruin zadel. Haar haar wappert
+    // Blond meisje met een witte helm en een zwarte jas op een zwarte scooter met windscherm en een bruin zadel. Haar haar wappert
     // achter haar aan en uit de uitlaat komt af en toe een wolkje.
     function vespa() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, SC = .86, VW = 46, VH = 40, wpx = VW * SC, hpx = VH * SC, y = GROUND - 38.6 * SC + 2;
-        const jas = pick(['#E24A6B', '#2BB39A', '#7B5CC4', '#F39A2B', '#5C9BD6', '#D64541']), huid = pick(HUID), ZW = '#1b1b1d';
+        const jas = '#26262b', huid = '#F1C9A5', ZW = '#1b1b1d';       // ze draagt een zwarte jas
         const wiel = x => `<g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="${x}" cy="30.2" r="4.6" fill="#1b1b1b"/><circle cx="${x}" cy="30.2" r="2.5" fill="#c9cdd0"/><path d="M${x - 2} 30.2 h4 M${x} 28.2 v4" stroke="#6f757c" stroke-width=".6"/><circle cx="${x}" cy="30.2" r=".8" fill="#55595e"/></g>`;
         const w = document.createElement('div'); w.className = 'om-p'; w.style.width = wpx + 'px'; w.style.height = hpx + 'px';
         w.innerHTML = `<svg viewBox="-2 -4 ${VW} ${VH}" width="${wpx}" height="${hpx}" aria-hidden="true" style="display:block;overflow:visible">
@@ -3135,12 +3135,12 @@ ${pot(47.4)}${pot(61.6)}
           <g class="meisje">
             <path d="M17.6 15.8 L26.2 17.2 L27.2 27" fill="none" stroke="#2f4f7a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M26.4 27.6 h3.2" stroke="#f4f4f4" stroke-width="1.8" stroke-linecap="round"/><path d="M26.4 27.6 h3.2" stroke="#9aa3ab" stroke-width=".3"/>
-            <path d="M17.2 15.4 L21.2 6.6" stroke="${jas}" stroke-width="5.4" stroke-linecap="round"/>
+            <path d="M17.2 15.4 L21.2 6.6" stroke="${jas}" stroke-width="5.4" stroke-linecap="round"/><path d="M19.6 13.6 L22.6 7.4" stroke="#4a4a52" stroke-width=".5" stroke-linecap="round"/>
             <g class="haar" style="transform-box:view-box;transform-origin:20.6px 4.6px"><path d="M21 3.6 Q16.4 4.6 12.6 9.6 Q16.8 9.6 21.4 7 Z" fill="#E9C46A"/><path d="M20 5 Q16.6 6.4 14.4 9" fill="none" stroke="#D2A94B" stroke-width=".5" stroke-linecap="round"/></g>
             <circle cx="23" cy="3.4" r="3" fill="${huid}"/><circle cx="24.6" cy="3.2" r=".42" fill="#1d1d1d"/>
             <path d="M19.6 4.6 Q18.8 -1.2 23.2 -1 Q26.8 -.8 26.6 2.6 L24.9 2.5 Q23.4 1.5 21.8 3 L21.6 5.2 Z" fill="#fff" stroke="#8f99a3" stroke-width=".5" stroke-linejoin="round"/>
             <path d="M20.6 1.2 Q22.8 -.2 25.4 .8" fill="none" stroke="#D22630" stroke-width=".6" stroke-linecap="round"/>
-            <path d="M21.8 7.6 L28 9.6 L32 11" fill="none" stroke="${jas}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32.4" cy="11.1" r="1.1" fill="${huid}"/>
+            <path d="M21.8 7.6 L28 9.6 L32 11" fill="none" stroke="#4a4a52" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.8 7.6 L28 9.6 L32 11" fill="none" stroke="${jas}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32.4" cy="11.1" r="1.1" fill="${huid}"/>
           </g></svg>`;
         strip.appendChild(w);
         const speed = 9, x0 = fromLeft ? -wpx - 10 : width + 10, x1 = fromLeft ? width + 20 + EX : -wpx - 20 - EX;
