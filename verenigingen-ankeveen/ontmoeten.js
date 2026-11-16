@@ -3116,13 +3116,14 @@ ${pot(47.4)}${pot(61.6)}
         animate(w.querySelector('.vlag'), [{ transform: 'skewY(-7deg) scaleX(1)' }, { transform: 'skewY(6deg) scaleX(.9)' }], { duration: 420, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
         animate(w.querySelector('.rook'), [{ opacity: .0, transform: 'translate(0, 2px)' }, { opacity: .55, transform: 'translate(-2px, 0)', offset: .4 }, { opacity: 0, transform: 'translate(-7px, -3px)' }], { duration: 1500, iterations: Infinity, easing: 'ease-out' });
     }
-    // Blond meisje met een witte jethelm (zwart vlak bovenop, helder vizier) en een zwarte jas op een zwarte scooter met een naar achteren gebogen windscherm, een
+    // Twee blonde meiden op een scooter. Achterop de passagier (lichtblauw jack, witte helm met rode bies), voorop
+    // een blond meisje met een witte jethelm (zwart vlak bovenop, helder vizier) en een zwarte jas op een zwarte scooter met een naar achteren gebogen windscherm, een
     // achteruitkijkspiegel, een bruin zadel en een metalen rekje achterop. Haar haar wappert
     // achter haar aan en uit de uitlaat komt af en toe een wolkje.
     function vespa() {
         if (document.hidden) return;
         const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, SC = .86, VW = 46, VH = 40, wpx = VW * SC, hpx = VH * SC, y = GROUND - 38.6 * SC + 2;
-        const jas = '#26262b', huid = '#F1C9A5', ZW = '#1b1b1d';       // ze draagt een zwarte jas
+        const jas = '#26262b', jas2 = '#6f9fca', huid = '#F1C9A5', ZW = '#1b1b1d';       // ze draagt een zwarte jas
         const wiel = x => `<g class="wheel" style="transform-box:fill-box;transform-origin:center"><circle cx="${x}" cy="30.2" r="4.6" fill="#1b1b1b"/><circle cx="${x}" cy="30.2" r="2.5" fill="#c9cdd0"/><path d="M${x - 2} 30.2 h4 M${x} 28.2 v4" stroke="#6f757c" stroke-width=".6"/><circle cx="${x}" cy="30.2" r=".8" fill="#55595e"/></g>`;
         const w = document.createElement('div'); w.className = 'om-p'; w.style.width = wpx + 'px'; w.style.height = hpx + 'px';
         w.innerHTML = `<svg viewBox="-2 -4 ${VW} ${VH}" width="${wpx}" height="${hpx}" aria-hidden="true" style="display:block;overflow:visible">
@@ -3159,6 +3160,20 @@ ${pot(47.4)}${pot(61.6)}
             <path d="M22.5 3.9 Q24.6 3.2 25.7 .5" fill="none" stroke="#141414" stroke-width=".9" stroke-linecap="round"/>
             <circle cx="22.5" cy="3.9" r=".95" fill="#141414"/><circle cx="22.5" cy="3.9" r=".62" fill="#EFEAC8"/>
             <path d="M21.8 7.6 L28 9.6 L32 11" fill="none" stroke="#4a4a52" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.8 7.6 L28 9.6 L32 11" fill="none" stroke="${jas}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32.4" cy="11.1" r="1.1" fill="${huid}"/>
+          </g>
+          <!-- de passagier: een tweede blonde meid achterop, armen om het middel van de bestuurster -->
+          <g class="duo">
+            <path d="M10.6 15.8 L19 17.6 L20.2 26.6" fill="none" stroke="#3b3f4a" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19.6 27.3 h3" stroke="#f4f4f4" stroke-width="1.7" stroke-linecap="round"/><path d="M19.6 27.3 h3" stroke="#9aa3ab" stroke-width=".3"/>
+            <path d="M10.2 15.4 L13.6 7.2" stroke="#3f6a94" stroke-width="5.6" stroke-linecap="round"/><path d="M10.2 15.4 L13.6 7.2" stroke="${jas2}" stroke-width="5" stroke-linecap="round"/>
+            <g class="haar" style="transform-box:view-box;transform-origin:13px 5px"><path d="M13.4 4 Q8.8 5 5 10 Q9.2 10 13.8 7.4 Z" fill="#F0D27A"/><path d="M12.4 5.4 Q9 6.8 6.8 9.4" fill="none" stroke="#D2A94B" stroke-width=".5" stroke-linecap="round"/></g>
+            <circle cx="15.4" cy="3.8" r="3" fill="${huid}"/><circle cx="17" cy="3.6" r=".42" fill="#1d1d1d"/>
+            <g transform="translate(-7.6 .4)">
+              <path d="M19.1 5.7 Q18.2 -1.7 23.2 -1.5 Q27 -1.3 26.9 2.3 L25.2 2.5 Q24.3 3.2 24.1 4.9 L23.7 6.1 Q21.1 6.8 19.1 5.7 Z" fill="#fff" stroke="#8f99a3" stroke-width=".45" stroke-linejoin="round"/>
+              <path d="M19.4 2.6 Q22.6 1.2 26.7 1.5" fill="none" stroke="#D22630" stroke-width=".8" stroke-linecap="round"/>
+              <path d="M19.2 5.7 Q21.1 6.8 23.7 6.1 L24.1 4.9" fill="none" stroke="#B98A5E" stroke-width=".75" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <path d="M14 8.4 L17.4 12.4 L20.4 13" fill="none" stroke="#3f6a94" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8.4 L17.4 12.4 L20.4 13" fill="none" stroke="${jas2}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20.8" cy="13.1" r="1.05" fill="${huid}"/>
           </g></svg>`;
         strip.appendChild(w);
         const speed = 9, x0 = fromLeft ? -wpx - 10 : width + 10, x1 = fromLeft ? width + 20 + EX : -wpx - 20 - EX;
@@ -3166,7 +3181,7 @@ ${pot(47.4)}${pot(61.6)}
             .finished.then(() => w.remove()).catch(() => w.remove());
         w.querySelectorAll('.wheel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 2 * Math.PI * 4.6 * SC * speed, iterations: Infinity, easing: 'linear' }));
         animate(w.firstElementChild, [{ transform: 'translateY(0)' }, { transform: 'translateY(-.6px)' }], { duration: 260, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
-        animate(w.querySelector('.haar'), [{ transform: 'rotate(-7deg) scaleX(1)' }, { transform: 'rotate(8deg) scaleX(1.12)' }], { duration: 230, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        w.querySelectorAll('.haar').forEach((h, i) => animate(h, [{ transform: 'rotate(-7deg) scaleX(1)' }, { transform: 'rotate(8deg) scaleX(1.12)' }], { duration: 230 + i * 40, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' }));
         animate(w.querySelector('.rook'), [{ opacity: 0, transform: 'translate(2px, 0) scale(.6)' }, { opacity: .6, transform: 'translate(0, -.5px) scale(1)', offset: .3 }, { opacity: 0, transform: 'translate(-6px, -3px) scale(1.5)' }], { duration: 900, iterations: Infinity, easing: 'ease-out' });
     }
     function oldtimer() {
