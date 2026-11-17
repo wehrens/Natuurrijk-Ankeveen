@@ -2118,6 +2118,48 @@ ${pot(47.4)}${pot(61.6)}
         const groen = document.createElement('div');
         groen.style.cssText = 'position:absolute;inset:0;pointer-events:none';
         bg.insertBefore(groen, bg.firstChild);
+        // Drie bomen, net als de huizen vaag op de achtergrond: een eik, een populier en een knotwilg. Ze laten het
+        // jaargetijde zien: lichtgroen met bloesem in de lente, vol groen in de zomer, oranje en rood met vallend blad
+        // in de herfst en kaal in de winter. Met ?seizoen=lente|zomer|herfst|winter is een seizoen te bekijken.
+        {
+            const mnd = new Date().getMonth() + 1, vraag = (location.search.match(/seizoen=(lente|zomer|herfst|winter)/) || [])[1];
+            const seizoen = vraag || (mnd >= 3 && mnd <= 5 ? 'lente' : mnd >= 6 && mnd <= 8 ? 'zomer' : mnd >= 9 && mnd <= 11 ? 'herfst' : 'winter');
+            const KL = { lente: ['#A9D46A', '#8FC455', '#ffffff'], zomer: ['#4F9E45', '#3F8A3A', '#62AE52'], herfst: ['#E0902E', '#C4532B', '#EBC14A'] }[seizoen];
+            const HOUT = '#7A5636', kaal = seizoen === 'winter';
+            const stip = (pts, r, k) => pts.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${k}"/>`).join('');
+            const tak = (d, b) => `<path d="${d}" fill="none" stroke="${HOUT}" stroke-width="${b}" stroke-linecap="round" stroke-linejoin="round"/>`;
+            const eik = h => `<svg viewBox="0 0 44 50" width="${h * 44 / 50}" height="${h}" aria-hidden="true" style="overflow:visible">
+                ${tak('M22 50 V27', 3.4)}${tak('M22 36 L12 24 M22 31 L32 21 M22 27 L22 9', 1.8)}${kaal ? tak('M15.5 28 L8 17 M12 24 L5 22 M27 26 L30 11 M32 21 L39 19 M22 18 L15 8 M22 15 L27 5 M10.5 20.5 L9 13 M29.4 14 L34 9 M22 9 L20 3', .9) : ''}
+                ${kaal ? '' : `<g fill="${KL[0]}"><circle cx="22" cy="16" r="12.5"/><circle cx="11" cy="23" r="9"/><circle cx="33" cy="23" r="9"/><circle cx="14" cy="12" r="7.5"/><circle cx="30" cy="12" r="7.5"/><circle cx="22" cy="26" r="8"/></g>
+                ${stip([[13, 24], [29, 27], [22, 20], [33, 16]], 4.2, KL[1])}${stip([[17, 11], [27, 9], [9, 20], [35, 25], [23, 28], [15, 28], [30, 19]], seizoen === 'lente' ? 1.5 : 3, KL[2])}`}</svg>`;
+            const populier = h => `<svg viewBox="0 0 22 58" width="${h * 22 / 58}" height="${h}" aria-hidden="true" style="overflow:visible">
+                ${tak('M11 58 V' + (kaal ? 5 : 40), 2.6)}${kaal ? tak('M11 46 L6.4 38 M11 42 L15.8 33 M11 36 L5.6 27 M11 31 L16.2 21 M11 25 L6.6 16 M11 19 L14.8 10 M11 13 L8.4 6', .9) : ''}
+                ${kaal ? '' : `<path d="M11 1 Q20 15 18 34 Q16.5 47 11 47 Q5.5 47 4 34 Q2 15 11 1 Z" fill="${KL[0]}"/><path d="M11 6 Q16.6 18 15.4 34 Q14.4 43.4 11.6 44 Q13 30 11 6 Z" fill="${KL[1]}"/>
+                ${stip([[8, 16], [12.4, 27], [7.4, 33], [10, 9], [14, 39]], seizoen === 'lente' ? 1.2 : 2.2, KL[2])}`}</svg>`;
+            const wilg = h => `<svg viewBox="0 0 40 40" width="${h}" height="${h}" aria-hidden="true" style="overflow:visible">
+                ${kaal ? '' : `<ellipse cx="20" cy="14" rx="18" ry="12.5" fill="${KL[0]}" opacity=".55"/>`}
+                <path d="M4 20 L16.4 20 M36 20 L23.6 20 M5.4 12 L16.8 19 M34.6 12 L23.2 19 M9.6 5.6 L17.6 18 M30.4 5.6 L22.4 18 M15.4 2.4 L19 17.4 M24.6 2.4 L21 17.4 M20 1.4 V17" fill="none" stroke="${kaal ? '#B08A4A' : KL[1]}" stroke-width="${kaal ? .9 : 2}" stroke-linecap="round"/>
+                ${kaal ? '' : stip([[8, 16], [32, 15], [13, 8], [27, 7], [20, 5], [24, 13], [16, 13]], seizoen === 'lente' ? 1.3 : 2.4, KL[2])}
+                <path d="M16.2 40 L17 24 Q14.6 21.6 15.6 18.6 Q20 15.4 24.4 18.6 Q25.4 21.6 23 24 L23.8 40 Z" fill="${HOUT}"/></svg>`;
+            // [positie %, svg, alleen op bredere schermen]
+            [[10.5, eik(36), true], ['min(35.5%, calc(62% - 111px))', populier(46), false], [85, wilg(28), true]].forEach(([pct, svg, breed], bi) => {
+                const d = document.createElement('div');
+                d.style.cssText = `position:absolute;left:${typeof pct === 'number' ? pct + '%' : pct};bottom:${H - GROUND}px;transform:translateX(-50%);opacity:${STERK ? .85 : .38};line-height:0`;
+                d.innerHTML = svg; if (breed) d.className = 'om-breed';
+                bg.insertBefore(d, groen.nextSibling);
+                if (seizoen !== 'herfst' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                // herfst: af en toe dwarrelt er een blaadje naar beneden
+                const bw = d.firstElementChild.getBoundingClientRect().width || 30, bh = d.firstElementChild.getBoundingClientRect().height || 36;
+                for (let i = 0; i < 2; i++) {
+                    const b = document.createElement('div'), x = bw * (.2 + .6 * Math.random()), dx = (Math.random() - .5) * 14;
+                    b.style.cssText = `position:absolute;left:0;top:0;width:3px;height:2px;border-radius:60% 0 60% 0;background:${KL[i]};opacity:0`;
+                    d.appendChild(b);
+                    animate(b, [{ transform: `translate(${x}px, ${bh * .35}px) rotate(0deg)`, opacity: 0 }, { opacity: 1, offset: .08 }, { transform: `translate(${x + dx}px, ${bh * .7}px) rotate(160deg)`, opacity: 1, offset: .55 },
+                        { transform: `translate(${x - dx * .4}px, ${bh - 1}px) rotate(300deg)`, opacity: 1, offset: .9 }, { transform: `translate(${x - dx * .4}px, ${bh - 1}px) rotate(300deg)`, opacity: 0 }],
+                        { duration: 5200 + bi * 700 + i * 900, iterations: Infinity, delay: bi * 1300 + i * 2600, easing: 'ease-in-out' });
+                }
+            });
+        }
         // plaatsnaambord Ankeveen (blauw met witte rand), rechts
         const bord = document.createElement('div');
         bord.style.cssText = `position:absolute;right:max(14px, 4%);bottom:${H - GROUND}px;line-height:0;opacity:.85`;
