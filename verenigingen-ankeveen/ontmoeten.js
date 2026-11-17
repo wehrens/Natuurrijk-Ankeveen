@@ -19,7 +19,8 @@
                               de nestpaal en de zittende ooievaar hebben z-index 1
      z-index 3   lucht        alles wat over de hele kopbalk vliegt of opstijgt: ooievaar, teksten, hartjes, bal
 
-   SEIZOENEN: een groep met `maanden` in de lijst `specials` komt alleen in die maanden vanzelf langs.
+   SEIZOENEN: de strook doorloopt steeds lente, zomer, herfst en winter (de bomen kleuren mee). Een groep met `sz` in de
+   lijst `specials` (l, z, h, w) komt alleen in die seizoenen langs; de rest is over het jaar verdeeld.
    Met #naam achter het adres (bijvoorbeeld #naturists) is elke groep het hele jaar te bekijken. */
 (function () {
     'use strict';
@@ -2120,12 +2121,19 @@ ${pot(47.4)}${pot(61.6)}
         bg.insertBefore(groen, bg.firstChild);
         // Drie bomen, net als de huizen vaag op de achtergrond: een eik, een populier en een knotwilg. Ze laten het
         // jaargetijde zien: lichtgroen met bloesem in de lente, vol groen in de zomer, oranje en rood met vallend blad
-        // in de herfst en kaal in de winter. Met ?seizoen=lente|zomer|herfst|winter is een seizoen te bekijken.
+        // in de herfst en kaal in de winter. De strook doorloopt steeds alle vier de seizoenen (zie nextSpecial), te
+        // beginnen bij het echte seizoen; met ?seizoen=lente|zomer|herfst|winter blijft het bij dat ene seizoen.
+        var seizoenNu, seizoenVast, zetBomen;
         {
             const mnd = new Date().getMonth() + 1, vraag = (location.search.match(/seizoen=(lente|zomer|herfst|winter)/) || [])[1];
-            const seizoen = vraag || (mnd >= 3 && mnd <= 5 ? 'lente' : mnd >= 6 && mnd <= 8 ? 'zomer' : mnd >= 9 && mnd <= 11 ? 'herfst' : 'winter');
+            seizoenVast = !!vraag;
+            seizoenNu = vraag || (mnd >= 3 && mnd <= 5 ? 'lente' : mnd >= 6 && mnd <= 8 ? 'zomer' : mnd >= 9 && mnd <= 11 ? 'herfst' : 'winter');
+            const HOUT = '#7A5636', bomen = [];
+            let blaadjes = [];
+            zetBomen = (seizoen, zacht) => {
             const KL = { lente: ['#A9D46A', '#8FC455', '#ffffff'], zomer: ['#4F9E45', '#3F8A3A', '#62AE52'], herfst: ['#E0902E', '#C4532B', '#EBC14A'] }[seizoen];
-            const HOUT = '#7A5636', kaal = seizoen === 'winter';
+            const kaal = seizoen === 'winter';
+            blaadjes.forEach(b => { b.getAnimations().forEach(a => a.cancel()); b.remove(); }); blaadjes = [];
             const stip = (pts, r, k) => pts.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${k}"/>`).join('');
             const tak = (d, b) => `<path d="${d}" fill="none" stroke="${HOUT}" stroke-width="${b}" stroke-linecap="round" stroke-linejoin="round"/>`;
             const eik = h => `<svg viewBox="0 0 44 50" width="${h * 44 / 50}" height="${h}" aria-hidden="true" style="overflow:visible">
@@ -2143,22 +2151,34 @@ ${pot(47.4)}${pot(61.6)}
                 <path d="M16.2 40 L17 24 Q14.6 21.6 15.6 18.6 Q20 15.4 24.4 18.6 Q25.4 21.6 23 24 L23.8 40 Z" fill="${HOUT}"/></svg>`;
             // [positie %, svg, alleen op bredere schermen]
             [[10.5, eik(36), true], ['min(35.5%, calc(62% - 111px))', populier(46), false], [85, wilg(28), true]].forEach(([pct, svg, breed], bi) => {
-                const d = document.createElement('div');
-                d.style.cssText = `position:absolute;left:${typeof pct === 'number' ? pct + '%' : pct};bottom:${H - GROUND}px;transform:translateX(-50%);opacity:${STERK ? .85 : .38};line-height:0`;
-                d.innerHTML = svg; if (breed) d.className = 'om-breed';
-                bg.insertBefore(d, groen.nextSibling);
-                if (seizoen !== 'herfst' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                let d = bomen[bi];
+                const op = STERK ? .85 : .38;
+                if (!d) {
+                    d = bomen[bi] = document.createElement('div');
+                    d.style.cssText = `position:absolute;left:${typeof pct === 'number' ? pct + '%' : pct};bottom:${H - GROUND}px;transform:translateX(-50%);opacity:${op};line-height:0`;
+                    if (breed) d.className = 'om-breed';
+                    bg.insertBefore(d, groen.nextSibling);
+                }
+                if (zacht) {                                          // rustige overgang: de oude kroon vervaagt, de nieuwe komt op
+                    d.animate([{ opacity: op }, { opacity: 0, offset: .5 }, { opacity: op }], { duration: 2400, easing: 'ease-in-out' });
+                    setTimeout(() => { d.innerHTML = svg; blad(d, bi); }, 1200);
+                } else { d.innerHTML = svg; blad(d, bi); }
+            });
+            function blad(d, bi) {
+                if (seizoen !== 'herfst' || seizoenNu !== 'herfst' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
                 // herfst: af en toe dwarrelt er een blaadje naar beneden
                 const bw = d.firstElementChild.getBoundingClientRect().width || 30, bh = d.firstElementChild.getBoundingClientRect().height || 36;
                 for (let i = 0; i < 2; i++) {
                     const b = document.createElement('div'), x = bw * (.2 + .6 * Math.random()), dx = (Math.random() - .5) * 14;
                     b.style.cssText = `position:absolute;left:0;top:0;width:3px;height:2px;border-radius:60% 0 60% 0;background:${KL[i]};opacity:0`;
-                    d.appendChild(b);
+                    d.appendChild(b); blaadjes.push(b);
                     animate(b, [{ transform: `translate(${x}px, ${bh * .35}px) rotate(0deg)`, opacity: 0 }, { opacity: 1, offset: .08 }, { transform: `translate(${x + dx}px, ${bh * .7}px) rotate(160deg)`, opacity: 1, offset: .55 },
                         { transform: `translate(${x - dx * .4}px, ${bh - 1}px) rotate(300deg)`, opacity: 1, offset: .9 }, { transform: `translate(${x - dx * .4}px, ${bh - 1}px) rotate(300deg)`, opacity: 0 }],
                         { duration: 5200 + bi * 700 + i * 900, iterations: Infinity, delay: bi * 1300 + i * 2600, easing: 'ease-in-out' });
                 }
-            });
+            }
+            };
+            zetBomen(seizoenNu, false);
         }
         // plaatsnaambord Ankeveen (blauw met witte rand), rechts
         const bord = document.createElement('div');
@@ -3437,48 +3457,52 @@ ${pot(47.4)}${pot(61.6)}
     const specials = [
         { run: peloton, dur: () => (W() + 300 + EX) * 4.5 },
         { run: fanfare, dur: () => (W() + 200 + EX) * 24, groot: true },
-        { run: skaters, dur: () => (W() + 200 + EX) * 7.5, maanden: [12, 1, 2] },
-        { run: naturists, dur: () => (W() + 160 + EX) * 26 + 17500, groot: true, maanden: [5, 6, 7, 8, 9] },
-        { run: carnaval, dur: () => (W() + 300 + EX) * 22 + 9000, groot: true, maanden: [11, 12, 1, 2, 3], als: d => d.getMonth() !== 10 || d.getDate() >= 11 },   // vanaf de elfde van de elfde
-        { run: yogis, dur: () => YOGA_DUUR, groot: true, maanden: [4, 5, 6, 7, 8, 9, 10] },
+        { run: skaters, dur: () => (W() + 200 + EX) * 7.5, sz: 'w' },
+        { run: naturists, dur: () => (W() + 160 + EX) * 26 + 17500, groot: true, sz: 'z' },
+        { run: carnaval, dur: () => (W() + 300 + EX) * 22 + 9000, groot: true, sz: 'w' },
+        { run: yogis, dur: () => YOGA_DUUR, groot: true, sz: 'lz' },
         { run: klasje, dur: () => (W() + 220 + EX) * 22, groot: true },
         { run: voetballer, dur: () => (W() + 100) * 30 },
         { run: footballers, dur: () => (W() + 220 + EX) * 11 },
         { run: markt, dur: marktDur, groot: true },
         { run: bakfiets, dur: () => (W() + 100 + EX) * 16 + 12000, rare: true },
-        { run: kermis, dur: () => 42000, rare: true, maanden: [10] },   // de kermis is in oktober
+        { run: kermis, dur: () => 42000, rare: true, sz: 'h' },   // de kermis is in oktober
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
         { run: vogelaars, dur: vogelaarsDur },
         { run: jazz, dur: jazzDur, groot: true },
         { run: havenloos, dur: havenloosDur, groot: true },
         { run: gitaarschool, dur: () => (W() + 120 + EX) * 20 },
-        { run: zumba, dur: zumbaDur, groot: true, maanden: [4, 5, 6, 7, 8, 9, 10] },
+        { run: zumba, dur: zumbaDur, groot: true, sz: 'lh' },
         { run: ruiter, dur: () => (W() + 140 + EX) * 30 },
         { run: boswachter, dur: () => (W() + 120 + EX) * 13 },
         { run: klompenman, dur: () => (W() + 160 + EX) * 13 },
         { run: familie, dur: () => (W() + 200 + EX) * 27 },
-        { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true, maanden: [11, 12, 1] },
+        { run: lichtjesmarkt, dur: lichtjesDur, groot: true, rare: true, sz: 'w' },
         { run: newfoundlander, dur: () => (W() + 120) * 24 + 6500 },
         { run: symon, dur: () => (W() + 220) * 16 },
         { run: vespa, dur: () => (W() + 120 + EX) * 9 },
-        { run: sportdag, dur: () => 35500, groot: true, maanden: [4, 5, 6, 7, 8, 9, 10] },   // tennis, petanque, biljart, handbal en voetbal naast elkaar
+        { run: sportdag, dur: () => 35500, groot: true, sz: 'z' },   // tennis, petanque, biljart, handbal en voetbal naast elkaar
         { run: oldtimer, dur: () => (W() + 180) * 14 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },   // de Snoek staat er twee keer in: hij komt elke ronde twee keer langs
     ];
     // Alle bijzondere groepen komen om de beurt langs (geschud, geen herhaling voordat iedereen
     // geweest is), elkaar deels overlappend. De eerste komt al na een paar seconden.
-    let bag = [], last = null;
+    let bag = [], last = null, jaarrond = [], eersteRonde = true;
     function nextSpecial() {
         if (document.hidden) { setTimeout(nextSpecial, 5000); return; }
         const nuM = performance.now();
         if (marktTot > nuM) { setTimeout(nextSpecial, 1500); return; }   // lichtjesmarkt: niemand anders, daarna meteen weer verder
         if (!bag.length) {
-            // seizoenen: schaatsers alleen in de winter, naturisten in de zomer, de kermis in oktober, carnaval van
-            // 11 november tot en met maart, de lichtjesmarkt rond de feestdagen; yoga, zumba en de sportdag van april
-            // tot en met oktober
-            const vandaag = new Date(), maand = vandaag.getMonth() + 1;
-            // (in de projectiestand gelden de seizoenen niet: daar komt het hele jaar alles langs)
-            bag = specials.filter(x => STERK || ((!x.maanden || x.maanden.includes(maand)) && (!x.als || x.als(vandaag)))).sort(() => Math.random() - 0.5);
+            // De strook doorloopt steeds het hele jaar: lente, zomer, herfst, winter, zodat je op elk moment alle seizoenen
+            // ziet langskomen. Per seizoen komen de groepen die daarbij horen (schaatsers, carnaval en de lichtjesmarkt in
+            // de winter, naturisten en de sportdag in de zomer, de kermis in de herfst, yoga in lente en zomer, zumba in lente en herfst)
+            // en een kwart van de groepen die het hele jaar langskomen. De bomen kleuren mee.
+            const VOLG = ['lente', 'zomer', 'herfst', 'winter'];
+            if (eersteRonde) eersteRonde = false;
+            else if (!seizoenVast) { seizoenNu = VOLG[(VOLG.indexOf(seizoenNu) + 1) % 4]; zetBomen(seizoenNu, true); }
+            if (!jaarrond.length) jaarrond = specials.filter(x => !x.sz).sort(() => Math.random() - 0.5);
+            const deel = seizoenVast ? jaarrond.splice(0) : jaarrond.splice(0, Math.ceil(specials.filter(x => !x.sz).length / 4));
+            bag = specials.filter(x => x.sz && x.sz.includes(seizoenNu[0])).concat(deel).sort(() => Math.random() - 0.5);
             const dubbel = bag.findIndex((x, i) => i && x.run === bag[i - 1].run);       // niet twee keer dezelfde direct na elkaar
             if (dubbel > 0) bag.splice((dubbel + Math.ceil(bag.length / 2)) % bag.length, 0, bag.splice(dubbel, 1)[0]);
             if (last && bag[0].run === last.run && bag.length > 1) bag.push(bag.shift());
@@ -3541,7 +3565,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.vespa = vespa; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; ['lente', 'zomer', 'herfst', 'winter'].forEach(n => { window.ontmoeten[n] = () => { seizoenNu = n; zetBomen(n, true); bag = []; eersteRonde = true; }; }); window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.vespa = vespa; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
