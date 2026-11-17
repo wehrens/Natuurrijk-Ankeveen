@@ -675,16 +675,55 @@
             ${leg('legA', 1)}</svg>`;
         return w;
     }
+    // Een kind op schaatsjes dat een keukenstoel voor zich uit duwt als steun: rechtop, kleine wiebelpasjes.
+    function stoelkind() {
+        const w = document.createElement('div'); w.className = 'om-p';
+        const huid = pick(HUID), muts = pick(MUTS), jas = pick(['#E8452C', '#3B8FE0', '#F39A2B', '#7B5CC4', '#2BB39A']), broek = pick(['#2f3e55', '#1f4e79', '#3b3b3b']);
+        const HOUT = '#9A6A3E', ROND = '#6E4A2A';
+        const been = (cls, x) => `<g class="${cls}" style="transform-box:view-box;transform-origin:${x}px 20px">
+              <path d="M${x} 20 L${x + .4} 26.4" stroke="${broek}" stroke-width="2.6" stroke-linecap="round"/>
+              <path d="M${x - 1.4} 26.6 h3.4 l.3 1 h-4 z" fill="#2b2b2b"/><path d="M${x - 2.4} 28.4 h6" stroke="#8a96a6" stroke-width=".8" stroke-linecap="round"/></g>`;
+        w.innerHTML = `<svg viewBox="0 0 34 30" width="24" height="21" aria-hidden="true" style="overflow:visible">
+            <g class="stoel">
+              <path d="M21.6 8.6 V28.6 M30.8 18 V28.6 M23.6 18 V28.6" stroke="${HOUT}" stroke-width="1.3" stroke-linecap="round"/>
+              <path d="M20.8 18 H31.6" stroke="${ROND}" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M21.6 10.6 H24.2 M21.6 13.4 H24.2" stroke="${HOUT}" stroke-width=".9"/><path d="M21.6 8.6 H24.4 V16.2" fill="none" stroke="${HOUT}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            ${been('legB', 11.4)}
+            <g class="lijf" style="transform-box:view-box;transform-origin:12px 20px">
+              <path d="M9 12.4 q3.4 -2.4 6.6 0 l.8 8.4 h-8 z" fill="${jas}"/>
+              <path d="M14.6 12.8 L21.8 10.4" stroke="${jas}" stroke-width="2" stroke-linecap="round"/><circle cx="22" cy="10.3" r="1" fill="${huid}"/>
+              <circle cx="12.6" cy="8.2" r="3.4" fill="${huid}"/>
+              <path d="M9.2 8 q0 -4.6 3.4 -4.6 q3.4 0 3.4 4.6 z" fill="${muts}"/><circle cx="12.4" cy="3.2" r="1.2" fill="${muts}"/>
+              <path d="M10 11.6 q2.6 1.4 5.2 0 l.2 1.4 q-2.8 1.4 -5.6 0 z" fill="${pick(MUTS)}"/>
+            </g>
+            ${been('legA', 13)}</svg>`;
+        return w;
+    }
+    // Schaatsers (alleen 's winters): een flinke groep, met helemaal achteraan twee kleintjes die een stoel duwen.
     function skaters() {
         if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, dur = (width + 200 + EX) * 7.5;
-        const colors = [pick(KLEUR), pick(KLEUR), pick(KLEUR)];
-        for (let i = 0; i < 3; i++) {
-            const w = skater(colors[i]); strip.appendChild(w);
-            const off = i * 34, y = GROUND - 26 + 0.6;
-            const x0 = fromLeft ? -60 - off : width + 20 + off, x1 = fromLeft ? width + 40 + EX - off : -80 - EX + off;
-            animate(w, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' })
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1;
+        const N = 7, offs = [];
+        for (let i = 0, o = 0; i < N; i++) { offs.push(o); o += rand(26, 40); }
+        const kindOff = offs[N - 1] + 46, totaal = kindOff + 34, afstand = width + 120 + totaal, dur = afstand * 7.5;
+        const leden = [];
+        for (let i = 0; i < N; i++) leden.push({ w: skater(pick(KLEUR)), off: offs[i], y: GROUND - 26 + 0.6 - (i % 2 ? 1.5 : 0), sc: i % 2 ? .9 : 1, schaats: true });
+        for (let i = 0; i < 2; i++) leden.push({ w: stoelkind(), off: kindOff + i * 34, y: GROUND - 21 + 0.6, sc: 1, kind: true });
+        leden.forEach((m, i) => {
+            const w = m.w; if (i % 2 && m.schaats) w.classList.add('om-achter'); strip.appendChild(w);
+            const x0 = fromLeft ? -60 - m.off : width + 20 + m.off, x1 = fromLeft ? x0 + afstand : x0 - afstand;
+            animate(w, [{ transform: `translate(${x0}px, ${m.y}px) scale(${f * m.sc}, ${m.sc})` }, { transform: `translate(${x1}px, ${m.y}px) scale(${f * m.sc}, ${m.sc})` }], { duration: dur, easing: 'linear' })
                 .finished.then(() => w.remove()).catch(() => w.remove());
+            if (m.kind) {
+                // kleine wiebelpasjes, het lijfje schommelt mee en de stoel schokt een heel klein beetje
+                const T = 620, d = -i * 170;
+                animate(w.querySelector('.legA'), [{ transform: 'rotate(-14deg)' }, { transform: 'rotate(12deg)' }], { duration: T / 2, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: d });
+                animate(w.querySelector('.legB'), [{ transform: 'rotate(12deg)' }, { transform: 'rotate(-14deg)' }], { duration: T / 2, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: d });
+                animate(w.querySelector('.lijf'), [{ transform: 'rotate(-5deg)' }, { transform: 'rotate(5deg)' }], { duration: T, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: d });
+                animate(w.querySelector('.stoel'), [{ transform: 'translateX(0)' }, { transform: 'translateX(.6px)' }], { duration: T / 2, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out', delay: d });
+                return;
+            }
             const T = 1400, d = -i * 230;
             // een slag: 0-55% krachtig afzetten naar achteren, 55-100% laag en snel terughalen
             const stroke = [{ transform: 'rotate(-4deg)', easing: 'ease-in' }, { transform: 'rotate(52deg)', offset: .55, easing: 'ease-out' },
@@ -699,7 +738,7 @@
             });
             // romp zakt bij elke afzet iets en glijdt een tikje vooruit
             animate(w.querySelector('.torso'), [{ transform: 'translate(0,0)' }, { transform: 'translate(1.2px,1px)', offset: .3 }, { transform: 'translate(0,0)', offset: .5 }, { transform: 'translate(1.2px,1px)', offset: .8 }, { transform: 'translate(0,0)' }], { duration: T, iterations: Infinity, easing: 'ease-in-out', delay: d });
-        }
+        });
     }
 
     // Yogi: drie mediterende figuren in lotushouding, handen tegen elkaar, zweven langzaam voorbij
@@ -3534,9 +3573,9 @@ ${pot(47.4)}${pot(61.6)}
     const planHond = () => setTimeout(() => { if (!rustig()) honden(); planHond(); }, rand(22000, 38000));
     setTimeout(() => { if (!rustig()) honden(); planHond(); }, 9000);
     const specials = [
-        { run: peloton, dur: () => (W() + 300 + EX) * 4.5 },
+        { run: peloton, dur: () => (W() + 300 + EX) * 4.5, sz: 'lzh' },   // geen wielrenners in de winter
         { run: fanfare, dur: () => (W() + 200 + EX) * 24, groot: true },
-        { run: skaters, dur: () => (W() + 200 + EX) * 7.5, sz: 'w' },
+        { run: skaters, dur: () => (W() + 120 + 360) * 7.5, groot: true, sz: 'w' },
         { run: naturists, dur: () => (W() + 160 + EX) * 26 + 17500, groot: true, sz: 'z' },
         { run: carnaval, dur: () => (W() + 300 + EX) * 22 + 9000, groot: true, sz: 'w' },
         { run: yogis, dur: () => YOGA_DUUR, groot: true, sz: 'lz' },
