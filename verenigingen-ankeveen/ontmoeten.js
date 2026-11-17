@@ -3500,8 +3500,13 @@ ${pot(47.4)}${pot(61.6)}
             const VOLG = ['lente', 'zomer', 'herfst', 'winter'];
             if (eersteRonde) eersteRonde = false;
             else if (!seizoenVast) { seizoenNu = VOLG[(VOLG.indexOf(seizoenNu) + 1) % 4]; zetBomen(seizoenNu, true); }
-            if (!jaarrond.length) jaarrond = specials.filter(x => !x.sz).sort(() => Math.random() - 0.5);
-            const deel = seizoenVast ? jaarrond.splice(0) : jaarrond.splice(0, Math.ceil(specials.filter(x => !x.sz).length / 4));
+            if (!jaarrond.length || (jaarrond.length === 1 && jaarrond[0].run === markt && seizoenNu === 'winter')) jaarrond = jaarrond.concat(specials.filter(x => !x.sz && !jaarrond.includes(x)).sort(() => Math.random() - 0.5));
+            // Korte seizoenen (een minuut of twee): per seizoen maar een achtste van de jaarrond-groepen, zodat de
+            // seizoenen vlot wisselen. In de winter staat de lichtjesmarkt er, dus dan geen gewone markt.
+            const deel = [], aantal = seizoenVast ? jaarrond.length : Math.ceil(specials.filter(x => !x.sz).length / 8);
+            for (let i = 0; i < jaarrond.length && deel.length < aantal;) {
+                if (seizoenNu === 'winter' && jaarrond[i].run === markt) i++; else deel.push(jaarrond.splice(i, 1)[0]);
+            }
             bag = specials.filter(x => x.sz && x.sz.includes(seizoenNu[0])).concat(deel).sort(() => Math.random() - 0.5);
             const dubbel = bag.findIndex((x, i) => i && x.run === bag[i - 1].run);       // niet twee keer dezelfde direct na elkaar
             if (dubbel > 0) bag.splice((dubbel + Math.ceil(bag.length / 2)) % bag.length, 0, bag.splice(dubbel, 1)[0]);
