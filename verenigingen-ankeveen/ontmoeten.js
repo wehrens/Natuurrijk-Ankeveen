@@ -2122,12 +2122,12 @@ ${pot(47.4)}${pot(61.6)}
         // Drie bomen, net als de huizen vaag op de achtergrond: een eik, een populier en een knotwilg. Ze laten het
         // jaargetijde zien: lichtgroen met bloesem in de lente, vol groen in de zomer, oranje en rood met vallend blad
         // in de herfst en kaal in de winter. De strook doorloopt steeds alle vier de seizoenen (zie nextSpecial), te
-        // beginnen bij het echte seizoen; met ?seizoen=lente|zomer|herfst|winter blijft het bij dat ene seizoen.
+        // beginnen bij een willekeurig seizoen; met ?seizoen=lente|zomer|herfst|winter blijft het bij dat ene seizoen.
         var seizoenNu, seizoenVast, zetBomen;
         {
-            const mnd = new Date().getMonth() + 1, vraag = (location.search.match(/seizoen=(lente|zomer|herfst|winter)/) || [])[1];
+            const vraag = (location.search.match(/seizoen=(lente|zomer|herfst|winter)/) || [])[1];
             seizoenVast = !!vraag;
-            seizoenNu = vraag || (mnd >= 3 && mnd <= 5 ? 'lente' : mnd >= 6 && mnd <= 8 ? 'zomer' : mnd >= 9 && mnd <= 11 ? 'herfst' : 'winter');
+            seizoenNu = vraag || pick(['lente', 'zomer', 'herfst', 'winter']);   // elke keer opent de strook in een willekeurig seizoen
             const HOUT = '#7A5636', bomen = [];
             let blaadjes = [];
             zetBomen = (seizoen, zacht) => {
