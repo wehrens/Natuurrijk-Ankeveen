@@ -2220,12 +2220,12 @@ ${pot(47.4)}${pot(61.6)}
         // jaargetijde zien: lichtgroen met bloesem in de lente, vol groen in de zomer, oranje en rood met vallend blad
         // in de herfst en kaal in de winter. De strook doorloopt steeds alle vier de seizoenen (zie nextSpecial), te
         // beginnen bij een willekeurig seizoen; met ?seizoen=lente|zomer|herfst|winter blijft het bij dat ene seizoen.
-        var seizoenNu, seizoenVast, zetBomen;
+        var seizoenNu, seizoenVast, zetBomen, boomLijst = [];
         {
             const vraag = (location.search.match(/seizoen=(lente|zomer|herfst|winter)/) || [])[1];
             seizoenVast = !!vraag;
             seizoenNu = vraag || pick(['lente', 'zomer', 'herfst', 'winter']);   // elke keer opent de strook in een willekeurig seizoen
-            const HOUT = '#7A5636', bomen = [];
+            const HOUT = '#7A5636', bomen = []; boomLijst = bomen;
             let blaadjes = [];
             zetBomen = (seizoen, zacht) => {
             const KL = { lente: ['#A9D46A', '#8FC455', '#ffffff'], zomer: ['#4F9E45', '#3F8A3A', '#62AE52'], herfst: ['#E0902E', '#C4532B', '#EBC14A'] }[seizoen];
@@ -2440,7 +2440,103 @@ ${pot(47.4)}${pot(61.6)}
         const titel = balk.querySelector('a'); if (titel) titel.classList.add('om-ijs');
     }
     balk.dataset.seizoen = seizoenNu;
-    var zetSeizoen = (n, zacht) => { seizoenNu = n; balk.dataset.seizoen = n; zetBomen(n, zacht); };
+    var zetSeizoen = (n, zacht) => { seizoenNu = n; balk.dataset.seizoen = n; zetBomen(n, zacht); if (n !== 'herfst') bladWeg(); };
+
+    // HERFST: blaadjes vallen uit de bomen en blijven op straat liggen, steeds meer. Af en toe komt er een man met
+    // een bladblazer die ze voor zich uit het beeld uit blaast. Buiten de herfst verdwijnen ze (de sneeuw dekt ze toe).
+    const bladLaag = document.createElement('div');
+    bladLaag.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:0';
+    bladLaag.setAttribute('aria-hidden', 'true');
+    strip.appendChild(bladLaag);
+    const BLADKLEUR = ['#E0902E', '#C4532B', '#EBC14A', '#A8662B', '#D9772A'];
+    const BLAD_MAX = 110;
+    let bladeren = [], blazen = false;
+    function boomXen() {
+        const sr = strip.getBoundingClientRect();
+        return boomLijst.filter(d => d.offsetParent !== null).map(d => { const r = d.getBoundingClientRect(); return [r.left - sr.left, r.width]; });
+    }
+    function legBlad(x, y, rot) {
+        const b = document.createElement('div');
+        b.style.cssText = `position:absolute;left:0;top:0;width:6px;height:3.4px;border-radius:70% 0 70% 0;background:${pick(BLADKLEUR)};box-shadow:inset 0 0 0 .4px rgba(90,50,20,.35)`;
+        b.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
+        bladLaag.appendChild(b);
+        const blad = { el: b, x, y, rot }; bladeren.push(blad);
+        return blad;
+    }
+    function valBlad() {
+        if (seizoenNu !== 'herfst' || blazen || bladeren.length >= BLAD_MAX || document.hidden) return;
+        const bomenX = boomXen(), w = W();
+        let x;
+        if (bomenX.length && chance(.7)) { const [bx, bw] = pick(bomenX); x = bx + bw / 2 + rand(-bw * .5 - 30, bw * .5 + 30); }
+        else x = rand(10, w - 10);
+        x = Math.max(4, Math.min(w - 6, x));
+        const y = GROUND - rand(1.2, 3.2), rot = rand(-35, 35) + (chance(.5) ? 0 : 180), x0 = x + rand(-18, 18), y0 = GROUND - rand(30, 46);
+        const blad = legBlad(x, y, rot);
+        if (REDUCE) return;
+        const dx = rand(6, 14) * (chance(.5) ? 1 : -1);
+        animate(blad.el, [{ transform: `translate(${x0}px, ${y0}px) rotate(${rot - 300}deg)`, opacity: 0 }, { opacity: 1, offset: .08 },
+            { transform: `translate(${x0 + dx}px, ${y0 + (y - y0) * .35}px) rotate(${rot - 160}deg)`, offset: .35 },
+            { transform: `translate(${x - dx * .6}px, ${y0 + (y - y0) * .7}px) rotate(${rot - 60}deg)`, offset: .7 },
+            { transform: `translate(${x}px, ${y}px) rotate(${rot}deg)`, opacity: 1 }], { duration: rand(3200, 5200), easing: 'ease-in-out' });
+    }
+    function bladWeg() {
+        const weg = bladeren; bladeren = [];
+        weg.forEach(b => animate(b.el, [{ opacity: 1 }, { opacity: 0 }], { duration: 2400, easing: 'ease-in' }).finished.then(() => b.el.remove()).catch(() => b.el.remove()));
+    }
+    // start de strook in de herfst, dan ligt er al wat blad
+    if (seizoenNu === 'herfst') for (let i = 0; i < 30; i++) { const w = W(), x = rand(10, w - 10); legBlad(x, GROUND - rand(1.2, 3.2), rand(-35, 35) + (chance(.5) ? 0 : 180)); }
+    setInterval(valBlad, 950);
+
+    function bladblazer() {
+        if (document.hidden) return;
+        const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, h = 24, speed = 42;
+        const man = person('#3E6B35', h); delete man.dataset.groet;
+        const svg = man.firstElementChild;
+        // de achterste arm houdt de blazer vast (zwaait niet), met oorkappen tegen de herrie en een oranje blazer
+        const armB = svg.querySelector('.armB'); armB.setAttribute('class', 'armVast'); armB.setAttribute('d', 'M13.5 14 l2.2 5 l2.6 1.2');
+        svg.insertAdjacentHTML('beforeend', `<path d="M4 4.6 q5 -6.4 10 0" fill="none" stroke="#2b2b2b" stroke-width=".9"/><rect x="3.2" y="3.8" width="2.4" height="3.6" rx="1" fill="#D22630"/><rect x="12.4" y="3.8" width="2.4" height="3.6" rx="1" fill="#D22630"/>
+            <path d="M3.6 18.5 h10.8" stroke="#F4F4F4" stroke-width="1.4" opacity=".85"/>
+            <g class="blazer"><rect x="14.4" y="17.6" width="6.6" height="5" rx="1.6" fill="#F07A1A" stroke="#9a4a0c" stroke-width=".4"/><path d="M18 19.6 L29 37.2" stroke="#3a3a3a" stroke-width="2.4" stroke-linecap="round"/><path d="M28 35.8 L30.6 38.4" stroke="#F07A1A" stroke-width="2.6" stroke-linecap="round"/></g>`);
+        strip.appendChild(man);
+        const x0 = fromLeft ? -50 : width + 30, x1 = fromLeft ? width + 50 : -70, dur = Math.abs(x1 - x0) * speed, y = GROUND - h;
+        const loop = animate(man, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: dur, easing: 'linear' });
+        const b = bob(man, 380);
+        loop.finished.then(() => { b.cancel(); man.remove(); }).catch(() => { b.cancel(); man.remove(); });
+        if (!REDUCE) animate(svg.querySelector('.blazer'), [{ transform: 'rotate(-3deg)' }, { transform: 'rotate(3deg)' }], { duration: 900, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+        svg.querySelector('.blazer').style.cssText = 'transform-box:view-box;transform-origin:17px 20px';
+        // de mond van de blazer zit ongeveer 18px vóór hem; de blaas reikt nog zo'n 20px verder
+        const reik = h * .45 / 2 + 18 + 20;
+        const manX = t => x0 + (x1 - x0) * Math.min(1, Math.max(0, t / dur)) + h * .45 / 2;
+        blazen = true; later(() => { blazen = false; }, dur);
+        // stofwolkjes bij de mond
+        const t0 = performance.now();
+        const stof = setInterval(() => {
+            const t = performance.now() - t0; if (t > dur || !man.isConnected) { clearInterval(stof); return; }
+            if (document.hidden || REDUCE) return;
+            const sx = manX(t) + f * (h * .45 / 2 + 6), c = document.createElement('div');
+            c.style.cssText = 'position:absolute;left:0;top:0;width:5px;height:5px;border-radius:50%;background:rgba(190,170,140,.45)';
+            strip.appendChild(c);
+            animate(c, [{ transform: `translate(${sx}px, ${GROUND - 4}px) scale(.5)`, opacity: .8 }, { transform: `translate(${sx + f * rand(14, 26)}px, ${GROUND - rand(6, 12)}px) scale(1.6)`, opacity: 0 }], { duration: 700, easing: 'ease-out' })
+                .finished.then(() => c.remove()).catch(() => c.remove());
+        }, 160);
+        // elk blad vliegt op als hij er aankomt, en waait voor hem uit het beeld uit
+        const lijst = bladeren.slice(); bladeren = bladeren.filter(bl => !lijst.includes(bl));
+        lijst.forEach(bl => {
+            const tBlaas = ((bl.x - f * reik) - (x0 + h * .45 / 2)) / (x1 - x0) * dur;
+            later(() => {
+                if (!bl.el.isConnected) return;
+                bl.el.getAnimations().forEach(a => a.cancel()); bl.el.style.transform = `translate(${bl.x}px, ${bl.y}px) rotate(${bl.rot}deg)`;
+                const eind = fromLeft ? width + rand(20, 80) : -rand(20, 80), afst = Math.abs(eind - bl.x), v = rand(.18, .32);
+                const hoog = rand(6, 20), r = bl.rot + f * rand(500, 1100);
+                animate(bl.el, [{ transform: `translate(${bl.x}px, ${bl.y}px) rotate(${bl.rot}deg)` },
+                    { transform: `translate(${bl.x + (eind - bl.x) * .25}px, ${bl.y - hoog}px) rotate(${bl.rot + (r - bl.rot) * .3}deg)`, offset: .2 },
+                    { transform: `translate(${bl.x + (eind - bl.x) * .6}px, ${bl.y - hoog * .3}px) rotate(${bl.rot + (r - bl.rot) * .65}deg)`, offset: .55 },
+                    { transform: `translate(${eind}px, ${bl.y - rand(0, 6)}px) rotate(${r}deg)` }], { duration: afst / v, easing: 'ease-out' })
+                    .finished.then(() => bl.el.remove()).catch(() => bl.el.remove());
+            }, Math.max(0, tBlaas));
+        });
+    }
+
     // de laag van de ganzen: vóór de omroeptoren (z-index -3), achter De Dillewijn (z-index -1)
     const ganzenlaag = document.createElement('div');
     ganzenlaag.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:-2;overflow:hidden';
@@ -3576,6 +3672,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: peloton, dur: () => (W() + 300 + EX) * 4.5, sz: 'lzh' },   // geen wielrenners in de winter
         { run: fanfare, dur: () => (W() + 200 + EX) * 24, groot: true },
         { run: skaters, dur: () => (W() + 120 + 360) * 7.5, groot: true, sz: 'w' },
+        { run: bladblazer, dur: () => (W() + 100) * 42, sz: 'h' },   // komt als laatste van de herfst, als er flink wat blad ligt
         { run: naturists, dur: () => (W() + 160 + EX) * 26 + 17500, groot: true, sz: 'z' },
         { run: carnaval, dur: () => (W() + 300 + EX) * 22 + 9000, groot: true, sz: 'w' },
         { run: yogis, dur: () => YOGA_DUUR, groot: true, sz: 'lz' },
@@ -3626,6 +3723,7 @@ ${pot(47.4)}${pot(61.6)}
                 if (seizoenNu === 'winter' && jaarrond[i].run === markt) i++; else deel.push(jaarrond.splice(i, 1)[0]);
             }
             bag = specials.filter(x => x.sz && x.sz.includes(seizoenNu[0])).concat(deel).sort(() => Math.random() - 0.5);
+            const bb = bag.findIndex(x => x.run === bladblazer); if (bb >= 0) bag.push(bag.splice(bb, 1)[0]);
             const dubbel = bag.findIndex((x, i) => i && x.run === bag[i - 1].run);       // niet twee keer dezelfde direct na elkaar
             if (dubbel > 0) bag.splice((dubbel + Math.ceil(bag.length / 2)) % bag.length, 0, bag.splice(dubbel, 1)[0]);
             if (last && bag[0].run === last.run && bag.length > 1) bag.push(bag.shift());
@@ -3688,7 +3786,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; ['lente', 'zomer', 'herfst', 'winter'].forEach(n => { window.ontmoeten[n] = () => { zetSeizoen(n, true); bag = []; eersteRonde = true; }; }); window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.vespa = vespa; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.bladblazer = bladblazer; ['lente', 'zomer', 'herfst', 'winter'].forEach(n => { window.ontmoeten[n] = () => { zetSeizoen(n, true); bag = []; eersteRonde = true; }; }); window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.vespa = vespa; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
