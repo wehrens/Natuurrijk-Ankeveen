@@ -19,7 +19,8 @@
                               de nestpaal en de zittende ooievaar hebben z-index 1
      z-index 3   lucht        alles wat over de hele kopbalk vliegt of opstijgt: ooievaar, teksten, hartjes, bal
 
-   SEIZOENEN: de strook doorloopt steeds lente, zomer, herfst en winter (de bomen kleuren mee). Een groep met `sz` in de
+   SEIZOENEN: de strook doorloopt steeds lente, zomer, herfst en winter (de bomen kleuren mee, zomers een blauwe lucht met
+   zon en korte mouwen, 's winters sneeuw op daken, bord en titel, een grijze lucht en mutsen en sjaals). Een groep met `sz` in de
    lijst `specials` (l, z, h, w) komt alleen in die seizoenen langs; de rest is over het jaar verdeeld.
    Met #naam achter het adres (bijvoorbeeld #naturists) is elke groep het hele jaar te bekijken. */
 (function () {
@@ -158,6 +159,40 @@
         w.dataset.groet = '1';
         return w;
     }
+    // Kleding naar het seizoen, voor gewone voorbijgangers: in de zomer vaak korte mouwen (en soms een korte broek),
+    // in de winter meestal een muts en een sjaal. Mouwen en pijpen zijn een kleurverloop over arm of been, zodat ze
+    // gewoon mee zwaaien met de loopbeweging.
+    let kledingId = 0;
+    function mutsSjaal(svg, doel) {
+        const m = pick(MUTS), m2 = pick(MUTS), sj = pick(MUTS);
+        (doel || svg).insertAdjacentHTML('beforeend', `<path d="M5 10.4 q4 2.2 8 0 l.4 2.2 q-4.4 2.4 -8.8 0 z" fill="${sj}"/><path d="M6 12 l-1.2 5.4 h2.2 l.8 -5 z" fill="${sj}"/>
+            <path d="M4.1 5 q0 -5.6 4.9 -5.6 q4.9 0 4.9 5.6 z" fill="${m}"/><path d="M3.9 3.8 h10.2 v1.8 h-10.2 z" fill="${m2}"/><circle cx="9" cy="-1" r="1.6" fill="${m2}"/>`);
+    }
+    function kleding(p) {
+        const svg = p && p.firstElementChild; if (!svg || svg.dataset.kleding) return p;
+        svg.dataset.kleding = 1;
+        const sz = typeof seizoenNu === 'string' ? seizoenNu : '';
+        if (sz === 'winter') {
+            if (chance(.8)) mutsSjaal(svg, svg.querySelector('g[transform^="rotate"]'));   // bij een oudje zit het hoofd in een schuine groep
+            return p;
+        }
+        if (sz !== 'zomer') return p;
+        const huid = (svg.querySelector('circle[r="4.6"]') || {}).getAttribute ? svg.querySelector('circle[r="4.6"]').getAttribute('fill') : null;
+        if (!huid) return p;
+        const NS = 'http://www.w3.org/2000/svg';
+        const verloop = (kleur, tot) => {
+            const id = 'om-kl' + (++kledingId);
+            let defs = svg.querySelector('defs'); if (!defs) { defs = document.createElementNS(NS, 'defs'); svg.prepend(defs); }
+            defs.insertAdjacentHTML('beforeend', `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="${tot}" stop-color="${kleur}"/><stop offset="${tot}" stop-color="${huid}"/></linearGradient>`);
+            return `url(#${id})`;
+        };
+        if (chance(.8)) svg.querySelectorAll('.armA, .armB').forEach(a => { const k = a.getAttribute('stroke'); if (k && k[0] === '#') a.setAttribute('stroke', verloop(k, .32)); });
+        if (chance(.45)) {
+            const lA = svg.querySelector('.legA'), k = lA && lA.getAttribute('stroke');
+            if (k && k[0] === '#') { svg.dataset.broek = k; const g = verloop(k, .4); svg.querySelectorAll('.legA, .legB').forEach(l => l.setAttribute('stroke', g)); }
+        }
+        return p;
+    }
     // Loopbeweging: benen en armen zwaaien om en om, het lijf veert mee. Geeft één handvat voor pause/play/cancel.
     // Bij pause gaan benen en armen netjes terug naar de ruststand (anders blijft iemand midden in een stap hangen).
     function bob(el, dur) {
@@ -225,7 +260,7 @@
         for (let i = 0; i < n; i++) {
             const h = oud ? rand(20.5, 23) : chance(.25) ? rand(13, 16) : rand(20, 25);
             const kleur = chance(.3) ? pick(KLEUR) : color;
-            const p = oud ? oudje(kleur, h, i === 0 && chance(.6) ? 'rollator' : 'stok') : person(kleur, h);
+            const p = kleding(oud ? oudje(kleur, h, i === 0 && chance(.6) ? 'rollator' : 'stok') : person(kleur, h));
             strip.appendChild(p);
             const off = oud ? i * rand(13, 16) : i * rand(8, 11), sp = oud ? speed * 1.8 : speed;
             const x0 = fromLeft ? -40 - off : width + 20 + off;
@@ -495,7 +530,7 @@
             animate(towel, [{ transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(0)` }, { transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(1)` }], { duration: 500, easing: 'ease-out' }); }, inDur + 100);
         later(() => { animate(towel, [{ transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(1)` }, { transform: `translate(${tx}px, ${GROUND - 4}px) scaleX(0)` }], { duration: 400, easing: 'ease-in' }).finished.then(() => towel.remove()).catch(() => towel.remove()); }, inDur + 1400 + LIG + NA + 200);
         // zonnetje boven de handdoek (niet als er al een zon aan de hemel staat: de projectie met zomerlucht)
-        if (!document.body.classList.contains('lucht')) later(() => { const z = document.createElement('div'); z.style.cssText = 'position:absolute;left:0;top:0;font-size:12px;line-height:1;pointer-events:none';
+        if (!document.body.classList.contains('lucht') && !(ZACHTE_LUCHT && seizoenNu === 'zomer')) later(() => { const z = document.createElement('div'); z.style.cssText = 'position:absolute;left:0;top:0;font-size:12px;line-height:1;pointer-events:none';
             const zp = luchtPlek(stopX + (n - 1) * GAP * f / 2, 14, 14);
             z.textContent = '☀️'; z.style.transform = `translate(${zp.x}px, ${zp.y}px)`; verte.appendChild(z);
             animate(z, [{ opacity: 0, transform: z.style.transform + ' scale(.5)' }, { opacity: 1, transform: z.style.transform + ' scale(1)' }], { duration: 600, easing: 'ease-out' });
@@ -889,7 +924,7 @@
         const shopEnd = open + 34000;
         function klant() {
             if (performance.now() - t0 > shopEnd - 6000) return;
-            const h = chance(.2) ? rand(14, 17) : rand(20, 25), color = pick(KLEUR), p = person(color, h); strip.appendChild(p);
+            const h = chance(.2) ? rand(14, 17) : rand(20, 25), color = pick(KLEUR), p = kleding(person(color, h)); strip.appendChild(p);
             const fromLeft = chance(.5), k = Math.floor(Math.random() * N), stop = xs[k] + (fromLeft ? -12 : 36);
             walkTo(p, fromLeft ? -40 : width + 20, stop, h, () => {
                 later(() => {
@@ -993,7 +1028,7 @@
             ride(x0, stop, function () {
                 moving.forEach(a => a.pause()); rider.stil = true;
                 // de voorbijganger komt van de kant waar de bak naartoe wijst en blijft bij de bak staan
-                const h = rand(21, 25), p = person(pick(KLEUR), h); strip.appendChild(p);
+                const h = rand(21, 25), p = kleding(person(pick(KLEUR), h)); strip.appendChild(p);
                 const px0 = fromLeft ? width + 20 : -40, px1 = stop + (fromLeft ? 50 : -16);
                 p.style.transform = `translate(${px0}px, ${GROUND - h}px) scaleX(${-f})`;
                 const b = bob(p, 420), dwalk = Math.abs(px1 - px0) * 18;
@@ -1546,7 +1581,7 @@
         if (document.hidden) return;
         const width = W(), fromLeft = chance(.5), f = fromLeft ? 1 : -1, speed = 27;
         const vader = baasMetHond({ h: 29, vacht: '#4A2A18', vlek: '#3A2012', dw: 17 });
-        const moeder = person(pick(KLEUR), 22.5);
+        const moeder = kleding(person(pick(KLEUR), 22.5));
         const kleurT = pick(['#F39A2B', '#3B8FE0', '#2BB39A', '#E8452C']);
         const peuter = () => { const p = person(kleurT, 12); delete p.dataset.groet; return p; };
         const t1 = peuter(), t2 = peuter();
@@ -2099,19 +2134,42 @@ ${pot(47.4)}${pot(61.6)}
 <g fill="none" stroke="#262626" stroke-width="1" stroke-linejoin="round"><path d="M8.5 44.5 L13 12 H96 L100.5 44.5"/><path d="M11.5 45 V74.5 H97.5 V45"/><path d="M6.5 74.5 H102.5"/><path d="M35.8 21.6 H61.2 M37 24 V42 M60 24 V42"/></g>
 </svg>`;
         };
+        // Sneeuw in de winter: een witte kap op alles wat naar boven wijst. Het silhouet min hetzelfde silhouet een
+        // paar pixels omlaag geschoven laat precies een randje bovenop over (op daken, dakkapel, toren en bord).
+        // Staat los van het (vage) gebouw, zodat de sneeuw wit en goed zichtbaar is.
+        let kapId = 0;
+        var sneeuwKap = (svg, geo, px, extra) => {
+            const vb = svg.match(/viewBox="([^"]+)"/)[1], w = svg.match(/width="([\d.]+)"/)[1], h = +svg.match(/height="([\d.]+)"/)[1];
+            const vh = +vb.split(' ')[3], dy = px * vh / h, id = 'om-kap' + (++kapId);
+            return `<svg viewBox="${vb}" width="${w}" height="${h}" aria-hidden="true" style="overflow:visible;filter:drop-shadow(0 .8px 0 rgba(85,115,145,.85))">
+                <defs><mask id="${id}" maskUnits="userSpaceOnUse" x="-200" y="-200" width="600" height="600"><rect x="-200" y="-200" width="600" height="600" fill="#fff"/><g fill="#000" transform="translate(0 ${dy.toFixed(2)})">${geo}</g></mask></defs>
+                <g fill="#fff" mask="url(#${id})">${geo}</g>${extra || ''}</svg>`;
+        };
+        const sneeuwLaag = (bron, svg, geo, px, extra) => {
+            const s = document.createElement('div');
+            s.className = 'om-sneeuw' + (bron.classList.contains('om-breed') ? ' om-breed' : '');
+            s.style.cssText = bron.style.cssText; s.style.opacity = '';
+            s.innerHTML = sneeuwKap(svg, geo, px, extra);
+            bron.after(s);
+        };
+        const GEO = {
+            huis: '<path d="M0 13 L15 0 L30 13 V34 H0 Z"/>', huis2: '<path d="M0 12 L15 0 L30 12 V40 H0 Z"/>',
+            cafe: '<path d="M8.5 44.5 L13 12 H96 L100.5 44.5 Z"/><rect x="11.5" y="44.6" width="86" height="30"/>'
+        };
         const bg = document.createElement('div');
         bg.setAttribute('aria-hidden', 'true');
         bg.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:0';
         const gebouwen = [];
         // [positie %, svg, alleen op bredere schermen]
-        const stukken = [[17, huis(ROOD, 26), false], [22, huis2(BLAUW, 30), true],  [68, huis(ROOD, 27), true],
-            [73, huis2(ROOD, 29), false], [78.5, huis(BLAUW, 25), true]];
-        stukken.push(['calc(62% - 70px)', cafe(34), false, STERK ? 1 : .4]);                 // het café staat een stukje links van het kerkje
-        stukken.forEach(([pct, svg, breed, op]) => {
+        const stukken = [[17, huis(ROOD, 26), false, 0, 'huis'], [22, huis2(BLAUW, 30), true, 0, 'huis2'],  [68, huis(ROOD, 27), true, 0, 'huis'],
+            [73, huis2(ROOD, 29), false, 0, 'huis2'], [78.5, huis(BLAUW, 25), true, 0, 'huis']];
+        stukken.push(['calc(62% - 70px)', cafe(34), false, STERK ? 1 : .4, 'cafe']);                 // het café staat een stukje links van het kerkje
+        stukken.forEach(([pct, svg, breed, op, soort]) => {
             const d = document.createElement('div');
             d.style.cssText = `position:absolute;left:${typeof pct === 'number' ? pct + '%' : pct};bottom:${H - GROUND}px;transform:translateX(-50%);opacity:${op || vaag};line-height:0`;
             d.innerHTML = svg; if (breed) d.className = 'om-breed';
             bg.appendChild(d); obstakels.push(d); gebouwen.push(d);
+            sneeuwLaag(d, svg, GEO[soort], soort === 'cafe' ? 3.4 : 3.6, soort === 'cafe' ? '<rect x="35.4" y="19.8" width="26.2" height="2.6" rx="1" fill="#fff"/><path d="M12.6 12.2 H96.4" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>' : '');
             if (typeof pct === 'number' && pct < 40) pleinRand.huizen.push(d); else if (typeof pct !== 'number') pleinRand.cafe = d;
         });
         // Laag groen (een bomenrand in de verte) in de open stukken tússen de huizen, het café en De Dillewijn.
@@ -2188,6 +2246,7 @@ ${pot(47.4)}${pot(61.6)}
             <rect x="1" y="1" width="52" height="15" rx="3" fill="#0F4C92"/><rect x="2.6" y="2.6" width="48.8" height="11.8" rx="2" fill="none" stroke="#fff" stroke-width="1"/>
             <text x="27" y="11.4" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="8" fill="#fff" letter-spacing=".3">Ankeveen</text></svg>`;
         bg.appendChild(bord); obstakels.push(bord); pleinRand.bord = bord;
+        bord.insertAdjacentHTML('beforeend', `<div class="om-sneeuw" style="position:absolute;inset:0;line-height:0">${sneeuwKap(bord.innerHTML, '<rect x="1" y="1" width="52" height="15" rx="3"/>', 3.2)}</div>`);
         const st = document.createElement('style');
         st.textContent = '@media (max-width: 640px){ #ontmoeten .om-breed{display:none} }';
         document.head.appendChild(st);
@@ -2200,6 +2259,8 @@ ${pot(47.4)}${pot(61.6)}
         // zodat wat erachter langs vliegt (de ganzen) ook echt achter de toren verdwijnt.
         const ksvg = kerk(74), kmask = `url('data:image/svg+xml,${encodeURIComponent(ksvg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')).replace(/'/g, '%27')}') center / 100% 100% no-repeat`;
         dw.innerHTML = `<div style="position:absolute;inset:0;background:${STERK ? getComputedStyle(tb).backgroundColor : '#E6F0F5'};-webkit-mask:${kmask};mask:${kmask}"></div><div style="position:relative;opacity:${STERK ? 1 : .36}">${ksvg}</div>`;
+        const kgeo = `<path d="${ksvg.match(/<path d="([^"]+)"/)[1]}"/>`;
+        dw.insertAdjacentHTML('beforeend', `<div class="om-sneeuw" style="position:absolute;inset:0;line-height:0">${sneeuwKap(ksvg, kgeo, 3.4)}</div>`);
         tb.appendChild(dw); obstakels.push(dw); pleinRand.kerk = dw;
         const zetKerk = () => {
             const sr = strip.getBoundingClientRect(), br = tb.getBoundingClientRect();
@@ -2319,8 +2380,28 @@ ${pot(47.4)}${pot(61.6)}
             if (REDUCE) w.style.transform = `translateX(${start * 100}vw)`;
             else animate(w, [{ transform: `translateX(${-breed - 10}px)` }, { transform: 'translateX(102vw)' }], { duration: sec * 1000, iterations: Infinity, easing: 'linear', delay: -start * sec * 1000 });
         });
+        // per seizoen een eigen kleur lucht die eroverheen in- en uitvloeit: zomers dieper blauw, 's winters grijswit
+        hemel.insertAdjacentHTML('afterbegin', `<div class="om-zomerlucht" style="position:absolute;inset:0;background:linear-gradient(180deg, #7DBDEB 0%, #A9D4F2 45%, rgba(248,246,240,0) 94%)"></div>
+            <div class="om-winterlucht" style="position:absolute;inset:0;background:linear-gradient(180deg, #CDD6DF 0%, #DEE4EA 45%, rgba(248,246,240,0) 94%)"></div>`);
         balk.appendChild(hemel);
+        // de zomerzon: hoog in de lucht, ver boven de daken, in de verre laag (achter de toren en het kerkje)
+        const zon = document.createElement('div'); zon.className = 'om-zon';
+        zon.style.cssText = 'position:absolute;top:3px;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,#FFF7C2 0 34%,#FFE35C 52%,rgba(255,227,92,.35) 62%,rgba(255,227,92,0) 72%)';
+        verte.appendChild(zon);
     }
+    {
+        const st = document.createElement('style');
+        st.textContent = `.om-sneeuw,.om-zomerlucht,.om-winterlucht,.om-zon{opacity:0;transition:opacity 2.4s ease}
+            [data-seizoen="winter"] .om-sneeuw,[data-seizoen="winter"] .om-winterlucht,[data-seizoen="zomer"] .om-zomerlucht,[data-seizoen="zomer"] .om-zon{opacity:1}
+            .om-zon{left:46%} @media (max-width: 640px){ .om-zon{left:68%;width:28px!important;height:28px!important} }
+            .om-ijs{transition:text-shadow 2.4s ease}
+            [data-seizoen="winter"] .om-ijs{text-shadow:0 -2.6px 0 #fff, 0 -3.4px 0 rgba(110,145,180,.9)}`;
+        document.head.appendChild(st);
+        // sneeuw op de letters van de titel
+        const titel = balk.querySelector('a'); if (titel) titel.classList.add('om-ijs');
+    }
+    balk.dataset.seizoen = seizoenNu;
+    var zetSeizoen = (n, zacht) => { seizoenNu = n; balk.dataset.seizoen = n; zetBomen(n, zacht); };
     // de laag van de ganzen: vóór de omroeptoren (z-index -3), achter De Dillewijn (z-index -1)
     const ganzenlaag = document.createElement('div');
     ganzenlaag.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:-2;overflow:hidden';
@@ -2581,7 +2662,7 @@ ${pot(47.4)}${pot(61.6)}
         w.querySelectorAll('.gond').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-360deg)' }], { duration: 14000, iterations: Infinity, easing: 'linear', delay: 2200 }));
         // een rij mensen komt kijken en staat er even onder
         const kijkers = [];
-        later(() => { for (let i = 0; i < 3; i++) { const h = chance(.4) ? rand(14, 17) : rand(20, 25), p = person(pick(KLEUR), h); strip.appendChild(p);
+        later(() => { for (let i = 0; i < 3; i++) { const h = chance(.4) ? rand(14, 17) : rand(20, 25), p = kleding(person(pick(KLEUR), h)); strip.appendChild(p);
             const x0 = chance(.5) ? -40 : W() + 20, x1 = left + 10 + i * 16, y = GROUND - h, f = x1 > x0 ? 1 : -1;
             p.style.transform = `translate(${x0}px, ${y}px) scaleX(${f})`; const b = bob(p, 420);
             animate(p, [{ transform: `translate(${x0}px, ${y}px) scaleX(${f})` }, { transform: `translate(${x1}px, ${y}px) scaleX(${f})` }], { duration: Math.abs(x1 - x0) * 14, easing: 'linear' }).finished.then(() => b.pause()).catch(() => {});
@@ -2850,7 +2931,7 @@ ${pot(47.4)}${pot(61.6)}
     function baasMetHond(o = {}) {
         const h = o.h || rand(21, 24.5), w = document.createElement('div'); w.className = 'om-p';
         w.style.width = '34px'; w.style.height = h + 'px';
-        const pers = person(o.jas || pick(KLEUR), h, o.kapsel); pers.style.position = 'absolute'; pers.style.left = '0'; pers.style.top = '0';
+        const pers = kleding(person(o.jas || pick(KLEUR), h, o.kapsel)); pers.style.position = 'absolute'; pers.style.left = '0'; pers.style.top = '0';
         const vacht = o.vacht || pick(VACHT), vlek = o.vlek || pick(VACHT), klein = chance(.5), dw = o.dw || (klein ? 12 : 15), dh = dw * .65;
         const licht = vacht === '#f4efe6' || vacht === '#d9b36a';                // lichte vacht krijgt een randje
         const rand_ = licht ? 'stroke="#8a7560" stroke-width=".6"' : '', poot = licht ? '#c9bca8' : vacht;
@@ -2924,7 +3005,7 @@ ${pot(47.4)}${pot(61.6)}
         psvg.lastElementChild.setAttribute('fill', '#E9C46A');
         // voor het hurken: alles boven de benen in één groep (die zakt), plus een paar gebogen benen
         const NS = 'http://www.w3.org/2000/svg', boven = document.createElementNS(NS, 'g'), hurk = document.createElementNS(NS, 'g');
-        const bA = psvg.querySelector('.legA'), bB = psvg.querySelector('.legB'), broek = bA.getAttribute('stroke');
+        const bA = psvg.querySelector('.legA'), bB = psvg.querySelector('.legB'), broek = psvg.dataset.broek || bA.getAttribute('stroke');
         [...psvg.children].filter(e => e !== bA && e !== bB).forEach(e => boven.appendChild(e));
         hurk.innerHTML = `<path d="M8 31.6 L3.4 31 L6.4 38.4 M10 31.6 L14.6 31 L11.6 38.4" fill="none" stroke="${broek}" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>`;
         hurk.style.opacity = 0;
@@ -3284,9 +3365,7 @@ ${pot(47.4)}${pot(61.6)}
     const MUTS = ['#C0392B', '#1F6E43', '#2B4C8C', '#E67E22', '#6B3FA0', '#ECECEC', '#16A085', '#8E2B4F'];
     function wintermens(h) {
         const p = person(pick(['#2f3e55', '#5a3a2a', '#3b3b3b', '#7a1f2b', '#1f4e79', '#4a5d3a', '#6b6b6b']), h), svg = p.firstElementChild;
-        const m = pick(MUTS), m2 = pick(MUTS), sj = pick(MUTS);
-        svg.insertAdjacentHTML('beforeend', `<path d="M5 10.4 q4 2.2 8 0 l.4 2.2 q-4.4 2.4 -8.8 0 z" fill="${sj}"/><path d="M6 12 l-1.2 5.4 h2.2 l.8 -5 z" fill="${sj}"/>
-            <path d="M4.1 5 q0 -5.6 4.9 -5.6 q4.9 0 4.9 5.6 z" fill="${m}"/><path d="M3.9 3.8 h10.2 v1.8 h-10.2 z" fill="${m2}"/><circle cx="9" cy="-1" r="1.6" fill="${m2}"/>`);
+        mutsSjaal(svg); svg.dataset.kleding = 1;
         delete p.dataset.groet;
         return p;
     }
@@ -3499,7 +3578,7 @@ ${pot(47.4)}${pot(61.6)}
             // en een kwart van de groepen die het hele jaar langskomen. De bomen kleuren mee.
             const VOLG = ['lente', 'zomer', 'herfst', 'winter'];
             if (eersteRonde) eersteRonde = false;
-            else if (!seizoenVast) { seizoenNu = VOLG[(VOLG.indexOf(seizoenNu) + 1) % 4]; zetBomen(seizoenNu, true); }
+            else if (!seizoenVast) zetSeizoen(VOLG[(VOLG.indexOf(seizoenNu) + 1) % 4], true);
             if (!jaarrond.length || (jaarrond.length === 1 && jaarrond[0].run === markt && seizoenNu === 'winter')) jaarrond = jaarrond.concat(specials.filter(x => !x.sz && !jaarrond.includes(x)).sort(() => Math.random() - 0.5));
             // Korte seizoenen (een minuut of twee): per seizoen maar een achtste van de jaarrond-groepen, zodat de
             // seizoenen vlot wisselen. In de winter staat de lichtjesmarkt er, dus dan geen gewone markt.
@@ -3570,7 +3649,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; ['lente', 'zomer', 'herfst', 'winter'].forEach(n => { window.ontmoeten[n] = () => { seizoenNu = n; zetBomen(n, true); bag = []; eersteRonde = true; }; }); window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.vespa = vespa; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; ['lente', 'zomer', 'herfst', 'winter'].forEach(n => { window.ontmoeten[n] = () => { zetSeizoen(n, true); bag = []; eersteRonde = true; }; }); window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.vespa = vespa; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
