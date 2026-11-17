@@ -1388,22 +1388,41 @@
 
         // 2. PETANQUE: drie spelers om de beurt. De "pointeur" gaat door de knieën en rolt zijn bal naar het butje;
         // de "tireur" blijft staan, haalt uit en gooit met een boog recht op een bal die er al ligt: die ketst weg.
-        // Na elk spelletje (zes ballen) lopen ze naar de overkant en spelen ze in de andere richting terug.
+        // Elk spelletje begint met het gooien van het rode butje. Na zes ballen lopen ze naar de overkant, waar de ballen
+        // liggen; pas als ze erbij staan rapen ze die (en het butje) op, en dan spelen ze in de andere richting terug.
         (() => {
             const v = vak(1), grond = VH - 1.7, pos = (x, y) => `translate(${x}px, ${y}px)`;
             const PLEK = { 1: [0, 9, 18], '-1': [CW - 27.5, CW - 18.5, CW - 9.5] }, BUT = { 1: CW - 13, '-1': 13 };
-            let dir = 1, n = 0, liggen = [], bezigTot = 0;
+            let dir = 1, n = 0, liggen = [], bezigTot = 0, butLigt = false;
             const spelers = PLEK[1].map((x, i) => { const m = mens(v, pick(KLEUR), x, i === 1 ? 20 : 21, i === 2 ? 0 : undefined); bob(m, 280); return { m, x0: x, x }; });
-            const but = bol(v, 1, `background:#E0262E;transform:${pos(BUT[1], VH - 1)}`);
+            const but = bol(v, 1, `background:#E0262E;transform:${pos(BUT[1], VH - 1)};opacity:0`);
             lus(() => {
                 if (performance.now() < bezigTot) return;
+                if (!butLigt) {
+                    // eerst het butje: de eerste speler gooit het rode balletje met een lage boog naar de overkant
+                    const sp = spelers[dir > 0 ? 0 : 2], arm = sp.m.querySelector(dir > 0 ? '.armB' : '.armA'), d = g => `rotate(${g * dir}deg)`;
+                    const x0 = dir > 0 ? sp.x + 11 : sp.x - 1.5;
+                    arm.animate([{ transform: d(0) }, { transform: d(50), offset: .32 }, { transform: d(-75), offset: .52 }, { transform: d(-50), offset: .7 }, { transform: d(0) }], { duration: 1400, easing: 'ease-in-out' });
+                    later(() => { if (klaar) return; but.getAnimations().forEach(a => a.cancel()); but.style.opacity = 1;
+                        const x1 = BUT[dir] + rand(-3, 3);
+                        animate(but, boog(x0 + 2 * dir, VH - 8, x1, VH - 1, 8), { duration: 700, easing: 'linear' }); }, 700);
+                    butLigt = true; bezigTot = performance.now() + 2400;
+                    return;
+                }
                 if (liggen.length >= 6) {
-                    // spelletje uit: ballen oprapen, naar de overkant lopen, butje de andere kant op
-                    liggen.splice(0).forEach(q => animate(q.b, [{ opacity: 1 }, { opacity: 0 }], { duration: 400 }).finished.then(() => q.b.remove()).catch(() => q.b.remove()));
-                    dir = -dir; bezigTot = performance.now() + 3300;
-                    animate(but, [{ opacity: 1 }, { opacity: 0 }], { duration: 300 }).finished.then(() => { but.style.transform = pos(BUT[dir], VH - 1); animate(but, [{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: 1700 }); }).catch(() => {});
-                    spelers.forEach((sp, i) => { const x = PLEK[dir][i];
-                        animate(sp.m, [{ transform: `translateX(${sp.x - sp.x0}px)` }, { transform: `translateX(${x - sp.x0}px)` }], { duration: 2300, delay: (dir > 0 ? 2 - i : i) * 220, easing: 'ease-in-out' }); sp.x = x; });
+                    // spelletje uit: naar de overkant lopen, waar de ballen liggen; als ze er staan rapen ze alles op
+                    dir = -dir;
+                    let laatst = 0;
+                    spelers.forEach((sp, i) => { const x = PLEK[dir][i], wacht = (dir > 0 ? 2 - i : i) * 220; laatst = Math.max(laatst, wacht);
+                        animate(sp.m, [{ transform: `translateX(${sp.x - sp.x0}px)` }, { transform: `translateX(${x - sp.x0}px)` }], { duration: 2300, delay: wacht, easing: 'ease-in-out' }); sp.x = x; });
+                    const bij = 2300 + laatst + 250;
+                    later(() => {
+                        // even bukken en oprapen
+                        spelers.forEach(sp => sp.m.firstElementChild.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(3px)', offset: .4 }, { transform: 'translateY(3px)', offset: .6 }, { transform: 'translateY(0)' }], { duration: 900, easing: 'ease-in-out' }));
+                        liggen.splice(0).forEach(q => animate(q.b, [{ opacity: 1 }, { opacity: 0 }], { duration: 400, delay: 300 }).finished.then(() => q.b.remove()).catch(() => q.b.remove()));
+                        animate(but, [{ opacity: 1 }, { opacity: 0 }], { duration: 400, delay: 300 });
+                    }, bij);
+                    butLigt = false; bezigTot = performance.now() + bij + 1300;
                     return;
                 }
                 const k = n++ % 3, sp = spelers[k], m = sp.m, svg = m.firstElementChild, arm = m.querySelector(dir > 0 ? '.armB' : '.armA');
