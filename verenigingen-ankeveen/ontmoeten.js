@@ -741,6 +741,110 @@
         });
     }
 
+    // ZWEMSTERS: een paar dames die even een duik nemen, 's zomers én 's winters. Ze komen aanlopen in badpak en badmuts,
+    // leggen hun handdoek neer, gaan op het randje onderaan zitten, laten zich in het water zakken en zwemmen een rondje
+    // (alleen de hoofdjes zijn te zien). Dan klimmen ze via een klein trappetje de kant op, slaan hun handdoek om en
+    // lopen vlug naar huis, de kortste kant op. Het zwemplekje is altijd links, bij het ooievaarsnest.
+    function zwemster(h) {
+        const p = person('#000', h), svg = p.firstElementChild;
+        delete p.dataset.groet;
+        const huid = svg.querySelector('circle[r="4.6"]').getAttribute('fill');
+        const pak = pick(['#1b4f9c', '#D64541', '#16233a', '#2BB39A', '#7B5CC4', '#E8452C']), muts = pick(['#ffffff', '#F2C318', '#F39A2B', '#E8452C', '#3B8FE0', '#E58FB4']);
+        svg.querySelectorAll('.armA, .armB, .legA, .legB').forEach(n => n.setAttribute('stroke', huid));
+        svg.querySelector('path[d^="M3 13"]').setAttribute('fill', pak);
+        svg.querySelector('path[d^="M4.5 22"]').setAttribute('fill', pak);
+        svg.lastElementChild.remove();                                    // het haar gaat onder de badmuts
+        const doek = pick(['#F6E7C8', '#BFE3F2', '#F7C6D9', '#FFFFFF', '#CFE8C0']), streep = pick(['#E8452C', '#1b4f9c', '#2BB39A', '#F39A2B']);
+        svg.insertAdjacentHTML('beforeend', `<path d="M4.2 5.2 q0 -5.8 4.8 -5.8 q4.8 0 4.8 5.8 q-4.8 -1.6 -9.6 0 z" fill="${muts}" stroke="rgba(0,0,0,.18)" stroke-width=".4"/>
+            <g class="doek" opacity="0"><path d="M2.2 13.4 h13.6 l.9 14.2 h-15.4 z" fill="${doek}" stroke="rgba(0,0,0,.2)" stroke-width=".4"/><path d="M2.1 16 h13.8 M1.6 25 h14.8" stroke="${streep}" stroke-width=".9"/></g>`);
+        // de armen komen over de handdoek heen
+        svg.appendChild(svg.querySelector('.armA'));
+        return { p, svg, doek, streep };
+    }
+    function zwemsters() {
+        if (document.hidden) return;
+        const width = W(), n = pick([2, 3, 3]), winter = seizoenNu === 'winter';
+        const trapX = paal.offsetLeft + 44;                              // altijd links, vlak bij het ooievaarsnest
+        const thuis = trapX < width / 2 ? -1 : 1;                         // de kortste kant naar huis
+        const kom = thuis;                                                 // ze komen ook van die kant
+        const NAT = GROUND + 4.4;                                         // waterlijn: alleen het hoofdje steekt boven de rand uit
+        // het water onder de rand en het trappetje
+        const water = document.createElement('div');
+        water.style.cssText = `position:absolute;left:${trapX - 50}px;top:${GROUND + 2}px;width:100px;height:${H - GROUND - 2}px;pointer-events:none;z-index:0;opacity:0;
+            background:linear-gradient(90deg, rgba(110,170,210,0), rgba(110,170,210,.55) 18%, rgba(110,170,210,.55) 82%, rgba(110,170,210,0))`;
+        strip.appendChild(water);
+        const trap = document.createElement('div');
+        trap.style.cssText = `position:absolute;left:${trapX - 3}px;top:${GROUND - 5}px;line-height:0;pointer-events:none;z-index:1;opacity:0`;
+        trap.innerHTML = `<svg viewBox="0 0 6 14" width="6" height="14" aria-hidden="true"><path d="M1 14 V1.4 Q1 0 2.4 0 M5 14 V1.4 Q5 0 3.6 0" fill="none" stroke="#9aa3ab" stroke-width=".9" stroke-linecap="round"/><path d="M1 6.4 H5 M1 9.6 H5 M1 12.8 H5" stroke="#9aa3ab" stroke-width=".8"/></svg>`;
+        strip.appendChild(trap);
+        animate(water, [{ opacity: 0 }, { opacity: 1 }], { duration: 1200 }); animate(trap, [{ opacity: 0 }, { opacity: 1 }], { duration: 1200 });
+        const dames = [];
+        let laatsteWeg = 0;
+        for (let i = 0; i < n; i++) {
+            const h = rand(20.5, 23), z = zwemster(h), w = z.p, bw = h * .45; strip.appendChild(w);
+            const spot = trapX + (i - (n - 1) / 2) * 15 + (i >= (n - 1) / 2 ? 9 : -9);   // naast het trappetje, niet erop
+            const st = { x: kom > 0 ? width + 20 + i * 16 : -30 - i * 16, y: GROUND - h, f: kom > 0 ? -1 : 1 };
+            const zet = () => `translate(${st.x}px, ${st.y}px) scaleX(${st.f})`;
+            w.style.transform = zet();
+            const ga = (x, y, f, dur, easing = 'linear') => { if (f) st.f = f; const van = zet(); st.x = x; st.y = y; return animate(w, [{ transform: van }, { transform: zet() }], { duration: dur, easing }); };   // omdraaien gaat in één keer
+            const loop = bob(w, 300);
+            // 1. aanlopen en de handdoek neerleggen
+            const t1 = Math.abs(spot - st.x) * 24;
+            ga(spot, st.y, 0, t1);
+            const handdoek = document.createElement('div');
+            handdoek.style.cssText = `position:absolute;left:${spot - 3}px;top:${GROUND - 2.2}px;width:${bw + 6}px;height:2.4px;border-radius:1px;background:${z.doek};box-shadow:inset 0 -.8px 0 ${z.streep};opacity:0;pointer-events:none`;
+            strip.appendChild(handdoek);
+            later(() => { loop.pause(); animate(handdoek, [{ opacity: 0 }, { opacity: 1 }], { duration: 300 }); }, t1);
+            // 2. op het randje zitten (benen bungelen over de rand), dan in het water zakken
+            const tZit = 2600 + i * 500;
+            later(() => { ga(st.x, GROUND - h * .62, 0, 600, 'ease-in-out');
+                z.svg.querySelectorAll('.legA, .legB').forEach((l, j) => animate(l, [{ transform: 'rotate(0deg)' }, { transform: `rotate(${j ? -14 : -24}deg)` }], { duration: 600, easing: 'ease-out' })); }, t1 + 300);
+            const tIn = t1 + tZit;
+            later(() => {
+                ga(st.x, NAT - 5 * h / 40, 0, 700, 'ease-in');
+                for (let k = 0; k < 4; k++) { const d = document.createElement('div');                    // spatjes
+                    d.style.cssText = 'position:absolute;left:0;top:0;width:2px;height:2px;border-radius:50%;background:#8EC5E8;pointer-events:none;z-index:2';
+                    strip.appendChild(d); const sx = st.x + bw / 2;
+                    animate(d, [{ transform: `translate(${sx}px, ${GROUND + 1}px)` }, { transform: `translate(${sx + rand(-7, 7)}px, ${GROUND - rand(4, 8)}px)`, offset: .45 }, { transform: `translate(${sx + rand(-10, 10)}px, ${GROUND + 3}px)`, opacity: 0 }], { duration: 650, delay: 500, easing: 'ease-out' })
+                        .finished.then(() => d.remove()).catch(() => d.remove()); }
+            }, tIn);
+            // 3. een rondje zwemmen: het hoofdje dobbert heen en weer
+            const zwem = winter ? 2600 : 5200, tZwem = tIn + 800;
+            later(() => {
+                z.dobber = animate(z.svg, [{ transform: 'translateY(0)' }, { transform: 'translateY(.7px)' }], { duration: 520, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+                const uit = st.x + rand(14, 26) * (chance(.5) ? 1 : -1);
+                ga(uit, st.y, uit > st.x ? 1 : -1, zwem / 2, 'ease-in-out');
+                later(() => ga(trapX - bw / 2 + (i % 2 ? 6 : -6), st.y, 0, zwem / 2, 'ease-in-out'), zwem / 2);
+            }, tZwem);
+            if (i === 0) later(() => zegOp(trapX, GROUND - 28, winter ? 'Brrr!' : 'Heerlijk!', winter ? '#3B8FE0' : '#E8452C', 13), tZwem + 600);
+            // 4. om de beurt via het trappetje de kant op
+            const tTrap = tIn + 800 + zwem + 300 + i * 1900;
+            later(() => {
+                if (z.dobber) z.dobber.cancel();
+                ga(trapX - bw / 2, st.y, 0, 300, 'ease-out');
+                later(() => {
+                    z.svg.querySelectorAll('.legA, .legB').forEach(l => animate(l, [{ transform: getComputedStyle(l).transform === 'none' ? 'rotate(0deg)' : getComputedStyle(l).transform }, { transform: 'rotate(0deg)' }], { duration: 300 }));
+                    const van = `translate(${st.x}px, ${st.y}px) scaleX(${st.f})`; st.y = GROUND - h;
+                    animate(w, [{ transform: van }, { transform: `translate(${st.x}px, ${(st.y + GROUND) / 2 + 3}px) scaleX(${st.f})`, offset: .33 }, { transform: `translate(${st.x}px, ${(st.y + GROUND) / 2 + 3}px) scaleX(${st.f})`, offset: .45 },
+                        { transform: `translate(${st.x}px, ${st.y + 2}px) scaleX(${st.f})`, offset: .8 }, { transform: zet() }], { duration: 1300, easing: 'ease-in-out' });
+                }, 300);
+            }, tTrap);
+            // 5. naar de handdoek, omslaan, en vlug naar huis (de kortste kant op)
+            const tDoek = tTrap + 1700;
+            later(() => {
+                loop.play(); ga(spot, st.y, spot >= st.x ? 1 : -1, Math.max(250, Math.abs(spot - st.x) * 24));
+                later(() => { loop.pause(); animate(handdoek, [{ opacity: 1 }, { opacity: 0 }], { duration: 250 }).finished.then(() => handdoek.remove()).catch(() => handdoek.remove());
+                    animate(z.svg.querySelector('.doek'), [{ opacity: 0 }, { opacity: 1 }], { duration: 350 }); }, Math.max(250, Math.abs(spot - st.x) * 24));
+            }, tDoek);
+            const tWeg = tDoek + 1300 + Math.abs(spot - trapX) * 24;
+            const eind = thuis > 0 ? width + 30 + i * 6 : -40 - i * 6, tLoop = Math.abs(eind - spot) * 13;
+            later(() => { loop.play(); ga(eind, st.y, thuis, tLoop).finished.then(() => { loop.cancel(); w.remove(); }).catch(() => { loop.cancel(); w.remove(); }); }, tWeg);
+            laatsteWeg = Math.max(laatsteWeg, tWeg + 600);
+            dames.push(w);
+        }
+        later(() => [water, trap].forEach(e => animate(e, [{ opacity: 1 }, { opacity: 0 }], { duration: 1200 }).finished.then(() => e.remove()).catch(() => e.remove())), laatsteWeg);
+    }
+
     // Yogi: drie mediterende figuren in lotushouding, handen tegen elkaar, zweven langzaam voorbij
     // Yoga: elke yogi staat op een matje en wisselt rustig van houding: de boom (op één been, andere voet
     // tegen de knie, handen boven het hoofd tegen elkaar), armen omhoog, de neerwaartse hond en weer terug.
@@ -3691,6 +3795,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: peloton, dur: () => (W() + 300 + EX) * 4.5, sz: 'lzh' },   // geen wielrenners in de winter
         { run: fanfare, dur: () => (W() + 200 + EX) * 24, groot: true },
         { run: skaters, dur: () => (W() + 120 + 360) * 7.5, groot: true, sz: 'w' },
+        { run: zwemsters, dur: () => 26000 + W() * 22, sz: 'zw' },   // even dippen, zomer én winter
         { run: bladblazer, dur: () => (W() + 100) * 42, sz: 'h' },   // komt als laatste van de herfst, als er flink wat blad ligt
         { run: naturists, dur: () => (W() + 160 + EX) * 26 + 17500, groot: true, sz: 'z' },
         { run: carnaval, dur: () => (W() + 300 + EX) * 22 + 9000, groot: true, sz: 'w' },
@@ -3805,7 +3910,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.bladblazer = bladblazer; ['lente', 'zomer', 'herfst', 'winter'].forEach(n => { window.ontmoeten[n] = () => { zetSeizoen(n, true); bag = []; eersteRonde = true; }; }); window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.vespa = vespa; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.bladblazer = bladblazer; window.ontmoeten.zwemsters = zwemsters; ['lente', 'zomer', 'herfst', 'winter'].forEach(n => { window.ontmoeten[n] = () => { zetSeizoen(n, true); bag = []; eersteRonde = true; }; }); window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.vespa = vespa; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
