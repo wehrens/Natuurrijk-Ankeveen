@@ -3439,20 +3439,20 @@ ${pot(47.4)}${pot(61.6)}
         { run: fanfare, dur: () => (W() + 200 + EX) * 24, groot: true },
         { run: skaters, dur: () => (W() + 200 + EX) * 7.5, maanden: [12, 1, 2] },
         { run: naturists, dur: () => (W() + 160 + EX) * 26 + 17500, groot: true, maanden: [5, 6, 7, 8, 9] },
-        { run: carnaval, dur: () => (W() + 300 + EX) * 22 + 9000, groot: true, maanden: [11, 12, 1, 2, 3] },
-        { run: yogis, dur: () => YOGA_DUUR, groot: true },
+        { run: carnaval, dur: () => (W() + 300 + EX) * 22 + 9000, groot: true, maanden: [11, 12, 1, 2, 3], als: d => d.getMonth() !== 10 || d.getDate() >= 11 },   // vanaf de elfde van de elfde
+        { run: yogis, dur: () => YOGA_DUUR, groot: true, maanden: [4, 5, 6, 7, 8, 9, 10] },
         { run: klasje, dur: () => (W() + 220 + EX) * 22, groot: true },
         { run: voetballer, dur: () => (W() + 100) * 30 },
         { run: footballers, dur: () => (W() + 220 + EX) * 11 },
         { run: markt, dur: marktDur, groot: true },
         { run: bakfiets, dur: () => (W() + 100 + EX) * 16 + 12000, rare: true },
-        { run: kermis, dur: () => 42000, rare: true, maanden: [4, 5, 6, 7, 8, 9] },
+        { run: kermis, dur: () => 42000, rare: true, maanden: [10] },   // de kermis is in oktober
         { run: hardloopsters, dur: () => (W() + 180 + EX) * 9 },
         { run: vogelaars, dur: vogelaarsDur },
         { run: jazz, dur: jazzDur, groot: true },
         { run: havenloos, dur: havenloosDur, groot: true },
         { run: gitaarschool, dur: () => (W() + 120 + EX) * 20 },
-        { run: zumba, dur: zumbaDur, groot: true },
+        { run: zumba, dur: zumbaDur, groot: true, maanden: [4, 5, 6, 7, 8, 9, 10] },
         { run: ruiter, dur: () => (W() + 140 + EX) * 30 },
         { run: boswachter, dur: () => (W() + 120 + EX) * 13 },
         { run: klompenman, dur: () => (W() + 160 + EX) * 13 },
@@ -3461,7 +3461,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: newfoundlander, dur: () => (W() + 120) * 24 + 6500 },
         { run: symon, dur: () => (W() + 220) * 16 },
         { run: vespa, dur: () => (W() + 120 + EX) * 9 },
-        { run: sportdag, dur: () => 35500, groot: true },   // tennis, petanque, biljart, handbal en voetbal naast elkaar
+        { run: sportdag, dur: () => 35500, groot: true, maanden: [4, 5, 6, 7, 8, 9, 10] },   // tennis, petanque, biljart, handbal en voetbal naast elkaar
         { run: oldtimer, dur: () => (W() + 180) * 14 },
         { run: oldtimer, dur: () => (W() + 180) * 14 },   // de Snoek staat er twee keer in: hij komt elke ronde twee keer langs
     ];
@@ -3473,11 +3473,12 @@ ${pot(47.4)}${pot(61.6)}
         const nuM = performance.now();
         if (marktTot > nuM) { setTimeout(nextSpecial, 1500); return; }   // lichtjesmarkt: niemand anders, daarna meteen weer verder
         if (!bag.length) {
-            // seizoenen: schaatsers alleen in de winter, naturisten en kermis in de zomer, carnaval van 11 november
-            // tot en met maart, de lichtjesmarkt rond de feestdagen
-            const maand = new Date().getMonth() + 1;
+            // seizoenen: schaatsers alleen in de winter, naturisten in de zomer, de kermis in oktober, carnaval van
+            // 11 november tot en met maart, de lichtjesmarkt rond de feestdagen; yoga, zumba en de sportdag van april
+            // tot en met oktober
+            const vandaag = new Date(), maand = vandaag.getMonth() + 1;
             // (in de projectiestand gelden de seizoenen niet: daar komt het hele jaar alles langs)
-            bag = specials.filter(x => STERK || !x.maanden || x.maanden.includes(maand)).sort(() => Math.random() - 0.5);
+            bag = specials.filter(x => STERK || ((!x.maanden || x.maanden.includes(maand)) && (!x.als || x.als(vandaag)))).sort(() => Math.random() - 0.5);
             const dubbel = bag.findIndex((x, i) => i && x.run === bag[i - 1].run);       // niet twee keer dezelfde direct na elkaar
             if (dubbel > 0) bag.splice((dubbel + Math.ceil(bag.length / 2)) % bag.length, 0, bag.splice(dubbel, 1)[0]);
             if (last && bag[0].run === last.run && bag.length > 1) bag.push(bag.shift());
