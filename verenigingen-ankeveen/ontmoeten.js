@@ -741,7 +741,7 @@
         });
     }
 
-    // ZWEMSTERS: een paar dames die even een duik nemen, 's zomers én 's winters. Ze komen aanlopen in badpak en badmuts,
+    // ZWEMSTERS: een paar dames die elk seizoen even een duik nemen, ook 's winters. Ze komen aanlopen in badpak en badmuts,
     // leggen hun handdoek neer, gaan op het randje onderaan zitten, laten zich in het water zakken en zwemmen een rondje
     // (alleen de hoofdjes zijn te zien). Dan klimmen ze via een klein trappetje de kant op, slaan hun handdoek om en
     // lopen vlug naar huis, de kortste kant op. Het zwemplekje is altijd links, bij het ooievaarsnest.
@@ -768,16 +768,12 @@
         const thuis = trapX < width / 2 ? -1 : 1;                         // de kortste kant naar huis
         const kom = thuis;                                                 // ze komen ook van die kant
         const NAT = GROUND + 4.4;                                         // waterlijn: alleen het hoofdje steekt boven de rand uit
-        // het water onder de rand en het trappetje
+        // het water onder de rand (het trappetje staat er altijd, zie zwemtrap)
         const water = document.createElement('div');
         water.style.cssText = `position:absolute;left:${trapX - 50}px;top:${GROUND + 2}px;width:100px;height:${H - GROUND - 2}px;pointer-events:none;z-index:0;opacity:0;
             background:linear-gradient(90deg, rgba(110,170,210,0), rgba(110,170,210,.55) 18%, rgba(110,170,210,.55) 82%, rgba(110,170,210,0))`;
         strip.appendChild(water);
-        const trap = document.createElement('div');
-        trap.style.cssText = `position:absolute;left:${trapX - 3}px;top:${GROUND - 5}px;line-height:0;pointer-events:none;z-index:1;opacity:0`;
-        trap.innerHTML = `<svg viewBox="0 0 6 14" width="6" height="14" aria-hidden="true"><path d="M1 14 V1.4 Q1 0 2.4 0 M5 14 V1.4 Q5 0 3.6 0" fill="none" stroke="#9aa3ab" stroke-width=".9" stroke-linecap="round"/><path d="M1 6.4 H5 M1 9.6 H5 M1 12.8 H5" stroke="#9aa3ab" stroke-width=".8"/></svg>`;
-        strip.appendChild(trap);
-        animate(water, [{ opacity: 0 }, { opacity: 1 }], { duration: 1200 }); animate(trap, [{ opacity: 0 }, { opacity: 1 }], { duration: 1200 });
+        animate(water, [{ opacity: 0 }, { opacity: 1 }], { duration: 1200 });
         const dames = [];
         let laatsteWeg = 0;
         for (let i = 0; i < n; i++) {
@@ -809,14 +805,14 @@
                         .finished.then(() => d.remove()).catch(() => d.remove()); }
             }, tIn);
             // 3. een rondje zwemmen: het hoofdje dobbert heen en weer
-            const zwem = winter ? 2600 : 5200, tZwem = tIn + 800;
+            const zwem = winter ? 2600 : seizoenNu === 'zomer' ? 5200 : 3800, tZwem = tIn + 800;
             later(() => {
                 z.dobber = animate(z.svg, [{ transform: 'translateY(0)' }, { transform: 'translateY(.7px)' }], { duration: 520, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
                 const uit = st.x + rand(14, 26) * (chance(.5) ? 1 : -1);
                 ga(uit, st.y, uit > st.x ? 1 : -1, zwem / 2, 'ease-in-out');
                 later(() => ga(trapX - bw / 2 + (i % 2 ? 6 : -6), st.y, 0, zwem / 2, 'ease-in-out'), zwem / 2);
             }, tZwem);
-            if (i === 0) later(() => zegOp(trapX, GROUND - 28, winter ? 'Brrr!' : 'Heerlijk!', winter ? '#3B8FE0' : '#E8452C', 13), tZwem + 600);
+            if (i === 0) later(() => zegOp(trapX, GROUND - 28, winter ? 'Brrr!' : seizoenNu === 'zomer' ? 'Heerlijk!' : 'Lekker fris!', winter ? '#3B8FE0' : '#E8452C', 13), tZwem + 600);
             // 4. om de beurt via het trappetje de kant op
             const tTrap = tIn + 800 + zwem + 300 + i * 1900;
             later(() => {
@@ -842,7 +838,7 @@
             laatsteWeg = Math.max(laatsteWeg, tWeg + 600);
             dames.push(w);
         }
-        later(() => [water, trap].forEach(e => animate(e, [{ opacity: 1 }, { opacity: 0 }], { duration: 1200 }).finished.then(() => e.remove()).catch(() => e.remove())), laatsteWeg);
+        later(() => [water].forEach(e => animate(e, [{ opacity: 1 }, { opacity: 0 }], { duration: 1200 }).finished.then(() => e.remove()).catch(() => e.remove())), laatsteWeg);
     }
 
     // Yogi: drie mediterende figuren in lotushouding, handen tegen elkaar, zweven langzaam voorbij
@@ -2511,6 +2507,12 @@ ${pot(47.4)}${pot(61.6)}
             <path d="M13 7.6 L9.2 -1.2 L10.6 -.4 L17.2 7.5 Z" fill="#fff" stroke="${GR}" stroke-width=".5" stroke-linejoin="round"/></g></svg>`;
     paal.style.zIndex = rand0.style.zIndex = ooi.style.zIndex = 1;      // ganzen (z-index 0) vliegen achter de paal langs
     strip.appendChild(paal); strip.appendChild(ooi); strip.appendChild(rand0); obstakels.push(paal);
+    // het zwemtrappetje van de zwemsters staat er altijd, een stukje rechts van het ooievaarsnest
+    const zwemtrap = document.createElement('div');
+    zwemtrap.setAttribute('aria-hidden', 'true');
+    zwemtrap.style.cssText = `position:absolute;left:calc(max(16px, 7%) + 28px);top:${GROUND - 5}px;line-height:0;pointer-events:none;z-index:1`;
+    zwemtrap.innerHTML = `<svg viewBox="0 0 6 14" width="6" height="14" aria-hidden="true"><path d="M1 14 V1.4 Q1 0 2.4 0 M5 14 V1.4 Q5 0 3.6 0" fill="none" stroke="#9aa3ab" stroke-width=".9" stroke-linecap="round"/><path d="M1 6.4 H5 M1 9.6 H5 M1 12.8 H5" stroke="#9aa3ab" stroke-width=".8"/></svg>`;
+    strip.appendChild(zwemtrap);
     let ooiThuis = false, ooiBezig = false, ooiSinds = 0;
     const nestX = () => paal.offsetLeft + 13, NESTY = GROUND + 2 - PH + 8;       // midden bovenop het nest
     const zet = (x, y, r) => `translate(${x - 15}px, ${y - 20}px) scaleX(${r})`;   // x,y = voeten van de ooievaar
@@ -3795,7 +3797,7 @@ ${pot(47.4)}${pot(61.6)}
         { run: peloton, dur: () => (W() + 300 + EX) * 4.5, sz: 'lzh' },   // geen wielrenners in de winter
         { run: fanfare, dur: () => (W() + 200 + EX) * 24, groot: true },
         { run: skaters, dur: () => (W() + 120 + 360) * 7.5, groot: true, sz: 'w' },
-        { run: zwemsters, dur: () => 26000 + W() * 22, sz: 'zw' },   // even dippen, zomer én winter
+        { run: zwemsters, dur: () => 26000 + W() * 22, sz: 'lzhw' },   // elk seizoen even dippen
         { run: bladblazer, dur: () => (W() + 100) * 42, sz: 'h' },   // komt als laatste van de herfst, als er flink wat blad ligt
         { run: naturists, dur: () => (W() + 160 + EX) * 26 + 17500, groot: true, sz: 'z' },
         { run: carnaval, dur: () => (W() + 300 + EX) * 22 + 9000, groot: true, sz: 'w' },
