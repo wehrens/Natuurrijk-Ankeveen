@@ -2310,6 +2310,26 @@ ${pot(47.4)}${pot(61.6)}
             s.innerHTML = sneeuwKap(svg, geo, px, extra);
             bron.after(s);
         };
+        // Licht in de winter: warm geel uit de ramen van het café, De Dillewijn en de huizen (bij de huizen niet
+        // overal: per raam een kans). Net als de sneeuw een eigen laag over het vage gebouw heen.
+        const LICHT = '#FFC94A';
+        var lichtSvg = (svg, binnen) => {
+            const vb = svg.match(/viewBox="([^"]+)"/)[1], w = svg.match(/width="([\d.]+)"/)[1], h = svg.match(/height="([\d.]+)"/)[1];
+            return `<svg viewBox="${vb}" width="${w}" height="${h}" aria-hidden="true" style="overflow:visible;filter:drop-shadow(0 0 1.6px rgba(255,186,60,.95)) drop-shadow(0 0 4px rgba(255,200,90,.6))"><g fill="${LICHT}">${binnen}</g></svg>`;
+        };
+        const ramenVan = (svg, soort) => {
+            if (soort === 'cafe') return (svg.match(/<rect [^>]*fill="(#3A4448|#C8B48C)"\/>/g) || []).map(r => r.replace(/ fill="[^"]+"/, '')).join('');
+            const r = (svg.match(/<rect x="[\d.]+" y="[\d.]+" width="5.4" height="5.4" rx="1" fill="#fff"\/>/g) || []).map(q => q.replace(' fill="#fff"', ''));
+            let aan = r.filter(() => chance(.5)); if (!aan.length) aan = [pick(r)];
+            return aan.join('');
+        };
+        const lichtLaag = (bron, svg, soort) => {
+            const l = document.createElement('div');
+            l.className = 'om-licht' + (bron.classList.contains('om-breed') ? ' om-breed' : '');
+            l.style.cssText = bron.style.cssText; l.style.opacity = '';
+            l.innerHTML = lichtSvg(svg, ramenVan(svg, soort));
+            bron.after(l);
+        };
         const GEO = {
             huis: '<path d="M0 13 L15 0 L30 13 V34 H0 Z"/>', huis2: '<path d="M0 12 L15 0 L30 12 V40 H0 Z"/>',
             cafe: '<path d="M8.5 44.5 L13 12 H96 L100.5 44.5 Z"/><rect x="11.5" y="44.6" width="86" height="30"/>'
@@ -2328,6 +2348,7 @@ ${pot(47.4)}${pot(61.6)}
             d.innerHTML = svg; if (breed) d.className = 'om-breed';
             bg.appendChild(d); obstakels.push(d); gebouwen.push(d);
             sneeuwLaag(d, svg, GEO[soort], soort === 'cafe' ? 3.4 : 3.6, soort === 'cafe' ? '<rect x="35.4" y="19.8" width="26.2" height="2.6" rx="1" fill="#fff"/><path d="M12.6 12.2 H96.4" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>' : '');
+            lichtLaag(d, svg, soort);                                    // komt tussen het gebouw en de sneeuw
             if (typeof pct === 'number' && pct < 40) pleinRand.huizen.push(d); else if (typeof pct !== 'number') pleinRand.cafe = d;
         });
         // Laag groen (een bomenrand in de verte) in de open stukken tússen de huizen, het café en De Dillewijn.
@@ -2418,6 +2439,8 @@ ${pot(47.4)}${pot(61.6)}
         const ksvg = kerk(74), kmask = `url('data:image/svg+xml,${encodeURIComponent(ksvg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')).replace(/'/g, '%27')}') center / 100% 100% no-repeat`;
         dw.innerHTML = `<div style="position:absolute;inset:0;background:${STERK ? getComputedStyle(tb).backgroundColor : '#E6F0F5'};-webkit-mask:${kmask};mask:${kmask}"></div><div style="position:relative;opacity:${STERK ? 1 : .36}">${ksvg}</div>`;
         const kgeo = `<path d="${ksvg.match(/<path d="([^"]+)"/)[1]}"/>`;
+        const kramen = ksvg.match(/<path d="([^"]+)"/g)[1].slice(9, -1).split(' Z ').slice(1).join(' Z ');      // de ramen, zonder de deur
+        dw.insertAdjacentHTML('beforeend', `<div class="om-licht" style="position:absolute;inset:0;line-height:0">${lichtSvg(ksvg, `<path d="${kramen}"/>`)}</div>`);
         dw.insertAdjacentHTML('beforeend', `<div class="om-sneeuw" style="position:absolute;inset:0;line-height:0">${sneeuwKap(ksvg, kgeo, 3.4)}</div>`);
         tb.appendChild(dw); obstakels.push(dw); pleinRand.kerk = dw;
         const zetKerk = () => {
@@ -2555,8 +2578,8 @@ ${pot(47.4)}${pot(61.6)}
     }
     {
         const st = document.createElement('style');
-        st.textContent = `.om-sneeuw,.om-zomerlucht,.om-winterlucht,.om-zon{opacity:0;transition:opacity 2.4s ease}
-            [data-seizoen="winter"] .om-sneeuw,[data-seizoen="winter"] .om-winterlucht,[data-seizoen="zomer"] .om-zomerlucht,[data-seizoen="zomer"] .om-zon{opacity:1}
+        st.textContent = `.om-sneeuw,.om-licht,.om-zomerlucht,.om-winterlucht,.om-zon{opacity:0;transition:opacity 2.4s ease}
+            [data-seizoen="winter"] .om-sneeuw,[data-seizoen="winter"] .om-licht,[data-seizoen="winter"] .om-winterlucht,[data-seizoen="zomer"] .om-zomerlucht,[data-seizoen="zomer"] .om-zon{opacity:1}
             .om-zon{left:46%} @media (max-width: 640px){ .om-zon{left:68%;width:28px!important;height:28px!important} }
             .om-ijs{transition:text-shadow 2.4s ease}
             [data-seizoen="winter"] .om-ijs{text-shadow:0 -2.6px 0 #fff, 0 -3.4px 0 rgba(110,145,180,.9)}`;
