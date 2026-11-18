@@ -20,7 +20,7 @@
      z-index 3   lucht        alles wat over de hele kopbalk vliegt of opstijgt: ooievaar, teksten, hartjes, bal
 
    SEIZOENEN: de strook doorloopt steeds lente, zomer, herfst en winter (de bomen kleuren mee, zomers een blauwe lucht met
-   zon en korte mouwen, 's winters sneeuw op daken, bord en titel, een grijze lucht en mutsen en sjaals). Een groep met `sz` in de
+   zon en korte mouwen, 's winters sneeuw op daken en bord, een grijze lucht en mutsen en sjaals). Een groep met `sz` in de
    lijst `specials` (l, z, h, w) komt alleen in die seizoenen langs; de rest is over het jaar verdeeld.
    Met #naam achter het adres (bijvoorbeeld #naturists) is elke groep het hele jaar te bekijken. */
 (function () {
@@ -2647,11 +2647,8 @@ ${pot(47.4)}${pot(61.6)}
         st.textContent = `.om-sneeuw,.om-licht,.om-zomerlucht,.om-winterlucht,.om-zon{opacity:0;transition:opacity 2.4s ease}
             [data-seizoen="winter"] .om-sneeuw,[data-seizoen="winter"] .om-licht,[data-seizoen="winter"] .om-winterlucht,[data-seizoen="zomer"] .om-zomerlucht,[data-seizoen="zomer"] .om-zon{opacity:1}
             .om-zon{left:46%} @media (max-width: 640px){ .om-zon{left:68%;width:28px!important;height:28px!important} }
-            .om-ijs{transition:text-shadow 2.4s ease}
-            [data-seizoen="winter"] .om-ijs{text-shadow:0 -2.6px 0 #fff, 0 -3.4px 0 rgba(110,145,180,.9)}`;
+`;
         document.head.appendChild(st);
-        // sneeuw op de letters van de titel
-        const titel = balk.querySelector('a'); if (titel) titel.classList.add('om-ijs');
     }
     balk.dataset.seizoen = seizoenNu;
     var zetSeizoen = (n, zacht) => { seizoenNu = n; balk.dataset.seizoen = n; zetBomen(n, zacht); if (n !== 'herfst') bladWeg(); };
