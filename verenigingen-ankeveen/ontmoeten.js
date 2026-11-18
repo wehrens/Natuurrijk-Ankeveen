@@ -682,8 +682,14 @@
         const N = 7, offs = [];
         for (let i = 0, o = 0; i < N; i++) { offs.push(o); o += rand(26, 40); }
         const totaal = offs[N - 1] + 20, afstand = width + 120 + totaal, dur = afstand * 7.5;
+        // ze rijden op het ijs onder de rand (waar ook de zwemsters zwemmen); zolang ze langskomen ligt daar een ijslaag
+        const ijs = document.createElement('div');
+        ijs.style.cssText = `position:absolute;left:0;right:0;top:${GROUND + 2}px;height:${H - GROUND - 2}px;pointer-events:none;z-index:0;opacity:0;
+            background:linear-gradient(180deg, rgba(214,232,244,.95), rgba(190,218,236,.9));box-shadow:inset 0 1px 0 rgba(255,255,255,.9)`;
+        strip.appendChild(ijs);
+        animate(ijs, [{ opacity: 0 }, { opacity: 1, offset: .08 }, { opacity: 1, offset: .92 }, { opacity: 0 }], { duration: dur, easing: 'linear' }).finished.then(() => ijs.remove()).catch(() => ijs.remove());
         const leden = [];
-        for (let i = 0; i < N; i++) leden.push({ w: skater(pick(KLEUR)), off: offs[i], y: GROUND - 26 + 0.6 - (i % 2 ? 1.5 : 0), sc: i % 2 ? .9 : 1, schaats: true });
+        for (let i = 0; i < N; i++) leden.push({ w: skater(pick(KLEUR)), off: offs[i], y: GROUND - 26 + 5.2 - (i % 2 ? 1.2 : 0), sc: i % 2 ? .9 : 1, schaats: true });
         leden.forEach((m, i) => {
             const w = m.w; if (i % 2 && m.schaats) w.classList.add('om-achter'); strip.appendChild(w);
             const x0 = fromLeft ? -60 - m.off : width + 20 + m.off, x1 = fromLeft ? x0 + afstand : x0 - afstand;
