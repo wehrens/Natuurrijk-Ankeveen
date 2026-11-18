@@ -1059,12 +1059,29 @@
             }
         });
         const open = tt + 400;
+        // 1b. Symon rijdt achteruit met zijn koffiekar het plein op en zet de kar links van de kramen neer, met wat ruimte
+        //     ertussen. De achterklep gaat omhoog en vormt een afdakje; Symon (blond, Ugg-laarzen) stapt uit en wordt barista.
+        const koffie = koffiekar(xs[0], walkIn * .4, open + 34000);
         // 2. klanten: komen aanlopen, staan even bij een kraam, gaan met tas weer weg
         const shopEnd = open + 34000;
         function klant() {
             if (performance.now() - t0 > shopEnd - 6000) return;
             const h = chance(.2) ? rand(14, 17) : rand(20, 25), color = pick(KLEUR), p = kleding(person(color, h)); strip.appendChild(p);
-            const fromLeft = chance(.5), k = Math.floor(Math.random() * N), stop = xs[k] + (fromLeft ? -12 : 36);
+            const fromLeft = chance(.5), k = Math.floor(Math.random() * N);
+            if (koffie.open() && chance(.3)) {
+                // een bakje koffie bij Symon
+                const stop = koffie.klantX();
+                walkTo(p, fromLeft ? -40 : width + 20, stop, h, () => {
+                    p.style.transform = `translate(${stop}px, ${GROUND - h}px) scaleX(-1)`; koffie.zet();
+                    later(() => {
+                        p.firstElementChild.insertAdjacentHTML('beforeend', '<path d="M12.6 21 h3.4 l-.4 3.6 h-2.6 z" fill="#fff" stroke="#8a6a4a" stroke-width=".4"/><path d="M12.8 22.4 h3" stroke="#8a6a4a" stroke-width=".7"/>');
+                        const leaveLeft = chance(.5);
+                        walkTo(p, stop, leaveLeft ? -60 : width + 40, h, () => p.remove());
+                    }, 2600);
+                });
+                return;
+            }
+            const stop = xs[k] + (fromLeft ? -12 : 36);
             walkTo(p, fromLeft ? -40 : width + 20, stop, h, () => {
                 later(() => {
                     p.firstElementChild.appendChild(tas(pick(['#D64541', '#1b4f9c', '#F39A2B', '#2BB39A'])));
@@ -1101,6 +1118,85 @@
             }
         }
         later(() => { walkTo(b1, posL(xs[0]), -60, hb, () => b1.remove()); walkTo(b2, posR(xs[0]), -80, hb, () => b2.remove()); }, td + 300);
+    }
+    function koffiekar(kraam0, tIn, tWeg) {
+        const { SC, wpx } = SYMON, y = GROUND - 31.4 * SC + .6, width = W();
+        const w = symonWagen(), svg = w.querySelector('svg');
+        w.querySelector('.rook').remove();
+        strip.appendChild(w);
+        w.querySelector('.tekst').style.transform = 'scaleX(-1)';                      // de auto kijkt naar links: tekst leesbaar houden
+        // gespiegeld (neus naar links): de achterkant van de kar is de rechterrand; daar komt het afdakje
+        const X = kraam0 - 34 - wpx, xStart = -wpx - 20, achter = X + wpx - 1.8;
+        const zet = x => `translate(${x}px, ${y}px) scaleX(-1)`;
+        w.style.transform = zet(xStart);
+        let isOpen = false;
+        const draai = (sel, r, ms, terug) => w.querySelectorAll(sel).forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: `rotate(${terug ? 360 : -360}deg)` }], { duration: 2 * Math.PI * r * SC * ms, iterations: Infinity, easing: 'linear' }));
+        const stopWielen = () => w.querySelectorAll('.wa, .wk').forEach(g => g.getAnimations().forEach(a => a.pause()));
+        // de hele wagen rijdt achteruit naar rechts (kar voorop) en remt rustig af
+        const dRij = Math.abs(X - xStart) * 22;
+        later(() => {
+            draai('.wa', 4.5, 22, true); draai('.wk', 3.2, 22, true);
+            animate(w, [{ transform: zet(xStart) }, { transform: zet(X) }], { duration: dRij, easing: 'cubic-bezier(.2,.0,.35,1)' }).finished.then(stopWielen).catch(() => {});
+        }, tIn);
+        // achterklep omhoog: draait om het scharnier bovenaan naar buiten tot een afdakje; het plankje met de machine komt tevoorschijn
+        const tKlep = tIn + dRij + 700;
+        later(() => {
+            animate(w.querySelector('.klep'), [{ transform: 'rotate(0deg)' }, { transform: 'rotate(96deg)' }], { duration: 1300, easing: 'ease-in-out' });
+            animate(w.querySelector('.toog'), [{ opacity: 0 }, { opacity: 1 }], { duration: 600, delay: 900 });
+        }, tKlep);
+        // Symon stapt uit (bij het portier) en loopt naar zijn plek onder het afdakje
+        const h = 24, sy = person('#2F2A26', h, 0); delete sy.dataset.groet;
+        const s2 = sy.firstElementChild;
+        s2.lastElementChild.setAttribute('fill', '#E2C06A');                            // blond
+        s2.querySelectorAll('.legA, .legB').forEach(l => {                              // Ugg-laarzen: lichtbruin, met een wollen randje
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            g.setAttribute('class', l.getAttribute('class')); g.setAttribute('style', l.getAttribute('style')); l.removeAttribute('class'); l.removeAttribute('style');
+            l.replaceWith(g); g.appendChild(l);
+            const x = l.getAttribute('class') === null && g.getAttribute('class') === 'legA' ? 7.3 : 10.3;
+            g.insertAdjacentHTML('beforeend', `<path d="M${x - 2.2} 31.6 h4.2 l.1 5.6 q2.4 .3 2.4 1.7 h-6.8 z" fill="#C9A06A" stroke="#9c7a4c" stroke-width=".35" stroke-linejoin="round"/><path d="M${x - 2.3} 31.8 h4.4" stroke="#F3E6CF" stroke-width="1.3" stroke-linecap="round"/>`);
+        });
+        s2.insertAdjacentHTML('beforeend', '<path d="M5 15 h8 l1.4 11 h-10.6 z" fill="#5A3A22" opacity=".9"/><path d="M6.2 15 l-1 -2.2 M11.8 15 l1 -2.2" stroke="#5A3A22" stroke-width=".6"/>');   // schort
+        s2.appendChild(s2.querySelector('.armA'));
+        const portier = X + wpx - (26 + 42) * SC, plekS = achter + 11, klantX = achter + 27;
+        sy.style.transform = `translate(${portier}px, ${GROUND - h}px) scaleX(1)`; sy.style.opacity = 0;
+        const tUit = tKlep + 400;
+        let werk = [];
+        later(() => {
+            strip.appendChild(sy);
+            animate(sy, [{ opacity: 0 }, { opacity: 1 }], { duration: 250 });
+            const b = bob(sy, 400), d = Math.abs(plekS - portier) * 26;
+            animate(sy, [{ transform: `translate(${portier}px, ${GROUND - h}px) scaleX(1)` }, { transform: `translate(${plekS}px, ${GROUND - h}px) scaleX(1)` }], { duration: d, easing: 'linear' })
+                .finished.then(() => {
+                    b.pause();
+                    // omdraaien naar de machine en aan het werk
+                    animate(sy, [{ transform: `translate(${plekS}px, ${GROUND - h}px) scaleX(-1)` }, { transform: `translate(${plekS}px, ${GROUND - h}px) scaleX(-1)` }], { duration: 10 });
+                    isOpen = true;
+                    werk.push(animate(sy.querySelector('.armB'), [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-70deg)', offset: .35 }, { transform: 'rotate(-55deg)', offset: .6 }, { transform: 'rotate(-75deg)', offset: .8 }, { transform: 'rotate(0deg)' }], { duration: 2200, iterations: Infinity, easing: 'ease-in-out' }));
+                    werk.push(animate(sy.querySelector('.armA'), [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-35deg)', offset: .5 }, { transform: 'rotate(0deg)' }], { duration: 3100, iterations: Infinity, easing: 'ease-in-out' }));
+                    werk.push(animate(w.querySelector('.stoom'), [{ opacity: 0, transform: 'translateY(1px)' }, { opacity: .9, offset: .3 }, { opacity: 0, transform: 'translateY(-3px)' }], { duration: 1800, iterations: Infinity, easing: 'ease-out' }));
+                }).catch(() => {});
+        }, tUit);
+        // na de markt: Symon stopt, klep dicht, instappen en vooruit naar links weg
+        later(() => {
+            isOpen = false; werk.forEach(a => a.cancel());
+            animate(w.querySelector('.toog'), [{ opacity: 1 }, { opacity: 0 }], { duration: 400 });
+            animate(w.querySelector('.klep'), [{ transform: 'rotate(96deg)' }, { transform: 'rotate(0deg)' }], { duration: 1100, delay: 300, easing: 'ease-in-out' });
+            const b = bob(sy, 400), d = Math.abs(plekS - portier) * 26;
+            animate(sy, [{ transform: `translate(${plekS}px, ${GROUND - h}px) scaleX(-1)` }, { transform: `translate(${portier}px, ${GROUND - h}px) scaleX(-1)` }], { duration: d, delay: 1400, easing: 'linear' })
+                .finished.then(() => { b.cancel(); animate(sy, [{ opacity: 1 }, { opacity: 0 }], { duration: 250 }).finished.then(() => sy.remove()).catch(() => sy.remove());
+                    later(() => {
+                        w.querySelectorAll('.wa, .wk').forEach(g => g.getAnimations().forEach(a => a.cancel()));
+                        draai('.wa', 4.5, 16); draai('.wk', 3.2, 16);
+                        animate(w, [{ transform: zet(X) }, { transform: zet(xStart - 40) }], { duration: Math.abs(X - xStart + 40) * 16, easing: 'cubic-bezier(.45,0,1,1)' })
+                            .finished.then(() => w.remove()).catch(() => w.remove());
+                    }, 600);
+                }).catch(() => {});
+        }, tWeg);
+        return {
+            open: () => isOpen && achter + 40 < width,
+            klantX: () => klantX,
+            zet: () => { if (!isOpen) return; animate(w.querySelector('.stoom'), [{ opacity: .9 }, { opacity: 0, transform: 'translateY(-4px)' }], { duration: 1200 }); }
+        };
     }
     const marktDur = () => (W() / 2) * 12 + 200 + 5 * (450 + 950 + 400) + 4 * (200 + 40 * 12 + 150) + 400 + 34000 + 5 * (700 + 450 + 450 + 950) + 4 * (200 + 40 * 12 + 150) + 300 + (W() / 2) * 12 + 2500;
 
@@ -3494,9 +3590,12 @@ ${pot(47.4)}${pot(61.6)}
     // langwerpige dakraampje in de dakrand), met
     // daarachter de zwarte houten kar (bruin luik met zilveren scharnieren, vlak dak) waarin de koffiemachine en de
     // pizzaoven staan. Op de kar wappert de Italiaanse vlag en uit het pijpje komt een rookwolkje.
-    function symon() {
-        if (document.hidden) return;
-        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, SC = 1.15, VW = 90, VH = 32.4, wpx = VW * SC, hpx = VH * SC, y = GROUND - 31.4 * SC + .6;
+    // De Land Rover met de koffiekar, los te gebruiken: voor het voorbijrijden (symon) en op de markt (koffiekar).
+    // De achterwand van de kar is een klep die omhoog kan en dan een afdakje vormt; eronder een plankje met espressomachine.
+    const SYMON = { SC: 1.15, VW: 90, VH: 32.4 };
+    SYMON.wpx = SYMON.VW * SYMON.SC; SYMON.hpx = SYMON.VH * SYMON.SC;
+    function symonWagen() {
+        const { SC, VW, VH, wpx, hpx } = SYMON;
         const w = document.createElement('div'); w.className = 'om-p'; w.style.width = wpx + 'px'; w.style.height = hpx + 'px';
         const wiel = (x, yy, rr, velg, cls) => `<g class="${cls}" style="transform-box:fill-box;transform-origin:center"><circle cx="${x}" cy="${yy}" r="${rr}" fill="#1b1b1b"/><circle cx="${x}" cy="${yy}" r="${rr * .56}" fill="${velg}"/>
             <path d="M${x - rr * .4} ${yy} h${rr * .8} M${x} ${yy - rr * .4} v${rr * .8}" stroke="rgba(0,0,0,.35)" stroke-width=".5"/><circle cx="${x}" cy="${yy}" r="${rr * .16}" fill="#6a6a6a"/></g>`;
@@ -3515,6 +3614,11 @@ ${pot(47.4)}${pot(61.6)}
           <rect x="-40.4" y="0" width="2.6" height="15.4" fill="#B59A6C"/><rect x="-8.4" y="0" width="2.6" height="15.4" fill="#B59A6C"/><rect x="-40.4" y="-.2" width="34.6" height="1.7" fill="#8C7550"/>
           <path d="M-33.4 16.2 Q-33.4 12.8 -30 12.8 H-17 Q-13.6 12.8 -13.6 16.2 Z" fill="#111"/>
           ${wiel(-27.2, 17.2, 3.2, '#3a3a3a', 'wk')}${wiel(-19.8, 17.2, 3.2, '#3a3a3a', 'wk')}
+          <g class="toog" opacity="0"><rect x="-49" y="8.4" width="9" height="1" fill="#8C7550"/><path d="M-48 9.4 L-46.4 15.6 M-41.6 9.4 L-41 15.6" stroke="#6E5A3C" stroke-width=".6"/>
+            <rect x="-46.6" y="3.6" width="5" height="4.8" rx=".6" fill="#C9CDD0" stroke="#7d8389" stroke-width=".35"/><rect x="-45.8" y="4.4" width="3.4" height="1.2" fill="#8a2f22"/><path d="M-44.6 8.4 v-1.4 h1.6 v1.4" fill="#4a4e52"/><path d="M-41.6 4.8 h1 v1.8" stroke="#2a2a2a" stroke-width=".5" fill="none"/>
+            <path d="M-48.6 8.3 h1.4 v-1.3 h-1.4 z M-39.2 8.3 h1.2 v-1.2 h-1.2 z" fill="#fff" stroke="#999" stroke-width=".2"/>
+            <g class="stoom" fill="#e8ecef" opacity="0"><circle cx="-44" cy="2.4" r=".8"/><circle cx="-43.4" cy="1" r="1"/><circle cx="-44.2" cy="-.6" r="1.2"/></g></g>
+          <g class="klep" style="transform-box:view-box;transform-origin:-40.4px 0px"><rect x="-41" y="-.2" width="2" height="14.6" rx=".3" fill="#B59A6C" stroke="#8C7550" stroke-width=".35"/><path d="M-40 2 v10.4" stroke="#8C7550" stroke-width=".3"/></g>
           <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="-23" y="13.7" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="2.6" fill="#F4F1EA" letter-spacing=".25">CAFFÈ &amp; PIZZA</text></g>
           <g class="auto">
             <path d="M3 4 H30.6 L32.8 8.8 H44.4 Q46 8.8 46 10.4 V15.4 H3 Z" fill="#575B59"/>
@@ -3531,6 +3635,12 @@ ${pot(47.4)}${pot(61.6)}
             <path d="M5.6 15.9 a5.4 5.4 0 0 1 10.8 0 Z M33 15.9 a5.4 5.4 0 0 1 10.8 0 Z" fill="#2a2a2a"/>
             ${wiel(11, 15.9, 4.5, '#4A4E4C', 'wa')}${wiel(38.4, 15.9, 4.5, '#4A4E4C', 'wa')}
           </g></svg>`;
+        return w;
+    }
+    function symon() {
+        if (document.hidden) return;
+        const fromLeft = chance(.5), width = W(), f = fromLeft ? 1 : -1, { SC, wpx } = SYMON, y = GROUND - 31.4 * SC + .6;
+        const w = symonWagen();
         strip.appendChild(w);
         if (f < 0) w.querySelector('.tekst').style.transform = 'scaleX(-1)';          // de tekst op de kar blijft leesbaar
         const speed = 16, dur = (width + 220) * speed, x0 = fromLeft ? -wpx - 10 : width + 10, x1 = fromLeft ? width + 20 : -wpx - 20;
