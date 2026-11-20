@@ -177,6 +177,8 @@ nav.site-nav {
 .news-date { font-size: .85rem; color: var(--brown); font-weight: 600; }
 .news-item h4 { font-size: 1.15rem; margin: .2rem 0 .3rem; }
 .news-item p { color: var(--text-medium); font-size: .96rem; }
+.news-item.memoriam { border-left-color: var(--text-medium); display: flow-root; }
+.news-item.memoriam img { float: left; width: 76px; height: 96px; object-fit: cover; object-position: 50% 30%; border-radius: 10px; margin: .2rem 1rem .2rem 0; cursor: zoom-in; filter: grayscale(.15); }
 
 /* ===== FOTOSTROOK ===== */
 .strip { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: repeat(6, 1fr); gap: .8rem; }
