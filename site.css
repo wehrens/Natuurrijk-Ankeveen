@@ -177,8 +177,15 @@ nav.site-nav {
 .news-date { font-size: .85rem; color: var(--brown); font-weight: 600; }
 .news-item h4 { font-size: 1.15rem; margin: .2rem 0 .3rem; }
 .news-item p { color: var(--text-medium); font-size: .96rem; }
-.news-item.memoriam { border-left-color: var(--text-medium); display: flow-root; }
-.news-item.memoriam img { float: left; width: 76px; height: 96px; object-fit: cover; object-position: 50% 30%; border-radius: 10px; margin: .2rem 1rem .2rem 0; cursor: zoom-in; filter: grayscale(.15); }
+.news-featured.memoriam img { object-position: 50% 25%; cursor: zoom-in; }
+.news-featured.memoriam .overlay { pointer-events: none; }
+.news-featured.memoriam .news-date { color: #F3E6CF; opacity: .9; }
+@media (max-width: 960px) {
+    /* op smalle schermen de foto boven de tekst, zodat Willem zelf in beeld blijft */
+    .news-featured.memoriam { min-height: 0; background: #1A2E22; }
+    .news-featured.memoriam img { position: static; display: block; height: auto; aspect-ratio: 4 / 5; max-height: 70vh; }
+    .news-featured.memoriam .overlay { min-height: 0; height: auto; display: block; background: none; padding: 1.4rem 1.6rem 1.6rem; }
+}
 
 /* ===== FOTOSTROOK ===== */
 .strip { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: repeat(6, 1fr); gap: .8rem; }
