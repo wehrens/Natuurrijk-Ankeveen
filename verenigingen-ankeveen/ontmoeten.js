@@ -1179,7 +1179,7 @@
         if (!kandidaten.length) return;
         const huis = pick(kandidaten), hr = huis.getBoundingClientRect(), hl = hr.left - sr.left, hrr = hr.right - sr.left, hc = (hl + hrr) / 2;
         const f = hc < width / 2 ? 1 : -1;                                   // ze komen van de kant met de meeste ruimte achter het huis
-        const GROEN = '#1E6B3A', GROEN2 = '#2E8B4E';
+        const GROEN = '#1E6B3A', GROEN2 = '#2E8B4E';   // groen met geel, de kleuren van Teeuwissen
         const wiel = (x, y, r) => `<g class="wiel" style="transform-box:fill-box;transform-origin:center"><circle cx="${x}" cy="${y}" r="${r}" fill="#1b1b1b"/><circle cx="${x}" cy="${y}" r="${r * .5}" fill="#c9cdd0"/><path d="M${x - r * .4} ${y} h${r * .8}" stroke="#6a6f75" stroke-width=".5"/></g>`;
         const maak = (vb, wpx, hpx, binnen) => { const w = document.createElement('div'); w.className = 'om-p'; w.style.width = wpx + 'px'; w.style.height = hpx + 'px';
             w.innerHTML = `<svg viewBox="${vb}" width="${wpx}" height="${hpx}" aria-hidden="true" style="display:block;overflow:visible">${binnen}</svg>`; return w; };
@@ -1188,8 +1188,8 @@
         const bus = maak('0 0 44 23', BW, BH, `
             <path d="M2 18.6 V6 Q2 2.4 5.6 2.4 H30 Q33 2.4 35 5.4 L40.6 11.4 Q42.4 12.6 42.4 14.6 V18.6 Z" fill="${GROEN}"/>
             <path d="M31.2 4.4 H29.4 V11 H39.2 L34.6 5.6 Q33.6 4.4 31.2 4.4 Z" fill="#3E4A50"/><rect x="21" y="4.4" width="7" height="5.4" rx=".6" fill="#3E4A50"/>
-            <path d="M2 12.8 H42.4" stroke="#fff" stroke-width="1.1"/><path d="M2 14.4 H42.4" stroke="${GROEN2}" stroke-width=".8"/>
-            <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="22.4" y="17.8" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="2.4" fill="#fff" letter-spacing=".1">TEEUWISSEN</text></g>
+            <path d="M2 12.8 H42.4" stroke="#F2C318" stroke-width="1.1"/><path d="M2 14.4 H42.4" stroke="${GROEN2}" stroke-width=".8"/>
+            <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="22.4" y="17.8" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="2.4" fill="#F2C318" letter-spacing=".1">TEEUWISSEN</text></g>
             <path d="M28.8 4.4 V18.4" stroke="#14502a" stroke-width=".4"/><rect x="30.4" y="12" width="1.8" height=".6" fill="#14502a"/>
             <rect x="40.6" y="15.2" width="2.2" height="1.4" rx=".3" fill="#F6E7A6"/><rect x="1.4" y="14.8" width="1.2" height="1.8" fill="#D22630"/>
             <path d="M6 18.8 a4.4 4.4 0 0 1 8.8 0 Z M30 18.8 a4.4 4.4 0 0 1 8.8 0 Z" fill="#14502a"/>${wiel(10.4, 19, 3.6)}${wiel(34.4, 19, 3.6)}`);
@@ -1198,11 +1198,11 @@
         const wagen = maak('0 0 92 38', VW, VH, `
             <rect x="6" y="27.4" width="80" height="3" fill="#2b2b2b"/>
             <g class="tank"><rect x="10" y="5" width="56" height="21" rx="10.5" fill="${GROEN}"/><path d="M16 9 H60" stroke="${GROEN2}" stroke-width="2.4" stroke-linecap="round"/>
-              <path d="M10.6 17.6 H65.4" stroke="#fff" stroke-width="1.2"/>
-              <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="38" y="15.6" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="5.6" fill="#fff" letter-spacing=".4">TEEUWISSEN</text><text x="38" y="23.4" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="3.2" fill="#fff" letter-spacing=".5">RIOOLSERVICE</text></g>
+              <path d="M10.6 17.6 H65.4" stroke="#F2C318" stroke-width="1.2"/>
+              <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="38" y="15.6" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="5.6" fill="#F2C318" letter-spacing=".4">TEEUWISSEN</text><text x="38" y="23.4" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="3.2" fill="#F2C318" letter-spacing=".5">RIOOLSERVICE</text></g>
               <rect x="30" y="2.6" width="10" height="3" rx="1" fill="#9aa3ab"/><path d="M62 5.4 v-3.4 h4" fill="none" stroke="#9aa3ab" stroke-width="1"/></g>
             <g class="haspel" style="transform-box:fill-box;transform-origin:center"><circle cx="5.4" cy="18" r="5.2" fill="#2b2b2b"/><circle cx="5.4" cy="18" r="3.6" fill="none" stroke="#555" stroke-width="1.6"/><path d="M5.4 12.8 V23.2 M.2 18 H10.6" stroke="#777" stroke-width=".7"/><circle cx="5.4" cy="18" r="1" fill="#c9cdd0"/></g>
-            <path d="M68 27.4 V10.6 Q68 7.8 70.8 7.8 H80 Q82.6 7.8 84.2 10.6 L88.4 18 Q89.4 19.4 89.4 21.2 V27.4 Z" fill="#F4F4F2" stroke="#b9bec4" stroke-width=".4"/>
+            <path d="M68 27.4 V10.6 Q68 7.8 70.8 7.8 H80 Q82.6 7.8 84.2 10.6 L88.4 18 Q89.4 19.4 89.4 21.2 V27.4 Z" fill="#F2C318" stroke="#c49a0c" stroke-width=".4"/>
             <path d="M72 10 H80.2 Q81.6 10 82.4 11.4 L85.6 17.4 H72 Z" fill="#3E4A50"/><path d="M68 21 H89.4" stroke="${GROEN}" stroke-width="2"/>
             <rect x="88" y="23" width="2" height="1.6" rx=".3" fill="#F6E7A6"/><path d="M66.6 9 V2" stroke="#3a3a3a" stroke-width="1.2"/>
             <g class="uitlaat" fill="#9aa0a6" opacity="0"><circle cx="66.6" cy=".8" r="1.1"/><circle cx="65.6" cy="-1.2" r="1.5"/></g>
@@ -1239,13 +1239,19 @@
         const dWagen = Math.abs(wagenX - start) * 20;
         later(() => { strip.insertBefore(wagen, mt.isConnected ? mt : null); wagen.style.transform = zet(start, yW); rijd(wagen, yW, start, wagenX, dWagen, 'cubic-bezier(.25,.1,.25,1)'); }, tWagen);
         // 3. slang uitrollen van de haspel naar het huis
-        const haspelX = f > 0 ? wagenX + 5.4 : wagenX + VW - 5.4, slangL = Math.abs(haspelX - hc);
-        const slang = document.createElement('div');
-        slang.style.cssText = `position:absolute;top:${GROUND - 3.2}px;left:${Math.min(haspelX, hc)}px;width:${slangL}px;height:3px;border-radius:1.5px;background:#2b2b2b;transform-origin:${f > 0 ? '0' : '100%'} 50%;transform:scaleX(0);pointer-events:none`;
+        // de slang loopt ononderbroken van de haspel omlaag naar de grond en dan over de straat naar het huis
+        const haspelX = f > 0 ? wagenX + 5.4 : wagenX + VW - 5.4, haspelY = yW + 18;
+        const sx = haspelX - f * 2.6, sy = haspelY + 4.4, gx = haspelX - f * 9, gy = GROUND - 1.7;
+        const slangSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        slangSvg.setAttribute('aria-hidden', 'true');
+        slangSvg.style.cssText = 'position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none';
+        slangSvg.innerHTML = `<path d="M${sx} ${sy} Q${sx - f * 1.5} ${gy} ${gx} ${gy} L${hc} ${gy}" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+        const slang = slangSvg.firstElementChild;
         const tSlang = tWagen + dWagen + 900, UIT = 1600;
         later(() => {
-            strip.insertBefore(slang, wagen);
-            animate(slang, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: UIT, easing: 'ease-out' });
+            strip.insertBefore(slangSvg, wagen);
+            const L = slang.getTotalLength(); slang.style.strokeDasharray = `${L} ${L}`;
+            animate(slang, [{ strokeDashoffset: L }, { strokeDashoffset: 0 }], { duration: UIT, easing: 'ease-out' });
             animate(wagen.querySelector('.haspel'), [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-540deg)' }], { duration: UIT, easing: 'ease-out' });
         }, tSlang);
         // 4. zuigen: de wagen bromt en het huis trilt
@@ -1253,7 +1259,7 @@
         later(() => {
             animate(wagen.querySelector('.tank'), [{ transform: 'translate(0,0)' }, { transform: 'translate(.3px,-.3px)' }], { duration: 90, direction: 'alternate', iterations: Math.round(ZUIG / 90), easing: 'linear' });
             animate(wagen.querySelector('.uitlaat'), [{ opacity: 0, transform: 'translate(0,0)' }, { opacity: .7, offset: .3 }, { opacity: 0, transform: 'translate(-3px,-4px)' }], { duration: 900, iterations: Math.round(ZUIG / 900) });
-            animate(slang, [{ transform: 'scaleX(1) scaleY(1)' }, { transform: 'scaleX(1) scaleY(1.25)' }], { duration: 260, direction: 'alternate', iterations: Math.round(ZUIG / 260) });
+            animate(slang, [{ strokeWidth: 3 }, { strokeWidth: 3.8 }], { duration: 260, direction: 'alternate', iterations: Math.round(ZUIG / 260) });
             const pand = huis.firstElementChild; pand.style.transformOrigin = '50% 100%';
             animate(pand, [{ transform: 'scale(1, 1) rotate(0deg)' }, { transform: 'scale(1.04, .95) rotate(-1.6deg)', offset: .25 }, { transform: 'scale(.97, 1.06) rotate(0deg)', offset: .5 },
                 { transform: 'scale(1.04, .95) rotate(1.6deg)', offset: .75 }, { transform: 'scale(1, 1) rotate(0deg)' }], { duration: 1040, iterations: 4, easing: 'ease-in-out' });
@@ -1261,7 +1267,8 @@
         // 5. slang weer oprollen
         const tOp = tZuig + ZUIG + 600;
         later(() => {
-            animate(slang, [{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], { duration: UIT, easing: 'ease-in' }).finished.then(() => slang.remove()).catch(() => slang.remove());
+            const L = slang.getTotalLength();
+            animate(slang, [{ strokeDashoffset: 0 }, { strokeDashoffset: L }], { duration: UIT, easing: 'ease-in' }).finished.then(() => slangSvg.remove()).catch(() => slangSvg.remove());
             animate(wagen.querySelector('.haspel'), [{ transform: 'rotate(-540deg)' }, { transform: 'rotate(0deg)' }], { duration: UIT, easing: 'ease-in' });
         }, tOp);
         // 6. de wagen rijdt weg; de monteur loopt terug naar het busje en dat rijdt er achteraan
