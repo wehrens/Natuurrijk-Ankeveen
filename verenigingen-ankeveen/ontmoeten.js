@@ -1189,6 +1189,7 @@
             <path d="M2 18.6 V6 Q2 2.4 5.6 2.4 H30 Q33 2.4 35 5.4 L40.6 11.4 Q42.4 12.6 42.4 14.6 V18.6 Z" fill="${GROEN}"/>
             <path d="M31.2 4.4 H29.4 V11 H39.2 L34.6 5.6 Q33.6 4.4 31.2 4.4 Z" fill="#3E4A50"/><rect x="21" y="4.4" width="7" height="5.4" rx=".6" fill="#3E4A50"/>
             <path d="M2 12.8 H42.4" stroke="#fff" stroke-width="1.1"/><path d="M2 14.4 H42.4" stroke="${GROEN2}" stroke-width=".8"/>
+            <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="22.4" y="17.8" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="2.4" fill="#fff" letter-spacing=".1">TEEUWISSEN</text></g>
             <path d="M28.8 4.4 V18.4" stroke="#14502a" stroke-width=".4"/><rect x="30.4" y="12" width="1.8" height=".6" fill="#14502a"/>
             <rect x="40.6" y="15.2" width="2.2" height="1.4" rx=".3" fill="#F6E7A6"/><rect x="1.4" y="14.8" width="1.2" height="1.8" fill="#D22630"/>
             <path d="M6 18.8 a4.4 4.4 0 0 1 8.8 0 Z M30 18.8 a4.4 4.4 0 0 1 8.8 0 Z" fill="#14502a"/>${wiel(10.4, 19, 3.6)}${wiel(34.4, 19, 3.6)}`);
@@ -1198,7 +1199,7 @@
             <rect x="6" y="27.4" width="80" height="3" fill="#2b2b2b"/>
             <g class="tank"><rect x="10" y="5" width="56" height="21" rx="10.5" fill="${GROEN}"/><path d="M16 9 H60" stroke="${GROEN2}" stroke-width="2.4" stroke-linecap="round"/>
               <path d="M10.6 17.6 H65.4" stroke="#fff" stroke-width="1.2"/>
-              <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="38" y="23.4" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="3.6" fill="#fff" letter-spacing=".3">RIOOLSERVICE</text></g>
+              <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="38" y="15.6" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="5.6" fill="#fff" letter-spacing=".4">TEEUWISSEN</text><text x="38" y="23.4" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="3.2" fill="#fff" letter-spacing=".5">RIOOLSERVICE</text></g>
               <rect x="30" y="2.6" width="10" height="3" rx="1" fill="#9aa3ab"/><path d="M62 5.4 v-3.4 h4" fill="none" stroke="#9aa3ab" stroke-width="1"/></g>
             <g class="haspel" style="transform-box:fill-box;transform-origin:center"><circle cx="5.4" cy="18" r="5.2" fill="#2b2b2b"/><circle cx="5.4" cy="18" r="3.6" fill="none" stroke="#555" stroke-width="1.6"/><path d="M5.4 12.8 V23.2 M.2 18 H10.6" stroke="#777" stroke-width=".7"/><circle cx="5.4" cy="18" r="1" fill="#c9cdd0"/></g>
             <path d="M68 27.4 V10.6 Q68 7.8 70.8 7.8 H80 Q82.6 7.8 84.2 10.6 L88.4 18 Q89.4 19.4 89.4 21.2 V27.4 Z" fill="#F4F4F2" stroke="#b9bec4" stroke-width=".4"/>
@@ -1206,8 +1207,8 @@
             <rect x="88" y="23" width="2" height="1.6" rx=".3" fill="#F6E7A6"/><path d="M66.6 9 V2" stroke="#3a3a3a" stroke-width="1.2"/>
             <g class="uitlaat" fill="#9aa0a6" opacity="0"><circle cx="66.6" cy=".8" r="1.1"/><circle cx="65.6" cy="-1.2" r="1.5"/></g>
             ${wiel(20, 31, 4.6)}${wiel(32, 31, 4.6)}${wiel(78, 31, 4.6)}`);
-        const flipTekst = el => { const t = el.querySelector('.tekst'); if (t && f < 0) t.style.transform = 'scaleX(-1)'; };
-        flipTekst(wagen);
+        const flipTekst = el => { if (f < 0) el.querySelectorAll('.tekst').forEach(t => { t.style.transform = 'scaleX(-1)'; }); };
+        flipTekst(wagen); flipTekst(bus);
         // posities (bij f = -1 alles gespiegeld)
         const achterKant = f > 0 ? hrr + 6 : hl - 6;                         // waar de haspel komt
         const wagenX = f > 0 ? achterKant : achterKant - VW, busX = f > 0 ? hl - 8 - BW : hrr + 8;   // het busje stopt vóór het huis, de wagen rijdt erlangs en zet zijn achterkant naast het huis
