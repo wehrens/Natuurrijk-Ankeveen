@@ -54,7 +54,7 @@
         return best;
     }
     // Het marktplein: de open ruimte tussen het linker huis en het café. Daar staan de markt en de lichtjesmarkt.
-    const pleinRand = { huizen: [], cafe: null, bord: null, kerk: null };
+    const pleinRand = { huizen: [], cafe: null, bord: null, kerk: null }, alleHuizen = [];
     function pleinPlek(breedte, duur) {
         const w = W(), sr = strip.getBoundingClientRect();
         const zicht = pleinRand.huizen.filter(e => e.offsetParent !== null).map(e => e.getBoundingClientRect().right - sr.left);
@@ -1167,6 +1167,111 @@
             klantX: () => klantX,
             zet: () => { if (!isOpen) return; animate(w.querySelector('.stoom'), [{ opacity: .9 }, { opacity: 0, transform: 'translateY(-4px)' }], { duration: 1200 }); }
         };
+    }
+    // TEEUWISSEN (verborgen, alleen via #teeuwissen): in het voorjaar stopt het groene busje van de rioolservice voor een
+    // huis, de monteur stapt uit, en even later komt de grote vacuümwagen erbij. Die rolt een dikke slang uit naar het
+    // huis, zuigt (het huis trilt net als het café bij carnaval), rolt de slang weer op, en dan rijden ze weer weg.
+    function teeuwissen() {
+        if (document.hidden) return;
+        if (!seizoenVast && seizoenNu !== 'lente') zetSeizoen('lente', true);
+        const width = W(), sr = strip.getBoundingClientRect();
+        const kandidaten = alleHuizen.filter(e => e.offsetParent !== null);
+        if (!kandidaten.length) return;
+        const huis = pick(kandidaten), hr = huis.getBoundingClientRect(), hl = hr.left - sr.left, hrr = hr.right - sr.left, hc = (hl + hrr) / 2;
+        const f = hc < width / 2 ? 1 : -1;                                   // ze komen van de kant met de meeste ruimte achter het huis
+        const GROEN = '#1E6B3A', GROEN2 = '#2E8B4E';
+        const wiel = (x, y, r) => `<g class="wiel" style="transform-box:fill-box;transform-origin:center"><circle cx="${x}" cy="${y}" r="${r}" fill="#1b1b1b"/><circle cx="${x}" cy="${y}" r="${r * .5}" fill="#c9cdd0"/><path d="M${x - r * .4} ${y} h${r * .8}" stroke="#6a6f75" stroke-width=".5"/></g>`;
+        const maak = (vb, wpx, hpx, binnen) => { const w = document.createElement('div'); w.className = 'om-p'; w.style.width = wpx + 'px'; w.style.height = hpx + 'px';
+            w.innerHTML = `<svg viewBox="${vb}" width="${wpx}" height="${hpx}" aria-hidden="true" style="display:block;overflow:visible">${binnen}</svg>`; return w; };
+        // het busje (neus naar rechts)
+        const BW = 44, BH = 23;
+        const bus = maak('0 0 44 23', BW, BH, `
+            <path d="M2 18.6 V6 Q2 2.4 5.6 2.4 H30 Q33 2.4 35 5.4 L40.6 11.4 Q42.4 12.6 42.4 14.6 V18.6 Z" fill="${GROEN}"/>
+            <path d="M31.2 4.4 H29.4 V11 H39.2 L34.6 5.6 Q33.6 4.4 31.2 4.4 Z" fill="#3E4A50"/><rect x="21" y="4.4" width="7" height="5.4" rx=".6" fill="#3E4A50"/>
+            <path d="M2 12.8 H42.4" stroke="#fff" stroke-width="1.1"/><path d="M2 14.4 H42.4" stroke="${GROEN2}" stroke-width=".8"/>
+            <path d="M28.8 4.4 V18.4" stroke="#14502a" stroke-width=".4"/><rect x="30.4" y="12" width="1.8" height=".6" fill="#14502a"/>
+            <rect x="40.6" y="15.2" width="2.2" height="1.4" rx=".3" fill="#F6E7A6"/><rect x="1.4" y="14.8" width="1.2" height="1.8" fill="#D22630"/>
+            <path d="M6 18.8 a4.4 4.4 0 0 1 8.8 0 Z M30 18.8 a4.4 4.4 0 0 1 8.8 0 Z" fill="#14502a"/>${wiel(10.4, 19, 3.6)}${wiel(34.4, 19, 3.6)}`);
+        // de vacuümwagen (neus naar rechts): cabine voor, een grote groene tank, achterop de haspel met de zuigslang
+        const VW = 92, VH = 38;
+        const wagen = maak('0 0 92 38', VW, VH, `
+            <rect x="6" y="27.4" width="80" height="3" fill="#2b2b2b"/>
+            <g class="tank"><rect x="10" y="5" width="56" height="21" rx="10.5" fill="${GROEN}"/><path d="M16 9 H60" stroke="${GROEN2}" stroke-width="2.4" stroke-linecap="round"/>
+              <path d="M10.6 17.6 H65.4" stroke="#fff" stroke-width="1.2"/>
+              <g class="tekst" style="transform-box:fill-box;transform-origin:center"><text x="38" y="23.4" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="3.6" fill="#fff" letter-spacing=".3">RIOOLSERVICE</text></g>
+              <rect x="30" y="2.6" width="10" height="3" rx="1" fill="#9aa3ab"/><path d="M62 5.4 v-3.4 h4" fill="none" stroke="#9aa3ab" stroke-width="1"/></g>
+            <g class="haspel" style="transform-box:fill-box;transform-origin:center"><circle cx="5.4" cy="18" r="5.2" fill="#2b2b2b"/><circle cx="5.4" cy="18" r="3.6" fill="none" stroke="#555" stroke-width="1.6"/><path d="M5.4 12.8 V23.2 M.2 18 H10.6" stroke="#777" stroke-width=".7"/><circle cx="5.4" cy="18" r="1" fill="#c9cdd0"/></g>
+            <path d="M68 27.4 V10.6 Q68 7.8 70.8 7.8 H80 Q82.6 7.8 84.2 10.6 L88.4 18 Q89.4 19.4 89.4 21.2 V27.4 Z" fill="#F4F4F2" stroke="#b9bec4" stroke-width=".4"/>
+            <path d="M72 10 H80.2 Q81.6 10 82.4 11.4 L85.6 17.4 H72 Z" fill="#3E4A50"/><path d="M68 21 H89.4" stroke="${GROEN}" stroke-width="2"/>
+            <rect x="88" y="23" width="2" height="1.6" rx=".3" fill="#F6E7A6"/><path d="M66.6 9 V2" stroke="#3a3a3a" stroke-width="1.2"/>
+            <g class="uitlaat" fill="#9aa0a6" opacity="0"><circle cx="66.6" cy=".8" r="1.1"/><circle cx="65.6" cy="-1.2" r="1.5"/></g>
+            ${wiel(20, 31, 4.6)}${wiel(32, 31, 4.6)}${wiel(78, 31, 4.6)}`);
+        const flipTekst = el => { const t = el.querySelector('.tekst'); if (t && f < 0) t.style.transform = 'scaleX(-1)'; };
+        flipTekst(wagen);
+        // posities (bij f = -1 alles gespiegeld)
+        const achterKant = f > 0 ? hrr + 6 : hl - 6;                         // waar de haspel komt
+        const wagenX = f > 0 ? achterKant : achterKant - VW, busX = f > 0 ? hl - 8 - BW : hrr + 8;   // het busje stopt vóór het huis, de wagen rijdt erlangs en zet zijn achterkant naast het huis
+        const yB = GROUND - BH + 1, yW = GROUND - VH + 2.4;
+        const zet = (x, y) => `translate(${x}px, ${y}px) scaleX(${f})`;
+        const rijd = (el, y, x0, x1, ms, ease) => {
+            el.querySelectorAll('.wiel').forEach(g => animate(g, [{ transform: 'rotate(0deg)' }, { transform: `rotate(${360}deg)` }], { duration: 900, iterations: Math.max(1, Math.round(ms / 900)), easing: 'linear' }));
+            return animate(el, [{ transform: zet(x0, y) }, { transform: zet(x1, y) }], { duration: ms, easing: ease });
+        };
+        const start = f > 0 ? -VW - 30 : width + 30, eind = f > 0 ? width + 40 : -VW - 60;
+        // 1. het busje
+        strip.appendChild(bus); bus.style.transform = zet(start, yB);
+        const dBus = Math.abs(busX - start) * 16;
+        rijd(bus, yB, start, busX, dBus, 'cubic-bezier(.25,.1,.3,1)');
+        // de monteur stapt uit en loopt naar het huis
+        const mt = person(GROEN2, 23); delete mt.dataset.groet;
+        mt.firstElementChild.insertAdjacentHTML('beforeend', '<path d="M3.6 18.6 h10.8" stroke="#F2C318" stroke-width="1.3"/>');
+        const mBus = f > 0 ? busX + 4 : busX + BW - 14, mHuis = hc - 5 + f * 6;
+        later(() => {
+            strip.appendChild(mt);
+            mt.style.transform = `translate(${mBus}px, ${GROUND - 23}px) scaleX(${-f})`;
+            const b = bob(mt, 420);
+            animate(mt, [{ transform: `translate(${mBus}px, ${GROUND - 23}px) scaleX(${-f})`, opacity: 0 }, { opacity: 1, offset: .1 }, { transform: `translate(${mHuis}px, ${GROUND - 23}px) scaleX(${-f})`, opacity: 1 }], { duration: Math.abs(mHuis - mBus) * 26, easing: 'linear' })
+                .finished.then(() => b.pause()).catch(() => {});
+        }, dBus + 500);
+        // 2. de vacuümwagen
+        const tWagen = dBus + 3200;
+        const dWagen = Math.abs(wagenX - start) * 20;
+        later(() => { strip.insertBefore(wagen, mt.isConnected ? mt : null); wagen.style.transform = zet(start, yW); rijd(wagen, yW, start, wagenX, dWagen, 'cubic-bezier(.25,.1,.25,1)'); }, tWagen);
+        // 3. slang uitrollen van de haspel naar het huis
+        const haspelX = f > 0 ? wagenX + 5.4 : wagenX + VW - 5.4, slangL = Math.abs(haspelX - hc);
+        const slang = document.createElement('div');
+        slang.style.cssText = `position:absolute;top:${GROUND - 3.2}px;left:${Math.min(haspelX, hc)}px;width:${slangL}px;height:3px;border-radius:1.5px;background:#2b2b2b;transform-origin:${f > 0 ? '0' : '100%'} 50%;transform:scaleX(0);pointer-events:none`;
+        const tSlang = tWagen + dWagen + 900, UIT = 1600;
+        later(() => {
+            strip.insertBefore(slang, wagen);
+            animate(slang, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: UIT, easing: 'ease-out' });
+            animate(wagen.querySelector('.haspel'), [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-540deg)' }], { duration: UIT, easing: 'ease-out' });
+        }, tSlang);
+        // 4. zuigen: de wagen bromt en het huis trilt
+        const tZuig = tSlang + UIT + 500, ZUIG = 4 * 1040;
+        later(() => {
+            animate(wagen.querySelector('.tank'), [{ transform: 'translate(0,0)' }, { transform: 'translate(.3px,-.3px)' }], { duration: 90, direction: 'alternate', iterations: Math.round(ZUIG / 90), easing: 'linear' });
+            animate(wagen.querySelector('.uitlaat'), [{ opacity: 0, transform: 'translate(0,0)' }, { opacity: .7, offset: .3 }, { opacity: 0, transform: 'translate(-3px,-4px)' }], { duration: 900, iterations: Math.round(ZUIG / 900) });
+            animate(slang, [{ transform: 'scaleX(1) scaleY(1)' }, { transform: 'scaleX(1) scaleY(1.25)' }], { duration: 260, direction: 'alternate', iterations: Math.round(ZUIG / 260) });
+            const pand = huis.firstElementChild; pand.style.transformOrigin = '50% 100%';
+            animate(pand, [{ transform: 'scale(1, 1) rotate(0deg)' }, { transform: 'scale(1.04, .95) rotate(-1.6deg)', offset: .25 }, { transform: 'scale(.97, 1.06) rotate(0deg)', offset: .5 },
+                { transform: 'scale(1.04, .95) rotate(1.6deg)', offset: .75 }, { transform: 'scale(1, 1) rotate(0deg)' }], { duration: 1040, iterations: 4, easing: 'ease-in-out' });
+        }, tZuig);
+        // 5. slang weer oprollen
+        const tOp = tZuig + ZUIG + 600;
+        later(() => {
+            animate(slang, [{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], { duration: UIT, easing: 'ease-in' }).finished.then(() => slang.remove()).catch(() => slang.remove());
+            animate(wagen.querySelector('.haspel'), [{ transform: 'rotate(-540deg)' }, { transform: 'rotate(0deg)' }], { duration: UIT, easing: 'ease-in' });
+        }, tOp);
+        // 6. de wagen rijdt weg; de monteur loopt terug naar het busje en dat rijdt er achteraan
+        const tWeg = tOp + UIT + 700;
+        later(() => { rijd(wagen, yW, wagenX, eind, Math.abs(eind - wagenX) * 16, 'cubic-bezier(.5,0,1,1)').finished.then(() => wagen.remove()).catch(() => wagen.remove()); }, tWeg);
+        later(() => {
+            const b = bob(mt, 420);
+            animate(mt, [{ transform: `translate(${mHuis}px, ${GROUND - 23}px) scaleX(${f})`, opacity: 1 }, { transform: `translate(${mBus}px, ${GROUND - 23}px) scaleX(${f})`, opacity: 1, offset: .92 }, { transform: `translate(${mBus}px, ${GROUND - 23}px) scaleX(${f})`, opacity: 0 }], { duration: Math.abs(mHuis - mBus) * 26, easing: 'linear' })
+                .finished.then(() => { b.cancel(); mt.remove();
+                    later(() => rijd(bus, yB, busX, eind, Math.abs(eind - busX) * 14, 'cubic-bezier(.5,0,1,1)').finished.then(() => bus.remove()).catch(() => bus.remove()), 600); }).catch(() => {});
+        }, tWeg + 400);
     }
     const marktDur = () => (W() / 2) * 12 + 200 + 5 * (450 + 950 + 400) + 4 * (200 + 40 * 12 + 150) + 400 + 34000 + 5 * (700 + 450 + 450 + 950) + 4 * (200 + 40 * 12 + 150) + 300 + (W() / 2) * 12 + 2500;
 
@@ -2416,6 +2521,7 @@ ${pot(47.4)}${pot(61.6)}
             sneeuwLaag(d, svg, GEO[soort], soort === 'cafe' ? 3.4 : 3.6, soort === 'cafe' ? '<rect x="35.4" y="19.8" width="26.2" height="2.6" rx="1" fill="#fff"/><path d="M12.6 12.2 H96.4" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>' : '');
             lichtLaag(d, svg, soort);                                    // komt tussen het gebouw en de sneeuw
             if (typeof pct === 'number' && pct < 40) pleinRand.huizen.push(d); else if (typeof pct !== 'number') pleinRand.cafe = d;
+            if (soort !== 'cafe') alleHuizen.push(d);
         });
         // Laag groen (een bomenrand in de verte) in de open stukken tússen de huizen, het café en De Dillewijn.
         // Het ligt in de achtergrondlaag, dus achter alle poppetjes; elk stuk vervaagt naar links en rechts.
@@ -4012,7 +4118,7 @@ ${pot(47.4)}${pot(61.6)}
             }
         }, 450);
     }
-    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.bladblazer = bladblazer; window.ontmoeten.zwemsters = zwemsters; ['lente', 'zomer', 'herfst', 'winter'].forEach(n => { window.ontmoeten[n] = () => { zetSeizoen(n, true); bag = []; eersteRonde = true; }; }); window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.vespa = vespa; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
+    groeten(strip); if (window.ontmoeten) { window.ontmoeten.zwaai = zwaai; window.ontmoeten.bladblazer = bladblazer; window.ontmoeten.zwemsters = zwemsters; window.ontmoeten.teeuwissen = teeuwissen; ['lente', 'zomer', 'herfst', 'winter'].forEach(n => { window.ontmoeten[n] = () => { zetSeizoen(n, true); bag = []; eersteRonde = true; }; }); window.ontmoeten.havenloos = havenloos; window.ontmoeten.gitaarschool = gitaarschool; window.ontmoeten.zumba = zumba; window.ontmoeten.ruiter = ruiter; window.ontmoeten.boswachter = boswachter; window.ontmoeten.klompenman = klompenman; window.ontmoeten.familie = familie; window.ontmoeten.koffie = () => meeting(true); window.ontmoeten.lichtjesmarkt = lichtjesmarkt; window.ontmoeten.honden = honden; window.ontmoeten.plassen = () => honden({ kant: pick([1, -1]), plas: true, bord: false }); window.ontmoeten.newfoundlander = newfoundlander; window.ontmoeten.vespa = vespa; window.ontmoeten.symon = symon; window.ontmoeten.sportdag = sportdag; window.ontmoeten.tennissers = tennissers; window.ontmoeten.biljarters = biljarters; window.ontmoeten.ooiHouding = ooiHouding; window.ontmoeten.ooievaar = ooievaar; window.ontmoeten.bordplas = () => honden({ kant: pick([1, -1]), plas: true, bord: true }); window.ontmoeten.snuffelen = () => honden({ kant: pick([1, -1]), plas: false, bord: false }); window.ontmoeten.voetballer = voetballer; window.ontmoeten.ooievaar = ooievaar; }
     // Een scène direct bekijken: zet de naam achter een # in het adres, bijvoorbeeld .../verenigingen-ankeveen/#havenloos
     const toon = () => {
         const n = decodeURIComponent(location.hash.slice(1)), fn = window.ontmoeten && window.ontmoeten[n];
