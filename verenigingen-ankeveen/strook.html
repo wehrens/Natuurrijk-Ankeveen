@@ -99,7 +99,7 @@ body.binnen.lucht #ontmoeten::after{background:#4E8A3A}
     var bq = parseFloat(q.get('b')), pos = q.get('pos') || 'onder';
     var f = document.createElement('iframe');
     f.title = 'Animatiestrook Ankeveen';
-    f.src = 'strook.html?binnen' + (lucht ? '&lucht' : '') + (q.get('titel') ? '&titel=' + encodeURIComponent(q.get('titel')) : '') + location.hash;
+    f.src = 'strook.html?binnen' + (lucht ? '&lucht' : '') + (q.get('titel') ? '&titel=' + encodeURIComponent(q.get('titel')) : '') + (q.get('seizoen') ? '&seizoen=' + encodeURIComponent(q.get('seizoen')) : '') + location.hash;
     // de zomerlucht: zon en een paar wolken die langzaam overdrijven (achter de strook). Standaard alleen in de band
     // (daarboven zwart); met ?lucht&vol over het hele beeld.
     var hemel = null, WOLKEN = [[.06, .26, 150, 0], [.34, .16, 190, -70], [.16, .34, 230, -150], [.50, .20, 170, -120], [.62, .30, 210, -30], [.40, .13, 260, -200]];

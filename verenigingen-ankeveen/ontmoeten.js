@@ -2730,10 +2730,10 @@ ${pot(47.4)}${pot(61.6)}
     verte.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:-4;overflow:hidden';
     verte.setAttribute('aria-hidden', 'true');
     balk.appendChild(verte);
-    // Een zachte zomerlucht in de kopbalk (niet in de projectiestand, die heeft zijn eigen lucht). Bovenin een licht blauw waas dat
+    // Een zachte lucht in de kopbalk (niet in de projectiestand met ?lucht, die heeft zijn eigen lucht). Bovenin een licht blauw waas dat
     // naar beneden toe in de gewone achtergrond overgaat, met twee bleke wolkjes die traag overdrijven. Geen zon, geen
     // gras; titel en menu blijven goed leesbaar.
-    const ZACHTE_LUCHT = !STERK;
+    const ZACHTE_LUCHT = !STERK || !document.body.classList.contains('lucht');   // ook in de projectiestand zonder eigen lucht, zodat je de seizoenen ziet wisselen
     if (ZACHTE_LUCHT) {
         const hemel = document.createElement('div');
         hemel.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:-5;overflow:hidden;background:linear-gradient(180deg, #CBE4F5 0%, #DDEDF7 45%, rgba(248,246,240,0) 92%)';
